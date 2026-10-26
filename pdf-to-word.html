@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF en Word — PdfBleu.com</title>
+<meta name="description" content="Convertissez un PDF en document Word (.docx) modifiable, gratuitement et sans inscription. Le texte sélectionnable est extrait directement dans votre navigateur : aucun envoi sur un serveur.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:110px;height:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:12.5px;text-align:center;padding:8px}
+.filecard .coverph.bad{color:#b71c1c}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.levels{display:grid;gap:10px;margin-bottom:4px}
+.levelcard{position:relative;display:block;border:1.5px solid #c5cae9;border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.levelcard:hover{border-color:#3F51B5}
+.levelcard.sel{border-color:#2e7d32;background:#e8f5e9;box-shadow:0 2px 8px rgba(46,125,50,.14)}
+.levelcard input{position:absolute;opacity:0;pointer-events:none}
+.levelcard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:15.5px}
+.levelcard .ldesc{display:block;font-size:13px;color:#666c8a;margin-top:2px}
+.levelcard.disabled{opacity:.55;cursor:not-allowed;background:#f7f8fc}
+.levelcard.disabled:hover{border-color:#c5cae9}
+.soonbadge{display:inline-block;background:#ff9800;color:#fff;font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.ocrnote{font-size:13px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 12px;margin-top:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Accueil</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#DCE5FA"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#5F83C6"/><path d="M38 10 L32 16" stroke="#295795" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#295795"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">W</text></svg></span>
+<h1>Convertir un PDF en Word</h1>
+<p class="subtitle">Transformez vos PDF en documents Word modifiables : le texte, les paragraphes et les titres sont reconstruits automatiquement, sans quitter votre appareil.</p>
+</div>
+<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Conversion en cours…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
+<p class="droptxt">ou déposez votre PDF ici</p>
+</div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l’aperçu…</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>PDF en Word</h2>
+<p>Choisissez le mode de conversion :</p>
+<div class="levels" role="radiogroup" aria-label="Mode de conversion">
+<label class="levelcard sel" id="noOcrCard">
+<input type="radio" name="mode" value="noocr" checked>
+<span class="ltitle">Sans OCR</span>
+<span class="ldesc">Convertit les PDF dont le texte est sélectionnable en documents Word modifiables.</span>
+</label>
+<label class="levelcard disabled" id="ocrCard">
+<input type="radio" name="mode" value="ocr" disabled>
+<span class="ltitle">OCR<span class="soonbadge">Bientôt</span></span>
+<span class="ldesc">Pour les PDF numérisés (texte non sélectionnable).</span>
+</label>
+</div>
+<p class="ocrnote" id="ocrNote" style="display:none">L’OCR arrive bientôt : il permettra de convertir aussi les documents scannés. Pour le moment, seuls les PDF dont le texte est sélectionnable peuvent être convertis.</p>
+<div class="warnnote">⚠ <strong>Conversion simplifiée :</strong> le texte, les paragraphes, les titres approximatifs (selon la taille du texte) ainsi que le gras et l’italique sont conservés. Les mises en page complexes, les tableaux, les colonnes et les images ne sont pas reproduits.</div>
+<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Votre document Word est prêt !</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convertir un autre PDF</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+
+<div class="howto">
+<h2>Comment convertir un PDF en Word</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choisissez votre PDF</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier dans la zone prévue. Un seul document suffit.</p></div>
+<div class="step"><span class="num">2</span><h3>Lancez la conversion</h3><p>Le mode « Sans OCR » extrait le texte sélectionnable de votre PDF et reconstruit les paragraphes et les titres.</p></div>
+<div class="step"><span class="num">3</span><h3>Téléchargez le .docx</h3><p>Appuyez sur « Convertir en Word », puis téléchargez votre document modifiable dans Word, LibreOffice ou Google Docs.</p></div>
+</div>
+<div class="seo">
+<p>Notre convertisseur PDF en Word est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : l’extraction du texte a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, rapports et documents personnels.</p>
+<p>La conversion convient aux documents dont le texte est sélectionnable : rapports, lettres, devoirs, formulaires remplis ou documents administratifs. Le texte, les paragraphes, les titres et les mises en forme simples (gras, italique, tailles) sont conservés dans le fichier .docx produit. Les documents scannés, qui sont en réalité des images, nécessitent une reconnaissance de caractères (OCR) : cette fonction arrive bientôt.</p>
+</div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convertir en Word</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+</footer>
+<script>
+(function () {
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  // === Fonctions pures de conversion (testables) ===
+  // Ces fonctions ne touchent ni au DOM ni aux bibliothèques externes :
+  // elles transforment les « items » de texte fournis par pdf.js en fichiers
+  // XML prêts à être zippés en un vrai document .docx. Les heuristiques sont
+  // volontairement simples et déterministes ; elles sont décrites ci-dessous.
+
+  // Échappe les caractères spéciaux XML d'un texte.
+  function escapeXml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  // Nom du fichier produit : nom d'origine sans son extension, + « .docx ».
+  function outputDocxName(fileName) {
+    var base = String(fileName || 'document').replace(/\.[^.]+$/, '');
+    if (!base) base = 'document';
+    return base + '.docx';
+  }
+
+  // Métriques d'un item pdf.js :
+  // - x = transform[4], y = transform[5] (coordonnées PDF : y croît vers le haut) ;
+  // - taille de police ≈ norme de la partie verticale de la matrice,
+  //   soit Math.hypot(transform[2], transform[3]), avec repli sur item.height ;
+  // - endX = fin horizontale approximative, pour repérer les écarts entre mots ;
+  // - gras / italique déduits du nom de la police.
+  function itemMetrics(it) {
+    var tr = it.transform || [1, 0, 0, 1, 0, 0];
+    var size = Math.hypot(tr[2] || 0, tr[3] || 0);
+    if (!size || !isFinite(size)) size = it.height || 0;
+    var scaleX = Math.hypot(tr[0] || 0, tr[1] || 0) || 1;
+    var fontName = it.fontName || '';
+    return {
+      str: it.str,
+      x: tr[4] || 0,
+      y: tr[5] || 0,
+      endX: (tr[4] || 0) + (it.width || 0) * scaleX,
+      size: size,
+      bold: /bold/i.test(fontName),
+      italic: /italic|oblique/i.test(fontName)
+    };
+  }
+
+  function runStyleKey(r) {
+    return (r.bold ? 'b' : '') + (r.italic ? 'i' : '') + Math.round((r.size || 0) * 2);
+  }
+  function pushRun(runs, run) {
+    var last = runs.length ? runs[runs.length - 1] : null;
+    if (last && runStyleKey(last) === runStyleKey(run)) {
+      last.str += run.str;
+    } else {
+      runs.push({ str: run.str, bold: !!run.bold, italic: !!run.italic, size: run.size || 0 });
+    }
+  }
+
+  // Regroupe les items d'une page en lignes :
+  // - tri par y décroissant (le haut de page d'abord), tolérance verticale
+  //   d'environ 0,5 × la taille de police pour rattacher un item à une ligne ;
+  // - items d'une même ligne triés par x croissant ;
+  // - un espace est inséré entre deux items quand l'écart horizontal dépasse
+  //   environ 0,25 × la taille de police (probable séparation de mots), sinon
+  //   les fragments sont collés (mot coupé entre deux items, accents, etc.).
+  function groupPageLines(items) {
+    var norm = [];
+    (items || []).forEach(function (it) {
+      if (!it || typeof it.str !== 'string' || it.str === '') return;
+      norm.push(itemMetrics(it));
+    });
+    norm.sort(function (a, b) {
+      if (a.y !== b.y) return b.y - a.y;
+      return a.x - b.x;
+    });
+    var rawLines = [];
+    norm.forEach(function (m) {
+      var cur = rawLines.length ? rawLines[rawLines.length - 1] : null;
+      var tol = Math.max(2, 0.5 * Math.max(m.size, cur ? cur.size : 0));
+      if (cur && Math.abs(m.y - cur.y) <= tol) {
+        cur.items.push(m);
+        if (m.size > cur.size) cur.size = m.size;
+      } else {
+        rawLines.push({ y: m.y, size: m.size, items: [m] });
+      }
+    });
+    return rawLines.map(function (L) {
+      var sorted = L.items.slice().sort(function (a, b) { return a.x - b.x; });
+      var runs = [];
+      var prev = null;
+      sorted.forEach(function (m) {
+        var str = m.str;
+        if (prev) {
+          var gap = m.x - prev.endX;
+          var needSpace = gap > 0.25 * Math.max(m.size, prev.size);
+          var lastRun = runs.length ? runs[runs.length - 1] : null;
+          if (needSpace && !/^\s/.test(str) && !(lastRun && /\s$/.test(lastRun.str))) str = ' ' + str;
+        }
+        pushRun(runs, { str: str, bold: m.bold, italic: m.italic, size: m.size });
+        prev = m;
+      });
+      var text = runs.map(function (r) { return r.str; }).join('');
+      return { runs: runs, text: text, size: L.size, y: L.y, x: sorted.length ? sorted[0].x : 0 };
+    });
+  }
+
+  // Transforme les lignes de toutes les pages en blocs Word :
+  // - la taille de corps est la taille de ligne la plus fréquente (mode) ;
+  // - une ligne ≥ 1,35 × la taille de corps devient un Titre 1, ≥ 1,15 × un
+  //   Titre 2, à condition d'être plutôt courte (< 120 caractères) ;
+  // - deux lignes de corps consécutives fusionnent dans le même paragraphe si
+  //   leur écart vertical est inférieur à 1,6 × la hauteur de ligne
+  //   (hauteur de ligne ≈ taille × 1,2) ; un écart plus grand ouvre un
+  //   nouveau paragraphe. Un mot coupé par un tiret en fin de ligne est
+  //   recollé sans espace ;
+  // - un saut de page est inséré entre les pages du PDF.
+  function buildBlocks(pagesLines) {
+    var freq = {}, bodySize = 12, bestCount = -1;
+    pagesLines.forEach(function (lines) {
+      lines.forEach(function (l) {
+        if (!l.text || !l.text.trim()) return;
+        var k = Math.round(l.size * 2) / 2;
+        freq[k] = (freq[k] || 0) + 1;
+        if (freq[k] > bestCount) { bestCount = freq[k]; bodySize = k; }
+      });
+    });
+    var blocks = [];
+    pagesLines.forEach(function (lines, pageIdx) {
+      if (pageIdx > 0) blocks.push({ type: 'pagebreak' });
+      var para = null;
+      var prev = null;
+      function flush() { if (para) { blocks.push(para); para = null; } }
+      lines.forEach(function (line) {
+        if (!line.text || !line.text.trim()) return;
+        var isH1 = line.size >= bodySize * 1.35 && line.text.length < 120;
+        var isH2 = !isH1 && line.size >= bodySize * 1.15 && line.text.length < 120;
+        if (isH1 || isH2) {
+          flush();
+          blocks.push({ type: isH1 ? 'h1' : 'h2', runs: line.runs });
+          prev = line;
+          return;
+        }
+        var merged = false;
+        if (para && prev) {
+          var gap = prev.y - line.y;
+          var lineHeight = Math.max(prev.size, 1) * 1.2;
+          if (gap > 0 && gap < 1.6 * lineHeight) {
+            var prevText = para.runs.map(function (r) { return r.str; }).join('');
+            var joiner = /-$/.test(prevText) || /\s$/.test(prevText) ? '' : ' ';
+            if (joiner && para.runs.length) para.runs[para.runs.length - 1].str += joiner;
+            line.runs.forEach(function (r) { pushRun(para.runs, r); });
+            merged = true;
+          }
+        }
+        if (!merged) {
+          flush();
+          para = { type: 'p', runs: [] };
+          line.runs.forEach(function (r) { pushRun(para.runs, r); });
+        }
+        prev = line;
+      });
+      flush();
+    });
+    return blocks;
+  }
+
+  // Nombre de mots approximatif dans les blocs (pour l'écran de résultat).
+  function countWords(blocks) {
+    var n = 0;
+    blocks.forEach(function (b) {
+      if (!b.runs) return;
+      var t = b.runs.map(function (r) { return r.str; }).join('');
+      t.split(/\s+/).forEach(function (w) { if (w) n++; });
+    });
+    return n;
+  }
+
+  function runToXml(r) {
+    var rpr = '';
+    if (r.bold) rpr += '<w:b/>';
+    if (r.italic) rpr += '<w:i/>';
+    if (r.size) {
+      var hp = Math.max(2, Math.round(r.size * 2));
+      rpr += '<w:sz w:val="' + hp + '"/><w:szCs w:val="' + hp + '"/>';
+    }
+    return '<w:r>' + (rpr ? '<w:rPr>' + rpr + '</w:rPr>' : '') + '<w:t xml:space="preserve">' + escapeXml(r.str) + '</w:t></w:r>';
+  }
+  function blockToXml(b) {
+    if (b.type === 'pagebreak') return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+    var style = b.type === 'h1' ? 'Heading1' : (b.type === 'h2' ? 'Heading2' : 'Normal');
+    var runs = (b.runs || []).map(runToXml).join('');
+    return '<w:p><w:pPr><w:pStyle w:val="' + style + '"/></w:pPr>' + runs + '</w:p>';
+  }
+
+  // Dimensions de la section Word : points PDF → twips (1 pt = 20 twips),
+  // bornées à des valeurs acceptées par Word, avec repli sur A4 ; marges de
+  // 1 pouce (1440 twips).
+  function sectionTwips(firstPage) {
+    var w = 11906, h = 16838;
+    if (firstPage && firstPage.width > 0 && firstPage.height > 0) {
+      w = Math.min(31680, Math.max(2880, Math.round(firstPage.width * 20)));
+      h = Math.min(31680, Math.max(2880, Math.round(firstPage.height * 20)));
+    }
+    return { w: w, h: h, landscape: w > h };
+  }
+
+  function buildDocumentXml(blocks, firstPage) {
+    var sec = sectionTwips(firstPage);
+    var body = blocks.map(blockToXml).join('');
+    var sect = '<w:sectPr><w:pgSz w:w="' + sec.w + '" w:h="' + sec.h + '"' + (sec.landscape ? ' w:orient="landscape"' : '') + '/>' +
+      '<w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr>';
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + body + sect + '</w:body></w:document>';
+  }
+
+  function buildContentTypesXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
+      '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
+      '</Types>';
+  }
+  function buildRelsXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
+      '</Relationships>';
+  }
+  function buildDocumentRelsXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
+      '</Relationships>';
+  }
+  function buildStylesXml() {
+    return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
+      '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="fr-FR"/></w:rPr></w:rPrDefault>' +
+      '<w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
+      '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/>' +
+      '<w:pPr><w:spacing w:after="120"/></w:pPr><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:style>' +
+      '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/>' +
+      '<w:pPr><w:keepNext/><w:spacing w:before="280" w:after="140"/><w:outlineLevel w:val="0"/></w:pPr>' +
+      '<w:rPr><w:b/><w:color w:val="1A237E"/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr></w:style>' +
+      '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/>' +
+      '<w:pPr><w:keepNext/><w:spacing w:before="220" w:after="110"/><w:outlineLevel w:val="1"/></w:pPr>' +
+      '<w:rPr><w:b/><w:color w:val="1A237E"/><w:sz w:val="26"/><w:szCs w:val="26"/></w:rPr></w:style>' +
+      '</w:styles>';
+  }
+  // === Fin fonctions pures ===
+
+  var current = null; // {file, name, base, pages, thumb, bad}
+  var resultUrl = null;
+  var resultName = '';
+
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var coverWrap = document.getElementById('coverWrap');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+  var ocrCard = document.getElementById('ocrCard');
+  var ocrNote = document.getElementById('ocrNote');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+  }
+
+  function updateBar() {
+    var show = !!current;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      var total = current.pages || 0;
+      barSummary.textContent = current.name + ' • ' + total + (total > 1 ? ' pages' : ' page');
+    }
+    convertBtn.disabled = !(current && !current.bad && current.pages);
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    coverWrap.innerHTML = '';
+    if (current.thumb) {
+      var img = document.createElement('img');
+      img.src = current.thumb;
+      img.alt = 'Couverture de ' + current.name;
+      coverWrap.appendChild(img);
+    } else {
+      var ph = document.createElement('span');
+      ph.className = 'coverph' + (current.bad ? ' bad' : '');
+      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l’aperçu…';
+      coverWrap.appendChild(ph);
+    }
+    fileNameEl.textContent = current.name;
+    var total = current.pages || 0;
+    fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    else fileWarnEl.textContent = '';
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n’est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    var base = f.name.replace(/\.pdf$/i, '');
+    current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null };
+    renderFileCard();
+    updateBar();
+    try {
+      var buf = await f.arrayBuffer();
+      if (window.pdfjsLib) {
+        var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+        current.pages = pdf.numPages;
+        try {
+          var first = await pdf.getPage(1);
+          var baseVp = first.getViewport({ scale: 1 });
+          var scale = Math.min(1.6, 220 / baseVp.width);
+          var vp = first.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.floor(vp.width); canvas.height = Math.floor(vp.height);
+          await first.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          current.thumb = canvas.toDataURL('image/jpeg', 0.72);
+        } catch (thumbErr) { /* l'aperçu est optionnel */ }
+      } else {
+        var doc = await PDFLib.PDFDocument.load(buf.slice(0));
+        current.pages = doc.getPageCount();
+      }
+    } catch (err) {
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) {
+        current.bad = 'encrypted';
+      } else {
+        try {
+          var buf2 = await f.arrayBuffer();
+          var doc2 = await PDFLib.PDFDocument.load(buf2);
+          current.pages = doc2.getPageCount();
+        } catch (err2) {
+          if (err2 && /encrypt/i.test(String(err2 && err2.message))) current.bad = 'encrypted';
+          else current.bad = 'corrupt';
+        }
+      }
+      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
+      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être converti.');
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    updateBar();
+  });
+
+  ocrCard.addEventListener('click', function (e) {
+    e.preventDefault();
+    ocrNote.style.display = 'block';
+  });
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Veuillez d’abord choisir un fichier PDF.'); return; }
+    if (current.bad === 'encrypted') { showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.'); return; }
+    if (current.bad === 'corrupt') { showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.'); return; }
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = '';
+    try {
+      var buf = await current.file.arrayBuffer();
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      } catch (loadErr) {
+        if (loadErr && (loadErr.name === 'PasswordException' || /password/i.test(String(loadErr && loadErr.message)))) throw new Error('encrypted');
+        throw new Error('corrupt');
+      }
+      var pagesItems = [];
+      var totalChars = 0;
+      var scannedPages = 0;
+      var firstDims = null;
+      for (var p = 1; p <= pdf.numPages; p++) {
+        processingDetail.textContent = 'Page ' + p + '/' + pdf.numPages;
+        var page = await pdf.getPage(p);
+        if (p === 1) {
+          var vp1 = page.getViewport({ scale: 1 });
+          firstDims = { width: vp1.width, height: vp1.height };
+        }
+        var tc = await page.getTextContent();
+        // Résolution des vrais noms de polices : pdf.js place un identifiant
+        // interne (ex. « g_d0_f1 ») dans item.fontName ; le nom réel
+        // (« Helvetica-Bold », « Calibri-Italic »…), accessible après le calcul
+        // de la liste d'opérateurs, est nécessaire pour détecter gras/italique.
+        try { await page.getOperatorList(); } catch (opErr) { /* noms d'origine conservés */ }
+        var fontNames = {};
+        var resolvedItems = tc.items.map(function (it) {
+          if (!it.fontName) return it;
+          if (!(it.fontName in fontNames)) {
+            var real = it.fontName;
+            try {
+              var fo = page.commonObjs.get(it.fontName);
+              if (fo && fo.name) real = fo.name;
+            } catch (nameErr) { /* identifiant interne conservé */ }
+            fontNames[it.fontName] = real;
+          }
+          if (fontNames[it.fontName] === it.fontName) return it;
+          var copy = {};
+          for (var k in it) copy[k] = it[k];
+          copy.fontName = fontNames[it.fontName];
+          return copy;
+        });
+        var pageChars = 0;
+        tc.items.forEach(function (it) { if (it.str) pageChars += it.str.replace(/\s+/g, '').length; });
+        if (pageChars < 10) scannedPages++;
+        totalChars += pageChars;
+        pagesItems.push(resolvedItems);
+      }
+      if (totalChars === 0) throw new Error('scanned');
+      var pagesLines = pagesItems.map(function (items) { return groupPageLines(items); });
+      var blocks = buildBlocks(pagesLines);
+      var words = countWords(blocks);
+      var zip = new JSZip();
+      zip.file('[Content_Types].xml', buildContentTypesXml());
+      zip.file('_rels/.rels', buildRelsXml());
+      zip.file('word/document.xml', buildDocumentXml(blocks, firstDims));
+      zip.file('word/styles.xml', buildStylesXml());
+      zip.file('word/_rels/document.xml.rels', buildDocumentRelsXml());
+      var blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultName = outputDocxName(current.name);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
+      var rm2 = document.createElement('div'); rm2.className = 'rmeta';
+      rm2.textContent = formatSize(blob.size) + ' • ' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' • environ ' + words + ' mots';
+      left.appendChild(rn); left.appendChild(rm2);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .docx';
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ').';
+      if (scannedPages > 0) {
+        scanNote.style.display = 'block';
+        scanNote.textContent = '⚠ ' + scannedPages + ' page(s) de ce document ne contenaient aucun texte sélectionnable (pages numérisées) : leur contenu n’a pas pu être converti. L’OCR qui permettra de les traiter arrive bientôt (Bientôt).';
+      } else {
+        scanNote.style.display = 'none';
+      }
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
+      else if (err && err.message === 'scanned') showError('Ce PDF semble composé d’images numérisées : aucun texte sélectionnable n’a pu être extrait, la conversion en Word est donc impossible sans OCR. L’OCR arrive bientôt (Bientôt). En attendant, essayez un PDF contenant du vrai texte (par exemple un document créé sur ordinateur).');
+      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
+      else showError('Une erreur est survenue pendant la conversion. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+    } finally {
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+    }
+  });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    resultName = '';
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+</html>
