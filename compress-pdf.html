@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compresser PDF — PdfBleu.com</title>
+<meta name="description" content="Compressez vos fichiers PDF en réduisant leur taille, directement dans votre navigateur. Gratuit, sans inscription : vos fichiers ne quittent jamais votre appareil.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
+h1{font-size:27px;color:#1a237e;margin-bottom:8px}
+.intro{color:#444a6d;margin-bottom:16px}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .icon{font-size:40px;display:block;margin-bottom:6px}
+.drop p{color:#3F51B5;font-weight:600}
+.drop small{color:#666c8a}
+button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
+button.action{background:#2e7d32}
+button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
+button:disabled{opacity:.5;cursor:not-allowed}
+label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
+input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
+input[type=number]{width:130px;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
+select{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px;background:#fff}
+input[type=range]{width:100%;margin-top:8px}
+.hint{font-size:13px;color:#666c8a;margin-top:5px}
+.note{font-size:13px;color:#666c8a;margin-top:12px}
+.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
+.choices{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.choices label{flex:1;min-width:110px;text-align:center;border:1.5px solid #c5cae9;border-radius:10px;padding:12px 6px;cursor:pointer;font-weight:700;color:#3F51B5;background:#fff;font-size:14px}
+.choices input{margin-right:5px}
+.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
+.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
+.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.tiles{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.tile{background:#eef1fb;border:1.5px solid #c5cae9;border-radius:10px;padding:10px 6px;text-align:center;width:106px}
+.tile .pname{font-weight:700;color:#1a237e;font-size:14px;margin-bottom:8px}
+.tile button{background:#fff;border:1.5px solid #3F51B5;color:#3F51B5;border-radius:14px;padding:3px 8px;cursor:pointer;font-size:13px;margin:2px}
+.tile button.del{border-color:#e53935;color:#e53935}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Accueil</a>
+</header>
+<main>
+<h1>Compresser PDF</h1>
+<p class="intro">Réduisez la taille de votre PDF pour l'envoyer plus facilement par e-mail ou le partager. Choisissez le niveau de compression selon vos besoins.</p>
+<div class="private-note">🔒 Votre fichier ne quitte jamais votre appareil : la compression se fait entièrement dans votre navigateur.</div>
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+<div class="tool">
+<div class="drop" id="drop">
+<span class="icon">📄</span>
+<p>Glissez votre fichier PDF ici</p>
+<small>ou touchez le bouton ci-dessous pour le choisir</small>
+</div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+<button class="pick" id="pickBtn" type="button">Choisir un fichier PDF</button>
+<p class="fileinfo" id="fileInfo"></p>
+<label class="field">Niveau de compression</label>
+<div class="choices" role="radiogroup" aria-label="Niveau de compression">
+<label><input type="radio" name="quality" value="150">Qualité élevée<br><small>≈ 150 dpi, fichier plus lourd</small></label>
+<label><input type="radio" name="quality" value="110" checked>Recommandée<br><small>≈ 110 dpi, bon équilibre</small></label>
+<label><input type="radio" name="quality" value="72">Forte compression<br><small>≈ 72 dpi, fichier très léger</small></label>
+</div>
+<p class="note">⚠️ Important : la compression transforme chaque page en image JPEG. Le texte du PDF obtenu n'est donc plus sélectionnable ni cherchable, et la qualité convient surtout à l'envoi par e-mail ou au partage.</p>
+<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+<button class="action" id="goBtn" type="button" disabled>Compresser et télécharger</button>
+</div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+</main>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+</footer>
+<script>
+(function () {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var file = null;
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var goBtn = document.getElementById('goBtn');
+  var status = document.getElementById('status');
+  var errorBox = document.getElementById('error');
+  var fileInfo = document.getElementById('fileInfo');
+  var result = document.getElementById('result');
+  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = msg ? 'block' : 'none'; }
+  function fmtSize(octets) {
+    if (octets < 1024) return octets + ' o';
+    if (octets < 1024 * 1024) return (octets / 1024).toFixed(1) + ' Ko';
+    return (octets / (1024 * 1024)).toFixed(2) + ' Mo';
+  }
+  function setFile(f) {
+    showError(''); result.style.display = 'none';
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('Ce fichier n\'est pas un PDF. Veuillez choisir un fichier PDF.'); return; }
+    file = f;
+    fileInfo.textContent = 'Fichier : ' + f.name + ' — taille d\'origine : ' + fmtSize(f.size) + '.';
+    fileInfo.style.display = 'block';
+    goBtn.disabled = false;
+  }
+  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault(); drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  });
+  goBtn.addEventListener('click', async function () {
+    showError(''); result.style.display = 'none';
+    if (!file) { showError('Veuillez d\'abord choisir un fichier PDF.'); return; }
+    var checked = document.querySelector('input[name="quality"]:checked');
+    var dpi = checked ? parseInt(checked.value, 10) : 110;
+    var scale = dpi / 72;
+    goBtn.disabled = true; status.style.display = 'block';
+    try {
+      var buf = await file.arrayBuffer();
+      var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      var out = await PDFLib.PDFDocument.create();
+      for (var i = 1; i <= pdf.numPages; i++) {
+        status.textContent = 'Traitement en cours… page ' + i + ' sur ' + pdf.numPages + '.';
+        var page = await pdf.getPage(i);
+        var base = page.getViewport({ scale: 1 });
+        var viewport = page.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        var blob = await new Promise(function (res) { canvas.toBlob(res, 'image/jpeg', 0.75); });
+        if (!blob) throw new Error('render');
+        var imgBuf = await blob.arrayBuffer();
+        var img = await out.embedJpg(imgBuf);
+        var newPage = out.addPage([base.width, base.height]);
+        newPage.drawImage(img, { x: 0, y: 0, width: base.width, height: base.height });
+      }
+      var bytes = await out.save();
+      var avant = file.size, apres = bytes.length;
+      var gain = (1 - apres / avant) * 100;
+      var blobOut = new Blob([bytes], { type: 'application/pdf' });
+      var url = URL.createObjectURL(blobOut);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'pdfbleu-compresse.pdf';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      result.innerHTML = '';
+      var ligne = document.createElement('div');
+      if (gain > 0) {
+        ligne.textContent = '✅ Terminé ! Taille d\'origine : ' + fmtSize(avant) + ' → nouvelle taille : ' + fmtSize(apres) + ' — vous avez économisé ' + gain.toFixed(1) + ' %.';
+      } else {
+        ligne.textContent = 'Terminé. Taille d\'origine : ' + fmtSize(avant) + ' → nouvelle taille : ' + fmtSize(apres) + '. Ce document ne se compresse pas davantage avec ce niveau (il est peut-être déjà optimisé) : essayez la « Forte compression ».' ;
+      }
+      result.appendChild(ligne);
+      result.style.display = 'block';
+    } catch (err) {
+      showError('Une erreur est survenue pendant la compression. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+    } finally {
+      status.style.display = 'none';
+      status.textContent = 'Traitement en cours… veuillez patienter.';
+      goBtn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
