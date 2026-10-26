@@ -4,33 +4,109 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diviser PDF — PdfBleu.com</title>
-<meta name="description" content="Extrayez les pages de votre choix d'un PDF (par exemple 1-3,5) dans un nouveau fichier. Gratuit et 100% privé : tout se fait dans votre navigateur.">
+<meta name="description" content="Divisez un fichier PDF par plages de pages ou extrayez chaque page en fichiers séparés. Gratuit, sans inscription et 100 % privé : tout se fait dans votre navigateur, sans envoi sur un serveur.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
 header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
 header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
 header .logo .com{color:#4ADE80}
 header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
-h1{font-size:27px;color:#1a237e;margin-bottom:8px}
-.intro{color:#444a6d;margin-bottom:16px}
-.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
-.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
-.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
 .drop.drag{background:#dfe5f9}
-.drop .icon{font-size:40px;display:block;margin-bottom:6px}
-.drop p{color:#3F51B5;font-weight:600}
-.drop small{color:#666c8a}
-button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
-button.action{background:#2e7d32}
-button:disabled{opacity:.5;cursor:not-allowed}
-label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
-input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:110px;height:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:12.5px;text-align:center;padding:8px}
+.filecard .coverph.bad{color:#b71c1c}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.pagestrip{display:none;margin-top:18px}
+.pagestrip.on{display:block}
+.pagestrip h3{font-size:15px;color:#1a237e;margin-bottom:4px}
+.pagestrip p{font-size:13px;color:#666c8a;margin-bottom:10px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px}
+.thumb{background:#f9faff;border:2px solid #dfe3f7;border-radius:10px;padding:6px;cursor:pointer;text-align:center}
+.thumb.sel{border-color:#2e7d32;background:#e8f5e9}
+.thumb .timg{background:#fff;border:1px solid #e0e4f5;border-radius:4px;height:92px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:5px}
+.thumb .timg img{max-width:100%;max-height:100%;display:block}
+.thumb .tph{color:#8a90b8;font-size:11px}
+.thumb .tnum{font-size:12.5px;font-weight:700;color:#1a237e}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{flex:1;padding:11px 6px;border-radius:10px;border:1.5px solid #3F51B5;background:#fff;color:#3F51B5;font-size:15px;font-weight:700;cursor:pointer}
+.tabs button.active{background:#3F51B5;color:#fff}
+.subtoggle{display:flex;gap:8px;margin-bottom:14px}
+.subtoggle button{flex:1;padding:9px 6px;border-radius:20px;border:1.5px solid #9fa8da;background:#eef1fb;color:#444a6d;font-size:13.5px;font-weight:700;cursor:pointer}
+.subtoggle button.active{background:#1a237e;border-color:#1a237e;color:#fff}
+.panel{display:none}
+.panel.on{display:block}
+.range-row{display:flex;align-items:flex-end;gap:8px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:10px;margin-bottom:10px}
+.range-row .fld{flex:1}
+.range-row label{display:block;font-size:12.5px;font-weight:700;color:#1a237e;margin-bottom:4px}
+.range-row input{width:100%;padding:9px;border:1.5px solid #c5cae9;border-radius:8px;font-size:15px}
+.range-row .rmr{background:#e53935;color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;line-height:1;flex-shrink:0;margin-bottom:4px}
+.range-row .rmr:disabled{opacity:.35;cursor:not-allowed}
+.addrange{width:100%;background:#fff;color:#3F51B5;border:1.5px dashed #3F51B5;padding:10px 14px;border-radius:10px;font-size:14.5px;font-weight:700;cursor:pointer;margin-bottom:12px}
+.checkline{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:#21243d;margin:10px 0;cursor:pointer}
+.checkline input{width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:#2e7d32}
+.fieldlabel{display:block;font-weight:700;font-size:14px;color:#1a237e;margin-bottom:6px}
+input[type=text].txt,input[type=number].num{width:100%;padding:11px 12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
 .hint{font-size:13px;color:#666c8a;margin-top:5px}
-.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
-.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
-.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.info{background:#eef1fb;border:1px solid #c5cae9;border-radius:8px;padding:10px 12px;font-size:14px;color:#1a237e;margin-top:12px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:9px 18px;border-radius:20px;font-size:14px;font-weight:700;flex-shrink:0}
+.success a.zipdl{display:block;text-align:center;background:#3F51B5;color:#fff;text-decoration:none;padding:15px 30px;border-radius:28px;font-size:16.5px;font-weight:700;margin-bottom:12px;cursor:pointer}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
 .ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
 .ad-300{width:300px;max-width:100%;height:250px}
 .ad-fluid{width:100%;min-height:110px}
@@ -39,6 +115,8 @@ footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
 footer a{color:#3F51B5;text-decoration:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <header>
@@ -46,149 +124,673 @@ footer a{color:#3F51B5;text-decoration:none}
 <a class="home" href="index.html">Accueil</a>
 </header>
 <main>
-<h1>Diviser PDF</h1>
-<p class="intro">Choisissez un fichier PDF, puis indiquez les pages à extraire. Vous obtiendrez un nouveau PDF contenant uniquement ces pages.</p>
-<div class="private-note">🔒 Votre fichier ne quitte jamais votre appareil : l'extraction se fait entièrement dans votre navigateur.</div>
+<div class="tool-head">
+<span class="tic"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><rect x="6" y="4" width="26" height="34" rx="4" fill="#fff" stroke="#EE6C4D" stroke-width="3"/><path d="M6 22 H32" stroke="#EE6C4D" stroke-width="3" stroke-dasharray="4 3"/><circle cx="36" cy="34" r="3.2" fill="none" stroke="#3F51B5" stroke-width="2.6"/><path d="M38.2 31.8 L44 26" stroke="#3F51B5" stroke-width="2.6" stroke-linecap="round"/><circle cx="36" cy="42" r="0.1" fill="none"/><path d="M38.2 36.2 L44 42" stroke="#3F51B5" stroke-width="2.6" stroke-linecap="round"/></svg></span>
+<h1>Diviser un fichier PDF</h1>
+<p class="subtitle">Séparez une page ou tout un ensemble de pages pour créer des fichiers PDF indépendants, en quelques secondes.</p>
+</div>
+<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la division se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
-<div class="tool">
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Division en cours…</p>
+</div>
 <div class="drop" id="drop">
-<span class="icon">✂️</span>
-<p>Glissez votre fichier PDF ici</p>
-<small>ou touchez le bouton ci-dessous pour le choisir</small>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
+<p class="droptxt">ou déposez votre PDF ici</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Choisir un fichier PDF</button>
-<p class="fileinfo" id="fileInfo"></p>
-<label class="field" for="range">Pages à extraire</label>
-<input type="text" id="range" placeholder="Exemple : 1-3,5" autocomplete="off">
-<p class="hint">Utilisez des virgules et des tirets. Exemple : <strong>1-3,5</strong> extrait les pages 1, 2, 3 et 5.</p>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<div class="filecard" id="fileCard">
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l'aperçu…</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+</div>
+<div class="pagestrip" id="pageStrip">
+<h3>Pages du document</h3>
+<p>Touchez une page pour la sélectionner ou la désélectionner. La sélection se reporte dans le champ ci-contre.</p>
+<div class="thumbs" id="thumbs"></div>
+</div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Extraire et télécharger</button>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Diviser PDF</h2>
+<div class="tabs" role="tablist">
+<button type="button" id="tabRangeBtn" class="active">Plages</button>
+<button type="button" id="tabExtractBtn">Extraction</button>
+</div>
+
+<div class="panel on" id="panelRange">
+<div class="subtoggle">
+<button type="button" id="rangeCustomBtn" class="active">Personnalisées</button>
+<button type="button" id="rangeFixedBtn">Fixes</button>
+</div>
+<div id="rangeCustomBox">
+<div id="rangesList"></div>
+<button class="addrange" id="addRangeBtn" type="button">+ Ajouter une plage</button>
+<label class="checkline"><input type="checkbox" id="mergeRangesChk"> <span>Fusionner toutes les plages en un seul fichier PDF</span></label>
+</div>
+<div id="rangeFixedBox" style="display:none">
+<label class="fieldlabel" for="fixedN">Diviser par plages de N pages</label>
+<input type="number" class="num" id="fixedN" min="1" value="2">
+<p class="hint">Chaque fichier créé contiendra au maximum ce nombre de pages.</p>
+<div class="info" id="fixedInfo">Ajoutez un fichier PDF pour voir le résultat.</div>
+</div>
+</div>
+
+<div class="panel" id="panelExtract">
+<div class="subtoggle">
+<button type="button" id="extractAllBtn" class="active">Extraire toutes les pages</button>
+<button type="button" id="extractSelectBtn">Sélectionner des pages</button>
+</div>
+<div id="extractSelectBox" style="display:none">
+<label class="fieldlabel" for="extractPagesInput">Pages à extraire</label>
+<input type="text" class="txt" id="extractPagesInput" placeholder="Exemple : 1,5-8" autocomplete="off">
+<p class="hint">Utilisez des virgules et des tirets. Exemple : <strong>1,5-8</strong>. Vous pouvez aussi toucher les pages dans l'aperçu.</p>
+<label class="checkline"><input type="checkbox" id="mergeExtractChk"> <span>Fusionner les pages extraites en un seul fichier PDF</span></label>
+</div>
+<div class="info" id="extractInfo">Ajoutez un fichier PDF pour voir le résultat.</div>
+</div>
+
+<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Vos fichiers sont prêts !</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<a class="zipdl" id="zipBtn" href="#" style="display:none">Tout télécharger (.zip)</a>
+<button class="again" id="restartBtn" type="button">Diviser un autre PDF</button>
 </div>
 
 <div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+
+<div class="howto">
+<h2>Comment diviser un PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choisissez votre fichier</h3><p>Cliquez sur le bouton de sélection ou déposez votre PDF dans la zone prévue. Un seul fichier suffit.</p></div>
+<div class="step"><span class="num">2</span><h3>Choisissez vos pages</h3><p>Définissez des plages personnalisées ou fixes, ou bien extrayez chaque page dans un fichier séparé.</p></div>
+<div class="step"><span class="num">3</span><h3>Divisez et téléchargez</h3><p>Appuyez sur « Diviser PDF », puis téléchargez chaque fichier ou l'archive complète en un seul clic.</p></div>
+</div>
+<div class="seo">
+<p>Notre outil de division PDF est entièrement gratuit et fonctionne sans inscription ni limite. Contrairement aux services classiques, votre document n'est jamais envoyé sur un serveur : tout le traitement a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, factures et documents personnels.</p>
+<p>Vous pouvez séparer les chapitres d'un rapport, isoler une facture dans un relevé, extraire les pages d'un devoir ou partager uniquement les pages utiles d'un long document, sans rien installer.</p>
+</div>
+</div>
 </main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="splitBtn" type="button">Diviser PDF</button>
+</div>
+
 <footer>
 <p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
 </footer>
 <script>
 (function () {
-  var file = null;
-  var pageCount = 0;
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  // === Fonctions de planification (pures) ===
+  function parsePageSelection(text, total) {
+    if (!text || !String(text).trim()) {
+      throw new Error('Veuillez indiquer au moins une page à extraire.');
+    }
+    var seen = {};
+    var indices = [];
+    var parts = String(text).split(',');
+    for (var i = 0; i < parts.length; i++) {
+      var part = parts[i].trim();
+      if (!part) throw new Error('Sélection de pages invalide : un élément est vide. Utilisez par exemple : 1,5-8');
+      var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      var single = part.match(/^(\d+)$/);
+      var n;
+      if (m) {
+        var start = parseInt(m[1], 10);
+        var end = parseInt(m[2], 10);
+        if (start > end) throw new Error('Plage invalide « ' + part + ' » : la première page doit être inférieure ou égale à la dernière.');
+        for (n = start; n <= end; n++) {
+          if (n < 1 || n > total) throw new Error('La page ' + n + ' n\u2019existe pas : le document contient ' + total + ' page(s).');
+          if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
+        }
+      } else if (single) {
+        n = parseInt(single[1], 10);
+        if (n < 1 || n > total) throw new Error('La page ' + n + ' n\u2019existe pas : le document contient ' + total + ' page(s).');
+        if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
+      } else {
+        throw new Error('Format invalide « ' + part + ' ». Utilisez par exemple : 1,5-8');
+      }
+    }
+    if (!indices.length) throw new Error('Veuillez indiquer au moins une page à extraire.');
+    indices.sort(function (a, b) { return a - b; });
+    return indices;
+  }
+  function validateRangeValues(from, to, total) {
+    if (!Number.isInteger(from) || !Number.isInteger(to)) {
+      throw new Error('Veuillez saisir des numéros de pages valides dans chaque plage.');
+    }
+    if (from < 1 || to < 1 || from > total || to > total) {
+      throw new Error('Plage ' + from + ' - ' + to + ' hors limites : le document contient ' + total + ' page(s), de 1 à ' + total + '.');
+    }
+    if (from > to) {
+      throw new Error('Plage invalide ' + from + ' - ' + to + ' : la page de début doit être inférieure ou égale à la page de fin.');
+    }
+  }
+  function rangeIndices(from, to) {
+    var out = [];
+    for (var n = from; n <= to; n++) out.push(n - 1);
+    return out;
+  }
+  function planCustomRanges(ranges, total, merge) {
+    if (!ranges || !ranges.length) throw new Error('Veuillez ajouter au moins une plage de pages.');
+    var i;
+    for (i = 0; i < ranges.length; i++) validateRangeValues(ranges[i].from, ranges[i].to, total);
+    if (merge) {
+      var all = [];
+      for (i = 0; i < ranges.length; i++) all = all.concat(rangeIndices(ranges[i].from, ranges[i].to));
+      return [all];
+    }
+    return ranges.map(function (r) { return rangeIndices(r.from, r.to); });
+  }
+  function planFixedRanges(total, n) {
+    if (!Number.isInteger(n) || n < 1) throw new Error('Le nombre de pages par fichier doit être un entier au moins égal à 1.');
+    if (n > total) throw new Error('Le nombre de pages par fichier (' + n + ') dépasse le nombre de pages du document (' + total + ').');
+    var outputs = [];
+    for (var start = 1; start <= total; start += n) {
+      outputs.push(rangeIndices(start, Math.min(total, start + n - 1)));
+    }
+    return outputs;
+  }
+  function planExtractAll(total) {
+    var outputs = [];
+    for (var i = 0; i < total; i++) outputs.push([i]);
+    return outputs;
+  }
+  function planExtractSelection(indices, merge) {
+    if (!indices || !indices.length) throw new Error('Veuillez sélectionner au moins une page à extraire.');
+    if (merge) return [indices.slice()];
+    return indices.map(function (idx) { return [idx]; });
+  }
+  function outputNameFor(base, indices, isMergedSingle) {
+    if (isMergedSingle) return 'pdfbleu-division.pdf';
+    if (indices.length === 1) return base + '_page_' + (indices[0] + 1) + '.pdf';
+    return base + '_pages_' + (indices[0] + 1) + '-' + (indices[indices.length - 1] + 1) + '.pdf';
+  }
+  function describeIndices(indices) {
+    if (indices.length === 1) return 'Page ' + (indices[0] + 1);
+    var contiguous = true;
+    for (var i = 1; i < indices.length; i++) if (indices[i] !== indices[i - 1] + 1) contiguous = false;
+    if (contiguous) return 'Pages ' + (indices[0] + 1) + ' à ' + (indices[indices.length - 1] + 1);
+    return 'Pages ' + indices.map(function (x) { return x + 1; }).join(', ');
+  }
+  // === Fin fonctions pures ===
+
+  var current = null; // {file, name, base, pages, thumb, bad, pageThumbs}
+  var mode = 'range'; // 'range' | 'extract'
+  var rangeSub = 'custom'; // 'custom' | 'fixed'
+  var extractSub = 'all'; // 'all' | 'select'
+  var resultUrls = [];
+  var zipUrl = null;
+
   var drop = document.getElementById('drop');
   var input = document.getElementById('fileInput');
-  var goBtn = document.getElementById('goBtn');
-  var status = document.getElementById('status');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var coverWrap = document.getElementById('coverWrap');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var pageStrip = document.getElementById('pageStrip');
+  var thumbsEl = document.getElementById('thumbs');
   var errorBox = document.getElementById('error');
-  var fileInfo = document.getElementById('fileInfo');
-  var rangeInput = document.getElementById('range');
+  var processing = document.getElementById('processing');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var zipBtn = document.getElementById('zipBtn');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var splitBtn = document.getElementById('splitBtn');
+  var tabRangeBtn = document.getElementById('tabRangeBtn');
+  var tabExtractBtn = document.getElementById('tabExtractBtn');
+  var panelRange = document.getElementById('panelRange');
+  var panelExtract = document.getElementById('panelExtract');
+  var rangeCustomBtn = document.getElementById('rangeCustomBtn');
+  var rangeFixedBtn = document.getElementById('rangeFixedBtn');
+  var rangeCustomBox = document.getElementById('rangeCustomBox');
+  var rangeFixedBox = document.getElementById('rangeFixedBox');
+  var rangesList = document.getElementById('rangesList');
+  var addRangeBtn = document.getElementById('addRangeBtn');
+  var mergeRangesChk = document.getElementById('mergeRangesChk');
+  var fixedNInput = document.getElementById('fixedN');
+  var fixedInfo = document.getElementById('fixedInfo');
+  var extractAllBtn = document.getElementById('extractAllBtn');
+  var extractSelectBtn = document.getElementById('extractSelectBtn');
+  var extractSelectBox = document.getElementById('extractSelectBox');
+  var extractPagesInput = document.getElementById('extractPagesInput');
+  var mergeExtractChk = document.getElementById('mergeExtractChk');
+  var extractInfo = document.getElementById('extractInfo');
 
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.style.display = msg ? 'block' : 'none';
   }
-  async function setFile(f) {
-    showError('');
-    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) {
-      showError('Ce fichier n\'est pas un PDF. Veuillez choisir un fichier PDF.');
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+  }
+  function totalPages() { return current && typeof current.pages === 'number' ? current.pages : 0; }
+
+  function collectRanges() {
+    var rows = rangesList.querySelectorAll('.range-row');
+    var out = [];
+    rows.forEach(function (row) {
+      var f = row.querySelector('.rfrom').value;
+      var t = row.querySelector('.rto').value;
+      out.push({ from: f === '' ? NaN : parseInt(f, 10), to: t === '' ? NaN : parseInt(t, 10) });
+    });
+    return out;
+  }
+  function isMergedSingle() {
+    if (mode === 'range' && rangeSub === 'custom' && mergeRangesChk.checked) return collectRanges().length > 0;
+    if (mode === 'extract' && extractSub === 'select' && mergeExtractChk.checked) return true;
+    return false;
+  }
+  function getPlan() {
+    var total = totalPages();
+    if (!current) throw new Error('Veuillez d\u2019abord choisir un fichier PDF.');
+    if (current.bad === 'encrypted') throw new Error('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
+    if (current.bad === 'corrupt') throw new Error('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.');
+    if (!total) throw new Error('Le fichier est encore en cours de lecture, veuillez patienter.');
+    if (mode === 'range') {
+      if (rangeSub === 'custom') return planCustomRanges(collectRanges(), total, mergeRangesChk.checked);
+      var n = fixedNInput.value === '' ? NaN : parseInt(fixedNInput.value, 10);
+      return planFixedRanges(total, n);
+    }
+    if (extractSub === 'all') return planExtractAll(total);
+    var indices = parsePageSelection(extractPagesInput.value, total);
+    return planExtractSelection(indices, mergeExtractChk.checked);
+  }
+  function tryPlan() {
+    try { return getPlan(); } catch (e) { return null; }
+  }
+
+  function updateFixedInfo() {
+    var total = totalPages();
+    if (!current || !total) { fixedInfo.textContent = 'Ajoutez un fichier PDF pour voir le résultat.'; return; }
+    var n = fixedNInput.value === '' ? NaN : parseInt(fixedNInput.value, 10);
+    if (!Number.isInteger(n) || n < 1) { fixedInfo.textContent = 'Veuillez saisir un nombre de pages au moins égal à 1.'; return; }
+    if (n > total) { fixedInfo.textContent = 'Ce nombre dépasse le total du document (' + total + ' pages).'; return; }
+    var count = Math.ceil(total / n);
+    fixedInfo.textContent = 'Ce PDF de ' + total + ' pages sera divisé en fichiers de ' + n + ' page(s) maximum. ' + count + ' fichier(s) PDF seront créés.';
+  }
+  function updateExtractInfo() {
+    var total = totalPages();
+    if (!current || !total) { extractInfo.textContent = 'Ajoutez un fichier PDF pour voir le résultat.'; return; }
+    if (extractSub === 'all') {
+      extractInfo.textContent = 'Chaque page deviendra un fichier séparé. ' + total + ' fichier(s) PDF seront créés.';
       return;
     }
     try {
-      var buf = await f.arrayBuffer();
-      var doc = await PDFLib.PDFDocument.load(buf);
-      pageCount = doc.getPageCount();
-      file = f;
-      fileInfo.textContent = 'Fichier : ' + f.name + ' — ' + pageCount + ' page(s).';
-      fileInfo.style.display = 'block';
-      goBtn.disabled = false;
-    } catch (err) {
-      file = null;
-      pageCount = 0;
-      goBtn.disabled = true;
-      showError('Impossible de lire ce PDF. Il est peut-être protégé par un mot de passe ou endommagé.');
+      var indices = parsePageSelection(extractPagesInput.value, total);
+      if (mergeExtractChk.checked) extractInfo.textContent = indices.length + ' page(s) sélectionnée(s) seront réunies en 1 seul fichier PDF.';
+      else extractInfo.textContent = indices.length + ' page(s) sélectionnée(s). ' + indices.length + ' fichier(s) PDF seront créés.';
+    } catch (e) {
+      extractInfo.textContent = 'Sélectionnez des pages pour voir combien de fichiers seront créés.';
     }
   }
-  function parseRange(text, total) {
-    var indices = [];
-    var seen = {};
-    var parts = text.split(',');
-    for (var i = 0; i < parts.length; i++) {
-      var part = parts[i].trim();
-      if (!part) throw new Error('Plage de pages vide. Vérifiez le format, par exemple : 1-3,5');
-      var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
-      var single = part.match(/^(\d+)$/);
-      var start, end, n;
-      if (m) {
-        start = parseInt(m[1], 10);
-        end = parseInt(m[2], 10);
-        if (start > end) throw new Error('Plage invalide « ' + part + ' » : le début doit être inférieur à la fin.');
-        for (n = start; n <= end; n++) {
-          if (n < 1 || n > total) throw new Error('La page ' + n + ' n\'existe pas : le document contient ' + total + ' page(s).');
-          if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
-        }
-      } else if (single) {
-        n = parseInt(single[1], 10);
-        if (n < 1 || n > total) throw new Error('La page ' + n + ' n\'existe pas : le document contient ' + total + ' page(s).');
-        if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
-      } else {
-        throw new Error('Format invalide « ' + part + ' ». Utilisez par exemple : 1-3,5');
-      }
+  function updateStripVisibility() {
+    var show = !!(current && mode === 'extract' && extractSub === 'select');
+    pageStrip.classList.toggle('on', show);
+  }
+  function updateBar() {
+    var plan = current ? tryPlan() : null;
+    var show = !!current;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      var total = totalPages();
+      barSummary.textContent = current.name + ' • ' + total + (total > 1 ? ' pages' : ' page') + (plan ? ' • ' + plan.length + ' fichier(s) à créer' : '');
     }
-    if (!indices.length) throw new Error('Veuillez indiquer au moins une page à extraire.');
-    return indices;
+    splitBtn.disabled = !plan;
+    updateFixedInfo();
+    updateExtractInfo();
+    updateStripVisibility();
   }
 
-  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+  function addRangeRow(fromVal, toVal) {
+    var row = document.createElement('div');
+    row.className = 'range-row';
+    var f1 = document.createElement('div'); f1.className = 'fld';
+    var l1 = document.createElement('label'); l1.textContent = 'De la page';
+    var i1 = document.createElement('input'); i1.type = 'number'; i1.className = 'rfrom'; i1.min = '1'; i1.value = fromVal;
+    i1.addEventListener('input', updateBar);
+    f1.appendChild(l1); f1.appendChild(i1);
+    var f2 = document.createElement('div'); f2.className = 'fld';
+    var l2 = document.createElement('label'); l2.textContent = 'À';
+    var i2 = document.createElement('input'); i2.type = 'number'; i2.className = 'rto'; i2.min = '1'; i2.value = toVal;
+    i2.addEventListener('input', updateBar);
+    f2.appendChild(l2); f2.appendChild(i2);
+    var rm = document.createElement('button');
+    rm.type = 'button'; rm.className = 'rmr'; rm.textContent = '✕'; rm.title = 'Retirer cette plage';
+    rm.addEventListener('click', function () {
+      row.remove();
+      refreshRangeRemoveButtons();
+      updateBar();
+    });
+    row.appendChild(f1); row.appendChild(f2); row.appendChild(rm);
+    rangesList.appendChild(row);
+    refreshRangeRemoveButtons();
+  }
+  function refreshRangeRemoveButtons() {
+    var btns = rangesList.querySelectorAll('.rmr');
+    btns.forEach(function (b) { b.disabled = btns.length <= 1; });
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    coverWrap.innerHTML = '';
+    if (current.thumb) {
+      var img = document.createElement('img');
+      img.src = current.thumb;
+      img.alt = 'Couverture de ' + current.name;
+      coverWrap.appendChild(img);
+    } else {
+      var ph = document.createElement('span');
+      ph.className = 'coverph' + (current.bad ? ' bad' : '');
+      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l\u2019aperçu…';
+      coverWrap.appendChild(ph);
+    }
+    fileNameEl.textContent = current.name;
+    var total = totalPages();
+    fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    else fileWarnEl.textContent = '';
+  }
+  function renderThumbs() {
+    thumbsEl.innerHTML = '';
+    if (!current || !current.pageThumbs) return;
+    var selected = {};
+    try {
+      parsePageSelection(extractPagesInput.value, totalPages()).forEach(function (idx) { selected[idx] = true; });
+    } catch (e) { /* sélection en cours de saisie */ }
+    current.pageThumbs.forEach(function (thumb, idx) {
+      var box = document.createElement('div');
+      box.className = 'thumb' + (selected[idx] ? ' sel' : '');
+      var tw = document.createElement('div'); tw.className = 'timg';
+      if (thumb) {
+        var img = document.createElement('img'); img.src = thumb; img.alt = 'Page ' + (idx + 1);
+        tw.appendChild(img);
+      } else {
+        var ph = document.createElement('span'); ph.className = 'tph'; ph.textContent = 'Page ' + (idx + 1);
+        tw.appendChild(ph);
+      }
+      var num = document.createElement('div'); num.className = 'tnum'; num.textContent = 'Page ' + (idx + 1);
+      box.appendChild(tw); box.appendChild(num);
+      box.addEventListener('click', function () { togglePage(idx); });
+      thumbsEl.appendChild(box);
+    });
+  }
+  function togglePage(idx) {
+    var set = {};
+    try {
+      parsePageSelection(extractPagesInput.value, totalPages()).forEach(function (i) { set[i] = true; });
+    } catch (e) { set = {}; }
+    if (set[idx]) delete set[idx]; else set[idx] = true;
+    var list = Object.keys(set).map(function (k) { return parseInt(k, 10) + 1; }).sort(function (a, b) { return a - b; });
+    extractPagesInput.value = list.join(',');
+    renderThumbs();
+    updateBar();
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n\u2019est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    var base = f.name.replace(/\.pdf$/i, '');
+    current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null, pageThumbs: [] };
+    renderFileCard();
+    updateBar();
+    try {
+      var buf = await f.arrayBuffer();
+      if (window.pdfjsLib) {
+        var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+        current.pages = pdf.numPages;
+        try {
+          var first = await pdf.getPage(1);
+          var baseVp = first.getViewport({ scale: 1 });
+          var scale = Math.min(1.6, 220 / baseVp.width);
+          var vp = first.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.floor(vp.width); canvas.height = Math.floor(vp.height);
+          await first.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          current.thumb = canvas.toDataURL('image/jpeg', 0.72);
+        } catch (thumbErr) { /* l'aperçu est optionnel */ }
+        current.pageThumbs = [];
+        for (var p = 1; p <= pdf.numPages; p++) {
+          try {
+            var page = await pdf.getPage(p);
+            var bvp = page.getViewport({ scale: 1 });
+            var sc = Math.min(1, 160 / bvp.width);
+            var v = page.getViewport({ scale: sc });
+            var c = document.createElement('canvas');
+            c.width = Math.floor(v.width); c.height = Math.floor(v.height);
+            await page.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+            current.pageThumbs.push(c.toDataURL('image/jpeg', 0.65));
+          } catch (pageErr) { current.pageThumbs.push(null); }
+        }
+      } else {
+        var doc = await PDFLib.PDFDocument.load(buf.slice(0));
+        current.pages = doc.getPageCount();
+        current.pageThumbs = [];
+        for (var q = 0; q < current.pages; q++) current.pageThumbs.push(null);
+      }
+    } catch (err) {
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) {
+        current.bad = 'encrypted';
+      } else {
+        try {
+          var buf2 = await f.arrayBuffer();
+          var doc2 = await PDFLib.PDFDocument.load(buf2);
+          current.pages = doc2.getPageCount();
+          current.pageThumbs = [];
+          for (var r = 0; r < current.pages; r++) current.pageThumbs.push(null);
+        } catch (err2) {
+          if (err2 && /encrypt/i.test(String(err2 && err2.message))) current.bad = 'encrypted';
+          else current.bad = 'corrupt';
+        }
+      }
+      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
+      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être divisé.');
+    }
+    // Valeurs par défaut des plages pour ce document
+    if (current.pages && rangesList.querySelectorAll('.range-row').length === 1) {
+      var onlyFrom = rangesList.querySelector('.rfrom');
+      var onlyTo = rangesList.querySelector('.rto');
+      if (onlyFrom && onlyTo && onlyFrom.value === '1') onlyTo.value = current.pages;
+      if (fixedNInput.max !== String(current.pages)) fixedNInput.max = String(current.pages);
+    }
+    renderFileCard();
+    renderThumbs();
+    updateBar();
+  }
+
+  function setMode(next) {
+    mode = next;
+    tabRangeBtn.classList.toggle('active', mode === 'range');
+    tabExtractBtn.classList.toggle('active', mode === 'extract');
+    panelRange.classList.toggle('on', mode === 'range');
+    panelExtract.classList.toggle('on', mode === 'extract');
+    updateBar();
+  }
+  function setRangeSub(next) {
+    rangeSub = next;
+    rangeCustomBtn.classList.toggle('active', rangeSub === 'custom');
+    rangeFixedBtn.classList.toggle('active', rangeSub === 'fixed');
+    rangeCustomBox.style.display = rangeSub === 'custom' ? '' : 'none';
+    rangeFixedBox.style.display = rangeSub === 'fixed' ? '' : 'none';
+    updateBar();
+  }
+  function setExtractSub(next) {
+    extractSub = next;
+    extractAllBtn.classList.toggle('active', extractSub === 'all');
+    extractSelectBtn.classList.toggle('active', extractSub === 'select');
+    extractSelectBox.style.display = extractSub === 'select' ? '' : 'none';
+    if (extractSub === 'select') renderThumbs();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
   drop.addEventListener('click', function () { input.click(); });
-  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
   drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
   drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
   drop.addEventListener('drop', function (e) {
     e.preventDefault();
     drop.classList.remove('drag');
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    renderThumbs();
+    updateBar();
   });
 
-  goBtn.addEventListener('click', async function () {
+  tabRangeBtn.addEventListener('click', function () { setMode('range'); });
+  tabExtractBtn.addEventListener('click', function () { setMode('extract'); });
+  rangeCustomBtn.addEventListener('click', function () { setRangeSub('custom'); });
+  rangeFixedBtn.addEventListener('click', function () { setRangeSub('fixed'); });
+  extractAllBtn.addEventListener('click', function () { setExtractSub('all'); });
+  extractSelectBtn.addEventListener('click', function () { setExtractSub('select'); });
+  addRangeBtn.addEventListener('click', function () {
+    var ranges = collectRanges();
+    var total = totalPages();
+    var last = ranges.length ? ranges[ranges.length - 1] : null;
+    var from = last && Number.isInteger(last.to) ? last.to + 1 : 1;
+    if (total && from > total) from = total;
+    var to = total ? Math.min(total, from + 1) : from + 1;
+    if (to < from) to = from;
+    addRangeRow(from, to);
+    updateBar();
+  });
+  mergeRangesChk.addEventListener('change', updateBar);
+  mergeExtractChk.addEventListener('change', updateBar);
+  fixedNInput.addEventListener('input', updateBar);
+  extractPagesInput.addEventListener('input', function () { renderThumbs(); updateBar(); });
+
+  splitBtn.addEventListener('click', async function () {
     showError('');
-    if (!file) { showError('Veuillez d\'abord choisir un fichier PDF.'); return; }
-    var indices;
+    if (!current) { showError('Veuillez d\u2019abord choisir un fichier PDF.'); return; }
+    var plan;
+    try { plan = getPlan(); } catch (e) { showError(e.message); return; }
+    splitBtn.disabled = true;
+    processing.classList.add('on');
     try {
-      indices = parseRange(rangeInput.value, pageCount);
+      var buf = await current.file.arrayBuffer();
+      var src;
+      try {
+        src = await PDFLib.PDFDocument.load(buf);
+      } catch (loadErr) {
+        if (loadErr && /encrypt/i.test(String(loadErr && loadErr.message))) {
+          throw new Error('encrypted');
+        }
+        throw new Error('corrupt');
+      }
+      var mergedSingle = isMergedSingle() && plan.length === 1;
+      var results = [];
+      for (var i = 0; i < plan.length; i++) {
+        var out = await PDFLib.PDFDocument.create();
+        var copied = await out.copyPages(src, plan[i]);
+        copied.forEach(function (pg) { out.addPage(pg); });
+        var bytes = await out.save();
+        var name = outputNameFor(current.base, plan[i], mergedSingle);
+        results.push({ name: name, indices: plan[i], bytes: bytes });
+      }
+      resultUrls.forEach(function (u) { URL.revokeObjectURL(u); });
+      resultUrls = [];
+      if (zipUrl) { URL.revokeObjectURL(zipUrl); zipUrl = null; }
+      resultList.innerHTML = '';
+      results.forEach(function (res) {
+        var blob = new Blob([res.bytes], { type: 'application/pdf' });
+        var url = URL.createObjectURL(blob);
+        resultUrls.push(url);
+        var item = document.createElement('div');
+        item.className = 'resultitem';
+        var left = document.createElement('div');
+        var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = res.name;
+        var rm2 = document.createElement('div'); rm2.className = 'rmeta';
+        rm2.textContent = describeIndices(res.indices) + ' • ' + res.indices.length + (res.indices.length > 1 ? ' pages' : ' page') + ' • ' + formatSize(res.bytes.length);
+        left.appendChild(rn); left.appendChild(rm2);
+        var a = document.createElement('a');
+        a.className = 'dl'; a.href = url; a.download = res.name; a.textContent = 'Télécharger';
+        item.appendChild(left); item.appendChild(a);
+        resultList.appendChild(item);
+      });
+      if (results.length > 1 && window.JSZip) {
+        var zip = new JSZip();
+        results.forEach(function (res) { zip.file(res.name, res.bytes); });
+        var zipBlob = await zip.generateAsync({ type: 'blob' });
+        zipUrl = URL.createObjectURL(zipBlob);
+        zipBtn.href = zipUrl;
+        zipBtn.setAttribute('download', 'pdfbleu-division.zip');
+        zipBtn.style.display = '';
+      } else {
+        zipBtn.style.display = 'none';
+      }
+      successInfo.textContent = results.length + (results.length > 1 ? ' fichiers créés à partir de ' : ' fichier créé à partir de ') + current.name + ' (' + totalPages() + ' pages).';
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      showError(err.message);
-      return;
-    }
-    goBtn.disabled = true;
-    status.style.display = 'block';
-    try {
-      var buf = await file.arrayBuffer();
-      var src = await PDFLib.PDFDocument.load(buf);
-      var out = await PDFLib.PDFDocument.create();
-      var pages = await out.copyPages(src, indices);
-      pages.forEach(function (p) { out.addPage(p); });
-      var bytes = await out.save();
-      var blob = new Blob([bytes], { type: 'application/pdf' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'pdfbleu-pages.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-    } catch (err) {
-      showError('Une erreur est survenue pendant l\'extraction. Veuillez réessayer.');
+      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
+      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
+      else showError('Une erreur est survenue pendant la division. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
     } finally {
-      status.style.display = 'none';
-      goBtn.disabled = false;
+      processing.classList.remove('on');
+      splitBtn.disabled = false;
+      updateBar();
     }
   });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    resultUrls.forEach(function (u) { URL.revokeObjectURL(u); });
+    resultUrls = [];
+    if (zipUrl) { URL.revokeObjectURL(zipUrl); zipUrl = null; }
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    renderThumbs();
+    updateBar();
+  });
+
+  addRangeRow(1, 2);
+  updateBar();
 })();
 </script>
 </body>
-</html>
+  </html>
