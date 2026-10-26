@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF en PowerPoint — PdfBleu.com</title>
+<meta name="description" content="Convertissez un PDF en présentation PowerPoint (.pptx) modifiable, gratuitement et sans inscription. Chaque page devient une diapositive dont le texte reste éditable, directement dans votre navigateur : aucun envoi sur un serveur.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:110px;height:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:12.5px;text-align:center;padding:8px}
+.filecard .coverph.bad{color:#b71c1c}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.levels{display:grid;gap:10px;margin-bottom:4px}
+.levelcard{position:relative;display:block;border:1.5px solid #c5cae9;border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.levelcard:hover{border-color:#3F51B5}
+.levelcard.sel{border-color:#2e7d32;background:#e8f5e9;box-shadow:0 2px 8px rgba(46,125,50,.14)}
+.levelcard input{position:absolute;opacity:0;pointer-events:none}
+.levelcard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:15.5px}
+.levelcard .ldesc{display:block;font-size:13px;color:#666c8a;margin-top:2px}
+.levelcard.disabled{opacity:.55;cursor:not-allowed;background:#f7f8fc}
+.levelcard.disabled:hover{border-color:#c5cae9}
+.soonbadge{display:inline-block;background:#ff9800;color:#fff;font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;margin-left:6px;vertical-align:2px}
+.ocrnote{font-size:13px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 12px;margin-top:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Accueil</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#F3D9CC"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#FF7651"/><path d="M38 10 L32 16" stroke="#D04526" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#D04526"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">P</text></svg></span>
+<h1>Convertir un PDF en PowerPoint</h1>
+<p class="subtitle">Chaque page de votre PDF devient une diapositive PowerPoint : le texte reste modifiable et garde sa place et sa taille, sans quitter votre appareil.</p>
+</div>
+<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Conversion en cours…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
+<p class="droptxt">ou déposez votre PDF ici</p>
+</div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l’aperçu…</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>PDF en PowerPoint</h2>
+<p>Choisissez le mode de conversion :</p>
+<div class="levels" role="radiogroup" aria-label="Mode de conversion">
+<label class="levelcard sel" id="noOcrCard">
+<input type="radio" name="mode" value="noocr" checked>
+<span class="ltitle">Sans OCR</span>
+<span class="ldesc">Convertit les PDF dont le texte est sélectionnable en présentations PowerPoint modifiables.</span>
+</label>
+<label class="levelcard disabled" id="ocrCard">
+<input type="radio" name="mode" value="ocr" disabled>
+<span class="ltitle">OCR<span class="soonbadge">Bientôt</span></span>
+<span class="ldesc">Pour les PDF numérisés (texte non sélectionnable).</span>
+</label>
+</div>
+<p class="ocrnote" id="ocrNote" style="display:none">L’OCR arrive bientôt : il permettra de convertir aussi les documents scannés. Pour le moment, seuls les PDF dont le texte est sélectionnable peuvent être convertis.</p>
+<div class="warnnote">⚠ <strong>Conversion simplifiée :</strong> chaque page du PDF devient une diapositive et chaque ligne de texte devient une zone de texte modifiable, placée à sa position et à sa taille approximatives. Les images, les arrière-plans et les graphismes complexes ne sont pas reproduits. Une page numérisée (sans texte sélectionnable) donne une diapositive vide.</div>
+<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Votre présentation PowerPoint est prête !</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convertir un autre PDF</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+
+<div class="howto">
+<h2>Comment convertir un PDF en PowerPoint</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choisissez votre PDF</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier dans la zone prévue. Un seul document suffit.</p></div>
+<div class="step"><span class="num">2</span><h3>Lancez la conversion</h3><p>Chaque page devient une diapositive : le texte sélectionnable est placé dans des zones modifiables, à sa position et à sa taille d’origine.</p></div>
+<div class="step"><span class="num">3</span><h3>Téléchargez le .pptx</h3><p>Appuyez sur « Convertir en PowerPoint », puis ouvrez votre présentation dans PowerPoint, LibreOffice Impress ou Google Slides.</p></div>
+</div>
+<div class="seo">
+<p>Notre convertisseur PDF en PowerPoint est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : l’extraction du texte a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos présentations, rapports et documents confidentiels.</p>
+<p>La conversion convient aux PDF dont le texte est sélectionnable : présentations exportées, rapports, cours ou plaquettes. Chaque page donne une diapositive dont les dimensions correspondent à la première page du PDF, et chaque ligne de texte y figure dans sa propre zone éditable. Les documents scannés, qui sont en réalité des images, nécessitent une reconnaissance de caractères (OCR) : cette fonction arrive bientôt.</p>
+</div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convertir en PowerPoint</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+</footer>
+<script>
+(function () {
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  // === Fonctions pures de conversion (testables) ===
+  // Ces fonctions ne touchent ni au DOM ni aux bibliothèques externes :
+  // elles transforment les « items » de texte fournis par pdf.js en parties
+  // XML (chaînes) prêtes à être zippées en un vrai fichier .pptx. Principe :
+  // une page du PDF = une diapositive ; chaque ligne de texte devient une
+  // zone de texte modifiable placée à sa position d'origine. Les coordonnées
+  // PDF sont en points, origine en bas à gauche ; PowerPoint utilise des EMU
+  // (1 point = 12 700 EMU), origine en haut à gauche.
+
+  var EMU_PER_PT = 12700;
+
+  function emu(pt) { return Math.round(pt * EMU_PER_PT); }
+
+  // Échappe les caractères spéciaux XML d'un texte.
+  function escapeXml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
+  // Nom du fichier produit : nom d'origine sans son extension, + « .pptx ».
+  function outputPptxName(fileName) {
+    var base = String(fileName || 'document').replace(/\.[^.]+$/, '');
+    if (!base) base = 'document';
+    return base + '.pptx';
+  }
+
+  // Métriques d'un item pdf.js (identique à nos autres convertisseurs) :
+  // - x = transform[4], y = transform[5] (ligne de base, y croît vers le haut) ;
+  // - taille ≈ Math.hypot(transform[2], transform[3]), repli sur item.height ;
+  // - gras / italique déduits du nom réel de la police.
+  function itemMetrics(it) {
+    var tr = it.transform || [1, 0, 0, 1, 0, 0];
+    var size = Math.hypot(tr[2] || 0, tr[3] || 0);
+    if (!size || !isFinite(size)) size = it.height || 0;
+    var scaleX = Math.hypot(tr[0] || 0, tr[1] || 0) || 1;
+    var fontName = it.fontName || '';
+    return {
+      str: it.str,
+      x: tr[4] || 0,
+      y: tr[5] || 0,
+      endX: (tr[4] || 0) + (it.width || 0) * scaleX,
+      size: size,
+      bold: /bold/i.test(fontName),
+      italic: /italic|oblique/i.test(fontName)
+    };
+  }
+
+  function runStyleKey(r) {
+    return (r.bold ? 'b' : '') + (r.italic ? 'i' : '') + Math.round((r.size || 0) * 2);
+  }
+  function pushRun(runs, run) {
+    var last = runs.length ? runs[runs.length - 1] : null;
+    if (last && runStyleKey(last) === runStyleKey(run)) {
+      last.str += run.str;
+    } else {
+      runs.push({ str: run.str, bold: !!run.bold, italic: !!run.italic, size: run.size || 0, x: run.x || 0 });
+    }
+  }
+
+  // Regroupe les items d'une page en lignes (même approche que PDF en Word) :
+  // tri par y décroissant, tolérance verticale ≈ 0,5 × la taille ; items d'une
+  // ligne triés par x ; un espace est inséré si l'écart horizontal dépasse
+  // ≈ 0,25 × la taille. Chaque ligne conserve x (début), width (largeur
+  // mesurée jusqu'à la fin du dernier item) et y (ligne de base).
+  function groupPageLines(items) {
+    var norm = [];
+    (items || []).forEach(function (it) {
+      if (!it || typeof it.str !== 'string' || it.str === '') return;
+      norm.push(itemMetrics(it));
+    });
+    norm.sort(function (a, b) {
+      if (a.y !== b.y) return b.y - a.y;
+      return a.x - b.x;
+    });
+    var rawLines = [];
+    norm.forEach(function (m) {
+      var cur = rawLines.length ? rawLines[rawLines.length - 1] : null;
+      var tol = Math.max(2, 0.5 * Math.max(m.size, cur ? cur.size : 0));
+      if (cur && Math.abs(m.y - cur.y) <= tol) {
+        cur.items.push(m);
+        if (m.size > cur.size) cur.size = m.size;
+      } else {
+        rawLines.push({ y: m.y, size: m.size, items: [m] });
+      }
+    });
+    return rawLines.map(function (L) {
+      var sorted = L.items.slice().sort(function (a, b) { return a.x - b.x; });
+      var runs = [];
+      var prev = null;
+      var maxEnd = 0;
+      sorted.forEach(function (m) {
+        var str = m.str;
+        if (prev) {
+          var gap = m.x - prev.endX;
+          var needSpace = gap > 0.25 * Math.max(m.size, prev.size);
+          var lastRun = runs.length ? runs[runs.length - 1] : null;
+          if (needSpace && !/^\s/.test(str) && !(lastRun && /\s$/.test(lastRun.str))) str = ' ' + str;
+        }
+        pushRun(runs, { str: str, bold: m.bold, italic: m.italic, size: m.size, x: m.x });
+        if (m.endX > maxEnd) maxEnd = m.endX;
+        prev = m;
+      });
+      var text = runs.map(function (r) { return r.str; }).join('');
+      var x0 = sorted.length ? sorted[0].x : 0;
+      return { runs: runs, text: text, size: L.size, y: L.y, x: x0, width: Math.max(0, maxEnd - x0) };
+    });
+  }
+
+  // Nombre de mots approximatif (pour l'écran de résultat).
+  function countLineWords(pagesData) {
+    var n = 0;
+    (pagesData || []).forEach(function (pg) {
+      (pg.lines || []).forEach(function (l) {
+        if (!l.text) return;
+        l.text.split(/\s+/).forEach(function (w) { if (w) n++; });
+      });
+    });
+    return n;
+  }
+
+  // === Construction du fichier .pptx (parties XML) ===
+
+  var XML_DECL = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+  var NS_A = 'http://schemas.openxmlformats.org/drawingml/2006/main';
+  var NS_R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  var NS_P = 'http://schemas.openxmlformats.org/presentationml/2006/main';
+  var RELS_NS = 'http://schemas.openxmlformats.org/package/2006/relationships';
+  var REL_OFFICE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument';
+  var REL_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide';
+  var REL_MASTER = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster';
+  var REL_LAYOUT = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout';
+  var REL_THEME = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme';
+  var REL_CORE = 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties';
+  var REL_APP = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties';
+
+  // Dimensions de la présentation en EMU, d'après la première page du PDF.
+  // PowerPoint exige des valeurs entre 914 400 et 51 206 400 EMU.
+  function slideSizeEmu(firstPage) {
+    var w = 595, h = 842;
+    if (firstPage && firstPage.width > 0 && firstPage.height > 0) { w = firstPage.width; h = firstPage.height; }
+    function clamp(v) { return Math.min(51206400, Math.max(914400, v)); }
+    return { cx: clamp(emu(w)), cy: clamp(emu(h)) };
+  }
+
+  // XML d'une zone de texte pour une ligne :
+  // - off x = début de la ligne ; off y = haut de la page − (ligne de base +
+  //   taille), car l'origine PDF est en bas et celle de PowerPoint en haut ;
+  // - ext largeur = largeur mesurée + une petite marge (0,5 × la taille) ;
+  //   hauteur = 1,35 × la taille. bodyPr en wrap="none" pour ne pas
+  //   recalculer la mise en page : la zone garde la taille qu'on lui donne.
+  function lineShapeXml(line, page, slideWpt, slideHpt, shapeId, shapeName) {
+    var sx = page.width > 0 ? slideWpt / page.width : 1;
+    var sy = page.height > 0 ? slideHpt / page.height : 1;
+    var offX = emu(line.x * sx);
+    var offY = emu((page.height - (line.y + line.size)) * sy);
+    var extX = emu(Math.max(line.width + line.size * 0.5, 1) * sx);
+    var extY = emu(Math.max(line.size * 1.35, 1) * sy);
+    var runs = (line.runs || []).map(function (r) {
+      var sz = Math.max(100, Math.round((r.size || line.size) * sy * 100));
+      var attrs = ' lang="fr-FR" dirty="0" sz="' + sz + '"';
+      if (r.bold) attrs += ' b="1"';
+      if (r.italic) attrs += ' i="1"';
+      var space = /^\s|\s$/.test(r.str) ? ' xml:space="preserve"' : '';
+      return '<a:r><a:rPr' + attrs + '><a:solidFill><a:srgbClr val="262626"/></a:solidFill><a:latin typeface="Calibri"/></a:rPr>' +
+        '<a:t' + space + '>' + escapeXml(r.str) + '</a:t></a:r>';
+    }).join('');
+    var endSz = Math.max(100, Math.round(line.size * sy * 100));
+    return '<p:sp>' +
+      '<p:nvSpPr><p:cNvPr id="' + shapeId + '" name="' + escapeXml(shapeName) + '"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>' +
+      '<p:spPr><a:xfrm><a:off x="' + offX + '" y="' + offY + '"/><a:ext cx="' + extX + '" cy="' + extY + '"/></a:xfrm>' +
+      '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>' +
+      '<p:txBody><a:bodyPr wrap="none" rtlCol="0"/><a:lstStyle/>' +
+      '<a:p>' + runs + '<a:endParaRPr lang="fr-FR" dirty="0" sz="' + endSz + '"/></a:p></p:txBody></p:sp>';
+  }
+
+  var GRP_TREE_HEAD =
+    '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>' +
+    '<p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
+
+  // XML complet d'une diapositive.
+  function buildSlideXml(page, slideWpt, slideHpt) {
+    var shapes = '';
+    var id = 2;
+    (page.lines || []).forEach(function (line) {
+      if (!line.text || !line.text.trim()) return;
+      shapes += lineShapeXml(line, page, slideWpt, slideHpt, id, 'Ligne ' + (id - 1));
+      id++;
+    });
+    return XML_DECL +
+      '<p:sld xmlns:a="' + NS_A + '" xmlns:r="' + NS_R + '" xmlns:p="' + NS_P + '">' +
+      '<p:cSld><p:spTree>' + GRP_TREE_HEAD + shapes + '</p:spTree></p:cSld>' +
+      '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>';
+  }
+
+  function relsXml(list) {
+    var out = XML_DECL + '<Relationships xmlns="' + RELS_NS + '">';
+    list.forEach(function (r) {
+      out += '<Relationship Id="' + r.id + '" Type="' + r.type + '" Target="' + r.target + '"/>';
+    });
+    return out + '</Relationships>';
+  }
+
+  function buildContentTypesXml(slideCount) {
+    var out = XML_DECL +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>' +
+      '<Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>' +
+      '<Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>' +
+      '<Override PartName="/ppt/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>';
+    for (var i = 1; i <= slideCount; i++) {
+      out += '<Override PartName="/ppt/slides/slide' + i + '.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>';
+    }
+    out += '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>' +
+      '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>' +
+      '</Types>';
+    return out;
+  }
+
+  function buildRootRelsXml() {
+    return relsXml([
+      { id: 'rId1', type: REL_OFFICE, target: 'ppt/presentation.xml' },
+      { id: 'rId2', type: REL_CORE, target: 'docProps/core.xml' },
+      { id: 'rId3', type: REL_APP, target: 'docProps/app.xml' }
+    ]);
+  }
+
+  function buildCoreXml(title) {
+    var now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+    return XML_DECL +
+      '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" ' +
+      'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" ' +
+      'xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
+      '<dc:title>' + escapeXml(title || 'Présentation') + '</dc:title>' +
+      '<dc:creator>PdfBleu.com</dc:creator><cp:lastModifiedBy>PdfBleu.com</cp:lastModifiedBy>' +
+      '<dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created>' +
+      '<dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>';
+  }
+
+  function buildAppXml(slideCount) {
+    return XML_DECL +
+      '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" ' +
+      'xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">' +
+      '<Application>PdfBleu.com</Application><PresentationFormat>Personnalisé</PresentationFormat>' +
+      '<Slides>' + slideCount + '</Slides><Company>PdfBleu.com</Company><AppVersion>16.0000</AppVersion></Properties>';
+  }
+
+  // Paragraphes de niveau 1 à 9 d'un style de texte (structure standard).
+  function lvlPprs(baseSz) {
+    var out = '';
+    for (var lvl = 1; lvl <= 9; lvl++) {
+      var sz = Math.max(1000, Math.round(baseSz * Math.pow(0.88, lvl - 1)));
+      out += '<a:lvl' + lvl + 'pPr marL="' + (347663 * (lvl - 1)) + '" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1">' +
+        '<a:lnSpc><a:spcPct val="100000"/></a:lnSpc><a:spcBef><a:spcPct val="0"/></a:spcBef><a:spcAft><a:spcPct val="0"/></a:spcAft>' +
+        '<a:defRPr sz="' + sz + '"><a:latin typeface="Calibri"/></a:defRPr></a:lvl' + lvl + 'pPr>';
+    }
+    return out;
+  }
+
+  function buildPresentationXml(slideCount, cx, cy) {
+    var ids = '';
+    for (var i = 0; i < slideCount; i++) {
+      ids += '<p:sldId id="' + (256 + i) + '" r:id="rId' + (2 + i) + '"/>';
+    }
+    return XML_DECL +
+      '<p:presentation xmlns:a="' + NS_A + '" xmlns:r="' + NS_R + '" xmlns:p="' + NS_P + '" saveSubsetFonts="1">' +
+      '<p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst>' +
+      '<p:sldIdLst>' + ids + '</p:sldIdLst>' +
+      '<p:sldSz cx="' + cx + '" cy="' + cy + '" type="custom"/>' +
+      '<p:notesSz cx="6858000" cy="9144000"/>' +
+      '<p:defaultTextStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr>' + lvlPprs(1800) + '</p:defaultTextStyle>' +
+      '</p:presentation>';
+  }
+
+  function buildPresentationRelsXml(slideCount) {
+    var list = [{ id: 'rId1', type: REL_MASTER, target: 'slideMasters/slideMaster1.xml' }];
+    for (var i = 1; i <= slideCount; i++) {
+      list.push({ id: 'rId' + (1 + i), type: REL_SLIDE, target: 'slides/slide' + i + '.xml' });
+    }
+    return relsXml(list);
+  }
+
+  function buildSlideMasterXml() {
+    return XML_DECL +
+      '<p:sldMaster xmlns:a="' + NS_A + '" xmlns:r="' + NS_R + '" xmlns:p="' + NS_P + '">' +
+      '<p:cSld><p:bg><p:bgPr><a:solidFill><a:srgbClr val="FFFFFF"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>' +
+      '<p:spTree>' + GRP_TREE_HEAD + '</p:spTree></p:cSld>' +
+      '<p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>' +
+      '<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst>' +
+      '<p:txStyles>' +
+      '<p:titleStyle>' + lvlPprs(4400) + '</p:titleStyle>' +
+      '<p:bodyStyle>' + lvlPprs(2400) + '</p:bodyStyle>' +
+      '<p:otherStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr>' + lvlPprs(1800) + '</p:otherStyle>' +
+      '</p:txStyles></p:sldMaster>';
+  }
+
+  function buildSlideMasterRelsXml() {
+    return relsXml([
+      { id: 'rId1', type: REL_LAYOUT, target: '../slideLayouts/slideLayout1.xml' },
+      { id: 'rId2', type: REL_THEME, target: '../theme/theme1.xml' }
+    ]);
+  }
+
+  function buildSlideLayoutXml() {
+    return XML_DECL +
+      '<p:sldLayout xmlns:a="' + NS_A + '" xmlns:r="' + NS_R + '" xmlns:p="' + NS_P + '" type="blank" preserve="1">' +
+      '<p:cSld name="Vide"><p:spTree>' + GRP_TREE_HEAD + '</p:spTree></p:cSld>' +
+      '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>';
+  }
+
+  function buildSlideLayoutRelsXml() {
+    return relsXml([{ id: 'rId1', type: REL_MASTER, target: '../slideMasters/slideMaster1.xml' }]);
+  }
+
+  function buildSlideRelsXml() {
+    return relsXml([{ id: 'rId1', type: REL_LAYOUT, target: '../slideLayouts/slideLayout1.xml' }]);
+  }
+
+  function buildThemeXml() {
+    var gradFill =
+      '<a:gradFill rotWithShape="1"><a:gsLst>' +
+      '<a:gs pos="0"><a:schemeClr val="phClr"><a:lumMod val="110000"/><a:satMod val="105000"/><a:lumOff val="10000"/></a:schemeClr></a:gs>' +
+      '<a:gs pos="50000"><a:schemeClr val="phClr"><a:lumMod val="105000"/><a:satMod val="103000"/><a:lumOff val="5000"/></a:schemeClr></a:gs>' +
+      '<a:gs pos="100000"><a:schemeClr val="phClr"/></a:gs></a:gsLst><a:lin ang="16200000" scaled="1"/></a:gradFill>';
+    function lnStyle(w, extra) {
+      return '<a:ln w="' + w + '" cap="flat" cmpd="sng" algn="ctr"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:prstDash val="solid"/>' + (extra || '') + '</a:ln>';
+    }
+    return XML_DECL +
+      '<a:theme xmlns:a="' + NS_A + '" name="PdfBleu"><a:themeElements>' +
+      '<a:clrScheme name="PdfBleu">' +
+      '<a:dk1><a:srgbClr val="262626"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>' +
+      '<a:dk2><a:srgbClr val="1A237E"/></a:dk2><a:lt2><a:srgbClr val="F4F6FB"/></a:lt2>' +
+      '<a:accent1><a:srgbClr val="3F51B5"/></a:accent1><a:accent2><a:srgbClr val="4CAF50"/></a:accent2>' +
+      '<a:accent3><a:srgbClr val="FF7651"/></a:accent3><a:accent4><a:srgbClr val="FFC000"/></a:accent4>' +
+      '<a:accent5><a:srgbClr val="5F83C6"/></a:accent5><a:accent6><a:srgbClr val="AB6993"/></a:accent6>' +
+      '<a:hlink><a:srgbClr val="3F51B5"/></a:hlink><a:folHlink><a:srgbClr val="7A6AA0"/></a:folHlink>' +
+      '</a:clrScheme>' +
+      '<a:fontScheme name="PdfBleu">' +
+      '<a:majorFont><a:latin typeface="Calibri"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont>' +
+      '<a:minorFont><a:latin typeface="Calibri"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont>' +
+      '</a:fontScheme>' +
+      '<a:fmtScheme name="PdfBleu">' +
+      '<a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill>' + gradFill + '<a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst>' +
+      '<a:lnStyleLst>' + lnStyle(9525) + lnStyle(25400) + lnStyle(38100) + '</a:lnStyleLst>' +
+      '<a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst>' +
+      '<a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill>' + gradFill + '</a:bgFillStyleLst>' +
+      '</a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>';
+  }
+
+  // Assemble toutes les parties du .pptx : { cheminDansLeZip: contenuXML }.
+  // pagesData = [{ width, height, lines }] dans l'ordre des pages du PDF ;
+  // la taille des diapositives vient de la première page.
+  function buildPptxParts(pagesData, title) {
+    var first = (pagesData && pagesData.length) ? pagesData[0] : { width: 595, height: 842 };
+    var size = slideSizeEmu(first);
+    var n = pagesData ? pagesData.length : 0;
+    var parts = {};
+    parts['[Content_Types].xml'] = buildContentTypesXml(n);
+    parts['_rels/.rels'] = buildRootRelsXml();
+    parts['docProps/core.xml'] = buildCoreXml(title);
+    parts['docProps/app.xml'] = buildAppXml(n);
+    parts['ppt/presentation.xml'] = buildPresentationXml(n, size.cx, size.cy);
+    parts['ppt/_rels/presentation.xml.rels'] = buildPresentationRelsXml(n);
+    parts['ppt/slideMasters/slideMaster1.xml'] = buildSlideMasterXml();
+    parts['ppt/slideMasters/_rels/slideMaster1.xml.rels'] = buildSlideMasterRelsXml();
+    parts['ppt/slideLayouts/slideLayout1.xml'] = buildSlideLayoutXml();
+    parts['ppt/slideLayouts/_rels/slideLayout1.xml.rels'] = buildSlideLayoutRelsXml();
+    parts['ppt/theme/theme1.xml'] = buildThemeXml();
+    (pagesData || []).forEach(function (page, i) {
+      parts['ppt/slides/slide' + (i + 1) + '.xml'] = buildSlideXml(page, first.width, first.height);
+      parts['ppt/slides/_rels/slide' + (i + 1) + '.xml.rels'] = buildSlideRelsXml();
+    });
+    return parts;
+  }
+  // === Fin fonctions pures ===
+
+  var current = null; // {file, name, base, pages, thumb, bad}
+  var resultUrl = null;
+  var resultName = '';
+
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var coverWrap = document.getElementById('coverWrap');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+  var ocrCard = document.getElementById('ocrCard');
+  var ocrNote = document.getElementById('ocrNote');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+  }
+
+  function updateBar() {
+    var show = !!current;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      var total = current.pages || 0;
+      barSummary.textContent = current.name + ' • ' + total + (total > 1 ? ' pages' : ' page');
+    }
+    convertBtn.disabled = !(current && !current.bad && current.pages);
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    coverWrap.innerHTML = '';
+    if (current.thumb) {
+      var img = document.createElement('img');
+      img.src = current.thumb;
+      img.alt = 'Couverture de ' + current.name;
+      coverWrap.appendChild(img);
+    } else {
+      var ph = document.createElement('span');
+      ph.className = 'coverph' + (current.bad ? ' bad' : '');
+      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l’aperçu…';
+      coverWrap.appendChild(ph);
+    }
+    fileNameEl.textContent = current.name;
+    var total = current.pages || 0;
+    fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    else fileWarnEl.textContent = '';
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n’est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    var base = f.name.replace(/\.pdf$/i, '');
+    current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null };
+    renderFileCard();
+    updateBar();
+    try {
+      var buf = await f.arrayBuffer();
+      if (window.pdfjsLib) {
+        var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+        current.pages = pdf.numPages;
+        try {
+          var first = await pdf.getPage(1);
+          var baseVp = first.getViewport({ scale: 1 });
+          var scale = Math.min(1.6, 220 / baseVp.width);
+          var vp = first.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.floor(vp.width); canvas.height = Math.floor(vp.height);
+          await first.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+          current.thumb = canvas.toDataURL('image/jpeg', 0.72);
+        } catch (thumbErr) { /* l'aperçu est optionnel */ }
+      } else {
+        var doc = await PDFLib.PDFDocument.load(buf.slice(0));
+        current.pages = doc.getPageCount();
+      }
+    } catch (err) {
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) {
+        current.bad = 'encrypted';
+      } else {
+        try {
+          var buf2 = await f.arrayBuffer();
+          var doc2 = await PDFLib.PDFDocument.load(buf2);
+          current.pages = doc2.getPageCount();
+        } catch (err2) {
+          if (err2 && /encrypt/i.test(String(err2 && err2.message))) current.bad = 'encrypted';
+          else current.bad = 'corrupt';
+        }
+      }
+      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
+      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être converti.');
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    updateBar();
+  });
+
+  ocrCard.addEventListener('click', function (e) {
+    e.preventDefault();
+    ocrNote.style.display = 'block';
+  });
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Veuillez d’abord choisir un fichier PDF.'); return; }
+    if (current.bad === 'encrypted') { showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.'); return; }
+    if (current.bad === 'corrupt') { showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.'); return; }
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = '';
+    try {
+      var buf = await current.file.arrayBuffer();
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      } catch (loadErr) {
+        if (loadErr && (loadErr.name === 'PasswordException' || /password/i.test(String(loadErr && loadErr.message)))) throw new Error('encrypted');
+        throw new Error('corrupt');
+      }
+      var pagesData = [];
+      var totalChars = 0;
+      var blankPages = 0;
+      for (var p = 1; p <= pdf.numPages; p++) {
+        processingDetail.textContent = 'Page ' + p + '/' + pdf.numPages;
+        var page = await pdf.getPage(p);
+        var vp = page.getViewport({ scale: 1 });
+        var tc = await page.getTextContent();
+        // Résolution des vrais noms de polices : pdf.js place un identifiant
+        // interne (ex. « g_d0_f1 ») dans item.fontName ; le nom réel
+        // (« Helvetica-Bold », « Calibri-Italic »…), accessible après le calcul
+        // de la liste d'opérateurs, est nécessaire pour détecter gras/italique.
+        try { await page.getOperatorList(); } catch (opErr) { /* noms d'origine conservés */ }
+        var fontNames = {};
+        var resolvedItems = tc.items.map(function (it) {
+          if (!it.fontName) return it;
+          if (!(it.fontName in fontNames)) {
+            var real = it.fontName;
+            try {
+              var fo = page.commonObjs.get(it.fontName);
+              if (fo && fo.name) real = fo.name;
+            } catch (nameErr) { /* identifiant interne conservé */ }
+            fontNames[it.fontName] = real;
+          }
+          if (fontNames[it.fontName] === it.fontName) return it;
+          var copy = {};
+          for (var k in it) copy[k] = it[k];
+          copy.fontName = fontNames[it.fontName];
+          return copy;
+        });
+        var pageChars = 0;
+        tc.items.forEach(function (it) { if (it.str) pageChars += it.str.replace(/\s+/g, '').length; });
+        if (pageChars < 10) blankPages++;
+        totalChars += pageChars;
+        pagesData.push({ width: vp.width, height: vp.height, lines: groupPageLines(resolvedItems) });
+      }
+      if (totalChars === 0) throw new Error('scanned');
+      var words = countLineWords(pagesData);
+      var parts = buildPptxParts(pagesData, current.base);
+      var zip = new JSZip();
+      Object.keys(parts).forEach(function (path) { zip.file(path, parts[path]); });
+      var blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultName = outputPptxName(current.name);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
+      var rm2 = document.createElement('div'); rm2.className = 'rmeta';
+      rm2.textContent = formatSize(blob.size) + ' • ' + pdf.numPages + (pdf.numPages > 1 ? ' diapositives' : ' diapositive') + ' • environ ' + words + ' mots de texte';
+      left.appendChild(rn); left.appendChild(rm2);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .pptx';
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' → ' + pdf.numPages + (pdf.numPages > 1 ? ' diapositives' : ' diapositive') + ').';
+      if (blankPages > 0) {
+        scanNote.style.display = 'block';
+        scanNote.textContent = '⚠ ' + blankPages + ' diapositive(s) sont vides : les pages correspondantes ne contenaient aucun texte sélectionnable (pages numérisées ou images). L’OCR qui permettra de les traiter arrive bientôt (Bientôt).';
+      } else {
+        scanNote.style.display = 'none';
+      }
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
+      else if (err && err.message === 'scanned') showError('Ce PDF semble composé d’images numérisées : aucun texte sélectionnable n’a pu être extrait, la conversion en PowerPoint est donc impossible sans OCR. L’OCR arrive bientôt (Bientôt). En attendant, essayez un PDF contenant du vrai texte (par exemple un document créé sur ordinateur).');
+      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
+      else showError('Une erreur est survenue pendant la conversion. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+    } finally {
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+    }
+  });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    resultName = '';
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+  </html>
