@@ -4,32 +4,81 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fusionner PDF — PdfBleu.com</title>
-<meta name="description" content="Fusionnez plusieurs fichiers PDF en un seul, gratuitement et sans envoi sur un serveur. Vos fichiers restent sur votre appareil.">
+<meta name="description" content="Fusionnez plusieurs fichiers PDF en un seul document, dans l'ordre que vous voulez. Gratuit, sans inscription, et sans envoi sur un serveur : tout se fait dans votre navigateur.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
 header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
 header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
 header .logo .com{color:#4ADE80}
 header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
-h1{font-size:27px;color:#1a237e;margin-bottom:8px}
-.intro{color:#444a6d;margin-bottom:16px}
-.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
-.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
-.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:300px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
 .drop.drag{background:#dfe5f9}
-.drop .icon{font-size:40px;display:block;margin-bottom:6px}
-.drop p{color:#3F51B5;font-weight:600}
-.drop small{color:#666c8a}
-button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
-button.action{background:#2e7d32}
-button:disabled{opacity:.5;cursor:not-allowed}
-ul.files{list-style:none;margin-top:14px}
-ul.files li{display:flex;justify-content:space-between;align-items:center;background:#f4f6fb;border:1px solid #e0e4f5;border-radius:8px;padding:9px 12px;margin-bottom:7px;font-size:14px;word-break:break-all}
-ul.files button{background:#e53935;color:#fff;border:none;border-radius:14px;padding:4px 12px;cursor:pointer;font-size:13px;margin-left:10px;flex-shrink:0}
-.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
-.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:18px}
+.cards:empty{margin-top:0}
+.fcard{background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:10px;position:relative}
+.fcard.dragover{border-color:#3F51B5;background:#eef1fb}
+.fcard .toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fcard .handle{cursor:grab;color:#8a90b8;font-size:17px;letter-spacing:2px;user-select:none}
+.fcard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.fcard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px}
+.fcard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.fcard .coverph{color:#8a90b8;font-size:13px;text-align:center;padding:8px}
+.fcard .coverph.bad{color:#b71c1c}
+body.hide-covers .fcard .coverwrap{display:none}
+.fcard .fname{font-size:13.5px;font-weight:600;word-break:break-all;line-height:1.35}
+.fcard .fmeta{font-size:12.5px;color:#666c8a;margin-top:3px}
+.fcard .warn{font-size:12.5px;color:#b71c1c;margin-top:4px;font-weight:600}
+.fcard .moves{display:flex;gap:8px;margin-top:9px}
+.fcard .moves button{flex:1;background:#fff;border:1.5px solid #3F51B5;color:#3F51B5;border-radius:16px;padding:5px 0;cursor:pointer;font-size:14px;font-weight:700}
+.fcard .moves button:disabled{opacity:.35;cursor:not-allowed}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar .util{width:100%;background:#eef1fb;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 14px;border-radius:10px;font-size:14.5px;font-weight:700;cursor:pointer;margin-top:8px}
+.sidebar .util:active{transform:scale(.99)}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:30px 20px;text-align:center;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px}
+.success p{color:#444a6d;margin-bottom:18px}
+.success a.dl{display:inline-block;background:#2e7d32;color:#fff;text-decoration:none;padding:15px 30px;border-radius:28px;font-size:16.5px;font-weight:700;margin-bottom:12px}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
 .ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
 .ad-300{width:300px;max-width:100%;height:250px}
 .ad-fluid{width:100%;min-height:110px}
@@ -38,6 +87,7 @@ footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
 footer a{color:#3F51B5;text-decoration:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 <header>
@@ -45,66 +95,304 @@ footer a{color:#3F51B5;text-decoration:none}
 <a class="home" href="index.html">Accueil</a>
 </header>
 <main>
-<h1>Fusionner PDF</h1>
-<p class="intro">Combinez plusieurs fichiers PDF en un seul document, dans l'ordre de la liste ci-dessous. Gratuit, sans inscription.</p>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la fusion se fait entièrement dans votre navigateur.</div>
+<div class="tool-head">
+<span class="tic"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><rect x="3" y="3" width="29" height="29" rx="6" fill="#EE6C4D"/><rect x="16" y="16" width="29" height="29" rx="6" fill="#EE6C4D"/><path d="M10 10 L19 19" stroke="#fff" stroke-width="3" fill="none"/><polygon points="12,19.5 20,19.5 20,11.5" fill="#fff"/><path d="M38 38 L29 29" stroke="#fff" stroke-width="3" fill="none"/><polygon points="36,28.5 28,28.5 28,36.5" fill="#fff"/></svg></span>
+<h1>Fusionner des fichiers PDF</h1>
+<p class="subtitle">Assemblez plusieurs documents PDF en un seul fichier, exactement dans l'ordre que vous choisissez. Simple, rapide et sans inscription.</p>
+</div>
+<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la fusion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
-<div class="tool">
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Fusion en cours…</p>
+</div>
 <div class="drop" id="drop">
-<span class="icon">🧩</span>
-<p>Glissez vos fichiers PDF ici</p>
-<small>ou touchez le bouton ci-dessous pour les choisir</small>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner des fichiers PDF</button>
+<p class="droptxt">ou déposez vos PDF ici</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
-<button class="pick" id="pickBtn" type="button">Choisir des fichiers PDF</button>
-<ul class="files" id="fileList"></ul>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<div class="cards" id="cards"></div>
 <div class="error" id="error"></div>
-<button class="action" id="mergeBtn" type="button" disabled>Fusionner et télécharger</button>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Fusionner PDF</h2>
+<p>Pour modifier l'ordre de vos fichiers, faites glisser les cartes sur ordinateur, ou utilisez les flèches ◀ ▶ de chaque carte sur téléphone.</p>
+<p>Pour ajouter d'autres fichiers, cliquez à nouveau sur « Sélectionner des fichiers PDF » : vous pouvez enchaîner plusieurs ajouts.</p>
+<button class="util" id="sortBtn" type="button">Trier par nom (A → Z)</button>
+<button class="util" id="coversBtn" type="button">Masquer les couvertures</button>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Votre PDF fusionné est prêt !</h2>
+<p id="successInfo"></p>
+<a class="dl" id="downloadBtn" href="#" download="pdfbleu-fusion.pdf">Télécharger le PDF fusionné</a>
+<button class="again" id="restartBtn" type="button">Recommencer</button>
 </div>
 
 <div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
 
-<p class="intro">Astuce : l'ordre des fichiers dans la liste est l'ordre des pages dans le PDF final. Retirez un fichier avec le bouton « Retirer » si besoin.</p>
+<div class="howto">
+<h2>Comment fusionner des PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choisissez vos fichiers</h3><p>Cliquez sur le bouton de sélection ou déposez vos PDF dans la zone prévue. Ajoutez autant de fichiers que nécessaire.</p></div>
+<div class="step"><span class="num">2</span><h3>Rangez-les dans l'ordre</h3><p>Déplacez les cartes par glisser-déposer ou avec les flèches : le premier fichier de la liste ouvrira le document final.</p></div>
+<div class="step"><span class="num">3</span><h3>Fusionnez et téléchargez</h3><p>Appuyez sur « Fusionner PDF », puis téléchargez votre document unique. C'est fini, rien d'autre à installer.</p></div>
+</div>
+<div class="seo">
+<p>Notre outil de fusion PDF est entièrement gratuit et fonctionne sans inscription ni limite de fichiers raisonnable. Contrairement aux services classiques, vos documents ne sont jamais envoyés sur un serveur : tout le traitement a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, factures et documents personnels.</p>
+<p>Vous pouvez réunir des rapports, des devoirs, des pièces justificatives ou des pages scannées en un seul PDF propre, prêt à être partagé par e-mail ou déposé sur une plateforme administrative.</p>
+</div>
+</div>
 </main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="mergeBtn" type="button">Fusionner PDF</button>
+</div>
+
 <footer>
 <p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
 </footer>
 <script>
 (function () {
-  var files = [];
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  var items = [];
+  var nextId = 1;
+  var sortDir = 'asc';
+  var dragId = null;
+  var resultUrl = null;
+
   var drop = document.getElementById('drop');
   var input = document.getElementById('fileInput');
-  var list = document.getElementById('fileList');
-  var mergeBtn = document.getElementById('mergeBtn');
-  var status = document.getElementById('status');
+  var pickBtn = document.getElementById('pickBtn');
+  var cardsEl = document.getElementById('cards');
   var errorBox = document.getElementById('error');
+  var sortBtn = document.getElementById('sortBtn');
+  var coversBtn = document.getElementById('coversBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var mergeBtn = document.getElementById('mergeBtn');
+  var processing = document.getElementById('processing');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var restartBtn = document.getElementById('restartBtn');
 
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.style.display = msg ? 'block' : 'none';
   }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+  }
+  function sortItemsByName(list, dir) {
+    var sorted = list.slice();
+    sorted.sort(function (a, b) {
+      var cmp = a.name.localeCompare(b.name, 'fr', { numeric: true, sensitivity: 'base' });
+      return dir === 'desc' ? -cmp : cmp;
+    });
+    return sorted;
+  }
+  function totalPages() {
+    var total = 0, known = true;
+    items.forEach(function (it) {
+      if (typeof it.pages === 'number') total += it.pages; else known = false;
+    });
+    return { total: total, known: known };
+  }
+  function updateBar() {
+    var show = items.length >= 2;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      var t = totalPages();
+      barSummary.textContent = items.length + ' fichiers • ' + t.total + (t.known ? '' : '+') + ' pages au total';
+    }
+  }
+  function findItem(id) {
+    for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i];
+    return null;
+  }
   function render() {
-    list.innerHTML = '';
-    files.forEach(function (f, i) {
-      var li = document.createElement('li');
-      var name = document.createElement('span');
-      name.textContent = (i + 1) + '. ' + f.name;
+    cardsEl.innerHTML = '';
+    items.forEach(function (it, idx) {
+      var card = document.createElement('article');
+      card.className = 'fcard';
+      card.draggable = true;
+      card.setAttribute('data-id', it.id);
+
+      var top = document.createElement('div');
+      top.className = 'toprow';
+      var handle = document.createElement('span');
+      handle.className = 'handle';
+      handle.textContent = '⠿';
+      handle.title = 'Glisser pour déplacer';
       var rm = document.createElement('button');
       rm.type = 'button';
-      rm.textContent = 'Retirer';
+      rm.className = 'rm';
+      rm.textContent = '✕';
+      rm.title = 'Retirer ce fichier';
       rm.addEventListener('click', function () {
-        files.splice(i, 1);
+        items = items.filter(function (x) { return x.id !== it.id; });
         render();
       });
-      li.appendChild(name);
-      li.appendChild(rm);
-      list.appendChild(li);
+      top.appendChild(handle);
+      top.appendChild(rm);
+      card.appendChild(top);
+
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (it.thumb) {
+        var img = document.createElement('img');
+        img.src = it.thumb;
+        img.alt = 'Couverture de ' + it.name;
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('span');
+        ph.className = 'coverph' + (it.bad ? ' bad' : '');
+        ph.textContent = it.bad ? '⚠ Aperçu indisponible' : 'Chargement de l\'aperçu…';
+        cover.appendChild(ph);
+      }
+      card.appendChild(cover);
+
+      var name = document.createElement('div');
+      name.className = 'fname';
+      name.textContent = (idx + 1) + '. ' + it.name;
+      card.appendChild(name);
+
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = (typeof it.pages === 'number' ? it.pages + (it.pages > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(it.file.size);
+      card.appendChild(meta);
+
+      if (it.bad === 'encrypted') {
+        var w1 = document.createElement('div');
+        w1.className = 'warn';
+        w1.textContent = 'Protégé par un mot de passe';
+        card.appendChild(w1);
+      } else if (it.bad === 'corrupt') {
+        var w2 = document.createElement('div');
+        w2.className = 'warn';
+        w2.textContent = 'Fichier illisible ou endommagé';
+        card.appendChild(w2);
+      }
+
+      var moves = document.createElement('div');
+      moves.className = 'moves';
+      var left = document.createElement('button');
+      left.type = 'button';
+      left.textContent = '◀';
+      left.title = 'Déplacer vers la gauche';
+      left.disabled = idx === 0;
+      left.addEventListener('click', function () { moveItem(it.id, -1); });
+      var right = document.createElement('button');
+      right.type = 'button';
+      right.textContent = '▶';
+      right.title = 'Déplacer vers la droite';
+      right.disabled = idx === items.length - 1;
+      right.addEventListener('click', function () { moveItem(it.id, 1); });
+      moves.appendChild(left);
+      moves.appendChild(right);
+      card.appendChild(moves);
+
+      card.addEventListener('dragstart', function (e) {
+        dragId = it.id;
+        if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(it.id)); } catch (err) {} }
+      });
+      card.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        card.classList.add('dragover');
+      });
+      card.addEventListener('dragleave', function () { card.classList.remove('dragover'); });
+      card.addEventListener('drop', function (e) {
+        e.preventDefault();
+        card.classList.remove('dragover');
+        if (dragId === null || dragId === it.id) return;
+        var from = -1, to = -1, i;
+        for (i = 0; i < items.length; i++) {
+          if (items[i].id === dragId) from = i;
+          if (items[i].id === it.id) to = i;
+        }
+        if (from < 0 || to < 0) return;
+        var moved = items.splice(from, 1)[0];
+        items.splice(to, 0, moved);
+        dragId = null;
+        render();
+      });
+      card.addEventListener('dragend', function () {
+        dragId = null;
+        var over = cardsEl.querySelectorAll('.dragover');
+        for (var i = 0; i < over.length; i++) over[i].classList.remove('dragover');
+      });
+
+      cardsEl.appendChild(card);
     });
-    mergeBtn.disabled = files.length < 2;
+    updateBar();
   }
+  function moveItem(id, delta) {
+    var idx = -1, i;
+    for (i = 0; i < items.length; i++) if (items[i].id === id) idx = i;
+    var target = idx + delta;
+    if (idx < 0 || target < 0 || target >= items.length) return;
+    var tmp = items[idx];
+    items[idx] = items[target];
+    items[target] = tmp;
+    render();
+  }
+
+  async function loadInfo(it) {
+    try {
+      var buf = await it.file.arrayBuffer();
+      if (window.pdfjsLib) {
+        var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+        it.pages = pdf.numPages;
+        try {
+          var page = await pdf.getPage(1);
+          var base = page.getViewport({ scale: 1 });
+          var scale = Math.min(1.6, 220 / base.width);
+          var viewport = page.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          var ctx = canvas.getContext('2d');
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          it.thumb = canvas.toDataURL('image/jpeg', 0.72);
+        } catch (thumbErr) { /* l'aperçu est optionnel */ }
+      } else {
+        var doc = await PDFLib.PDFDocument.load(buf.slice(0));
+        it.pages = doc.getPageCount();
+      }
+    } catch (err) {
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) {
+        it.bad = 'encrypted';
+      } else {
+        try {
+          var buf2 = await it.file.arrayBuffer();
+          var doc2 = await PDFLib.PDFDocument.load(buf2);
+          it.pages = doc2.getPageCount();
+        } catch (err2) {
+          if (err2 && /encrypt/i.test(String(err2 && err2.message))) it.bad = 'encrypted';
+          else it.bad = 'corrupt';
+        }
+      }
+    }
+    render();
+  }
+
   function addFiles(fileListIn) {
     showError('');
     var added = 0;
@@ -114,12 +402,15 @@ footer a{color:#3F51B5;text-decoration:none}
         showError('« ' + f.name + ' » n\'est pas un fichier PDF. Veuillez choisir uniquement des fichiers PDF.');
         return;
       }
-      files.push(f);
+      var it = { id: nextId++, file: f, name: f.name, pages: null, thumb: null, bad: null };
+      items.push(it);
       added++;
+      loadInfo(it);
     });
     if (added) render();
   }
-  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
   drop.addEventListener('click', function () { input.click(); });
   input.addEventListener('change', function () { addFiles(input.files); input.value = ''; });
   drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
@@ -130,37 +421,85 @@ footer a{color:#3F51B5;text-decoration:none}
     if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
   });
 
+  sortBtn.addEventListener('click', function () {
+    if (!items.length) return;
+    items = sortItemsByName(items, sortDir);
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    sortBtn.textContent = sortDir === 'asc' ? 'Trier par nom (A → Z)' : 'Trier par nom (Z → A)';
+    render();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('hide-covers');
+    coversBtn.textContent = hidden ? 'Afficher les couvertures' : 'Masquer les couvertures';
+  });
+
   mergeBtn.addEventListener('click', async function () {
     showError('');
-    if (files.length < 2) { showError('Veuillez ajouter au moins deux fichiers PDF à fusionner.'); return; }
+    if (items.length === 1) { showError('Ajoutez au moins un deuxième fichier PDF pour lancer la fusion.'); return; }
+    if (items.length < 2) { showError('Veuillez ajouter au moins deux fichiers PDF à fusionner.'); return; }
+    var badEnc = null, badCor = null, i;
+    for (i = 0; i < items.length; i++) {
+      if (items[i].bad === 'encrypted' && !badEnc) badEnc = items[i];
+      if (items[i].bad === 'corrupt' && !badCor) badCor = items[i];
+    }
+    if (badEnc) { showError('« ' + badEnc.name + ' » est protégé par un mot de passe et ne peut pas être fusionné. Retirez-le ou déverrouillez-le d\'abord.'); return; }
+    if (badCor) { showError('« ' + badCor.name + ' » semble endommagé ou illisible. Retirez-le puis réessayez.'); return; }
     mergeBtn.disabled = true;
-    status.style.display = 'block';
+    processing.classList.add('on');
     try {
       var merged = await PDFLib.PDFDocument.create();
-      for (var i = 0; i < files.length; i++) {
-        var buf = await files[i].arrayBuffer();
-        var src = await PDFLib.PDFDocument.load(buf);
+      for (i = 0; i < items.length; i++) {
+        var buf = await items[i].file.arrayBuffer();
+        var src;
+        try {
+          src = await PDFLib.PDFDocument.load(buf);
+        } catch (loadErr) {
+          if (loadErr && /encrypt/i.test(String(loadErr && loadErr.message))) {
+            throw new Error('encrypted:' + items[i].name);
+          }
+          throw new Error('corrupt:' + items[i].name);
+        }
         var pages = await merged.copyPages(src, src.getPageIndices());
         pages.forEach(function (p) { merged.addPage(p); });
       }
       var bytes = await merged.save();
       var blob = new Blob([bytes], { type: 'application/pdf' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'pdfbleu-fusion.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      downloadBtn.href = resultUrl;
+      var t = totalPages();
+      successInfo.textContent = 'Fichier : pdfbleu-fusion.pdf • ' + merged.getPageCount() + ' pages • ' + formatSize(bytes.length);
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      showError('Une erreur est survenue pendant la fusion. Un des fichiers est peut-être protégé ou endommagé. Veuillez réessayer.');
+      var msg = String(err && err.message || '');
+      if (msg.indexOf('encrypted:') === 0) {
+        showError('« ' + msg.slice(10) + ' » est protégé par un mot de passe et ne peut pas être fusionné. Retirez-le ou déverrouillez-le d\'abord.');
+      } else if (msg.indexOf('corrupt:') === 0) {
+        showError('« ' + msg.slice(8) + ' » semble endommagé ou illisible. Retirez-le puis réessayez.');
+      } else {
+        showError('Une erreur est survenue pendant la fusion. Un des fichiers est peut-être protégé ou endommagé. Veuillez réessayer.');
+      }
     } finally {
-      status.style.display = 'none';
-      mergeBtn.disabled = files.length < 2;
+      processing.classList.remove('on');
+      mergeBtn.disabled = false;
     }
   });
+
+  restartBtn.addEventListener('click', function () {
+    items = [];
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    render();
+  });
+
+  render();
 })();
 </script>
 </body>
-</html>
+  </html>
