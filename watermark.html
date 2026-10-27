@@ -3,48 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add a watermark — PdfBleu.com</title>
-<meta name="description" content="Add a text watermark (for example CONFIDENTIAL) to every page of a PDF, diagonally or at the bottom of the page. Free and 100% private.">
+<title>Watermark — PdfBleu.com</title>
+<meta name="description" content="Add a watermark to a PDF for free: stamp text or an image over your pages and choose the position, transparency, rotation and page range. Everything runs in your browser — your files are never uploaded.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
 header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
 header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
 header .logo .com{color:#4ADE80}
 header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
-h1{font-size:27px;color:#1a237e;margin-bottom:8px}
-.intro{color:#444a6d;margin-bottom:16px}
-.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
-.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
-.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
 .drop.drag{background:#dfe5f9}
-.drop .icon{font-size:40px;display:block;margin-bottom:6px}
-.drop p{color:#3F51B5;font-weight:600}
-.drop small{color:#666c8a}
-button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
-button.action{background:#2e7d32}
-button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
-button:disabled{opacity:.5;cursor:not-allowed}
-label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
-input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-input[type=number]{width:130px;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-select{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px;background:#fff}
-input[type=range]{width:100%;margin-top:8px}
-.hint{font-size:13px;color:#666c8a;margin-top:5px}
-.note{font-size:13px;color:#666c8a;margin-top:12px}
-.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
-.choices{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.choices label{flex:1;min-width:110px;text-align:center;border:1.5px solid #c5cae9;border-radius:10px;padding:12px 6px;cursor:pointer;font-weight:700;color:#3F51B5;background:#fff;font-size:14px}
-.choices input{margin-right:5px}
-.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
-.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
-.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
-.tiles{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.tile{background:#eef1fb;border:1.5px solid #c5cae9;border-radius:10px;padding:10px 6px;text-align:center;width:106px}
-.tile .pname{font-weight:700;color:#1a237e;font-size:14px;margin-bottom:8px}
-.tile button{background:#fff;border:1.5px solid #3F51B5;color:#3F51B5;border-radius:14px;padding:3px 8px;cursor:pointer;font-size:13px;margin:2px}
-.tile button.del{border-color:#e53935;color:#e53935}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.modetabs{display:flex;gap:8px;margin-bottom:14px}
+.modetab{flex:1;border:1.5px solid #c5cae9;background:#fff;border-radius:11px;padding:11px 8px;font-size:15px;font-weight:700;color:#333a5e;cursor:pointer;font-family:inherit}
+.modetab.sel{border-color:#3F51B5;background:#eef1fb;color:#1a237e}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.prop-row{margin-bottom:12px}
+.prop-row:last-child{margin-bottom:0}
+.prop-row label{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:5px}
+.prop-row input[type=text],.prop-row input[type=number],.prop-row select{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 10px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.prop-row input[type=range]{width:100%;accent-color:#3F51B5}
+.prop-row input[type=color]{width:56px;height:36px;border:1.5px solid #c5cae9;border-radius:8px;background:#fff;padding:2px;cursor:pointer;vertical-align:middle}
+.rangeval{font-weight:700;color:#1a237e}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.toggles{display:flex;gap:8px}
+.togglebtn{border:1.5px solid #c5cae9;background:#fff;border-radius:8px;width:42px;height:36px;font-size:15px;cursor:pointer;color:#333a5e;font-family:inherit}
+.togglebtn.on{background:#3F51B5;color:#fff;border-color:#3F51B5}
+.colorrow{display:flex;align-items:center;gap:10px}
+.colorrow select{flex:1}
+.posgrid{display:grid;grid-template-columns:repeat(3,44px);gap:6px}
+.posbtn{width:44px;height:38px;border:1.5px solid #c5cae9;background:#f9faff;border-radius:8px;cursor:pointer;position:relative;padding:0}
+.posbtn::after{content:'';position:absolute;width:14px;height:10px;border-radius:2px;background:#9fa8da}
+.posbtn[data-h="left"]::after{left:5px}.posbtn[data-h="center"]::after{left:50%;transform:translateX(-50%)}.posbtn[data-h="right"]::after{right:5px}
+.posbtn[data-v="top"]::after{top:5px}.posbtn[data-v="middle"]::after{top:50%;margin-top:-5px}.posbtn[data-v="bottom"]::after{bottom:5px}
+.posbtn.sel{border-color:#3F51B5;background:#eef1fb}
+.posbtn.sel::after{background:#3F51B5}
+.checkrow{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer}
+.pagerow{display:flex;align-items:center;gap:8px}
+.pagerow input{flex:1;min-width:0;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 10px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.pagerow span{font-size:13.5px;color:#666c8a;font-weight:600}
+.layercards{display:grid;gap:9px}
+.layercard{display:block;width:100%;text-align:left;border:1.5px solid #c5cae9;border-radius:11px;padding:11px 13px;cursor:pointer;background:#fff;font-family:inherit}
+.layercard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:14.5px}
+.layercard .ldesc{display:block;font-size:12.5px;color:#666c8a;margin-top:2px}
+.layercard.sel{border-color:#2e7d32;background:#e8f5e9}
+.imgup{display:flex;gap:12px;align-items:center}
+.imgprev{width:74px;height:56px;flex-shrink:0;border:1.5px dashed #c5cae9;border-radius:8px;display:none;align-items:center;justify-content:center;overflow:hidden;background:#fff}
+.imgprev.on{display:flex}
+.imgprev img{max-width:100%;max-height:100%;display:block}
+.imgbtn{border:1.5px solid #3F51B5;color:#3F51B5;background:#fff;border-radius:20px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.imgname{font-size:13px;color:#666c8a;margin-top:6px;word-break:break-all}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.previewsec{display:none;margin-top:18px}
+.previewsec.on{display:block}
+.previewhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.previewhead h2{font-size:19px;color:#1a237e}
+.previewhead select{border:1.5px solid #c5cae9;border-radius:8px;padding:7px 10px;font-size:14px;font-family:inherit;background:#fff;color:#21243d;max-width:100%}
+.pageblock{margin-bottom:22px}
+.pageblock:last-child{margin-bottom:2px}
+.pagelabel{font-size:13px;font-weight:700;color:#666c8a;margin-bottom:6px}
+.pagewrap{position:relative;margin:0 auto;background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.20);line-height:0;width:fit-content;max-width:100%}
+.pagewrap canvas{display:block;max-width:100%;height:auto}
+.wmoverlay{position:absolute;inset:0;overflow:hidden;pointer-events:none;line-height:1}
+.wmtile{position:absolute;transform-origin:center center;white-space:nowrap;line-height:1}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
 .ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
 .ad-300{width:300px;max-width:100%;height:250px}
 .ad-fluid{width:100%;min-height:110px}
@@ -53,6 +153,8 @@ footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
 footer a{color:#3F51B5;text-decoration:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <header>
@@ -60,162 +162,1053 @@ footer a{color:#3F51B5;text-decoration:none}
 <a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>Add a watermark</h1>
-<p class="intro">Stamp a semi-transparent text on every page of your document: ideal for marking a draft or a confidential document.</p>
-<div class="private-note">🔒 Your file never leaves your device: the watermark is added entirely in your browser.</div>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><circle cx="24" cy="13" r="5" fill="#fff"/><rect x="21" y="17" width="6" height="5" fill="#fff"/><rect x="13" y="22" width="22" height="6" rx="2" fill="#fff"/><rect x="10" y="30" width="28" height="7" rx="2" fill="#fff"/></svg></span>
+<h1>Add a watermark to your PDF</h1>
+<p class="subtitle">Stamp text or an image over your PDF pages. Choose the position, transparency and rotation — the stamp is built right here, in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: opening the PDFs, previewing them and stamping the watermark all happen entirely in your browser.</div>
+
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
-<div class="tool">
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
 <div class="drop" id="drop">
-<span class="icon">📄</span>
-<p>Drop your PDF file here</p>
-<small>or tap the button below to select it</small>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here</p>
 </div>
-<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
-<p class="fileinfo" id="fileInfo"></p>
-<label class="field" for="wmText">Watermark text</label>
-<input type="text" id="wmText" placeholder="Example: CONFIDENTIAL" autocomplete="off" maxlength="60">
-<label class="field" for="opacity">Opacity: <span id="opacityVal">30%</span></label>
-<input type="range" id="opacity" min="10" max="50" value="30" step="5">
-<label class="field">Position</label>
-<div class="choices" role="radiogroup" aria-label="Watermark position">
-<label><input type="radio" name="position" value="diagonal" checked>Diagonal, in the center</label>
-<label><input type="radio" name="position" value="bottom">At the bottom of each page</label>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
 </div>
-<div class="status" id="status">Processing… please wait.</div>
+<div class="filelist" id="fileList"></div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Add the watermark and download</button>
 </div>
+
+<div class="previewsec" id="previewSec">
+<div class="tool">
+<div class="previewhead">
+<h2>Preview</h2>
+<span id="previewFileWrap" style="display:none"><select id="previewFileSelect" aria-label="File to preview"></select></span>
+</div>
+<div id="previewPages"></div>
+<p class="footnote">This preview is a close approximation so you can check the layout — the watermark in the downloaded PDF is placed exactly.</p>
+</div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>Watermark options</h2>
+<p>Design your stamp once — it is applied to every file in the list with the same settings.</p>
+<div class="modetabs">
+<button class="modetab sel" id="modeTextBtn" type="button">Place text</button>
+<button class="modetab" id="modeImageBtn" type="button">Place image</button>
+</div>
+
+<div id="paneText">
+<div class="optgroup">
+<div class="prop-row"><label for="wmText">Text</label><input type="text" id="wmText" value="PdfBleu.com" maxlength="120" autocomplete="off"></div>
+<div class="prop-row"><label for="wmFont">Font</label>
+<select id="wmFont">
+<option value="helvetica" selected>Arial / Helvetica</option>
+<option value="impact">Impact</option>
+<option value="verdana">Verdana</option>
+<option value="courier">Courier</option>
+<option value="times">Times New Roman</option>
+</select>
+<p class="footnote">Fonts are matched to the closest built-in PDF font.</p>
+</div>
+<div class="prop-row"><label for="wmSize">Font size — <span class="rangeval" id="wmSizeVal">48</span> pt</label>
+<div class="pagerow"><input type="range" id="wmSize" min="8" max="150" step="1" value="48" style="flex:1"><input type="number" id="wmSizeNum" min="8" max="150" value="48" style="flex:0 0 76px"></div>
+</div>
+<div class="prop-row"><label>Style</label>
+<div class="toggles">
+<button class="togglebtn" id="wmBold" type="button" title="Bold" style="font-weight:800">B</button>
+<button class="togglebtn" id="wmItalic" type="button" title="Italic" style="font-style:italic">I</button>
+<button class="togglebtn" id="wmUnderline" type="button" title="Underline" style="text-decoration:underline">U</button>
+</div>
+</div>
+<div class="prop-row"><label for="wmColor">Font color</label>
+<div class="colorrow"><input type="color" id="wmColor" value="#000000"><span class="footnote" style="margin-top:0">The color of the watermark text.</span></div>
+</div>
+<div class="prop-row"><label for="wmBgSelect">Background</label>
+<div class="colorrow"><select id="wmBgSelect"><option value="" selected>None</option><option value="color">Color</option></select><input type="color" id="wmBgColor" value="#ffeb3b"></div>
+</div>
+</div>
+</div>
+
+<div id="paneImage" style="display:none">
+<div class="optgroup">
+<div class="prop-row"><label>Watermark image</label>
+<div class="imgup">
+<div class="imgprev" id="wmImgPrevWrap"><img id="wmImgPrev" alt="Your watermark image"></div>
+<div><button class="imgbtn" id="wmImgBtn" type="button">Add image</button>
+<div class="imgname" id="wmImgName">PNG or JPG. A PNG keeps its transparency.</div></div>
+</div>
+<input type="file" id="wmImgInput" accept="image/png,image/jpeg" hidden>
+</div>
+<div class="prop-row"><label for="wmImgScale">Image width — <span class="rangeval" id="wmImgScaleVal">35</span>% of the page width</label>
+<input type="range" id="wmImgScale" min="10" max="100" step="1" value="35">
+</div>
+</div>
+</div>
+
+<div class="optgroup">
+<div class="prop-row"><label>Position</label>
+<div class="posgrid" id="posGrid">
+<button class="posbtn" type="button" data-v="top" data-h="left" title="Top left"></button>
+<button class="posbtn" type="button" data-v="top" data-h="center" title="Top center"></button>
+<button class="posbtn" type="button" data-v="top" data-h="right" title="Top right"></button>
+<button class="posbtn" type="button" data-v="middle" data-h="left" title="Middle left"></button>
+<button class="posbtn sel" type="button" data-v="middle" data-h="center" title="Center"></button>
+<button class="posbtn" type="button" data-v="middle" data-h="right" title="Middle right"></button>
+<button class="posbtn" type="button" data-v="bottom" data-h="left" title="Bottom left"></button>
+<button class="posbtn" type="button" data-v="bottom" data-h="center" title="Bottom center"></button>
+<button class="posbtn" type="button" data-v="bottom" data-h="right" title="Bottom right"></button>
+</div>
+</div>
+<div class="prop-row"><label class="checkrow"><input type="checkbox" id="wmMosaic"> Mosaic — repeat the watermark over the whole page</label></div>
+<div class="prop-row"><label for="wmOpacity">Transparency</label>
+<select id="wmOpacity">
+<option value="100" selected>No transparency</option>
+<option value="75">75% opacity</option>
+<option value="50">50% opacity</option>
+<option value="25">25% opacity</option>
+</select>
+</div>
+<div class="prop-row"><label for="wmRotation">Rotation</label>
+<select id="wmRotation">
+<option value="0" selected>Do not rotate</option>
+<option value="45">45 degrees</option>
+<option value="90">90 degrees</option>
+<option value="180">180 degrees</option>
+<option value="270">270 degrees</option>
+</select>
+</div>
+<div class="prop-row"><label>Pages</label>
+<div class="pagerow"><span>from page</span><input type="number" id="wmFrom" min="1" placeholder="1"><span>to</span><input type="number" id="wmTo" min="1" placeholder="last"></div>
+<p class="footnote">Leave both blank to stamp every page. With several files, the range applies to each file and is limited to its page count.</p>
+</div>
+<div class="prop-row"><label>Layer</label>
+<div class="layercards">
+<button class="layercard sel" id="layerAbove" type="button"><span class="ltitle">Over the PDF content</span><span class="ldesc">The watermark is drawn on top of the page, like a stamp.</span></button>
+<button class="layercard" id="layerBelow" type="button"><span class="ltitle">Below the PDF content</span><span class="ldesc">The watermark sits underneath, showing through blank areas.</span></button>
+</div>
+</div>
+</div>
+<div class="freenote">Everything here is 100% free, with no limits: stamp as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your watermarked PDFs are ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="wmNote" style="display:none"></div>
+<div class="scannote" id="failNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Watermark more files</button>
+</div>
+
 <div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why watermark with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🖋</span><h3>Text or image stamps</h3><p>Type your name, your company or a word like “Confidential” and style it your way — or stamp your logo as an image, with its transparency preserved.</p></div>
+<div class="step"><span class="fic">🎯</span><h3>Position, mosaic &amp; transparency</h3><p>Nine positions, an optional tiled mosaic over the whole page, four transparency levels, rotation, a page range and a choice of layer — over or under the content.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>Your documents never leave your device. There is no server upload and no account, so contracts, invoices and personal files stay exactly where they belong: with you.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to add a watermark</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. You can stamp several PDFs in one go, with the same watermark.</p></div>
+<div class="step"><span class="num">2</span><h3>Design your watermark</h3><p>Write your text and pick a font, size and color — or switch to “Place image” and use your logo or any PNG or JPG picture.</p></div>
+<div class="step"><span class="num">3</span><h3>Place it your way</h3><p>Choose one of nine positions or tile the page as a mosaic, then set the transparency, rotation, the pages to stamp and the layer. The preview updates as you go.</p></div>
+<div class="step"><span class="num">4</span><h3>Stamp and download</h3><p>Press “Add watermark” and save each stamped PDF on its own, or all of them together in a single ZIP file.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>Is this watermark tool really free?</h3><p>Yes — completely. You can stamp as many PDFs as you like, several files at once, with every option unlocked. There is no subscription, no “premium” version of the watermark and no sign-up: the whole tool runs for free in your browser.</p></div>
+<div class="qa"><h3>Are my files uploaded to a server?</h3><p>No. Your PDFs are opened, previewed and stamped entirely on your own device — nothing is sent anywhere. That is why the tool also works on sensitive documents: contracts, payslips and personal files never pass through a third-party server.</p></div>
+<div class="qa"><h3>Can a watermark added here be removed later?</h3><p>A watermark drawn over the content becomes part of the page itself, so there is no one-click way to take it off, and a watermark placed below the content is buried even deeper, underneath everything else on the page. That said, no watermark is magic: a determined expert with specialist tools may still manage to remove or cover a stamp. Treat a watermark as a clear mark of ownership and a strong deterrent — not as encryption.</p></div>
+<div class="qa"><h3>Should I use a text or an image watermark?</h3><p>Text is the quickest way to mark ownership or status — a name, a company, “Draft” or “Confidential”. An image is better for a logo or an official-looking stamp, especially a PNG with a transparent background, which blends into the page without a white box around it.</p></div>
+<div class="qa"><h3>Which fonts can I use for a text watermark?</h3><p>Five familiar families — Arial/Helvetica, Impact, Verdana, Courier and Times New Roman — each matched to the closest built-in PDF font, so your watermark looks the same in every reader and adds almost nothing to the file size. Bold, italic and underline combine freely with the family you pick.</p></div>
+</div>
 </main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Adding your watermark…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button">Add watermark</button>
+</div>
+</div>
+
 <footer>
 <p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
+<script id="wmEngine">
+/* =====================================================================
+   PdfBleu Watermark — stamping engine, 100 % local.
+   Watermark.apply(pdfBytes, settings, imageAsset, PDFLibImpl)
+     -> Promise<{bytes, pagesStamped, replacedChars}>
+
+   The watermark drawing operations are built ONCE as a raw PDF
+   content-stream string (a single ops-builder) and attached to each
+   stamped page either at the END of its Contents (layer "above") or
+   at the START (layer "below"), with the font, image and opacity
+   graphics state registered in the page Resources. No DOM access in
+   here, so the engine can be tested headlessly.
+
+   Geometry: tile placements are computed in the page's DISPLAYED
+   (view) space — the size a reader shows after the page's own
+   /Rotate flag — with tile CENTERS in PDF points, bottom-left
+   origin, via Watermark.placements(). Each center is then mapped
+   into user space with viewToUser (the same mapping the Sign PDF
+   engine uses) and the tile itself is rotated by
+   (rotationDeg + pageRotation) around its own center, so the
+   watermark appears upright, at the angle the user picked, even on
+   rotated pages.
+   ===================================================================== */
+var Watermark = (function () {
+  'use strict';
+
+  var SAFE_EXTRA = { 8364: 1, 8226: 1, 8211: 1, 8212: 1, 8216: 1, 8217: 1, 8220: 1, 8221: 1, 8230: 1, 8482: 1 };
+
+  // Replace characters the standard PDF fonts (WinAnsi) cannot draw
+  // with "?", counting how many were replaced.
+  function sanitizeText(s) {
+    var out = '', n = 0;
+    s = String(s == null ? '' : s);
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if ((c >= 32 && c <= 126) || (c >= 160 && c <= 255) || SAFE_EXTRA[c]) out += s.charAt(i);
+      else { out += '?'; n++; }
+    }
+    return { text: out, replaced: n };
+  }
+
+  // Familiar font names -> the closest built-in PDF standard fonts.
+  var FONT_MAP = {
+    helvetica: { regular: 'Helvetica', bold: 'HelveticaBold', italic: 'HelveticaOblique', boldItalic: 'HelveticaBoldOblique' },
+    verdana:   { regular: 'Helvetica', bold: 'HelveticaBold', italic: 'HelveticaOblique', boldItalic: 'HelveticaBoldOblique' },
+    impact:    { regular: 'HelveticaBold', bold: 'HelveticaBold', italic: 'HelveticaBoldOblique', boldItalic: 'HelveticaBoldOblique' },
+    courier:   { regular: 'Courier', bold: 'CourierBold', italic: 'CourierOblique', boldItalic: 'CourierBoldOblique' },
+    times:     { regular: 'TimesRoman', bold: 'TimesRomanBold', italic: 'TimesRomanItalic', boldItalic: 'TimesRomanBoldItalic' }
+  };
+
+  function fontNameFor(fontKey, bold, italic) {
+    var f = FONT_MAP[fontKey] || FONT_MAP.helvetica;
+    if (bold && italic) return f.boldItalic;
+    if (bold) return f.bold;
+    if (italic) return f.italic;
+    return f.regular;
+  }
+
+  // Parse "#rrggbb" into [r, g, b] floats 0..1 (null when invalid).
+  function parseHex(hex) {
+    var m = /^#?([0-9a-fA-F]{6})$/.exec(String(hex == null ? '' : hex).trim());
+    if (!m) return null;
+    var v = parseInt(m[1], 16);
+    return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+  }
+
+  // Convert a point from view coordinates (top-left origin, page as
+  // displayed with its rotation applied, unrotated page W x H) into
+  // user-space coordinates (bottom-left origin). Same mapping as the
+  // Sign PDF engine.
+  function viewToUser(rot, W, H, vx, vy) {
+    if (rot === 90) return [vy, vx];
+    if (rot === 180) return [W - vx, vy];
+    if (rot === 270) return [W - vy, H - vx];
+    return [vx, H - vy];
+  }
+
+  /* Tile centers for a page of pageW x pageH points and a watermark
+     box of boxW x boxH points, in PDF points, BOTTOM-LEFT origin.
+     Single placement: the box is centered on the page for center
+     anchors, or inset 36 pt from the page edge for edge anchors.
+     Mosaic: tiles start half a box outside the page so the pattern
+     covers the edges, stepping boxW + gapX / boxH + gapY, and the
+     grid is thinned out if it would exceed 200 tiles. */
+  function placements(pageW, pageH, boxW, boxH, position, mosaic) {
+    position = position || {};
+    var v = position.v || 'middle', h = position.h || 'center';
+    if (!mosaic) {
+      var cx, cy;
+      if (h === 'left') cx = 36 + boxW / 2;
+      else if (h === 'right') cx = pageW - 36 - boxW / 2;
+      else cx = pageW / 2;
+      if (v === 'top') cy = pageH - 36 - boxH / 2;
+      else if (v === 'bottom') cy = 36 + boxH / 2;
+      else cy = pageH / 2;
+      if (boxW >= pageW - 72) cx = pageW / 2;
+      if (boxH >= pageH - 72) cy = pageH / 2;
+      return [{ cx: cx, cy: cy }];
+    }
+    var gapX = boxW * 0.35 + 40, gapY = boxH + 70;
+    var stepX = boxW + gapX, stepY = boxH + gapY;
+    function build(sx, sy) {
+      var list = [];
+      for (var y = -boxH / 2; y <= pageH + boxH / 2 + 0.001; y += sy) {
+        for (var x = -boxW / 2; x <= pageW + boxW / 2 + 0.001; x += sx) {
+          list.push({ cx: x, cy: y });
+        }
+      }
+      return list;
+    }
+    var out = build(stepX, stepY), guard = 0;
+    while (out.length > 200 && guard < 40) {
+      stepX *= 1.2; stepY *= 1.2;
+      out = build(stepX, stepY);
+      guard++;
+    }
+    return out;
+  }
+
+  function fmt(n) {
+    var v = Math.round(n * 10000) / 10000;
+    if (v === 0) v = 0; // avoid "-0"
+    return String(v);
+  }
+  function num(n) { return fmt(n); }
+  function rgbOp(rgb, op) { return fmt(rgb[0]) + ' ' + fmt(rgb[1]) + ' ' + fmt(rgb[2]) + ' ' + op; }
+
+  function outputName(name) {
+    var base = String(name || 'document').replace(/\.pdf$/i, '');
+    if (!base) base = 'document';
+    return base + '_watermark.pdf';
+  }
+
+  async function apply(pdfBytes, settings, imageAsset, PDFLibImpl) {
+    var L = PDFLibImpl || (typeof PDFLib !== 'undefined' ? PDFLib : null);
+    if (!L) throw new Error('The PDF library is not available.');
+    var s = settings || {};
+    var mode = s.mode === 'image' ? 'image' : 'text';
+    if (mode === 'image' && (!imageAsset || !imageAsset.bytes)) {
+      throw new Error('Please add a watermark image first — switch to “Place image” and choose a PNG or JPG.');
+    }
+    var fontSize = Math.max(1, Number(s.fontSize) || 48);
+    var opacity = Number(s.opacity);
+    if (!isFinite(opacity)) opacity = 1;
+    opacity = Math.max(0, Math.min(1, opacity));
+    var rotDeg = ((Number(s.rotationDeg) || 0) % 360 + 360) % 360;
+    var layer = s.layer === 'below' ? 'below' : 'above';
+    var position = s.position || { v: 'middle', h: 'center' };
+    var mosaic = !!s.mosaic;
+
+    var doc;
+    try { doc = await L.PDFDocument.load(pdfBytes); }
+    catch (e) { throw new Error('Could not open this PDF — it may be password-protected or damaged.'); }
+    var pages = doc.getPages();
+    var count = pages.length;
+    if (!count) throw new Error('This PDF has no pages.');
+
+    // Page range: clamp to [1, count]; from after to is an error.
+    var rawFrom = (s.range && s.range.from != null) ? Math.floor(Number(s.range.from)) : 1;
+    var rawTo = (s.range && s.range.to != null) ? Math.floor(Number(s.range.to)) : count;
+    if (!isFinite(rawFrom)) rawFrom = 1;
+    if (!isFinite(rawTo)) rawTo = count;
+    var from = Math.max(1, Math.min(count, rawFrom));
+    var to = Math.max(1, Math.min(count, rawTo));
+    if (from > to) throw new Error('The page range is invalid: “from page” comes after “to page”.');
+
+    var ctx = doc.context;
+    var PN = L.PDFName;
+    var FONT_RES = 'PdfBleuWmF', IMG_RES = 'PdfBleuWmIm', GS_RES = 'PdfBleuWmGS';
+
+    // Prepare the stamp material.
+    var font = null, cleanText = '', textHex = '', replacedChars = 0;
+    if (mode === 'text') {
+      var st = sanitizeText(s.text == null ? '' : s.text);
+      cleanText = st.text;
+      replacedChars = st.replaced;
+      if (!cleanText) throw new Error('Please enter the watermark text.');
+      font = await doc.embedFont(L.StandardFonts[fontNameFor(s.fontKey, s.bold, s.italic)]);
+      textHex = font.encodeText(cleanText).toString();
+    }
+    var img = null, imgW = 0, imgH = 0;
+    if (mode === 'image') {
+      img = imageAsset.format === 'jpg' ? await doc.embedJpg(imageAsset.bytes) : await doc.embedPng(imageAsset.bytes);
+      imgW = imageAsset.widthPx || img.width;
+      imgH = imageAsset.heightPx || img.height;
+      if (!(imgW > 0) || !(imgH > 0)) { imgW = img.width; imgH = img.height; }
+    }
+    var color = parseHex(s.colorHex) || [0, 0, 0];
+    var bg = s.bgHex ? parseHex(s.bgHex) : null;
+    var imageScale = Number(s.imageScale);
+    if (!isFinite(imageScale)) imageScale = 0.35;
+    imageScale = Math.max(0.05, Math.min(1, imageScale));
+
+    function getSubDict(res, name) {
+      var sub = res.get(PN.of(name));
+      sub = sub ? ctx.lookup(sub) : null;
+      if (!sub || typeof sub.set !== 'function') {
+        sub = ctx.obj({});
+        res.set(PN.of(name), sub);
+      }
+      return sub;
+    }
+
+    // Attach the ops stream to the page (first = below, last = above)
+    // and register everything the stream references.
+    function attach(page, ops) {
+      var res = page.node.Resources();
+      if (!res || typeof res.set !== 'function') {
+        res = ctx.obj({});
+        page.node.set(PN.of('Resources'), res);
+      }
+      if (font) res.set(PN.of(FONT_RES), font.ref);
+      if (img) getSubDict(res, 'XObject').set(PN.of(IMG_RES), img.ref);
+      if (opacity < 1) {
+        var gs = ctx.obj({});
+        gs.set(PN.of('Type'), PN.of('ExtGState'));
+        gs.set(PN.of('ca'), L.PDFNumber.of(opacity));
+        gs.set(PN.of('CA'), L.PDFNumber.of(opacity));
+        getSubDict(res, 'ExtGState').set(PN.of(GS_RES), gs);
+      }
+      var streamRef = ctx.register(ctx.flateStream(ops));
+      var raw = page.node.get(PN.of('Contents'));
+      var refs = [];
+      if (raw) {
+        var looked = ctx.lookup(raw);
+        if (looked && typeof looked.size === 'function' && typeof looked.get === 'function') {
+          for (var i = 0; i < looked.size(); i++) {
+            var el = looked.get(i);
+            refs.push(el instanceof L.PDFRef ? el : ctx.register(el));
+          }
+        } else if (looked) {
+          refs.push(raw instanceof L.PDFRef ? raw : ctx.register(looked));
+        }
+      }
+      var ordered = layer === 'below' ? [streamRef].concat(refs) : refs.concat([streamRef]);
+      page.node.set(PN.of('Contents'), ctx.obj(ordered));
+    }
+
+    // Build the drawing ops for ONE tile whose center is (cx, cy) in
+    // user space, rotated by phi radians around that center.
+    function tileOps(cx, cy, phi, boxW, boxH) {
+      var cos = Math.cos(phi), sin = Math.sin(phi);
+      var gs = opacity < 1 ? '/' + GS_RES + ' gs ' : '';
+      var ops = '';
+      if (mode === 'text') {
+        if (bg) {
+          var hb = fontSize * 1.15;
+          var a = boxW * cos, b = boxW * sin, c = -hb * sin, d = hb * cos;
+          var e = cx - (boxW / 2) * cos + (hb / 2) * sin;
+          var f = cy - (boxW / 2) * sin - (hb / 2) * cos;
+          ops += 'q ' + gs + rgbOp(bg, 'rg') + ' ' + num(a) + ' ' + num(b) + ' ' + num(c) + ' ' + num(d) + ' ' + num(e) + ' ' + num(f) + ' cm 0 0 1 1 re f Q\n';
+        }
+        // Baseline start: the point (-boxW/2, -0.26*boxH) from the tile
+        // center in the tile's own frame, rotated by phi.
+        var lx = -boxW / 2, ly = -0.26 * boxH;
+        var ox = cx + lx * cos - ly * sin;
+        var oy = cy + lx * sin + ly * cos;
+        ops += 'q ' + gs + 'BT /' + FONT_RES + ' ' + num(fontSize) + ' Tf ' + rgbOp(color, 'rg') + ' ' +
+               num(cos) + ' ' + num(sin) + ' ' + num(-sin) + ' ' + num(cos) + ' ' + num(ox) + ' ' + num(oy) + ' Tm ' + textHex + ' Tj ET Q\n';
+        if (s.underline) {
+          var drop = Math.max(2, fontSize * 0.08), lw = Math.max(1, fontSize * 0.045);
+          var uy = ly - drop;
+          var x1 = cx + (-boxW / 2) * cos - uy * sin, y1 = cy + (-boxW / 2) * sin + uy * cos;
+          var x2 = cx + (boxW / 2) * cos - uy * sin, y2 = cy + (boxW / 2) * sin + uy * cos;
+          ops += 'q ' + gs + num(lw) + ' w ' + rgbOp(color, 'RG') + ' ' + num(x1) + ' ' + num(y1) + ' m ' + num(x2) + ' ' + num(y2) + ' l S Q\n';
+        }
+      } else {
+        var a2 = boxW * cos, b2 = boxW * sin, c2 = -boxH * sin, d2 = boxH * cos;
+        var e2 = cx - (boxW / 2) * cos + (boxH / 2) * sin;
+        var f2 = cy - (boxW / 2) * sin - (boxH / 2) * cos;
+        ops += 'q ' + gs + num(a2) + ' ' + num(b2) + ' ' + num(c2) + ' ' + num(d2) + ' ' + num(e2) + ' ' + num(f2) + ' cm /' + IMG_RES + ' Do Q\n';
+      }
+      return ops;
+    }
+
+    var pagesStamped = 0;
+    for (var pi = from - 1; pi <= to - 1; pi++) {
+      var page = pages[pi];
+      var size = page.getSize();
+      var W = size.width, H = size.height;
+      var rot = 0;
+      try { rot = (page.getRotation && page.getRotation().angle) || 0; } catch (err) { rot = 0; }
+      rot = ((rot % 360) + 360) % 360;
+      var swapped = rot === 90 || rot === 270;
+      var vw = swapped ? H : W, vh = swapped ? W : H;
+      var boxW, boxH;
+      if (mode === 'text') {
+        boxW = font.widthOfTextAtSize(cleanText, fontSize);
+        boxH = fontSize;
+      } else {
+        boxW = vw * imageScale;
+        boxH = boxW * (imgH / imgW);
+      }
+      var centers = placements(vw, vh, boxW, boxH, position, mosaic);
+      var phi = (rotDeg + rot) * Math.PI / 180;
+      var all = '';
+      for (var ci = 0; ci < centers.length; ci++) {
+        var ctr = centers[ci];
+        var uc = viewToUser(rot, W, H, ctr.cx, vh - ctr.cy);
+        all += tileOps(uc[0], uc[1], phi, boxW, boxH);
+      }
+      if (all) { attach(page, all); pagesStamped++; }
+    }
+
+    var bytes = await doc.save();
+    return { bytes: bytes, pagesStamped: pagesStamped, replacedChars: replacedChars };
+  }
+
+  return {
+    apply: apply,
+    placements: placements,
+    outputName: outputName,
+    _: { sanitizeText: sanitizeText, fontNameFor: fontNameFor, fontMap: FONT_MAP, viewToUser: viewToUser, parseHex: parseHex }
+  };
+})();
+</script>
 <script>
 (function () {
-  var file = null;
-  var pageCount = 0;
-  var drop = document.getElementById('drop');
-  var input = document.getElementById('fileInput');
-  var goBtn = document.getElementById('goBtn');
-  var status = document.getElementById('status');
-  var errorBox = document.getElementById('error');
-  var fileInfo = document.getElementById('fileInfo');
-  var wmText = document.getElementById('wmText');
-  var opacity = document.getElementById('opacity');
-  var opacityVal = document.getElementById('opacityVal');
-  opacity.addEventListener('input', function () { opacityVal.textContent = opacity.value + '%'; });
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      layout = $('layout'), previewSec = $('previewSec'),
+      previewFileWrap = $('previewFileWrap'), previewFileSelect = $('previewFileSelect'),
+      previewPages = $('previewPages'),
+      modeTextBtn = $('modeTextBtn'), modeImageBtn = $('modeImageBtn'),
+      paneText = $('paneText'), paneImage = $('paneImage'),
+      wmText = $('wmText'), wmFont = $('wmFont'), wmSize = $('wmSize'), wmSizeNum = $('wmSizeNum'),
+      wmSizeVal = $('wmSizeVal'), wmBold = $('wmBold'), wmItalic = $('wmItalic'),
+      wmUnderline = $('wmUnderline'), wmColor = $('wmColor'),
+      wmBgSelect = $('wmBgSelect'), wmBgColor = $('wmBgColor'),
+      wmImgBtn = $('wmImgBtn'), wmImgInput = $('wmImgInput'),
+      wmImgPrevWrap = $('wmImgPrevWrap'), wmImgPrev = $('wmImgPrev'), wmImgName = $('wmImgName'),
+      wmImgScale = $('wmImgScale'), wmImgScaleVal = $('wmImgScaleVal'),
+      posGrid = $('posGrid'), wmMosaic = $('wmMosaic'), wmOpacity = $('wmOpacity'),
+      wmRotation = $('wmRotation'), wmFrom = $('wmFrom'), wmTo = $('wmTo'),
+      layerAbove = $('layerAbove'), layerBelow = $('layerBelow'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successInfo = $('successInfo'), resultList = $('resultList'),
+      zipBtn = $('zipBtn'), wmNote = $('wmNote'), failNote = $('failNote'),
+      restartBtn = $('restartBtn');
+
+  var state = {
+    mode: 'text',
+    files: [],           // {uid, name, size, bytes, pdfDoc, numPages, ok, errMsg, cover}
+    uidSeq: 0,
+    selectedUid: null,   // file shown in the preview
+    imageAsset: null,    // {bytes, format, widthPx, heightPx, url, name}
+    position: { v: 'middle', h: 'center' },
+    layer: 'above',
+    results: []          // {name, blob, pagesStamped, size}
+  };
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
   function showError(msg) {
-    errorBox.textContent = msg;
-    errorBox.style.display = msg ? 'block' : 'none';
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
   }
-  function downloadBytes(bytes, name) {
-    var blob = new Blob([bytes], { type: 'application/pdf' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = name;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-  }
+  function okFiles() { return state.files.filter(function (f) { return f.ok; }); }
 
-  function parseRange(text, total, verb) {
-    var indices = []; var seen = {};
-    var parts = text.split(',');
-    for (var i = 0; i < parts.length; i++) {
-      var part = parts[i].trim();
-      if (!part) throw new Error('Empty page range. Check the format, for example: 1-3,5');
-      var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
-      var single = part.match(/^(\d+)$/);
-      var start, end, n;
-      if (m) {
-        start = parseInt(m[1], 10); end = parseInt(m[2], 10);
-        if (start > end) throw new Error('Invalid range "' + part + '": the start must be less than the end.');
-        for (n = start; n <= end; n++) {
-          if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
-          if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
-        }
-      } else if (single) {
-        n = parseInt(single[1], 10);
-        if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
-        if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
-      } else {
-        throw new Error('Invalid format "' + part + '". Use for example: 1-3,5');
-      }
-    }
-    if (!indices.length) throw new Error('Please specify at least one page ' + verb + '.');
-    return indices;
-  }
+  /* ---------------- file handling ---------------- */
 
-  async function setFile(f) {
-    showError('');
-    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
-    try {
-      var buf = await f.arrayBuffer();
-      var doc = await PDFLib.PDFDocument.load(buf);
-      pageCount = doc.getPageCount();
-      file = f;
-      fileInfo.textContent = 'File: ' + f.name + ' — ' + pageCount + ' page(s).';
-      fileInfo.style.display = 'block';
-      goBtn.disabled = false;
-
-    } catch (err) {
-      file = null; pageCount = 0; goBtn.disabled = true;
-      showError('Could not read this PDF. It may be password-protected or damaged.');
-    }
-  }
-  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
-  drop.addEventListener('click', function () { input.click(); });
-  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
-  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
-  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
-  drop.addEventListener('drop', function (e) {
-    e.preventDefault(); drop.classList.remove('drag');
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
   });
-  goBtn.addEventListener('click', async function () {
-    showError('');
-    if (!file) { showError('Please select a PDF file first.'); return; }
-    var text = wmText.value.trim();
-    if (!text) { showError('Please enter the watermark text (for example: CONFIDENTIAL).'); return; }
-    var checked = document.querySelector('input[name="position"]:checked');
-    var position = checked ? checked.value : 'diagonal';
-    var op = parseInt(opacity.value, 10) / 100;
-    goBtn.disabled = true; status.style.display = 'block';
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+
+  function addFiles(fileListIn) {
+    var added = 0;
+    Array.prototype.forEach.call(fileListIn, function (file) {
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') return;
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, pdfDoc: null, numPages: 0, ok: false, errMsg: '', cover: null, loading: true
+      };
+      state.files.push(rec);
+      added++;
+      loadFile(rec, file);
+    });
+    if (!added) showError('Please choose PDF files — the files you dropped were not PDFs.');
+    else showError(null);
+    renderFileList();
+    refreshChrome();
+  }
+
+  async function loadFile(rec, file) {
     try {
       var buf = await file.arrayBuffer();
-      var doc = await PDFLib.PDFDocument.load(buf);
-      var font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
-      var color = PDFLib.rgb(0.32, 0.38, 0.62);
-      doc.getPages().forEach(function (page) {
-        var size = page.getSize();
-        if (position === 'diagonal') {
-          var fs = 46;
-          var tw = font.widthOfTextAtSize(text, fs);
-          var rad = Math.PI / 4;
-          var cx = size.width / 2, cy = size.height / 2;
-          page.drawText(text, {
-            x: cx - (tw * Math.cos(rad)) / 2,
-            y: cy - (tw * Math.sin(rad)) / 2,
-            size: fs, font: font, color: color, opacity: op,
-            rotate: PDFLib.degrees(45)
-          });
-        } else {
-          var fs2 = 13;
-          var tw2 = font.widthOfTextAtSize(text, fs2);
-          page.drawText(text, {
-            x: (size.width - tw2) / 2, y: 22,
-            size: fs2, font: font, color: color, opacity: op
-          });
-        }
-      });
-      downloadBytes(await doc.save(), 'pdfbleu-watermark.pdf');
-    } catch (err) {
-      showError('An error occurred while adding the watermark. Please try again.');
-    } finally { status.style.display = 'none'; goBtn.disabled = false; }
-  });
-})();
+      rec.bytes = new Uint8Array(buf);
+      var pdfDoc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+      rec.pdfDoc = pdfDoc;
+      rec.numPages = pdfDoc.numPages;
+      rec.ok = true;
+      try {
+        var page = await pdfDoc.getPage(1);
+        var vp = page.getViewport({ scale: 1 });
+        var scale = Math.min(128 / vp.width, 164 / vp.height);
+        var viewport = page.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+        rec.cover = canvas.toDataURL('image/png');
+      } catch (e) { rec.cover = null; }
+    } catch (e) {
+      rec.ok = false;
+      rec.errMsg = (e && e.name === 'PasswordException')
+        ? 'Password-protected — this file will be skipped.'
+        : 'Could not be opened — this file will be skipped.';
+    }
+    rec.loading = false;
+    if (!state.selectedUid && rec.ok) state.selectedUid = rec.uid;
+    renderFileList();
+    refreshChrome();
+    if (state.selectedUid === rec.uid) renderPreview();
+  }
 
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    if (state.selectedUid === uid) {
+      var ok = okFiles();
+      state.selectedUid = ok.length ? ok[0].uid : null;
+    }
+    renderFileList();
+    refreshChrome();
+    renderPreview();
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    state.files.forEach(function (f) {
+      var card = document.createElement('div');
+      card.className = 'filecard' + (f.ok || f.loading ? '' : ' bad');
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (f.cover) {
+        var img = document.createElement('img');
+        img.src = f.cover; img.alt = '';
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('span');
+        ph.className = 'coverph';
+        ph.textContent = f.loading ? 'Loading…' : (f.ok ? 'PDF' : 'Error');
+        cover.appendChild(ph);
+      }
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('div');
+      nm.className = 'fname'; nm.textContent = f.name;
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = fmtSize(f.size) + (f.ok ? ' · ' + f.numPages + (f.numPages === 1 ? ' page' : ' pages') : '');
+      info.appendChild(nm); info.appendChild(meta);
+      if (f.errMsg) {
+        var warn = document.createElement('div');
+        warn.className = 'warn'; warn.textContent = f.errMsg;
+        info.appendChild(warn);
+      }
+      var rm = document.createElement('button');
+      rm.className = 'rm'; rm.type = 'button'; rm.title = 'Remove this file'; rm.textContent = '✕';
+      rm.addEventListener('click', function () { removeFile(f.uid); });
+      card.appendChild(cover); card.appendChild(info); card.appendChild(rm);
+      fileList.appendChild(card);
+    });
+    fileTools.classList.toggle('on', state.files.length > 1);
+  }
+
+  sortBtn.addEventListener('click', function () {
+    state.files.sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }); });
+    renderFileList();
+    refreshChrome();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('nocovers');
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+    coversBtn.classList.toggle('on', !hidden);
+  });
+
+  /* ---------------- options ---------------- */
+
+  function setMode(m) {
+    state.mode = m;
+    modeTextBtn.classList.toggle('sel', m === 'text');
+    modeImageBtn.classList.toggle('sel', m === 'image');
+    paneText.style.display = m === 'text' ? '' : 'none';
+    paneImage.style.display = m === 'image' ? '' : 'none';
+    refreshChrome();
+    buildOverlays();
+  }
+  modeTextBtn.addEventListener('click', function () { setMode('text'); });
+  modeImageBtn.addEventListener('click', function () { setMode('image'); });
+
+  function toggleBtn(btn) { btn.classList.toggle('on'); buildOverlays(); }
+  wmBold.addEventListener('click', function () { toggleBtn(wmBold); });
+  wmItalic.addEventListener('click', function () { toggleBtn(wmItalic); });
+  wmUnderline.addEventListener('click', function () { toggleBtn(wmUnderline); });
+
+  wmSize.addEventListener('input', function () {
+    wmSizeNum.value = wmSize.value; wmSizeVal.textContent = wmSize.value; buildOverlays();
+  });
+  wmSizeNum.addEventListener('input', function () {
+    var v = Math.max(8, Math.min(150, parseInt(wmSizeNum.value, 10) || 8));
+    wmSize.value = v; wmSizeVal.textContent = v; buildOverlays();
+  });
+  wmImgScale.addEventListener('input', function () {
+    wmImgScaleVal.textContent = wmImgScale.value; buildOverlays();
+  });
+
+  posGrid.addEventListener('click', function (e) {
+    var btn = e.target.closest('.posbtn');
+    if (!btn) return;
+    state.position = { v: btn.getAttribute('data-v'), h: btn.getAttribute('data-h') };
+    Array.prototype.forEach.call(posGrid.querySelectorAll('.posbtn'), function (b) {
+      b.classList.toggle('sel', b === btn);
+    });
+    buildOverlays();
+  });
+
+  function setLayer(l) {
+    state.layer = l;
+    layerAbove.classList.toggle('sel', l === 'above');
+    layerBelow.classList.toggle('sel', l === 'below');
+  }
+  layerAbove.addEventListener('click', function () { setLayer('above'); });
+  layerBelow.addEventListener('click', function () { setLayer('below'); });
+
+  [wmText, wmFont, wmColor, wmBgSelect, wmBgColor, wmOpacity, wmRotation].forEach(function (el) {
+    el.addEventListener('input', buildOverlays);
+    el.addEventListener('change', buildOverlays);
+  });
+  wmMosaic.addEventListener('change', buildOverlays);
+
+  wmImgBtn.addEventListener('click', function () { wmImgInput.click(); });
+  wmImgInput.addEventListener('change', async function () {
+    var file = wmImgInput.files && wmImgInput.files[0];
+    wmImgInput.value = '';
+    if (!file) return;
+    var format = null;
+    if (file.type === 'image/png' || /\.png$/i.test(file.name)) format = 'png';
+    else if (file.type === 'image/jpeg' || /\.jpe?g$/i.test(file.name)) format = 'jpg';
+    if (!format) { showError('The watermark image must be a PNG or JPG file.'); return; }
+    showError(null);
+    try {
+      var buf = await file.arrayBuffer();
+      var url = URL.createObjectURL(file);
+      var dims = await new Promise(function (resolve, reject) {
+        var im = new Image();
+        im.onload = function () { resolve({ w: im.naturalWidth, h: im.naturalHeight }); };
+        im.onerror = reject;
+        im.src = url;
+      });
+      state.imageAsset = { bytes: new Uint8Array(buf), format: format, widthPx: dims.w, heightPx: dims.h, url: url, name: file.name };
+      wmImgPrev.src = url;
+      wmImgPrevWrap.classList.add('on');
+      wmImgName.textContent = file.name + ' (' + dims.w + ' × ' + dims.h + ')';
+      wmImgBtn.textContent = 'Change image';
+    } catch (e) {
+      showError('That image could not be read. Please try another PNG or JPG.');
+    }
+    refreshChrome();
+    buildOverlays();
+  });
+
+  function readSettings() {
+    var fromVal = parseInt(wmFrom.value, 10);
+    var toVal = parseInt(wmTo.value, 10);
+    var range = null;
+    if (!isNaN(fromVal) || !isNaN(toVal)) {
+      range = { from: isNaN(fromVal) ? null : fromVal, to: isNaN(toVal) ? null : toVal };
+    }
+    return {
+      mode: state.mode,
+      text: wmText.value,
+      fontKey: wmFont.value,
+      bold: wmBold.classList.contains('on'),
+      italic: wmItalic.classList.contains('on'),
+      underline: wmUnderline.classList.contains('on'),
+      fontSize: Math.max(8, Math.min(150, parseInt(wmSize.value, 10) || 48)),
+      colorHex: wmColor.value,
+      bgHex: wmBgSelect.value === 'color' ? wmBgColor.value : null,
+      opacity: (parseInt(wmOpacity.value, 10) || 100) / 100,
+      rotationDeg: parseInt(wmRotation.value, 10) || 0,
+      position: { v: state.position.v, h: state.position.h },
+      mosaic: wmMosaic.checked,
+      layer: state.layer,
+      range: range,
+      imageScale: (parseInt(wmImgScale.value, 10) || 35) / 100
+    };
+  }
+
+  /* ---------------- preview ---------------- */
+
+  var previewToken = 0;
+  var pageViews = []; // {wrap, overlay, vw, vh} per rendered page
+
+  async function renderPreview() {
+    var token = ++previewToken;
+    pageViews = [];
+    previewPages.innerHTML = '';
+    var rec = null;
+    state.files.forEach(function (f) { if (f.uid === state.selectedUid) rec = f; });
+    if (!rec || !rec.ok || !rec.pdfDoc) { previewSec.classList.remove('on'); return; }
+    previewSec.classList.add('on');
+    // file selector when more than one usable file
+    var ok = okFiles();
+    previewFileWrap.style.display = ok.length > 1 ? '' : 'none';
+    if (ok.length > 1) {
+      previewFileSelect.innerHTML = '';
+      ok.forEach(function (f) {
+        var opt = document.createElement('option');
+        opt.value = String(f.uid);
+        opt.textContent = f.name;
+        if (f.uid === state.selectedUid) opt.selected = true;
+        previewFileSelect.appendChild(opt);
+      });
+    }
+    for (var p = 1; p <= rec.numPages; p++) {
+      if (token !== previewToken) return;
+      var page = await rec.pdfDoc.getPage(p);
+      if (token !== previewToken) return;
+      var baseVp = page.getViewport({ scale: 1 });
+      var targetW = Math.min(680, previewPages.clientWidth || 680);
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var scale = (targetW / baseVp.width) * dpr;
+      var viewport = page.getViewport({ scale: scale });
+      var block = document.createElement('div');
+      block.className = 'pageblock';
+      var label = document.createElement('div');
+      label.className = 'pagelabel';
+      label.textContent = 'Page ' + p + ' of ' + rec.numPages;
+      var wrap = document.createElement('div');
+      wrap.className = 'pagewrap';
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.round(viewport.width);
+      canvas.height = Math.round(viewport.height);
+      canvas.style.width = Math.round(viewport.width / dpr) + 'px';
+      canvas.style.height = Math.round(viewport.height / dpr) + 'px';
+      var overlay = document.createElement('div');
+      overlay.className = 'wmoverlay';
+      wrap.appendChild(canvas);
+      wrap.appendChild(overlay);
+      block.appendChild(label);
+      block.appendChild(wrap);
+      previewPages.appendChild(block);
+      pageViews.push({ overlay: overlay, vw: baseVp.width, vh: baseVp.height });
+      try {
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+      } catch (e) { /* a re-render may cancel this one */ }
+    }
+    buildOverlays();
+  }
+
+  previewFileSelect.addEventListener('change', function () {
+    state.selectedUid = parseInt(previewFileSelect.value, 10);
+    renderPreview();
+  });
+
+  var measureCtx = document.createElement('canvas').getContext('2d');
+  var CSS_FONT = { helvetica: 'Arial, Helvetica, sans-serif', verdana: 'Verdana, Arial, sans-serif', impact: 'Impact, Arial, sans-serif', courier: "'Courier New', Courier, monospace", times: "'Times New Roman', Times, serif" };
+
+  function buildOverlays() {
+    if (!pageViews.length) return;
+    var s = readSettings();
+    pageViews.forEach(function (pv) {
+      pv.overlay.innerHTML = '';
+      var dispW = pv.overlay.clientWidth, dispH = pv.overlay.clientHeight;
+      if (!dispW || !dispH) return;
+      var kx = dispW / pv.vw, ky = dispH / pv.vh;
+      var boxW, boxH;
+      if (s.mode === 'text') {
+        if (!s.text) return;
+        var weight = (s.bold || s.fontKey === 'impact') ? '700 ' : '';
+        var style = s.italic ? 'italic ' : '';
+        measureCtx.font = style + weight + '100px ' + (CSS_FONT[s.fontKey] || CSS_FONT.helvetica);
+        var w100 = measureCtx.measureText(s.text).width || 100;
+        boxW = w100 / 100 * s.fontSize;
+        boxH = s.fontSize;
+      } else {
+        if (!state.imageAsset) return;
+        boxW = pv.vw * s.imageScale;
+        boxH = boxW * (state.imageAsset.heightPx / state.imageAsset.widthPx);
+      }
+      var centers = Watermark.placements(pv.vw, pv.vh, boxW, boxH, s.position, s.mosaic);
+      centers.forEach(function (c) {
+        var tile = document.createElement('div');
+        tile.className = 'wmtile';
+        tile.style.left = (c.cx * kx) + 'px';
+        tile.style.top = ((pv.vh - c.cy) * ky) + 'px';
+        tile.style.opacity = String(s.opacity);
+        tile.style.transform = 'translate(-50%,-50%) rotate(' + (-s.rotationDeg) + 'deg)';
+        if (s.mode === 'text') {
+          tile.textContent = s.text;
+          tile.style.fontSize = (s.fontSize * kx) + 'px';
+          tile.style.fontFamily = CSS_FONT[s.fontKey] || CSS_FONT.helvetica;
+          tile.style.fontWeight = (s.bold || s.fontKey === 'impact') ? '700' : '400';
+          tile.style.fontStyle = s.italic ? 'italic' : 'normal';
+          tile.style.color = s.colorHex;
+          tile.style.textDecoration = s.underline ? 'underline' : 'none';
+          if (s.bgHex) { tile.style.background = s.bgHex; tile.style.padding = '0.06em 0'; }
+        } else {
+          var im = document.createElement('img');
+          im.src = state.imageAsset.url;
+          im.alt = '';
+          im.style.width = (boxW * kx) + 'px';
+          im.style.height = (boxH * ky) + 'px';
+          im.style.display = 'block';
+          tile.appendChild(im);
+        }
+        pv.overlay.appendChild(tile);
+      });
+    });
+  }
+
+  /* ---------------- chrome state ---------------- */
+
+  function refreshChrome() {
+    var ok = okFiles();
+    var totalPages = ok.reduce(function (n, f) { return n + f.numPages; }, 0);
+    var has = ok.length > 0;
+    actionBar.classList.toggle('on', has);
+    document.body.classList.toggle('bar-visible', has);
+    if (has) {
+      barSummary.textContent = ok.length + (ok.length === 1 ? ' file' : ' files') + ' · ' + totalPages + (totalPages === 1 ? ' page' : ' pages');
+    }
+    var blocked = !has || (state.mode === 'image' && !state.imageAsset) || (state.mode === 'text' && !wmText.value);
+    applyBtn.disabled = blocked;
+    if (has && !previewSec.classList.contains('on')) renderPreview();
+    if (!has) { previewSec.classList.remove('on'); previewPages.innerHTML = ''; pageViews = []; }
+  }
+  wmText.addEventListener('input', refreshChrome);
+
+  /* ---------------- apply ---------------- */
+
+  applyBtn.addEventListener('click', async function () {
+    var ok = okFiles();
+    if (!ok.length) return;
+    var s = readSettings();
+    if (s.mode === 'text' && !s.text) { showError('Please enter the watermark text.'); return; }
+    if (s.mode === 'image' && !state.imageAsset) { showError('Please add a watermark image first.'); return; }
+    showError(null);
+    processing.classList.add('on');
+    state.results = [];
+    var failures = [];
+    var replacedTotal = 0;
+    for (var i = 0; i < ok.length; i++) {
+      var f = ok[i];
+      processingDetail.textContent = 'Stamping ' + f.name + ' (' + (i + 1) + ' of ' + ok.length + ')…';
+      try {
+        var res = await Watermark.apply(f.bytes.slice(0), s, state.imageAsset, PDFLib);
+        replacedTotal += res.replacedChars || 0;
+        var blob = new Blob([res.bytes], { type: 'application/pdf' });
+        state.results.push({
+          name: Watermark.outputName(f.name),
+          blob: blob,
+          pagesStamped: res.pagesStamped,
+          size: blob.size
+        });
+      } catch (e) {
+        failures.push(f.name + ': ' + (e && e.message ? e.message : 'failed'));
+      }
+    }
+    processing.classList.remove('on');
+    if (!state.results.length) {
+      showError('No file could be stamped. ' + (failures[0] || ''));
+      return;
+    }
+    layout.style.display = 'none';
+    actionBar.classList.remove('on');
+    document.body.classList.remove('bar-visible');
+    success.classList.add('on');
+    var stamped = state.results.reduce(function (n, r) { return n + r.pagesStamped; }, 0);
+    successInfo.textContent = 'Stamped ' + stamped + (stamped === 1 ? ' page' : ' pages') + ' across ' + state.results.length + (state.results.length === 1 ? ' file' : ' files') + '.';
+    resultList.innerHTML = '';
+    state.results.forEach(function (r) {
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var info = document.createElement('div');
+      var rn = document.createElement('div');
+      rn.className = 'rname'; rn.textContent = r.name;
+      var rmeta = document.createElement('div');
+      rmeta.className = 'rmeta';
+      rmeta.textContent = fmtSize(r.size) + ' · ' + r.pagesStamped + (r.pagesStamped === 1 ? ' page' : ' pages') + ' stamped';
+      info.appendChild(rn); info.appendChild(rmeta);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.textContent = 'Download';
+      a.href = URL.createObjectURL(r.blob);
+      a.setAttribute('download', r.name);
+      item.appendChild(info); item.appendChild(a);
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = state.results.length > 1 ? '' : 'none';
+    if (replacedTotal > 0) {
+      wmNote.style.display = '';
+      wmNote.textContent = replacedTotal + ' character' + (replacedTotal === 1 ? '' : 's') + ' in your watermark text couldn\'t be drawn with the built-in PDF fonts and ' + (replacedTotal === 1 ? 'was' : 'were') + ' replaced with \'?\'.';
+    } else wmNote.style.display = 'none';
+    if (failures.length) {
+      failNote.style.display = '';
+      failNote.textContent = 'Some files were skipped — ' + failures.join(' · ');
+    } else failNote.style.display = 'none';
+    success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  zipBtn.addEventListener('click', async function () {
+    if (state.results.length < 2) return;
+    zipBtn.disabled = true;
+    try {
+      var zip = new JSZip();
+      state.results.forEach(function (r) { zip.file(r.name, r.blob); });
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.setAttribute('download', 'pdfbleu-watermarked.zip');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+    }
+  });
+
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  restartBtn.addEventListener('click', function () { location.reload(); });
+
+  refreshChrome();
+})();
 </script>
 </body>
-</html>
+  </html>
