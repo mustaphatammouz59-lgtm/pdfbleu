@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate PDF — PdfBleu.com</title>
+<meta name="description" content="Translate a PDF into French, Arabic, Spanish and 28 other languages, keeping its paragraphs and page order. The file never leaves your device; only its text is sent to the free MyMemory translation service.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#fff8e1;border:1px solid #ffcc80;color:#6d4c00;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#7253E2;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(114,83,226,.35)}
+.doctile .dw{font-size:26px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.docstats{display:none;margin-top:14px;background:#eef1fb;border:1.5px solid #dfe3f7;border-radius:10px;padding:10px 14px;font-size:14px;color:#333a5e}
+.docstats.on{display:block}
+.docstats b{color:#1a237e}
+.emptypanel{display:none;margin-top:16px;background:#fff8e1;border:1.5px solid #ffcc80;color:#6d4c00;border-radius:10px;padding:14px 16px;font-size:14.5px}
+.emptypanel.on{display:block}
+.emptypanel h3{font-size:16px;margin-bottom:5px;color:#6d4c00}
+.emptypanel a{color:#3F51B5;font-weight:700}
+.progresswrap{display:none;margin-top:16px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:14px 16px}
+.progresswrap.on{display:block}
+.progresswrap .plabel{font-size:14px;font-weight:700;color:#1a237e;margin-bottom:9px}
+.bar{height:12px;background:#dfe3f7;border-radius:6px;overflow:hidden}
+.bar span{display:block;height:100%;width:0;background:#3F51B5;border-radius:6px;transition:width .25s ease}
+.progresswrap .prow{display:flex;align-items:center;gap:12px;margin-top:12px}
+.progresswrap .pnote{flex:1;font-size:13px;color:#666c8a}
+button.cancelbtn{background:#fff;color:#b71c1c;border:1.5px solid #e53935;border-radius:20px;padding:8px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar .optlabel{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#888fb0;margin:16px 0 8px}
+.langsel{width:100%;padding:11px 12px;border:1.5px solid #c5cae9;border-radius:10px;font-size:15px;font-family:inherit;color:#21243d;background:#fff}
+.swaprow{display:flex;justify-content:center;margin:8px 0 2px}
+button.swapbtn{background:#eef1fb;color:#3F51B5;border:1.5px solid #c5cae9;border-radius:50%;width:38px;height:38px;font-size:19px;cursor:pointer;line-height:1;font-family:inherit}
+button.swapbtn:active{transform:scale(.94)}
+.fromnote{font-size:13px;color:#666c8a;margin-top:7px}
+.levels{display:grid;gap:10px}
+.levelcard{position:relative;display:block;border:1.5px solid #c5cae9;border-radius:12px;padding:11px 14px;cursor:pointer;background:#fff}
+.levelcard:hover{border-color:#3F51B5}
+.levelcard.sel{border-color:#2e7d32;background:#e8f5e9;box-shadow:0 2px 8px rgba(46,125,50,.14)}
+.levelcard input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+.levelcard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:15.5px}
+.levelcard .ldesc{display:block;font-size:13px;color:#666c8a;margin-top:2px}
+.rangeinputs{display:none;gap:8px;align-items:center;margin-top:10px;font-size:14px;color:#333a5e}
+.rangeinputs.on{display:flex}
+.rangeinputs input{width:74px;padding:8px 9px;border:1.5px solid #c5cae9;border-radius:8px;font-size:14.5px;font-family:inherit}
+.bigbtn{width:100%;background:#2e7d32;color:#fff;border:none;padding:15px 20px;border-radius:28px;font-size:17px;font-weight:700;cursor:pointer;margin-top:18px;font-family:inherit;box-shadow:0 4px 14px rgba(46,125,50,.30)}
+.bigbtn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.bigbtn:active{transform:scale(.99)}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.warnnote a{color:#3F51B5;font-weight:700}
+.wordwarn{display:none;font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 12px;margin-top:12px}
+.wordwarn.on{display:block}
+.outnote{display:none;font-size:13.5px;color:#333a5e;background:#eef1fb;border:1px solid #c5cae9;border-radius:8px;padding:9px 12px;margin-top:10px}
+.outnote.on{display:block}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.error a{color:#3F51B5;font-weight:700}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.result{display:none;background:#fff;border:1px solid #e0e4f5;border-radius:14px;padding:22px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.result.on{display:block}
+.result h2{font-size:21px;color:#1a237e;margin-bottom:8px}
+.result .rstats{font-size:14px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;font-weight:600}
+.preview{background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:14px 16px;font-size:15px;color:#333a5e;white-space:pre-wrap;word-break:break-word;margin-top:14px;max-height:300px;overflow:auto}
+.preview[dir=rtl]{text-align:right}
+.ractions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.ractions button{border:none;border-radius:24px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.ractions .primary{background:#2e7d32;color:#fff}
+.ractions .secondary{background:#3F51B5;color:#fff}
+.ractions .ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5}
+.partial{display:none;background:#fff8e1;border:1.5px solid #ffcc80;border-radius:14px;padding:22px 20px;margin-top:18px;color:#6d4c00}
+.partial.on{display:block}
+.partial h2{font-size:20px;color:#6d4c00;margin-bottom:8px}
+.partial p{font-size:14.5px;margin-bottom:8px}
+.partial .ractions button.partialbtn{background:#ef6c00;color:#fff}
+.howto{margin-top:30px}
+.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.qa a{color:#3F51B5;font-weight:600}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#7253E2"/><text x="11" y="32" font-size="16" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">A</text><path d="M18 19 H31" stroke="#fff" stroke-width="2.6" fill="none"/><polygon points="28,15.5 35,19 28,22.5" fill="#fff"/><path d="M30 28 H17" stroke="#fff" stroke-width="2.6" fill="none"/><polygon points="20,24.5 13,28 20,31.5" fill="#fff"/><text x="40" y="33" font-size="15" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">ع</text></svg></span>
+<h1>Translate PDF</h1>
+<p class="subtitle">Turn a PDF into another language — French, Arabic, Spanish and 28 more — keeping its paragraphs and page order.</p>
+</div>
+<div class="private-note">🔒 The file stays on your device; its text is sent to a translation service. How that works is explained openly below — please read it before translating sensitive documents.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Reading your document…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">A</span><span class="dext">PDF</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="docstats" id="docStats"></div>
+<div class="emptypanel" id="emptyPanel">
+<h3>Text not found</h3>
+<p>This file contains no readable text to translate. If it is a scanned document, run <a href="ocr-pdf.html">OCR PDF</a> first to add a text layer, then translate it here.</p>
+</div>
+<div class="error" id="error"></div>
+<div class="progresswrap" id="progressWrap">
+<div class="plabel" id="progressLabel">Translating…</div>
+<div class="bar"><span id="progressBar"></span></div>
+<div class="prow">
+<p class="pnote">Segments are sent one at a time. You can stop at any point — finished pages are kept.</p>
+<button class="cancelbtn" id="cancelBtn" type="button">Cancel</button>
+</div>
+</div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Translate PDF</h2>
+<p>Choose the languages, then press Translate. The document is rebuilt as a clean, text-only PDF in the new language — or as a plain text file.</p>
+<div class="optlabel">From</div>
+<select class="langsel" id="fromLang" aria-label="Translate from">
+<option value="auto" selected>Auto-detect</option>
+<option value="en">English</option>
+<option value="fr">French</option>
+<option value="es">Spanish</option>
+<option value="de">German</option>
+<option value="it">Italian</option>
+<option value="pt">Portuguese</option>
+<option value="nl">Dutch</option>
+<option value="sv">Swedish</option>
+<option value="da">Danish</option>
+<option value="fi">Finnish</option>
+<option value="pl">Polish</option>
+<option value="cs">Czech</option>
+<option value="ro">Romanian</option>
+<option value="ca">Catalan</option>
+<option value="el">Greek</option>
+<option value="ru">Russian</option>
+<option value="uk">Ukrainian</option>
+<option value="bg">Bulgarian</option>
+<option value="tr">Turkish</option>
+<option value="ar">Arabic</option>
+<option value="fa">Persian</option>
+<option value="ur">Urdu</option>
+<option value="he">Hebrew</option>
+<option value="hi">Hindi</option>
+<option value="th">Thai</option>
+<option value="vi">Vietnamese</option>
+<option value="id">Indonesian</option>
+<option value="zh-CN">Chinese (Simplified)</option>
+<option value="ja">Japanese</option>
+<option value="ko">Korean</option>
+<option value="sw">Swahili</option>
+</select>
+<div class="swaprow"><button class="swapbtn" id="swapBtn" type="button" title="Swap languages">⇅</button></div>
+<div class="optlabel" style="margin-top:2px">To</div>
+<select class="langsel" id="toLang" aria-label="Translate to">
+<option value="en">English</option>
+<option value="fr" selected>French</option>
+<option value="es">Spanish</option>
+<option value="de">German</option>
+<option value="it">Italian</option>
+<option value="pt">Portuguese</option>
+<option value="nl">Dutch</option>
+<option value="sv">Swedish</option>
+<option value="da">Danish</option>
+<option value="fi">Finnish</option>
+<option value="pl">Polish</option>
+<option value="cs">Czech</option>
+<option value="ro">Romanian</option>
+<option value="ca">Catalan</option>
+<option value="el">Greek</option>
+<option value="ru">Russian</option>
+<option value="uk">Ukrainian</option>
+<option value="bg">Bulgarian</option>
+<option value="tr">Turkish</option>
+<option value="ar">Arabic</option>
+<option value="fa">Persian</option>
+<option value="ur">Urdu</option>
+<option value="he">Hebrew</option>
+<option value="hi">Hindi</option>
+<option value="th">Thai</option>
+<option value="vi">Vietnamese</option>
+<option value="id">Indonesian</option>
+<option value="zh-CN">Chinese (Simplified)</option>
+<option value="ja">Japanese</option>
+<option value="ko">Korean</option>
+<option value="sw">Swahili</option>
+</select>
+<p class="fromnote" id="fromNote">Add a PDF and its language will be detected automatically.</p>
+<div class="optlabel">Pages</div>
+<div class="levels" role="radiogroup" aria-label="Pages to translate">
+<label class="levelcard sel" data-scope="all">
+<input type="radio" name="pagesScope" value="all" checked>
+<span class="ltitle">All pages</span>
+<span class="ldesc">Translate the whole document.</span>
+</label>
+<label class="levelcard" data-scope="range">
+<input type="radio" name="pagesScope" value="range">
+<span class="ltitle">Page range</span>
+<span class="ldesc">Translate only part of the document — handy with the daily word limit.</span>
+</label>
+<span class="rangeinputs" id="rangeInputs">From <input type="number" id="fromPage" min="1" value="1"> to <input type="number" id="toPage" min="1" value="1"></span>
+</div>
+<div class="optlabel">Output</div>
+<p style="margin-bottom:0">Most languages are delivered as a <strong>PDF</strong>, and every translation also comes as a <strong>TXT</strong> file.</p>
+<div class="outnote" id="outputNote">For this language the translation is delivered as a text file (.txt) — PDF output needs a font that covers its script.</div>
+<div class="warnnote">⚠ <strong>How translation works here:</strong> your PDF file is never uploaded — its text is extracted on your device. To translate it, that text is sent over an encrypted connection to the free <strong>MyMemory</strong> translation service. Please do not translate highly sensitive documents with this tool. The free service allows roughly 1,000 words per day per visitor, so long documents may need the page-range option or a second day.</div>
+<button class="bigbtn" id="translateBtn" type="button" disabled>Translate</button>
+<div class="wordwarn" id="wordWarn"></div>
+<div class="freenote">No account, no sign-up — this tool is free. The only limit is the translation service's daily word allowance, explained above.</div>
+</aside>
+</div>
+
+<div class="result" id="resultPanel">
+<h2>Your translation</h2>
+<p class="rstats" id="resultStats"></p>
+<div class="preview" id="previewText"></div>
+<div class="ractions">
+<button class="primary" id="downloadPdfBtn" type="button">Download PDF</button>
+<button class="secondary" id="downloadTxtBtn" type="button">Download TXT</button>
+<button class="ghost" id="anotherBtn" type="button">Translate another</button>
+</div>
+</div>
+
+<div class="partial" id="partialPanel">
+<h2>Translation stopped part-way</h2>
+<p id="partialText"></p>
+<p id="partialPages"></p>
+<div class="ractions">
+<button class="partialbtn" id="downloadPartialBtn" type="button">Download translated pages so far (TXT)</button>
+<button class="secondary" id="retryBtn" type="button">Resume translation</button>
+<button class="ghost" id="partialAnotherBtn" type="button">Start over</button>
+</div>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to translate a PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choose your PDF</h3><p>Click the select button or drop your file into the area provided. Its text is read right here, on your device — the file itself goes nowhere.</p></div>
+<div class="step"><span class="num">2</span><h3>Pick the languages</h3><p>The source language is detected for you, or choose it yourself; then pick the target language and, if you like, a page range. Use the swap button to reverse the pair.</p></div>
+<div class="step"><span class="num">3</span><h3>Translate and download</h3><p>Press Translate and watch the segments progress. Download the result as a PDF in the new language, or as a text file — finished pages are kept even if the daily limit stops the run.</p></div>
+</div>
+<div class="seo">
+<p>Translating a document is often the difference between filing it away unread and actually using it: a contract from a foreign supplier, a study paper, a user manual, a letter from family abroad. This tool reads the text of your PDF, translates it paragraph by paragraph, and rebuilds it as a clean new document with the same page order — ready to read, print or share.</p>
+<p>One thing is different here, and it is stated openly rather than hidden: translation itself is done by the free MyMemory service, because no browser can carry a quality translator for thirty languages inside it. Your PDF file is never uploaded — only the extracted text travels, over an encrypted connection. Every other tool on this site works fully offline on your device; this one is the single, clearly-labelled exception.</p>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>How does this tool work?</h3><p>Your PDF is opened in your browser and its text is extracted page by page, on your device. The text is split into short segments, which are sent one at a time to the free MyMemory translation service and returned in the target language. The translated paragraphs are then rebuilt into a new PDF (for most languages) and a text file, keeping the original page order.</p></div>
+<div class="qa"><h3>Is my file uploaded?</h3><p>The file itself — no, never. It is opened and read entirely on your device, exactly like our other tools. But its <em>text</em> is sent to MyMemory to be translated, over an encrypted connection; that is how this one tool works, and it is why we ask you not to use it for highly sensitive documents.</p></div>
+<div class="qa"><h3>Why did translation stop in the middle?</h3><p>Almost always, the free service's daily limit: MyMemory allows roughly 1,000 words per day per visitor. When the limit is reached, translation stops cleanly, the pages already finished are kept, and you can download them as a text file. Translate the rest tomorrow, or use the page-range option to do a long document in daily slices.</p></div>
+<div class="qa"><h3>Which output will I get?</h3><p>For most languages — Latin, Greek, Cyrillic, Arabic and Hebrew scripts — you get a rebuilt PDF plus a TXT file. For Chinese, Japanese, Korean, Hindi and Thai, the translation is delivered as a text file (.txt) only: producing a PDF would need a font that covers those scripts, and rather than ship a broken PDF we give you the complete text.</p></div>
+<div class="qa"><h3>Does it keep the original layout and images?</h3><p>No. The result is a text-only rebuild: the same paragraphs, in the same order, on matching pages — but not the original fonts, columns or pictures. Keeping the exact layout while replacing the text is a server-side AI feature; it is honestly out of scope for a tool that runs in your browser.</p></div>
+<div class="qa"><h3>My PDF is a scan — what do I do?</h3><p>A scanned PDF holds pictures, not text, so there is nothing to translate and this page will tell you so. Run the file through <a href="ocr-pdf.html">OCR PDF</a> first to recognize the text and add a text layer, then translate the result here.</p></div>
+<div class="qa"><h3>How good is the translation?</h3><p>It is machine translation from a free service: generally good for understanding a document, drafting a reply, or studying — and noticeably weaker on idioms, legal phrasing and nuance. For anything important or legally binding, treat the output as a draft and have it reviewed by a human translator.</p></div>
+</div>
+</main>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+
+<script id="translateCore">
+/* =====================================================================
+   PdfBleu Translate PDF — translation core.
+   Pure, deterministic, DOM-free (node-testable). The network is
+   INJECTED: translateSegments takes a fetchImpl(url) -> Promise<JSON>,
+   so the page passes a fetch wrapper and node tests pass a fake.
+
+     - LANGUAGES / planOutput: target catalogue with PDF capability
+       (font coverage) and RTL flags.
+     - detectLanguage: script ranges first, then stopword scoring.
+     - splitSegments: paragraph -> <=450-char segments on sentence
+       boundaries (the free service rejects long queries).
+     - classifyResponse: MyMemory JSON -> ok / quota / tooLong / error.
+     - translateSegments: sequential, cached, cancellable, honest
+       partial results — never a fake completion.
+     - shapeArabic / unshape: logical Arabic -> visual-order
+       presentation forms (and back), so pdf-lib can draw Arabic with
+       an embedded font that has no shaping engine.
+     - itemsToParagraphs: pdf.js items -> lines -> paragraphs.
+     - buildSegments / assemblePages: page-range plumbing between the
+       document model and the segment list.
+   ===================================================================== */
+var TranslateCore = (function () {
+  'use strict';
+
+  /* ---------------- languages ---------------- */
+  var LANGUAGES = [
+    { code: 'en', name: 'English', pdf: true, rtl: false },
+    { code: 'fr', name: 'French', pdf: true, rtl: false },
+    { code: 'es', name: 'Spanish', pdf: true, rtl: false },
+    { code: 'de', name: 'German', pdf: true, rtl: false },
+    { code: 'it', name: 'Italian', pdf: true, rtl: false },
+    { code: 'pt', name: 'Portuguese', pdf: true, rtl: false },
+    { code: 'nl', name: 'Dutch', pdf: true, rtl: false },
+    { code: 'sv', name: 'Swedish', pdf: true, rtl: false },
+    { code: 'da', name: 'Danish', pdf: true, rtl: false },
+    { code: 'fi', name: 'Finnish', pdf: true, rtl: false },
+    { code: 'pl', name: 'Polish', pdf: true, rtl: false },
+    { code: 'cs', name: 'Czech', pdf: true, rtl: false },
+    { code: 'ro', name: 'Romanian', pdf: true, rtl: false },
+    { code: 'ca', name: 'Catalan', pdf: true, rtl: false },
+    { code: 'el', name: 'Greek', pdf: true, rtl: false },
+    { code: 'ru', name: 'Russian', pdf: true, rtl: false },
+    { code: 'uk', name: 'Ukrainian', pdf: true, rtl: false },
+    { code: 'bg', name: 'Bulgarian', pdf: true, rtl: false },
+    { code: 'tr', name: 'Turkish', pdf: true, rtl: false },
+    { code: 'ar', name: 'Arabic', pdf: true, rtl: true },
+    { code: 'fa', name: 'Persian', pdf: true, rtl: true },
+    { code: 'ur', name: 'Urdu', pdf: true, rtl: true },
+    { code: 'he', name: 'Hebrew', pdf: true, rtl: true },
+    { code: 'hi', name: 'Hindi', pdf: false, rtl: false },
+    { code: 'th', name: 'Thai', pdf: false, rtl: false },
+    { code: 'vi', name: 'Vietnamese', pdf: true, rtl: false },
+    { code: 'id', name: 'Indonesian', pdf: true, rtl: false },
+    { code: 'zh-CN', name: 'Chinese (Simplified)', pdf: false, rtl: false },
+    { code: 'ja', name: 'Japanese', pdf: false, rtl: false },
+    { code: 'ko', name: 'Korean', pdf: false, rtl: false },
+    { code: 'sw', name: 'Swahili', pdf: true, rtl: false }
+  ];
+  var LANG_BY_CODE = {};
+  LANGUAGES.forEach(function (l) { LANG_BY_CODE[l.code] = l; });
+
+  function langByCode(code) { return LANG_BY_CODE[code] || null; }
+  function planOutput(code) {
+    var l = LANG_BY_CODE[code];
+    return l ? { pdf: !!l.pdf, rtl: !!l.rtl } : { pdf: false, rtl: false };
+  }
+
+  /* ---------------- sentence splitting ---------------- */
+  var ABBR = {};
+  ('dr mr mrs ms st sr jr prof fig no vol pp etc vs approx jan feb mar apr jun jul aug sep sept oct nov dec').split(' ').forEach(function (w) { ABBR[w] = 1; });
+
+  function isProtectedDot(s, i) {
+    var before = s.slice(0, i);
+    var m = /([\p{L}]+)$/u.exec(before);
+    var word = m ? m[1].toLowerCase() : '';
+    if (!word) return false;
+    if (word.length === 1) {
+      var prevIdx = before.length - 2;
+      if (prevIdx < 0 || /[\s.(\["'“‘«]/.test(before[prevIdx])) return true;
+    }
+    if (ABBR[word]) return true;
+    if (/(^|[\s])(e\.g|i\.e|u\.s\.a|u\.s|u\.k)$/.test(before.toLowerCase())) return true;
+    return false;
+  }
+  function isStartChar(ch) {
+    if (!ch) return false;
+    var c = ch.charCodeAt(0);
+    if (c >= 0x0600 && c <= 0x06FF) return true;              /* Arabic */
+    if (/[0-9]/.test(ch)) return true;
+    if ('"\'“‘«([{'.indexOf(ch) >= 0) return true;
+    if (c >= 0x41 && c <= 0x5A) return true;                  /* A-Z */
+    if (c >= 0xC0 && c <= 0xDE && c !== 0xD7) return true;    /* Latin capitals */
+    if (c >= 0x391 && c <= 0x3A9) return true;                /* Greek capitals */
+    if (c >= 0x410 && c <= 0x42F) return true;                /* Cyrillic capitals */
+    if (c >= 0x100 && c <= 0x148 && c % 2 === 0) return true; /* Latin Extended capitals */
+    return false;
+  }
+  function splitSentences(text) {
+    var s = String(text == null ? '' : text);
+    var out = [];
+    var start = 0, i = 0, n = s.length;
+    function push(end) {
+      var t = s.slice(start, end).replace(/\s+/g, ' ').trim();
+      if (t) out.push(t);
+    }
+    while (i < n) {
+      var ch = s[i];
+      if (ch === '\n' || ch === '\r') {
+        var br = /^[ \t]*(\r?\n[ \t]*){2,}/.exec(s.slice(i));
+        if (br) { push(i); i += br[0].length; start = i; continue; }
+        i++; continue;
+      }
+      if (ch === '.' || ch === '!' || ch === '?' || ch === '…' || ch === '؟') {
+        if (ch === '.') {
+          if (s[i + 1] === '.') { i++; continue; }
+          if (i > 0 && i + 1 < n && /\d/.test(s[i - 1]) && /\d/.test(s[i + 1])) { i++; continue; }
+          if (isProtectedDot(s, i)) { i++; continue; }
+        }
+        var k = i + 1;
+        while (k < n && '"\'”’»)]'.indexOf(s[k]) >= 0) k++;
+        if (k >= n) { push(n); start = n; i = n; break; }
+        if (/\s/.test(s[k])) {
+          var q = k;
+          while (q < n && /\s/.test(s[q])) q++;
+          if (q >= n) { push(n); start = n; i = n; break; }
+          if (isStartChar(s[q])) { push(k); start = q; i = q; continue; }
+          i++; continue;
+        }
+        i++; continue;
+      }
+      i++;
+    }
+    if (start < n) push(n);
+    return out;
+  }
+
+  /* ---------------- segmentation ---------------- */
+  function splitSegments(text, maxLen) {
+    maxLen = maxLen || 450;
+    var sentences = splitSentences(text);
+    var segs = [];
+    var cur = '';
+    function flush() { if (cur) { segs.push(cur); cur = ''; } }
+    sentences.forEach(function (s) {
+      if (s.length > maxLen) {
+        flush();
+        var part = '';
+        s.split(/\s+/).filter(Boolean).forEach(function (w) {
+          if (w.length > maxLen) {
+            if (part) { segs.push(part); part = ''; }
+            for (var i = 0; i < w.length; i += maxLen) segs.push(w.slice(i, i + maxLen));
+          } else if (!part) part = w;
+          else if ((part + ' ' + w).length <= maxLen) part += ' ' + w;
+          else { segs.push(part); part = w; }
+        });
+        if (part) segs.push(part);
+      } else if (!cur) cur = s;
+      else if ((cur + ' ' + s).length <= maxLen) cur += ' ' + s;
+      else { segs.push(cur); cur = s; }
+    });
+    flush();
+    return segs.filter(function (x) { return x.length > 0; });
+  }
+
+  function splitSegmentInHalf(seg) {
+    var sentences = splitSentences(seg);
+    if (sentences.length >= 2) {
+      var bestK = 1, bestDiff = Infinity;
+      for (var k = 1; k < sentences.length; k++) {
+        var a = sentences.slice(0, k).join(' ').length;
+        var b = sentences.slice(k).join(' ').length;
+        if (Math.abs(a - b) < bestDiff) { bestDiff = Math.abs(a - b); bestK = k; }
+      }
+      return [sentences.slice(0, bestK).join(' '), sentences.slice(bestK).join(' ')];
+    }
+    var words = seg.split(/\s+/).filter(Boolean);
+    if (words.length >= 2) {
+      var mid = Math.floor(words.length / 2);
+      return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+    }
+    if (seg.length >= 2) {
+      var half = Math.floor(seg.length / 2);
+      return [seg.slice(0, half), seg.slice(half)];
+    }
+    return [seg];
+  }
+
+  /* ---------------- MyMemory protocol ---------------- */
+  function buildUrl(q, from, to) {
+    return 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) +
+      '&langpair=' + from + '|' + to;
+  }
+
+  function classifyResponse(json) {
+    if (!json || typeof json !== 'object' || !json.responseData) {
+      return { ok: false, kind: 'error', detail: 'The translation service returned an unreadable response.' };
+    }
+    var text = json.responseData.translatedText;
+    var status = String(json.responseStatus == null ? '' : json.responseStatus);
+    var details = String(json.responseDetails || '');
+    if (typeof text === 'string' && /USED ALL AVAILABLE FREE TRANSLATIONS/i.test(text)) {
+      return { ok: false, kind: 'quota', detail: 'Daily free limit reached.' };
+    }
+    if (json.quotaFinished === true) {
+      return { ok: false, kind: 'quota', detail: 'Daily free limit reached.' };
+    }
+    if (typeof text === 'string' && /QUERY LENGTH LIMIT/i.test(text)) {
+      return { ok: false, kind: 'tooLong', detail: 'Segment longer than the service accepts.' };
+    }
+    if (/INVALID/i.test(typeof text === 'string' ? text : '') || /INVALID/i.test(details)) {
+      return { ok: false, kind: 'error', detail: 'The service rejected the request' + (details ? ' (' + details + ')' : '') + '.' };
+    }
+    if (status === '403') {
+      return { ok: false, kind: 'quota', detail: 'Daily free limit reached.' };
+    }
+    if (status !== '200') {
+      return { ok: false, kind: 'error', detail: 'The translation service answered with status ' + (status || 'unknown') + (details ? ' (' + details + ')' : '') + '.' };
+    }
+    if (typeof text !== 'string') {
+      return { ok: false, kind: 'error', detail: 'The translation service returned no text.' };
+    }
+    return { ok: true, text: text };
+  }
+
+  function wait(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
+
+  async function translateSegments(segments, opts) {
+    opts = opts || {};
+    var from = opts.from, to = opts.to;
+    var fetchImpl = opts.fetchImpl;
+    var delayMs = opts.delayMs == null ? 150 : opts.delayMs;
+    var onProgress = opts.onProgress || null;
+    var shouldStop = opts.shouldStop || null;
+    var cache = opts.cache || new Map();
+    var results = [];
+
+    async function translateOne(seg, depth) {
+      var key = from + '|' + to + '|' + seg;
+      if (cache.has(key)) return { ok: true, text: cache.get(key), fetched: false };
+      var json;
+      try {
+        json = await fetchImpl(buildUrl(seg, from, to));
+      } catch (e) {
+        return { ok: false, kind: 'error', fetched: true, detail: 'Network error while contacting the translation service: ' + (e && e.message ? e.message : String(e)) };
+      }
+      var c = classifyResponse(json);
+      if (c.ok) { cache.set(key, c.text); return { ok: true, text: c.text, fetched: true }; }
+      if (c.kind === 'tooLong' && depth < 3) {
+        var halves = splitSegmentInHalf(seg);
+        if (halves.length === 2 && halves[0] && halves[1] && halves[0] !== seg) {
+          var a = await translateOne(halves[0], depth + 1);
+          if (!a.ok) return a;
+          var b = await translateOne(halves[1], depth + 1);
+          if (!b.ok) return b;
+          var joined = a.text + ' ' + b.text;
+          cache.set(key, joined);
+          return { ok: true, text: joined, fetched: true };
+        }
+      }
+      return { ok: false, kind: c.kind, detail: c.detail, fetched: true };
+    }
+
+    for (var i = 0; i < segments.length; i++) {
+      if (shouldStop && shouldStop()) {
+        return { done: false, reason: 'cancelled', results: results, completedCount: results.length };
+      }
+      var r = await translateOne(segments[i], 0);
+      if (!r.ok) {
+        if (r.kind === 'quota') return { done: false, reason: 'quota', results: results, completedCount: results.length };
+        return { done: false, reason: 'error', detail: r.detail, results: results, completedCount: results.length };
+      }
+      results.push(r.text);
+      if (onProgress) onProgress(results.length, segments.length);
+      if (r.fetched && delayMs > 0 && i < segments.length - 1) await wait(delayMs);
+    }
+    return { done: true, results: results, completedCount: results.length };
+  }
+
+  /* ---------------- language detection ---------------- */
+  var STOPWORDS = {
+    en: ('the of and a an in is it you that he was for on are with as his they at be this have from or one had by word but not what all were we when your can said there use an each which she do how their if will up other about out many then them these so some her would make like him into time has look two more write go see no way could people my than first been call who its now find long down day did get come made may part over new sound take only little work know place year live me back give most very after thing our just name good sentence man think say great where help through much before line right too mean old any same tell boy follow came want show also around form three small set put end does another well large must big even such because turn here why ask went men read need land different home us move try kind hand picture again change off spell air away animal house point page letter mother answer found study still learn should world high every near add food between own below country plant last school father keep tree never start city earth eye light thought head under story saw left few while might close something seem next hard open example begin life always those both paper together got group often run').split(' ').slice(0, 60),
+    fr: ('le la les de des du un une et est sont au aux en dans sur pour par avec sans chez vers entre ce cet cette ces qui que quoi dont où je tu il elle on nous vous ils elles ne pas plus très aussi comme mais donc car ni si quand lorsque depuis pendant avant après sous contre être avoir fait faire dit peut peuvent doit tout toute tous toutes même autre autres chaque aucun alors ainsi bien peu beaucoup toujours jamais souvent déjà encore maintenant ici oui non merci là aux est-ce').split(' '),
+    es: ('el la los las de un una unos unas y en que del se por para con no su al es lo como más pero sus le ya o este esta esto sí porque cuando también me hasta desde donde quien entre durante contra bajo sobre entre muy sin sobre todo toda todos también después antes aquí ahora cuando desde').split(' '),
+    de: ('der die das den dem des ein eine einen einem einer und ist sind war waren im am vom zum zur an auf für mit von zu bei nach über durch ich er sie es wir nicht auch sich als wie noch nur schon sehr mehr wenn als aber doch so wie schon diese dieser diesem diesen jene gibt geht steht liegt').split(' '),
+    it: ('il lo la i gli le di un una uno che e è sono era per con su tra fra anche come più non si ci ne questo questa quello quelli ma se perché quando dove molto poco già ancora così mentre dopo prima ora qui là essere avere fatto fare detto può devono tutto tutta tutti altre altro allora bene').split(' '),
+    pt: ('o a os as de um uma uns umas e em que do da dos das se por com não mais como mas ao à ou quando muito já eu ele ela isso isto este esta ser ter foi são dos era entre também depois antes agora aqui porque quando onde quem').split(' '),
+    nl: ('de het een van ik je dat niet zijn is was op aan met hij zij wij dit deze voor bij als nog maar wel ook er hebben kan veel want hun dit deze wordt werden over onder tussen na voor tegen door veel meer nog steeds altijd nooit').split(' ')
+  };
+  var STOPSETS = {};
+  Object.keys(STOPWORDS).forEach(function (k) {
+    var s = {};
+    STOPWORDS[k].forEach(function (w) { s[w] = 1; });
+    STOPSETS[k] = s;
+  });
+
+  function detectLanguage(text) {
+    var str = String(text == null ? '' : text);
+    if (!str.trim()) return null;
+    var counts = { ar: 0, he: 0, el: 0, ru: 0, hangul: 0, kana: 0, han: 0 };
+    var letters = 0;
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      if (c >= 0x0600 && c <= 0x06FF) counts.ar++;
+      else if (c >= 0x0590 && c <= 0x05FF) counts.he++;
+      else if (c >= 0x0370 && c <= 0x03FF) counts.el++;
+      else if (c >= 0x0400 && c <= 0x04FF) counts.ru++;
+      else if (c >= 0xAC00 && c <= 0xD7A3) counts.hangul++;
+      else if ((c >= 0x3040 && c <= 0x309F) || (c >= 0x30A0 && c <= 0x30FF)) counts.kana++;
+      else if (c >= 0x4E00 && c <= 0x9FFF) counts.han++;
+      if (/[\p{L}]/u.test(str[i])) letters++;
+    }
+    if (counts.kana > 0) return 'ja';
+    if (counts.hangul >= 3) return 'ko';
+    if (counts.han >= 3) return 'zh-CN';
+    var scriptMap = [['ar', 'ar'], ['he', 'he'], ['el', 'el'], ['ru', 'ru']];
+    var bestScript = null, bestN = 0;
+    scriptMap.forEach(function (pair) {
+      if (counts[pair[0]] > bestN) { bestN = counts[pair[0]]; bestScript = pair[1]; }
+    });
+    if (bestScript && bestN >= 3 && letters > 0 && bestN / letters >= 0.15) return bestScript;
+    var tokens = str.toLowerCase().match(/[\p{L}]+/gu) || [];
+    var order = ['en', 'fr', 'es', 'de', 'it', 'pt', 'nl'];
+    var best = null, bestScore = 0;
+    order.forEach(function (l) {
+      var set = STOPSETS[l], score = 0;
+      tokens.forEach(function (t) { if (set[t]) score++; });
+      if (score > bestScore) { bestScore = score; best = l; }
+    });
+    return bestScore >= 3 ? best : null;
+  }
+
+  /* ---------------- Arabic shaping ----------------
+     pdf-lib has no text-shaping engine: drawn strings are laid out
+     left-to-right, glyph by glyph. shapeArabic converts logical-order
+     Arabic into a visual-order string of Arabic Presentation Forms-B
+     codepoints (which the embedded Amiri font carries), applying the
+     standard joining rules and the lam-alef ligatures. unshape is its
+     exact inverse, so tests can round-trip. Extended letters outside
+     the table below (some Urdu/Persian-only letters) pass through
+     unshaped — they are never corrupted, just not joined. */
+  var JOIN = {};
+  var FORMS = {};
+  (function () {
+    var rows = [
+      [0x0621, 'N', 0xFE80, 0, 0, 0], [0x0622, 'R', 0xFE81, 0xFE82, 0, 0],
+      [0x0623, 'R', 0xFE83, 0xFE84, 0, 0], [0x0624, 'R', 0xFE85, 0xFE86, 0, 0],
+      [0x0625, 'R', 0xFE87, 0xFE88, 0, 0], [0x0626, 'D', 0xFE89, 0xFE8A, 0xFE8B, 0xFE8C],
+      [0x0627, 'R', 0xFE8D, 0xFE8E, 0, 0], [0x0628, 'D', 0xFE8F, 0xFE90, 0xFE91, 0xFE92],
+      [0x0629, 'R', 0xFE93, 0xFE94, 0, 0], [0x062A, 'D', 0xFE95, 0xFE96, 0xFE97, 0xFE98],
+      [0x062B, 'D', 0xFE99, 0xFE9A, 0xFE9B, 0xFE9C], [0x062C, 'D', 0xFE9D, 0xFE9E, 0xFE9F, 0xFEA0],
+      [0x062D, 'D', 0xFEA1, 0xFEA2, 0xFEA3, 0xFEA4], [0x062E, 'D', 0xFEA5, 0xFEA6, 0xFEA7, 0xFEA8],
+      [0x062F, 'R', 0xFEA9, 0xFEAA, 0, 0], [0x0630, 'R', 0xFEAB, 0xFEAC, 0, 0],
+      [0x0631, 'R', 0xFEAD, 0xFEAE, 0, 0], [0x0632, 'R', 0xFEAF, 0xFEB0, 0, 0],
+      [0x0633, 'D', 0xFEB1, 0xFEB2, 0xFEB3, 0xFEB4], [0x0634, 'D', 0xFEB5, 0xFEB6, 0xFEB7, 0xFEB8],
+      [0x0635, 'D', 0xFEB9, 0xFEBA, 0xFEBB, 0xFEBC], [0x0636, 'D', 0xFEBD, 0xFEBE, 0xFEBF, 0xFEC0],
+      [0x0637, 'D', 0xFEC1, 0xFEC2, 0xFEC3, 0xFEC4], [0x0638, 'D', 0xFEC5, 0xFEC6, 0xFEC7, 0xFEC8],
+      [0x0639, 'D', 0xFEC9, 0xFECA, 0xFECB, 0xFECC], [0x063A, 'D', 0xFECD, 0xFECE, 0xFECF, 0xFED0],
+      [0x0641, 'D', 0xFED1, 0xFED2, 0xFED3, 0xFED4], [0x0642, 'D', 0xFED5, 0xFED6, 0xFED7, 0xFED8],
+      [0x0643, 'D', 0xFED9, 0xFEDA, 0xFEDB, 0xFEDC], [0x0644, 'D', 0xFEDD, 0xFEDE, 0xFEDF, 0xFEE0],
+      [0x0645, 'D', 0xFEE1, 0xFEE2, 0xFEE3, 0xFEE4], [0x0646, 'D', 0xFEE5, 0xFEE6, 0xFEE7, 0xFEE8],
+      [0x0647, 'D', 0xFEE9, 0xFEEA, 0xFEEB, 0xFEEC], [0x0648, 'R', 0xFEED, 0xFEEE, 0, 0],
+      [0x0649, 'R', 0xFEEF, 0xFEF0, 0, 0], [0x064A, 'D', 0xFEF1, 0xFEF2, 0xFEF3, 0xFEF4],
+      [0x0671, 'R', 0xFB50, 0xFB51, 0, 0], [0x06CC, 'D', 0xFBFC, 0xFBFD, 0xFBFE, 0xFBFF],
+      [0x0640, 'D', 0x0640, 0x0640, 0x0640, 0x0640]
+    ];
+    rows.forEach(function (r) { JOIN[r[0]] = r[1]; FORMS[r[0]] = [r[2], r[3], r[4], r[5]]; });
+  })();
+  var LAM_ALEF = { 0x0622: [0xFEF5, 0xFEF6], 0x0623: [0xFEF7, 0xFEF8], 0x0625: [0xFEF9, 0xFEFA], 0x0627: [0xFEFB, 0xFEFC] };
+  var UNFORM = {};
+  Object.keys(FORMS).forEach(function (k) {
+    var cp = +k;
+    FORMS[cp].forEach(function (f) { if (f && f !== cp) UNFORM[f] = cp; });
+  });
+  Object.keys(LAM_ALEF).forEach(function (k) {
+    var a = +k;
+    UNFORM[LAM_ALEF[a][0]] = [0x0644, a];
+    UNFORM[LAM_ALEF[a][1]] = [0x0644, a];
+  });
+
+  function isMarkCp(cp) {
+    return (cp >= 0x064B && cp <= 0x065F) || cp === 0x0670 || (cp >= 0x06D6 && cp <= 0x06ED);
+  }
+
+  function shapeArabic(text) {
+    var chars = Array.from(String(text == null ? '' : text));
+    if (!chars.length) return '';
+    var atoms = chars.map(function (ch) { return { cp: ch.codePointAt(0), ch: ch, lig: undefined }; });
+    /* lam-alef merge — skipped when a mark sits between lam and alef,
+       so unshape stays an exact inverse. */
+    var merged = [];
+    for (var i = 0; i < atoms.length; i++) {
+      var at = atoms[i];
+      if (at.cp === 0x0644 && i + 1 < atoms.length && LAM_ALEF[atoms[i + 1].cp]) {
+        merged.push({ cp: at.cp, ch: at.ch, lig: atoms[i + 1].cp });
+        i++;
+      } else merged.push(at);
+    }
+    atoms = merged;
+    function isLetterAtom(a) { return !!a && (a.lig !== undefined || JOIN[a.cp] !== undefined); }
+    function clsOf(a) { return a.lig !== undefined ? 'R' : JOIN[a.cp]; }
+    function letterBefore(idx) {
+      for (var j = idx - 1; j >= 0; j--) {
+        if (isMarkCp(atoms[j].cp)) continue;
+        return isLetterAtom(atoms[j]) ? atoms[j] : null;
+      }
+      return null;
+    }
+    function letterAfter(idx) {
+      for (var j = idx + 1; j < atoms.length; j++) {
+        if (isMarkCp(atoms[j].cp)) continue;
+        return isLetterAtom(atoms[j]) ? atoms[j] : null;
+      }
+      return null;
+    }
+    function conn(a, b) { return clsOf(a) === 'D' && (clsOf(b) === 'D' || clsOf(b) === 'R'); }
+    var shaped = atoms.map(function (a, idx) {
+      if (isMarkCp(a.cp)) return { str: a.ch, kind: 'mark' };
+      if (isLetterAtom(a)) {
+        var prev = letterBefore(idx), next = letterAfter(idx);
+        var jp = !!prev && conn(prev, a);
+        var str;
+        if (a.lig !== undefined) {
+          str = String.fromCodePoint(LAM_ALEF[a.lig][jp ? 1 : 0]);
+        } else {
+          var jn = !!next && conn(a, next);
+          var fi = jp && jn ? 3 : jp ? 1 : jn ? 2 : 0;
+          str = String.fromCodePoint(FORMS[a.cp][fi] || FORMS[a.cp][0]);
+        }
+        return { str: str, kind: 'arab' };
+      }
+      if (a.ch === ' ' || a.ch === '\t' || a.ch === '\n') return { str: ' ', kind: 'space' };
+      return { str: a.ch, kind: 'neutral' };
+    });
+    var units = [];
+    var lastKind = null;
+    shaped.forEach(function (sa) {
+      if (sa.kind === 'mark') {
+        if (units.length) units[units.length - 1] += sa.str;
+        else { units.push(sa.str); lastKind = 'neutral'; }
+      } else if (sa.kind === 'arab') { units.push(sa.str); lastKind = 'arab'; }
+      else if (sa.kind === 'space') { units.push(sa.str); lastKind = 'space'; }
+      else {
+        if (lastKind === 'neutral' && units.length) units[units.length - 1] += sa.str;
+        else { units.push(sa.str); lastKind = 'neutral'; }
+      }
+    });
+    return units.reverse().join('');
+  }
+
+  function unshape(text) {
+    var chars = Array.from(String(text == null ? '' : text));
+    var units = [];
+    var lastKind = null;
+    chars.forEach(function (ch) {
+      var cp = ch.codePointAt(0);
+      if (isMarkCp(cp)) {
+        if (units.length) units[units.length - 1] += ch;
+        else { units.push(ch); lastKind = 'neutral'; }
+        return;
+      }
+      if (UNFORM[cp] !== undefined || JOIN[cp] !== undefined) { units.push(ch); lastKind = 'arab'; return; }
+      if (ch === ' ' || ch === '\t' || ch === '\n') { units.push(' '); lastKind = 'space'; return; }
+      if (lastKind === 'neutral' && units.length) units[units.length - 1] += ch;
+      else { units.push(ch); lastKind = 'neutral'; }
+    });
+    units.reverse();
+    return units.map(function (u) {
+      return Array.from(u).map(function (ch) {
+        var back = UNFORM[ch.codePointAt(0)];
+        if (back === undefined) return ch;
+        if (Array.isArray(back)) return String.fromCodePoint(back[0]) + String.fromCodePoint(back[1]);
+        return String.fromCodePoint(back);
+      }).join('');
+    }).join('');
+  }
+
+  /* ---------------- pdf.js items -> paragraphs ---------------- */
+  function itemMetrics(it) {
+    var tr = it.transform || [1, 0, 0, 1, 0, 0];
+    var size = Math.hypot(tr[2] || 0, tr[3] || 0);
+    if (!size || !isFinite(size)) size = it.height || 0;
+    var scaleX = Math.hypot(tr[0] || 0, tr[1] || 0) || 1;
+    return {
+      str: it.str,
+      x: tr[4] || 0,
+      y: tr[5] || 0,
+      endX: (tr[4] || 0) + (it.width || 0) * scaleX,
+      size: size
+    };
+  }
+  function groupLines(items) {
+    var norm = [];
+    (items || []).forEach(function (it) {
+      if (it && typeof it.str === 'string' && it.str !== '') norm.push(itemMetrics(it));
+    });
+    norm.sort(function (a, b) {
+      if (a.y !== b.y) return b.y - a.y;
+      return a.x - b.x;
+    });
+    var raw = [];
+    norm.forEach(function (m) {
+      var cur = raw.length ? raw[raw.length - 1] : null;
+      var tol = Math.max(2, 0.5 * Math.max(m.size, cur ? cur.size : 0));
+      if (cur && Math.abs(m.y - cur.y) <= tol) {
+        cur.items.push(m);
+        if (m.size > cur.size) cur.size = m.size;
+      } else raw.push({ y: m.y, size: m.size, items: [m] });
+    });
+    return raw.map(function (L) {
+      var sorted = L.items.slice().sort(function (a, b) { return a.x - b.x; });
+      var text = '', prev = null;
+      sorted.forEach(function (m) {
+        if (prev) {
+          var gap = m.x - prev.endX;
+          if (gap > 0.25 * Math.max(m.size, prev.size) && !/^\s/.test(m.str) && !/\s$/.test(text)) text += ' ';
+        }
+        text += m.str;
+        prev = m;
+      });
+      return { text: text, size: L.size, y: L.y };
+    });
+  }
+  function itemsToParagraphs(items) {
+    var lines = groupLines(items).filter(function (L) { return L.text.trim().length > 0; });
+    var paras = [];
+    var cur = null, prev = null;
+    lines.forEach(function (L) {
+      var t = L.text.replace(/\s+/g, ' ').trim();
+      if (!cur) { cur = t; prev = L; return; }
+      var gap = prev.y - L.y;
+      var lh = Math.max(prev.size, L.size, 1) * 1.2;
+      if (gap <= 1.6 * lh) {
+        if (/[-\u00AD]$/.test(cur) && /^[a-zà-ÿ]/.test(t)) cur = cur.slice(0, -1) + t;
+        else cur += ' ' + t;
+      } else { paras.push(cur); cur = t; }
+      prev = L;
+    });
+    if (cur) paras.push(cur);
+    return paras;
+  }
+
+  /* ---------------- document plumbing ---------------- */
+  function countWords(text) {
+    var m = String(text == null ? '' : text).match(/\S+/g);
+    return m ? m.length : 0;
+  }
+
+  function buildSegments(pages, fromPage, toPage) {
+    var segs = [];
+    (pages || []).forEach(function (pg) {
+      if (pg.page < fromPage || pg.page > toPage) return;
+      (pg.paragraphs || []).forEach(function (para, pi) {
+        splitSegments(para).forEach(function (s) {
+          segs.push({ page: pg.page, para: pi, text: s });
+        });
+      });
+    });
+    return segs;
+  }
+
+  function assemblePages(pages, segments, results) {
+    var byKey = {};
+    var segPerPage = {}, donePerPage = {};
+    segments.forEach(function (s, i) {
+      segPerPage[s.page] = (segPerPage[s.page] || 0) + 1;
+      if (i < results.length) {
+        donePerPage[s.page] = (donePerPage[s.page] || 0) + 1;
+        var key = s.page + '|' + s.para;
+        if (!byKey[key]) byKey[key] = [];
+        byKey[key].push(results[i]);
+      }
+    });
+    var completedPages = [];
+    var outPages = [];
+    (pages || []).forEach(function (pg) {
+      var total = segPerPage[pg.page] || 0;
+      var done = donePerPage[pg.page] || 0;
+      if (done >= total) {
+        completedPages.push(pg.page);
+        outPages.push({
+          page: pg.page,
+          paragraphs: (pg.paragraphs || []).map(function (para, pi) {
+            var parts = byKey[pg.page + '|' + pi];
+            return parts ? parts.join(' ') : para;
+          })
+        });
+      }
+    });
+    return {
+      pages: outPages,
+      completedPages: completedPages,
+      complete: results.length >= segments.length
+    };
+  }
+
+  function buildTxt(pages, header) {
+    var out = [];
+    if (header) { out.push(header); out.push(''); }
+    (pages || []).forEach(function (pg, i) {
+      if (i > 0) out.push('');
+      out.push('— Page ' + pg.page + ' —');
+      var paras = (pg.paragraphs || []).slice();
+      while (paras.length && paras[paras.length - 1] === '') paras.pop();
+      paras.forEach(function (p, j) {
+        out.push(p);
+        if (j < paras.length - 1) out.push('');
+      });
+    });
+    return out.join('\n') + '\n';
+  }
+
+  return {
+    LANGUAGES: LANGUAGES,
+    langByCode: langByCode,
+    planOutput: planOutput,
+    detectLanguage: detectLanguage,
+    splitSentences: splitSentences,
+    splitSegments: splitSegments,
+    buildUrl: buildUrl,
+    classifyResponse: classifyResponse,
+    translateSegments: translateSegments,
+    shapeArabic: shapeArabic,
+    unshape: unshape,
+    itemsToParagraphs: itemsToParagraphs,
+    groupLines: groupLines,
+    countWords: countWords,
+    buildSegments: buildSegments,
+    assemblePages: assemblePages,
+    buildTxt: buildTxt
+  };
+})();
+</script>
+
+<script id="translateBuilder">
+/* =====================================================================
+   PdfBleu Translate PDF — output PDF builder.
+   Pure with respect to the DOM: everything it needs (PDFLib, fontkit,
+   font bytes) is injected by the caller, so node tests exercise the
+   exact code the page runs. Layout per spec: A4, 56 pt margins,
+   11 pt body at 1.4 line height, 8 pt between paragraphs, every
+   source page starts a new output page, overflow flows onward, and
+   a short first paragraph of the first page becomes a 15 pt title.
+   Fonts: DejaVu Sans for Latin/Greek/Cyrillic/Hebrew targets, Amiri
+   for Arabic-script targets (lines shaped with
+   TranslateCore.shapeArabic and right-aligned); Hebrew lines are
+   word-reversed and right-aligned.
+   ===================================================================== */
+var TranslateBuilder = (function () {
+  'use strict';
+
+  var FONT_MAIN_URL = 'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf';
+  var FONT_ARABIC_URL = 'https://cdn.jsdelivr.net/npm/@expo-google-fonts/amiri@0.2.3/Amiri_400Regular.ttf';
+
+  function wrapLines(font, text, size, maxW) {
+    var words = String(text == null ? '' : text).split(/\s+/).filter(Boolean);
+    var lines = [];
+    var cur = '';
+    function addWord(w) {
+      if (font.widthOfTextAtSize(w, size) <= maxW) {
+        if (!cur) cur = w;
+        else if (font.widthOfTextAtSize(cur + ' ' + w, size) <= maxW) cur += ' ' + w;
+        else { lines.push(cur); cur = w; }
+        return;
+      }
+      if (cur) { lines.push(cur); cur = ''; }
+      var part = '';
+      Array.from(w).forEach(function (ch) {
+        if (font.widthOfTextAtSize(part + ch, size) <= maxW || !part) part += ch;
+        else { lines.push(part); part = ch; }
+      });
+      cur = part;
+    }
+    words.forEach(addWord);
+    if (cur) lines.push(cur);
+    return lines.length ? lines : [''];
+  }
+
+  async function buildPdf(opts) {
+    var PDFLib = opts.PDFLib;
+    var plan = TranslateCore.planOutput(opts.target);
+    var isArabicScript = opts.target === 'ar' || opts.target === 'fa' || opts.target === 'ur';
+    var doc = await PDFLib.PDFDocument.create();
+    if (opts.fontkit) doc.registerFontkit(opts.fontkit);
+    var font = await doc.embedFont(isArabicScript ? opts.fontBytes.arabic : opts.fontBytes.main, { subset: true });
+    doc.setTitle(String(opts.base || 'document') + ' (translated to ' + String(opts.langName || opts.target) + ')');
+    doc.setCreator('PdfBleu.com');
+    var W = 595.28, H = 841.89, M = 56, BODY = 11;
+    var maxW = W - 2 * M;
+    var inkBody = PDFLib.rgb(0.13, 0.14, 0.24);
+    var inkTitle = PDFLib.rgb(0.10, 0.14, 0.49);
+    var pages = (opts.pages && opts.pages.length) ? opts.pages : [{ page: 1, paragraphs: [] }];
+    var totalParas = 0;
+    pages.forEach(function (p) { totalParas += (p.paragraphs || []).length; });
+    pages.forEach(function (pg, pi) {
+      var page = doc.addPage([W, H]);
+      var y = H - M;
+      (pg.paragraphs || []).forEach(function (para, pai) {
+        var isTitle = pi === 0 && pai === 0 && String(para).length < 60 && totalParas > 1;
+        var size = isTitle ? 15 : BODY;
+        var lh = size * 1.4;
+        var lines = wrapLines(font, para, size, maxW);
+        lines.forEach(function (line) {
+          if (y - lh < M) { page = doc.addPage([W, H]); y = H - M; }
+          var drawn = line, x = M;
+          if (plan.rtl) {
+            drawn = isArabicScript
+              ? TranslateCore.shapeArabic(line)
+              : line.split(' ').filter(Boolean).reverse().join(' ');
+            x = W - M - font.widthOfTextAtSize(drawn, size);
+          }
+          page.drawText(drawn, {
+            x: x, y: y - size, size: size, font: font,
+            color: isTitle ? inkTitle : inkBody
+          });
+          y -= lh;
+        });
+        y -= isTitle ? 10 : 8;
+      });
+    });
+    return await doc.save();
+  }
+
+  return {
+    buildPdf: buildPdf,
+    wrapLines: wrapLines,
+    FONT_MAIN_URL: FONT_MAIN_URL,
+    FONT_ARABIC_URL: FONT_ARABIC_URL
+  };
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  var TC = TranslateCore;
+
+  var state = {
+    file: null, name: '', base: 'document', pages: 0,
+    docPages: null, totalWords: 0, detected: null, ready: false, empty: false,
+    warn: '', cache: new Map(), fontCache: {},
+    translating: false, cancelled: false,
+    lastTarget: null, lastAssembled: null, lastComplete: false
+  };
+
+  function fmtNum(n) { return String(n == null ? 0 : n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function fmtSize(bytes) {
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+    if (bytes >= 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return bytes + ' B';
+  }
+  function langName(code) {
+    var l = TC.langByCode(code);
+    return l ? l.name : code;
+  }
+  function showError(html) {
+    var e = $('error');
+    if (html) { e.innerHTML = html; e.className = 'error on'; }
+    else { e.innerHTML = ''; e.className = 'error'; }
+  }
+  function setProcessing(on, detail) {
+    $('processingDetail').textContent = detail || '';
+    $('processing').className = 'processing' + (on ? ' on' : '');
+  }
+  function downloadBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
+  function renderFileCard() {
+    var card = $('fileCard');
+    if (!state.file) { card.className = 'filecard'; return; }
+    card.className = 'filecard on';
+    $('fileName').textContent = state.name;
+    $('fileMeta').textContent = (state.pages ? state.pages + (state.pages === 1 ? ' page' : ' pages') + ' • ' : '') + fmtSize(state.file.size);
+    $('fileWarn').textContent = state.warn || '';
+  }
+
+  function effectiveFrom() {
+    var v = $('fromLang').value;
+    if (v !== 'auto') return v;
+    return state.detected || 'en';
+  }
+  function updateFromNote() {
+    var note = $('fromNote');
+    if (!state.file) { note.textContent = 'Add a PDF and its language will be detected automatically.'; return; }
+    if ($('fromLang').value !== 'auto') { note.textContent = 'Source language set by you.'; return; }
+    if (state.detected) {
+      note.textContent = 'Detected language: ' + langName(state.detected) + '. Auto-detect is on — you can override it above.';
+    } else {
+      note.textContent = 'The document language could not be detected — English will be used as the source. Pick the real language above if that is wrong.';
+    }
+  }
+  function updateOutputNote() {
+    var plan = TC.planOutput($('toLang').value);
+    $('outputNote').className = 'outnote' + (!plan.pdf ? ' on' : '');
+  }
+  function currentRange() {
+    var scope = document.querySelector('input[name="pagesScope"]:checked');
+    if (!scope || scope.value === 'all') return { from: 1, to: state.pages || 1 };
+    var f = parseInt($('fromPage').value, 10);
+    var t = parseInt($('toPage').value, 10);
+    if (!isFinite(f) || !isFinite(t) || f < 1 || t < 1 || f > state.pages || t > state.pages || f > t) return null;
+    return { from: f, to: t };
+  }
+  function wordsInRange(range) {
+    if (!state.docPages || !range) return 0;
+    var n = 0;
+    state.docPages.forEach(function (pg) {
+      if (pg.page < range.from || pg.page > range.to) return;
+      pg.paragraphs.forEach(function (p) { n += TC.countWords(p); });
+    });
+    return n;
+  }
+  function updateWordWarn() {
+    var w = $('wordWarn');
+    if (!state.ready) { w.className = 'wordwarn'; return; }
+    var range = currentRange();
+    var n = wordsInRange(range);
+    if (range && n > 900) {
+      w.textContent = 'This document has about ' + fmtNum(n) + ' words in the selected pages. The free service allows roughly 1,000 words per day, so translation may stop part-way — completed pages are kept and can be downloaded.';
+      w.className = 'wordwarn on';
+    } else w.className = 'wordwarn';
+  }
+  function refreshOptionUI() { updateFromNote(); updateOutputNote(); updateWordWarn(); }
+
+  /* ---------- file loading ---------- */
+  async function extractDocPages(pdf) {
+    var pages = [];
+    for (var p = 1; p <= pdf.numPages; p++) {
+      $('processingDetail').textContent = 'Reading page ' + p + ' of ' + pdf.numPages + '…';
+      var page = await pdf.getPage(p);
+      var tc = await page.getTextContent();
+      pages.push({ page: p, paragraphs: TC.itemsToParagraphs(tc.items) });
+    }
+    return pages;
+  }
+
+  async function loadFile(f) {
+    if (!f) return;
+    var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name || '');
+    resetResults();
+    showError('');
+    $('emptyPanel').className = 'emptypanel';
+    $('docStats').className = 'docstats';
+    state.ready = false; state.empty = false; state.docPages = null; state.warn = '';
+    state.detected = null; state.totalWords = 0; state.cache = new Map();
+    if (!isPdf) {
+      state.file = null; renderFileCard(); refreshOptionUI();
+      showError('"' + (f.name || 'That file') + '" is not a PDF file. Please choose a PDF file.');
+      $('translateBtn').disabled = true;
+      return;
+    }
+    state.file = f;
+    state.name = f.name || 'document.pdf';
+    state.base = state.name.replace(/\.pdf$/i, '') || 'document';
+    state.pages = 0;
+    renderFileCard();
+    $('translateBtn').disabled = true;
+    setProcessing(true, 'Opening the document…');
+    try {
+      var buf = await f.arrayBuffer();
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      } catch (loadErr) {
+        if (loadErr && (loadErr.name === 'PasswordException' || /password/i.test(String(loadErr && loadErr.message)))) {
+          state.warn = 'Password-protected';
+          renderFileCard();
+          showError('This PDF is password-protected. Unlock it first with <a href="unlock-pdf.html">Unlock PDF</a>.');
+          return;
+        }
+        throw loadErr;
+      }
+      state.pages = pdf.numPages;
+      renderFileCard();
+      $('fromPage').max = state.pages;
+      $('toPage').max = state.pages;
+      $('toPage').value = state.pages;
+      var pages = await extractDocPages(pdf);
+      state.docPages = pages;
+      var words = 0;
+      var joined = [];
+      pages.forEach(function (pg) {
+        pg.paragraphs.forEach(function (p) { words += TC.countWords(p); joined.push(p); });
+      });
+      state.totalWords = words;
+      if (words < 40) {
+        state.empty = true;
+        $('emptyPanel').className = 'emptypanel on';
+        refreshOptionUI();
+        return;
+      }
+      state.detected = TC.detectLanguage(joined.join('\n'));
+      var ds = $('docStats');
+      ds.innerHTML = '';
+      var b1 = document.createElement('b'); b1.textContent = fmtNum(state.pages);
+      ds.appendChild(b1);
+      ds.appendChild(document.createTextNode(state.pages === 1 ? ' page • ' : ' pages • '));
+      var b2 = document.createElement('b'); b2.textContent = fmtNum(words);
+      ds.appendChild(b2);
+      ds.appendChild(document.createTextNode(' words • Language: '));
+      var b3 = document.createElement('b'); b3.textContent = state.detected ? langName(state.detected) : 'Not detected';
+      ds.appendChild(b3);
+      ds.className = 'docstats on';
+      state.ready = true;
+      $('translateBtn').disabled = false;
+    } catch (err) {
+      showError('This file could not be opened as a PDF. It may be damaged, or not a PDF at all.');
+    } finally {
+      setProcessing(false);
+      refreshOptionUI();
+    }
+  }
+
+  /* ---------- translation run ---------- */
+  function apiFetch(url) {
+    return fetch(url).then(function (r) { return r.json(); });
+  }
+  function setProgress(on, done, total) {
+    $('progressWrap').className = 'progresswrap' + (on ? ' on' : '');
+    if (on) {
+      $('progressLabel').textContent = 'Translating segment ' + done + ' of ' + total + '…';
+      $('progressBar').style.width = (total ? Math.round(100 * done / total) : 0) + '%';
+    }
+  }
+
+  async function runTranslation() {
+    if (!state.ready || !state.docPages || state.translating) return;
+    showError('');
+    var from = effectiveFrom();
+    var to = $('toLang').value;
+    if (from === to) {
+      showError('Output language cannot be the same as input language. Choose a different target language — or swap the pair.');
+      return;
+    }
+    var range = currentRange();
+    if (!range) {
+      showError('The page range is not valid. Pages run from 1 to ' + state.pages + ', and “From” must not be after “To”.');
+      return;
+    }
+    var rangePages = state.docPages.filter(function (pg) { return pg.page >= range.from && pg.page <= range.to; });
+    var segments = TC.buildSegments(state.docPages, range.from, range.to);
+    if (!segments.length) {
+      showError('The selected pages contain no text to translate. Choose different pages — or, if the document is a scan, run <a href="ocr-pdf.html">OCR PDF</a> first.');
+      return;
+    }
+    resetResults();
+    state.translating = true;
+    state.cancelled = false;
+    state.lastTarget = to;
+    $('translateBtn').disabled = true;
+    setProgress(true, 0, segments.length);
+    var outcome;
+    try {
+      outcome = await TC.translateSegments(segments.map(function (s) { return s.text; }), {
+        from: from, to: to,
+        fetchImpl: apiFetch,
+        delayMs: 150,
+        cache: state.cache,
+        shouldStop: function () { return state.cancelled; },
+        onProgress: function (done, total) { setProgress(true, done, total); }
+      });
+    } finally {
+      state.translating = false;
+      $('translateBtn').disabled = false;
+      setProgress(false, 0, 0);
+    }
+    var assembled = TC.assemblePages(rangePages, segments, outcome.results);
+    state.lastAssembled = assembled;
+    state.lastComplete = !!outcome.done;
+    if (outcome.done) showResult(assembled, to);
+    else showPartial(assembled, outcome, segments.length);
+  }
+
+  function translatedWordCount(assembled) {
+    var n = 0;
+    assembled.pages.forEach(function (pg) {
+      pg.paragraphs.forEach(function (p) { n += TC.countWords(p); });
+    });
+    return n;
+  }
+  function resultText(assembled) {
+    return assembled.pages.map(function (pg) { return pg.paragraphs.join('\n\n'); }).join('\n\n');
+  }
+
+  function showResult(assembled, to) {
+    $('partialPanel').className = 'partial';
+    $('resultStats').textContent =
+      assembled.pages.length + (assembled.pages.length === 1 ? ' page' : ' pages') + ' translated • ' +
+      fmtNum(translatedWordCount(assembled)) + ' words • Target: ' + langName(to);
+    var plan = TC.planOutput(to);
+    var pv = $('previewText');
+    var text = resultText(assembled);
+    pv.textContent = text.length > 600 ? text.slice(0, 600) + '…' : text;
+    pv.setAttribute('dir', plan.rtl ? 'rtl' : 'ltr');
+    $('downloadPdfBtn').style.display = plan.pdf ? '' : 'none';
+    $('resultPanel').className = 'result on';
+    $('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function showPartial(assembled, outcome, totalSegments) {
+    $('resultPanel').className = 'result';
+    var reasonText;
+    if (outcome.reason === 'quota') {
+      reasonText = 'The free translation service reached its daily limit after ' + outcome.completedCount + ' of ' + totalSegments + ' segments.';
+    } else if (outcome.reason === 'cancelled') {
+      reasonText = 'You stopped the translation after ' + outcome.completedCount + ' of ' + totalSegments + ' segments.';
+    } else {
+      reasonText = 'Translation stopped after ' + outcome.completedCount + ' of ' + totalSegments + ' segments. ' + (outcome.detail || '');
+    }
+    $('partialText').textContent = reasonText;
+    if (assembled.completedPages.length) {
+      $('partialPages').textContent = 'Completed pages: ' + assembled.completedPages.join(', ') + '. You can download those pages now as a text file, clearly marked as a partial translation — or resume, and the finished segments will not be sent again.';
+      $('downloadPartialBtn').style.display = '';
+    } else {
+      $('partialPages').textContent = 'No full page was completed yet, so there is nothing to download. Press “Resume translation” to try again.';
+      $('downloadPartialBtn').style.display = 'none';
+    }
+    $('partialPanel').className = 'partial on';
+    $('partialPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function resetResults() {
+    state.lastAssembled = null;
+    state.lastComplete = false;
+    $('resultPanel').className = 'result';
+    $('partialPanel').className = 'partial';
+  }
+
+  /* ---------- downloads ---------- */
+  function txtHeader(partial) {
+    var to = state.lastTarget || $('toLang').value;
+    var head = state.base + ' — translated to ' + langName(to) + (partial ? ' (partial)' : '') + '\nSource file: ' + state.name;
+    if (partial && state.lastAssembled) {
+      head += '\nCompleted pages: ' + state.lastAssembled.completedPages.join(', ');
+    }
+    return head;
+  }
+  function downloadTxt(partial) {
+    var assembled = state.lastAssembled;
+    if (!assembled || !assembled.pages.length) return;
+    var text = TC.buildTxt(assembled.pages, txtHeader(partial));
+    downloadBlob(new Blob(['\ufeff' + text], { type: 'text/plain;charset=utf-8' }),
+      state.base + (partial ? '_translated_partial.txt' : '_translated.txt'));
+  }
+  async function fontBytesFor(target) {
+    var isAr = target === 'ar' || target === 'fa' || target === 'ur';
+    var url = isAr ? TranslateBuilder.FONT_ARABIC_URL : TranslateBuilder.FONT_MAIN_URL;
+    if (!state.fontCache[url]) {
+      var r = await fetch(url);
+      if (!r.ok) throw new Error('font download failed');
+      state.fontCache[url] = new Uint8Array(await r.arrayBuffer());
+    }
+    return isAr ? { arabic: state.fontCache[url] } : { main: state.fontCache[url] };
+  }
+  async function downloadPdf() {
+    var assembled = state.lastAssembled;
+    if (!assembled || !window.PDFLib) return;
+    var to = state.lastTarget || $('toLang').value;
+    var btn = $('downloadPdfBtn');
+    btn.disabled = true;
+    try {
+      var bytes = await TranslateBuilder.buildPdf({
+        pages: assembled.pages,
+        target: to,
+        base: state.base,
+        langName: langName(to),
+        PDFLib: window.PDFLib,
+        fontkit: window.fontkit,
+        fontBytes: await fontBytesFor(to)
+      });
+      downloadBlob(new Blob([bytes], { type: 'application/pdf' }), state.base + '_translated.pdf');
+    } catch (err) {
+      showError('The PDF could not be built — the font may have failed to download. The TXT download contains the full translation.');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  /* ---------- wiring ---------- */
+  var drop = $('drop'), input = $('fileInput');
+  $('pickBtn').addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () {
+    if (input.files && input.files[0]) loadFile(input.files[0]);
+    input.value = '';
+  });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault(); drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  $('removeFileBtn').addEventListener('click', startOver);
+
+  $('fromLang').addEventListener('change', function () { resetResults(); refreshOptionUI(); });
+  $('toLang').addEventListener('change', function () { resetResults(); refreshOptionUI(); });
+  $('swapBtn').addEventListener('click', function () {
+    var f = $('fromLang').value;
+    var t = $('toLang').value;
+    if (f === 'auto') {
+      $('fromLang').value = t;
+      $('toLang').value = effectiveFrom();
+    } else {
+      $('fromLang').value = t;
+      $('toLang').value = f;
+    }
+    resetResults();
+    refreshOptionUI();
+  });
+  var scopeCards = document.querySelectorAll('.levelcard[data-scope]');
+  scopeCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      scopeCards.forEach(function (c) {
+        var on = c === card;
+        c.classList.toggle('sel', on);
+        var radio = c.querySelector('input[type=radio]');
+        if (radio) radio.checked = on;
+      });
+      $('rangeInputs').className = 'rangeinputs' + (card.getAttribute('data-scope') === 'range' ? ' on' : '');
+      updateWordWarn();
+    });
+  });
+  $('rangeInputs').addEventListener('click', function (e) { e.stopPropagation(); });
+  $('fromPage').addEventListener('input', updateWordWarn);
+  $('toPage').addEventListener('input', updateWordWarn);
+  $('fromPage').addEventListener('change', updateWordWarn);
+  $('toPage').addEventListener('change', updateWordWarn);
+
+  $('translateBtn').addEventListener('click', runTranslation);
+  $('cancelBtn').addEventListener('click', function () { state.cancelled = true; });
+  $('retryBtn').addEventListener('click', runTranslation);
+  $('downloadTxtBtn').addEventListener('click', function () { downloadTxt(false); });
+  $('downloadPartialBtn').addEventListener('click', function () { downloadTxt(true); });
+  $('downloadPdfBtn').addEventListener('click', downloadPdf);
+  $('anotherBtn').addEventListener('click', startOver);
+  $('partialAnotherBtn').addEventListener('click', startOver);
+
+  function startOver() {
+    state.file = null; state.name = ''; state.base = 'document'; state.pages = 0;
+    state.docPages = null; state.totalWords = 0; state.detected = null;
+    state.ready = false; state.empty = false; state.warn = '';
+    state.cache = new Map(); state.cancelled = false; state.lastTarget = null;
+    resetResults();
+    showError('');
+    $('emptyPanel').className = 'emptypanel';
+    $('docStats').className = 'docstats';
+    $('docStats').innerHTML = '';
+    $('translateBtn').disabled = true;
+    renderFileCard();
+    refreshOptionUI();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  refreshOptionUI();
+})();
+</script>
+</body>
+                                         </html>
