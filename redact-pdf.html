@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redact PDF — PdfBleu.com</title>
+<meta name="description" content="Redact a PDF for free, right in your browser: find or draw over sensitive text and permanently destroy it — the document is rebuilt from page images, so redacted content cannot be recovered. No upload, your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#4A7AAB;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(74,122,171,.35)}
+.doctile .dw{font-size:30px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#b71c1c;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.verifyline{font-size:14px;border-radius:10px;padding:12px 14px;margin-bottom:16px;text-align:left}
+.verifyline.ok{background:#e8f5e9;border:1.5px solid #4CAF50;color:#1b5e20}
+.verifyline.bad{background:#fdecea;border:1.5px solid #e53935;color:#b71c1c;font-weight:700}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+/* ---------- Editor ---------- */
+.editor-layout{display:none;flex-direction:column;gap:18px}
+.editor-layout.on{display:flex}
+@media(min-width:920px){.editor-layout{flex-direction:row;align-items:flex-start}.editor-main{flex:1;min-width:0}.editor-side{width:330px;flex-shrink:0}}
+.editor-side{display:flex;flex-direction:column;gap:18px}
+.toolbar{position:sticky;top:8px;z-index:30;background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;box-shadow:0 2px 8px rgba(63,81,181,.12);margin-bottom:16px;align-items:center}
+.tbtn{border:1.5px solid #dfe3f7;background:#f9faff;color:#333a5e;border-radius:9px;padding:8px 10px;font-size:14.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;min-height:38px;justify-content:center;font-family:inherit}
+.tbtn.active{background:#3F51B5;color:#fff;border-color:#3F51B5}
+.tbtn:disabled{opacity:.45;cursor:not-allowed}
+.tsep{width:1px;align-self:stretch;background:#e0e4f5;margin:2px 2px}
+.zoomlbl{font-size:13.5px;font-weight:700;color:#1a237e;min-width:42px;text-align:center}
+.pageblock{margin-bottom:24px}
+.pageblock:last-child{margin-bottom:4px}
+.pagelabel{font-size:13px;font-weight:700;color:#666c8a;margin-bottom:6px}
+.pagewrap{position:relative;margin:0 auto;background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.20);line-height:0;width:fit-content;max-width:100%}
+.pagewrap canvas{display:block}
+.overlay{position:absolute;inset:0;line-height:1.4;touch-action:none;overflow:hidden}
+.overlay.mode-redact{cursor:crosshair}
+.overlay.mode-eraser{cursor:pointer}
+.mark{position:absolute;background:rgba(10,10,10,.85);border:1.5px solid #000;box-sizing:border-box}
+.mark.full{background:rgba(10,10,10,.92)}
+.mark.drawing{background:rgba(10,10,10,.45);border:1.5px dashed #3F51B5}
+.mark.sel{outline:2.5px solid #3F51B5;outline-offset:1px;z-index:6}
+.mark.flash{outline:3.5px solid #f9a825;outline-offset:1px;z-index:7}
+.card-panel{background:#fff;border-radius:14px;padding:16px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.card-panel h2{font-size:17px;color:#1a237e;margin-bottom:8px}
+.card-panel .warnnote{margin-top:0}
+.hint{font-size:13.5px;color:#666c8a}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:12px;text-align:left}
+.searchrow{display:flex;gap:8px;margin-bottom:4px}
+.searchrow input{flex:1;min-width:0;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 11px;font-size:14.5px;font-family:inherit;color:#21243d}
+.searchrow button,.detbtn{border:1.5px solid #3F51B5;background:#3F51B5;color:#fff;border-radius:20px;padding:9px 16px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.searchrow button:disabled,.detbtn:disabled{opacity:.45;cursor:not-allowed}
+.detrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #eef0fa}
+.detrow:last-of-type{border-bottom:none}
+.detrow .detlab{font-size:14.5px;font-weight:600;color:#333a5e}
+.detrow .detlab small{display:block;font-weight:400;color:#666c8a;font-size:12.5px}
+.resblock{margin-top:10px}
+.resblock:empty{display:none}
+.reshead{font-size:13.5px;font-weight:800;color:#1a237e;margin-bottom:3px}
+.resnote{font-size:12.5px;color:#666c8a;margin-bottom:7px}
+.respghead{font-weight:800;color:#1a237e;font-size:13px;margin:9px 0 5px}
+.resitem{display:flex;gap:8px;align-items:flex-start;padding:7px 9px;border:1.5px solid #e0e4f5;border-radius:8px;margin-bottom:6px;background:#f9faff;font-size:13px}
+.resitem input{width:17px;height:17px;accent-color:#3F51B5;margin-top:1px;flex-shrink:0}
+.resitem .rtext{flex:1;min-width:0;word-break:break-all;color:#333a5e}
+.acceptbtn{width:100%;border:none;background:#2e7d32;color:#fff;border-radius:20px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:2px}
+.acceptbtn:disabled{opacity:.5;cursor:not-allowed}
+.markrow{display:flex;align-items:center;gap:8px;padding:8px 9px;border:1.5px solid #e0e4f5;border-radius:9px;margin-bottom:7px;cursor:pointer;background:#f9faff;font-size:13.5px}
+.markrow.sel{border-color:#3F51B5;background:#eef1fb}
+.markrow .mic{font-size:14px;flex-shrink:0}
+.markrow .mlab{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:#333a5e}
+.markrow .mdel{background:#e53935;color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;flex-shrink:0;line-height:1;font-size:13px}
+.marks-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.marks-head h2{margin-bottom:0}
+.removeall{color:#e53935;font-size:13.5px;font-weight:700;cursor:pointer;background:none;border:none;padding:0;font-family:inherit}
+.markpghead{font-weight:800;color:#1a237e;font-size:13.5px;margin:10px 0 6px}
+.marksummary{font-size:13.5px;color:#444a6d;margin-top:6px}
+.prop-row{margin-bottom:11px}
+.prop-row label{display:block;font-size:13px;font-weight:600;color:#444a6d;margin-bottom:4px}
+.prop-row select{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 9px;font-size:14px;font-family:inherit;background:#fff;color:#21243d}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><rect x="13" y="7" width="22" height="34" rx="2" fill="#fff"/><path d="M18 13 H30 M18 35 H26" stroke="#4A7AAB" stroke-width="2" fill="none"/><rect x="16" y="20" width="16" height="8" fill="#212121"/><path d="M21 22 L27 26 M27 22 L21 26" stroke="#fff" stroke-width="1.8" fill="none"/></svg></span>
+<h1>Redact PDF</h1>
+<p class="subtitle">Permanently remove sensitive text and graphics — the content is destroyed, not just covered.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the redaction happens entirely in your browser — nothing is uploaded, so the document nobody should see never travels anywhere.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">▮</span><span class="dext">PDF</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Redact PDF</h2>
+<p>Open a PDF, mark the sensitive parts — by hand, by searching for text, or with the built-in detectors for card numbers, phone numbers and email addresses — then press “Redact document”. The marked content is destroyed for good.</p>
+<div class="warnnote">⚠ <strong>How this redaction works — honestly:</strong> every page is rebuilt as a picture with the marked areas burned in as solid black. That is what makes the redaction <strong>permanent</strong>: there is no original text hiding underneath to copy out or uncover. It also means the finished document has <strong>no selectable or searchable text anywhere</strong> — if you need a searchable copy afterwards, run the result through <a href="ocr-pdf.html">OCR PDF</a>. Check your marks carefully before applying: redaction cannot be undone. Nothing is uploaded, ever.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="editor-layout" id="editorLayout">
+<div class="editor-main">
+<div class="tool" id="editorCard">
+<div class="toolbar" id="toolbar">
+<button class="tbtn active" id="toolPan" data-tool="pan" type="button" title="Pan / select marks">✋ Pan</button>
+<button class="tbtn" id="toolRedact" data-tool="redact" type="button" title="Drag on a page to draw a redaction area">⬛ Redact</button>
+<button class="tbtn" id="toolRedactPage" type="button" title="Mark the whole page currently in view for redaction">▦ Redact page</button>
+<button class="tbtn" id="toolEraser" data-tool="eraser" type="button" title="Click a mark to remove it">✕ Eraser</button>
+<span class="tsep"></span>
+<button class="tbtn" id="zoomOut" type="button" title="Zoom out">−</button>
+<span class="zoomlbl" id="zoomLabel">100%</span>
+<button class="tbtn" id="zoomIn" type="button" title="Zoom in">+</button>
+</div>
+<div id="pagesEl"></div>
+<div class="error" id="editorError"></div>
+</div>
+</div>
+<div class="editor-side">
+<div class="card-panel" id="detectPanel">
+<h2>Find sensitive content</h2>
+<div class="scannote" id="noTextAlert" style="display:none">This PDF has no selectable text, so automatic detection can't work. You can still draw redaction areas by hand, or run <a href="ocr-pdf.html">OCR PDF</a> first to add a text layer.</div>
+<p class="hint" id="detectHint">Search the document's text, or run a detector. Every match is listed with a checkbox — only the ticked matches become marks when you press the accept button.</p>
+<div class="prop-row" style="margin-top:10px">
+<label for="searchInput">Search text</label>
+<div class="searchrow">
+<input type="text" id="searchInput" placeholder="e.g. a name, an amount, a reference…" autocomplete="off">
+<button id="searchBtn" type="button">Search</button>
+</div>
+</div>
+<div class="resblock" id="searchResults"></div>
+<div class="detrow">
+<span class="detlab">Credit cards<small>Only numbers that pass the card checksum (Luhn) are listed.</small></span>
+<button class="detbtn" id="detectCardsBtn" type="button">Detect</button>
+</div>
+<div class="resblock" id="cardResults"></div>
+<div class="detrow">
+<span class="detlab">Phone numbers<small>7–15 digits, with or without country code.</small></span>
+<button class="detbtn" id="detectPhonesBtn" type="button">Detect</button>
+</div>
+<div class="resblock" id="phoneResults"></div>
+<div class="detrow">
+<span class="detlab">Email addresses</span>
+<button class="detbtn" id="detectEmailsBtn" type="button">Detect</button>
+</div>
+<div class="resblock" id="emailResults"></div>
+</div>
+<div class="card-panel" id="marksPanel">
+<div class="marks-head"><h2>Marked for redaction</h2><button class="removeall" id="marksClear" type="button" style="display:none">Clear all</button></div>
+<p class="hint" id="marksEmpty">Nothing marked yet. Draw areas with the Redact tool, mark a whole page, or accept matches from the detection panel.</p>
+<div id="marksList"></div>
+<p class="marksummary" id="marksSummary"></p>
+</div>
+<div class="card-panel" id="optionsPanel">
+<h2>Output quality</h2>
+<div class="prop-row">
+<label for="dpiSelect">Page rendering quality</label>
+<select id="dpiSelect">
+<option value="150">150 DPI — smaller file</option>
+<option value="200" selected>200 DPI — recommended</option>
+<option value="300">300 DPI — sharpest, larger file</option>
+</select>
+</div>
+<p class="hint">Redaction rebuilds every page as an image at this resolution. Higher DPI keeps small text crisper but makes a bigger file. The rebuilt document has no text layer at any setting — that is what makes the redaction permanent.</p>
+</div>
+</div>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your redacted PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="verifyline ok" id="verifyLine"></div>
+<div class="resultlist" id="resultList"></div>
+<button class="again" id="restartBtn" type="button">Redact another file</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why redact with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔥</span><h3>Destroyed, not covered</h3><p>Tools that draw a black box over live text leave the words inside the file — anyone can copy them out. Here every page is rebuilt as an image, so what is under the black simply no longer exists.</p></div>
+<div class="step"><span class="fic">🔍</span><h3>Find it automatically</h3><p>Search for any text, or let the detectors sweep the document for card numbers (checksum-verified, so look-alike numbers are ignored), phone numbers and email addresses.</p></div>
+<div class="step"><span class="fic">✔️</span><h3>Verified before download</h3><p>Before you download, the finished file is re-opened and searched on your device: if a marked item could still be found in it, you would see a warning instead of a download.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to redact a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Open your PDF</h3><p>Click the select button or drop your PDF into the area provided. All of its pages open in the editor, right here in your browser.</p></div>
+<div class="step"><span class="num">2</span><h3>Mark what must go</h3><p>Drag black areas over sensitive content with the Redact tool, mark a whole page, or use search and the detectors to find card numbers, phones and emails in seconds.</p></div>
+<div class="step"><span class="num">3</span><h3>Review the marks</h3><p>Every mark is listed in the “Marked for redaction” panel, grouped by page. Remove any mark with its ✕, or clear them all and start the marking again.</p></div>
+<div class="step"><span class="num">4</span><h3>Redact and download</h3><p>Press “Redact document”. The pages are rebuilt as images with the marks burned in, the result is verified, and your redacted PDF is ready to download.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>Why rebuild the pages as images? Why not just draw black boxes?</h3><p>Because a black box drawn over live text is not redaction — the words are still inside the file, unchanged. Anyone can select the text under the box, copy it, or remove the box and read everything. That failure has embarrassed governments and law firms in real published documents. Rebuilding each page as an image with the marked areas painted black <em>before</em> the image is created means the covered content is never written into the new file at all: there is nothing left to recover.</p></div>
+<div class="qa"><h3>What happens to the pages and parts I did not mark?</h3><p>They are rebuilt the same way. Every page of the output is a fresh image of the original page, so no hidden text, metadata, annotations, form fields or layers survive anywhere in the document — not just under the black areas. The new file is a clean, flat document that shows exactly what the original showed, minus what you marked.</p></div>
+<div class="qa"><h3>Can I redact a scanned PDF?</h3><p>Yes — drawing areas by hand works on any page, scanned or not, because the rebuild works on the page picture itself. What does not work on a scan is automatic detection: a scanned page has no text layer for the search or the detectors to read. The panel tells you when that is the case, and running the file through <a href="ocr-pdf.html">OCR PDF</a> first adds a text layer that makes detection work.</p></div>
+<div class="qa"><h3>What exactly do the detectors find?</h3><p>The text search finds every occurrence of the words you type, on every page. The card detector finds digit sequences of 13–19 digits that pass the Luhn checksum — the mathematical check card numbers are built to satisfy — so random long numbers that merely look like cards are not flagged. The phone detector finds 7–15 digit numbers with the usual separators and optional country codes, and the email detector finds standard email addresses.</p></div>
+<div class="qa"><h3>Does the redacted file keep the original's metadata, bookmarks or form fields?</h3><p>No. The output is a brand-new document assembled from page images; nothing is copied across from the original except the visible appearance of the pages themselves. Titles, author metadata, annotations, attachments, form fields and layers do not carry over — which is deliberate: leftover metadata is another classic way “redacted” documents leak information.</p></div>
+<div class="qa"><h3>Which quality setting should I choose?</h3><p>200 DPI is the right balance for most documents: text stays crisp on screen and in print, and files stay reasonable. Choose 150 DPI when size matters most, for example for emailing, and 300 DPI for documents with very small print or fine detail that must stay sharp. Remember that at every setting the output's text is a picture — not selectable or searchable — because that is the price of a redaction that cannot be undone.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p id="processingTitle">Working…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="redactBtn" type="button" disabled title="Mark at least one area to redact">Redact document</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="redactCore">
+/* =====================================================================
+   PdfBleu Redact PDF — pure, node-testable core (no DOM in here).
+
+   TRUE redaction model: the output document is rebuilt from rendered
+   page images with the marked regions painted black on the pixels, so
+   covered content never reaches the new file. This core owns the
+   text-side machinery that finds things worth marking:
+
+     1. abstractItems / tokenizeItems turn raw pdf.js items into word
+        boxes in DISPLAYED page points (origin top-left, y down, y =
+        top of the box) — the same geometry the editor draws with.
+     2. groupCharLines groups words into lines and maps EVERY character
+        of the joined line string to its proportional slice of a word
+        box, so any character span can be turned back into a rectangle.
+     3. findText / findCards / findPhones / findEmails search the line
+        strings and return matches as {page, rect, text}. Detection
+        rects are expanded by PAD so glyph edges are fully covered.
+     4. Marks helpers keep the mark list ({id, page, label, kind,
+        fullPage, rect, text}) — kind 'area' | 'full', text set only
+        for detection/search marks (it is what verification looks for).
+     5. planRedaction converts marks into per-page pixel plans:
+        canvas size at the requested DPI under the safety caps, with
+        each mark as a pixel rect (outward-rounded, page-clamped).
+     6. verifyRemoved re-checks that none of the marked strings can be
+        found in the finished file's extracted text.
+   ===================================================================== */
+var RedactCore = (function () {
+  'use strict';
+
+  var PAD = 1.5;                 // pt added around detection rects
+  var MAX_SIDE_PX = 12000;       // sibling canvas caps
+  var MAX_PIXELS = 40000000;     // 40 MP
+  var MIN_MARK_PT = 2;           // smaller hand-drawn rects are treated as clicks
+
+  function sanitizeBase(name) {
+    var s = String(name == null ? '' : name).replace(/[^A-Za-z0-9._-]/g, '_').replace(/^\.+/, '').replace(/\.+$/, '');
+    return s || 'document';
+  }
+  function outputName(name) {
+    var base = String(name == null ? '' : name).replace(/\.pdf$/i, '');
+    return sanitizeBase(base) + '_redacted.pdf';
+  }
+
+  /* 2D affine multiply, same convention as pdf.js Util.transform. */
+  function multiply(m1, m2) {
+    return [
+      m1[0] * m2[0] + m1[2] * m2[1],
+      m1[1] * m2[0] + m1[3] * m2[1],
+      m1[0] * m2[2] + m1[2] * m2[3],
+      m1[1] * m2[2] + m1[3] * m2[3],
+      m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
+      m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+    ];
+  }
+
+  /* Raw pdf.js items -> abstract items in displayed points. */
+  function abstractItems(items, vpTransform) {
+    var out = [];
+    (items || []).forEach(function (it) {
+      if (!it || typeof it.str !== 'string') return;
+      var itm = it.transform || [1, 0, 0, 1, 0, 0];
+      var t = multiply(vpTransform || [1, 0, 0, 1, 0, 0], itm);
+      var fontH = Math.hypot(t[2] || 0, t[3] || 0);
+      if (!fontH || !isFinite(fontH)) fontH = it.height || 0;
+      var advItem = Math.hypot(itm[0] || 0, itm[1] || 0);
+      var advDisp = Math.hypot(t[0] || 0, t[1] || 0);
+      var ratio = advItem ? advDisp / advItem : 1;
+      out.push({
+        str: it.str,
+        x: t[4] || 0,
+        y: (t[5] || 0) - fontH,
+        w: (it.width || 0) * ratio,
+        h: fontH,
+        page: it.page
+      });
+    });
+    return out;
+  }
+
+  /* Abstract items -> word boxes; each word's share of the item width
+     is proportional to its character span inside the item string. */
+  function tokenizeItems(items, pageHeightPt) {
+    var words = [];
+    (items || []).forEach(function (it) {
+      var str = String(it.str == null ? '' : it.str);
+      if (!str) return;
+      var len = str.length;
+      var y = it.y || 0;
+      if (pageHeightPt && y > pageHeightPt) y = pageHeightPt;
+      if (y < 0) y = 0;
+      var re = /\S+/g, m;
+      while ((m = re.exec(str)) !== null) {
+        var start = m.index, end = start + m[0].length;
+        var x0 = (it.x || 0) + (it.w || 0) * (start / len);
+        var x1 = (it.x || 0) + (it.w || 0) * (end / len);
+        words.push({
+          text: m[0],
+          page: it.page || 0,
+          x: x0,
+          y: y,
+          w: Math.max(0, x1 - x0),
+          h: it.h || 0
+        });
+      }
+    });
+    return words;
+  }
+
+  /* Group words (reading order, one page at a time — a page change
+     always starts a new line) into lines. Each line carries:
+       text  — the words joined with single spaces
+       spans — one rect per character of text: word characters get
+               their proportional slice of the word box; the joining
+               space gets the gap between the two words.             */
+  function groupCharLines(words) {
+    var raw = [];
+    var cur = null;
+    (words || []).forEach(function (w) {
+      var h = w.h || 10;
+      var center = (w.y || 0) + h / 2;
+      if (!cur || cur.page !== (w.page || 0) ||
+          Math.abs(center - cur.anchor) > Math.max(2, 0.6 * Math.max(h, cur.h))) {
+        cur = { page: w.page || 0, anchor: center, y: w.y || 0, h: h, words: [] };
+        raw.push(cur);
+      }
+      cur.words.push(w);
+    });
+    return raw.map(function (l) {
+      var text = '', spans = [];
+      l.words.forEach(function (w, wi) {
+        if (wi > 0) {
+          var prev = l.words[wi - 1];
+          text += ' ';
+          spans.push({
+            x: prev.x + prev.w,
+            y: prev.y,
+            w: Math.max(0, w.x - (prev.x + prev.w)),
+            h: prev.h
+          });
+        }
+        var len = w.text.length || 1;
+        for (var ci = 0; ci < w.text.length; ci++) {
+          text += w.text[ci];
+          spans.push({
+            x: w.x + w.w * (ci / len),
+            y: w.y,
+            w: w.w / len,
+            h: w.h
+          });
+        }
+      });
+      return { page: l.page, text: text, spans: spans, y: l.y, h: l.h, words: l.words };
+    });
+  }
+
+  /* Union rect of line character spans [start, end), expanded by pad
+     on every side (left/top clamped at 0). */
+  function spanRect(line, start, end, pad) {
+    var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (var i = start; i < end && i < line.spans.length; i++) {
+      var s = line.spans[i];
+      if (!s) continue;
+      if (s.x < x0) x0 = s.x;
+      if (s.y < y0) y0 = s.y;
+      if (s.x + s.w > x1) x1 = s.x + s.w;
+      if (s.y + s.h > y1) y1 = s.y + s.h;
+    }
+    if (!isFinite(x0)) return null;
+    var p = pad || 0;
+    return {
+      x: Math.max(0, x0 - p),
+      y: Math.max(0, y0 - p),
+      w: (x1 - x0) + 2 * p,
+      h: (y1 - y0) + 2 * p
+    };
+  }
+
+  function pushMatches(out, lines, finder) {
+    (lines || []).forEach(function (line) { finder(line, out); });
+    return out;
+  }
+
+  /* Case-insensitive (default) substring search across each line's
+     joined string. Matches never span lines. */
+  function findText(lines, query, opts) {
+    var q = String(query == null ? '' : query).trim();
+    if (!q) return [];
+    var ci = !(opts && opts.caseSensitive);
+    var needle = ci ? q.toLowerCase() : q;
+    var out = [];
+    pushMatches(out, lines, function (line) {
+      var hay = ci ? line.text.toLowerCase() : line.text;
+      var from = 0;
+      while (from <= hay.length - needle.length) {
+        var idx = hay.indexOf(needle, from);
+        if (idx < 0) break;
+        var rect = spanRect(line, idx, idx + needle.length, PAD);
+        if (rect) out.push({ page: line.page, rect: rect, text: line.text.substr(idx, needle.length) });
+        from = idx + Math.max(1, needle.length);
+      }
+    });
+    return out;
+  }
+
+  /* Luhn checksum over a string of digits. */
+  function luhnValid(digits) {
+    var d = String(digits == null ? '' : digits).replace(/\D/g, '');
+    if (d.length < 2) return false;
+    var sum = 0, dbl = false;
+    for (var i = d.length - 1; i >= 0; i--) {
+      var n = d.charCodeAt(i) - 48;
+      if (dbl) { n *= 2; if (n > 9) n -= 9; }
+      sum += n;
+      dbl = !dbl;
+    }
+    return sum % 10 === 0;
+  }
+
+  /* Card numbers: maximal runs of digit groups joined by single
+     spaces or dashes. Within a run, the longest window of whole groups
+     totalling 13–19 digits that passes Luhn becomes a match — a
+     same-shaped number that fails the checksum is never flagged. */
+  function findCards(lines) {
+    var out = [];
+    pushMatches(out, lines, function (line) {
+      var text = line.text;
+      var re = /\d+(?:[ -]\d+)*/g, m;
+      while ((m = re.exec(text)) !== null) {
+        var runStart = m.index, runStr = m[0];
+        if (runStart > 0 && /[\d]/.test(text[runStart - 1])) continue;
+        // split the run into its digit groups, with char offsets
+        var groups = [], gre = /\d+/g, gm;
+        while ((gm = gre.exec(runStr)) !== null) {
+          groups.push({ start: runStart + gm.index, len: gm[0].length, digits: gm[0] });
+        }
+        var gi = 0;
+        while (gi < groups.length) {
+          var total = 0, digits = '', hitEnd = -1;
+          for (var gj = gi; gj < groups.length; gj++) {
+            total += groups[gj].len;
+            digits += groups[gj].digits;
+            if (total > 19) break;
+            if (total >= 13 && luhnValid(digits)) hitEnd = gj;
+          }
+          if (hitEnd >= 0) {
+            var s = groups[gi].start, e = groups[hitEnd].start + groups[hitEnd].len;
+            var rect = spanRect(line, s, e, PAD);
+            if (rect) out.push({ page: line.page, rect: rect, text: text.substring(s, e) });
+            gi = hitEnd + 1;
+          } else {
+            gi++;
+          }
+        }
+      }
+    });
+    return out;
+  }
+
+  var EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g;
+  function findEmails(lines) {
+    var out = [];
+    pushMatches(out, lines, function (line) {
+      EMAIL_RE.lastIndex = 0;
+      var m;
+      while ((m = EMAIL_RE.exec(line.text)) !== null) {
+        var rect = spanRect(line, m.index, m.index + m[0].length, PAD);
+        if (rect) out.push({ page: line.page, rect: rect, text: m[0] });
+      }
+    });
+    return out;
+  }
+
+  var DATE_LIKE_RE = /^\d{1,4}[-./]\d{1,2}[-./]\d{1,4}$/;
+  function findPhones(lines) {
+    var out = [];
+    pushMatches(out, lines, function (line) {
+      var text = line.text;
+      var re = /\+?\(?\d[\d\s().-]*\d\)?|\+?\d/g, m;
+      while ((m = re.exec(text)) !== null) {
+        var raw = m[0];
+        var start = m.index, end = start + raw.length;
+        if (start > 0 && /[\d+]/.test(text[start - 1])) continue;
+        if (end < text.length && /\d/.test(text[end])) continue;
+        var cand = raw.replace(/[\s.]+$/, '');
+        end = start + cand.length;
+        var digits = cand.replace(/\D/g, '');
+        if (digits.length < 7 || digits.length > 15) continue;
+        if (DATE_LIKE_RE.test(cand.replace(/\s/g, ''))) continue;
+        var hasSep = /[\s().-]/.test(cand) || cand.charAt(0) === '+';
+        if (!hasSep && digits.length < 7) continue;
+        var rect = spanRect(line, start, end, PAD);
+        if (rect) out.push({ page: line.page, rect: rect, text: text.substring(start, end) });
+      }
+    });
+    return out;
+  }
+
+  /* ---------------- marks model ----------------
+     A mark: {id, page, label, kind:'area'|'full', fullPage, rect,
+              text} — rect in displayed points for area marks, null
+              for full-page marks; text is the matched string for
+              detection/search marks, null for hand-drawn ones.      */
+  var markSeq = 0;
+  function makeMark(spec) {
+    spec = spec || {};
+    var full = !!spec.fullPage;
+    return {
+      id: spec.id || ('m' + (++markSeq)),
+      page: spec.page || 0,
+      label: spec.label || (full ? 'Full page' : 'Manual area'),
+      kind: full ? 'full' : 'area',
+      fullPage: full,
+      rect: full ? null : (spec.rect || null),
+      text: spec.text || null,
+      source: spec.source || (full ? 'page' : 'manual')
+    };
+  }
+  function addMark(marks, spec) {
+    var mk = makeMark(spec);
+    (marks || []).push(mk);
+    return mk;
+  }
+  function removeMark(marks, id) {
+    return (marks || []).filter(function (m) { return m.id !== id; });
+  }
+  function groupMarksByPage(marks) {
+    var byPage = {};
+    (marks || []).forEach(function (m) { (byPage[m.page] = byPage[m.page] || []).push(m); });
+    return Object.keys(byPage).map(function (k) { return Number(k); }).sort(function (a, b) { return a - b; })
+      .map(function (p) { return { page: p, marks: byPage[p] }; });
+  }
+  function countMarks(marks) {
+    var pages = {};
+    (marks || []).forEach(function (m) { pages[m.page] = true; });
+    return { total: (marks || []).length, pages: Object.keys(pages).length };
+  }
+  function marksOnPage(marks, page) {
+    return (marks || []).filter(function (m) { return m.page === page; });
+  }
+  function hasFullPageMark(marks, page) {
+    return (marks || []).some(function (m) { return m.page === page && m.fullPage; });
+  }
+
+  /* ---------------- apply plan ----------------
+     pages: [{w, h, marks:[mark…]}] in displayed points.
+     Returns per-page {scale, canvasW, canvasH, capped, rectsPx}
+     plus cappedPages. opts.maxSide / opts.maxPixels override the
+     caps (the tests use them to exercise capping). Rects are clamped
+     to the page, converted with the effective scale and rounded
+     OUTWARD so a mark always covers at least what was drawn.        */
+  function planRedaction(pages, dpi, opts) {
+    var maxSide = (opts && opts.maxSide) || MAX_SIDE_PX;
+    var maxPx = (opts && opts.maxPixels) || MAX_PIXELS;
+    dpi = dpi || 200;
+    var baseScale = dpi / 72;
+    var cappedPages = 0;
+    var planned = (pages || []).map(function (pg) {
+      var f = 1;
+      var rawW = pg.w * baseScale, rawH = pg.h * baseScale;
+      var maxDim = Math.max(rawW, rawH);
+      if (maxDim > maxSide) f = Math.min(f, maxSide / maxDim);
+      var px = rawW * rawH;
+      if (px > maxPx) f = Math.min(f, Math.sqrt(maxPx / px));
+      var scale = baseScale * f;
+      var capped = f < 1 - 1e-9;
+      if (capped) cappedPages++;
+      var canvasW = Math.max(1, Math.round(pg.w * scale));
+      var canvasH = Math.max(1, Math.round(pg.h * scale));
+      var rectsPx = (pg.marks || []).map(function (mk) {
+        var r = mk.fullPage ? { x: 0, y: 0, w: pg.w, h: pg.h } : (mk.rect || { x: 0, y: 0, w: 0, h: 0 });
+        var x0 = Math.max(0, Math.min(pg.w, r.x));
+        var y0 = Math.max(0, Math.min(pg.h, r.y));
+        var x1 = Math.max(0, Math.min(pg.w, r.x + r.w));
+        var y1 = Math.max(0, Math.min(pg.h, r.y + r.h));
+        return {
+          x: Math.floor(x0 * scale),
+          y: Math.floor(y0 * scale),
+          w: Math.max(0, Math.ceil(x1 * scale) - Math.floor(x0 * scale)),
+          h: Math.max(0, Math.ceil(y1 * scale) - Math.floor(y0 * scale))
+        };
+      });
+      return { scale: scale, canvasW: canvasW, canvasH: canvasH, capped: capped, rectsPx: rectsPx };
+    });
+    return { dpi: dpi, pages: planned, cappedPages: cappedPages };
+  }
+
+  /* ---------------- verification ----------------
+     The finished file is re-opened and its text extracted; none of
+     the marked strings may appear. Comparison is whitespace- and
+     case-insensitive; a marked string with 7+ digits is also looked
+     for in digits-only form (a card typed with spaces must not slip
+     through unspaced). Strings shorter than 2 chars after
+     normalisation cannot be verified meaningfully and are skipped. */
+  function normStr(s) {
+    return String(s == null ? '' : s).toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+  function verifyRemoved(extractedText, markedStrings) {
+    var hay = normStr(extractedText);
+    var hayDigits = null;
+    var found = [];
+    (markedStrings || []).forEach(function (s) {
+      var n = normStr(s);
+      if (n.length < 2) return;
+      if (hay.indexOf(n) >= 0) { found.push(s); return; }
+      var digs = String(s).replace(/\D/g, '');
+      if (digs.length >= 7) {
+        if (hayDigits === null) hayDigits = String(extractedText == null ? '' : extractedText).replace(/\D/g, '');
+        if (hayDigits.indexOf(digs) >= 0) found.push(s);
+      }
+    });
+    return { ok: found.length === 0, found: found };
+  }
+
+  return {
+    sanitizeBase: sanitizeBase,
+    outputName: outputName,
+    multiply: multiply,
+    abstractItems: abstractItems,
+    tokenizeItems: tokenizeItems,
+    groupCharLines: groupCharLines,
+    findText: findText,
+    luhnValid: luhnValid,
+    findCards: findCards,
+    findPhones: findPhones,
+    findEmails: findEmails,
+    makeMark: makeMark,
+    addMark: addMark,
+    removeMark: removeMark,
+    groupMarksByPage: groupMarksByPage,
+    countMarks: countMarks,
+    marksOnPage: marksOnPage,
+    hasFullPageMark: hasFullPageMark,
+    planRedaction: planRedaction,
+    verifyRemoved: verifyRemoved,
+    _: { spanRect: spanRect, normStr: normStr, PAD: PAD, MAX_SIDE_PX: MAX_SIDE_PX, MAX_PIXELS: MAX_PIXELS, MIN_MARK_PT: MIN_MARK_PT }
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  function $(id) { return document.getElementById(id); }
+  var layout = $('layout'), editorLayout = $('editorLayout'), success = $('success');
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput');
+  var fileCard = $('fileCard'), fileNameEl = $('fileName'), fileMeta = $('fileMeta'), fileWarn = $('fileWarn');
+  var errorBox = $('error'), editorError = $('editorError');
+  var processing = $('processing'), processingTitle = $('processingTitle'), processingDetail = $('processingDetail');
+  var actionBar = $('actionBar'), barSummary = $('barSummary'), redactBtn = $('redactBtn');
+  var pagesEl = $('pagesEl');
+  var marksList = $('marksList'), marksEmpty = $('marksEmpty'), marksSummary = $('marksSummary'), marksClear = $('marksClear');
+  var searchInput = $('searchInput'), searchBtn = $('searchBtn'), noTextAlert = $('noTextAlert');
+  var dpiSelect = $('dpiSelect');
+
+  var pdfDoc = null, pdfBytes = null, fileNameStr = '', pageCount = 0;
+  var pages = [];            // {pageObj, viewW, viewH, scale, canvas, overlay, wrap}
+  var pageLines = [];        // RedactCore char lines across all pages (line.page set)
+  var docHasText = false;
+  var marks = [];            // RedactCore marks
+  var mode = 'pan', zoom = 1;
+  var selectedMarkId = null;
+  var editorOpen = false, successShown = false, applying = false;
+  var renderToken = 0, gesture = null, resSeq = 0;
+  var resultUrl = null;
+  var detectState = { search: [], card: [], phone: [], email: [] };
+
+  var ERR_ENC = 'This PDF is password-protected. Please remove the password first (with the Unlock PDF tool, if you know it), then try again.';
+  var ERR_CORRUPT = 'This file could not be opened. It may be damaged, or it is not a real PDF.';
+  var DETECT_KEYS = [
+    { key: 'card', block: 'cardResults', title: 'Credit cards', note: 'Only numbers that pass the card checksum (Luhn) are listed — look-alike numbers are ignored.' },
+    { key: 'phone', block: 'phoneResults', title: 'Phone numbers', note: null },
+    { key: 'email', block: 'emailResults', title: 'Email addresses', note: null }
+  ];
+
+  function fmtSize(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = 'block'; }
+  function hideError() { errorBox.style.display = 'none'; }
+  function showEditorError(msg) { editorError.textContent = msg; editorError.style.display = 'block'; }
+  function hideEditorError() { editorError.style.display = 'none'; }
+  function showProcessing(title, detail) {
+    processingTitle.textContent = title || 'Working…';
+    processingDetail.textContent = detail || '';
+    processing.classList.add('on');
+  }
+  function hideProcessing() { processing.classList.remove('on'); }
+  function truncate(s, n) {
+    s = String(s == null ? '' : s);
+    return s.length > n ? s.substr(0, n - 1) + '…' : s;
+  }
+
+  /* ---------------- marks ---------------- */
+  function markDomById(id) { return pagesEl.querySelector('.mark[data-id="' + id + '"]'); }
+  function findMark(id) {
+    for (var i = 0; i < marks.length; i++) if (marks[i].id === id) return marks[i];
+    return null;
+  }
+  function styleMarkDom(mk) {
+    var d = markDomById(mk.id);
+    if (!d) return;
+    var pg = pages[mk.page];
+    if (!pg) return;
+    var sc = pg.scale;
+    if (mk.fullPage) {
+      d.style.left = '0px'; d.style.top = '0px';
+      d.style.width = (pg.viewW * sc) + 'px'; d.style.height = (pg.viewH * sc) + 'px';
+    } else if (mk.rect) {
+      d.style.left = (mk.rect.x * sc) + 'px';
+      d.style.top = (mk.rect.y * sc) + 'px';
+      d.style.width = Math.max(mk.rect.w * sc, 2) + 'px';
+      d.style.height = Math.max(mk.rect.h * sc, 2) + 'px';
+    }
+    d.classList.toggle('sel', mk.id === selectedMarkId);
+  }
+  function addMarkDom(mk) {
+    var pg = pages[mk.page];
+    if (!pg) return;
+    var d = document.createElement('div');
+    d.className = 'mark' + (mk.fullPage ? ' full' : '');
+    d.setAttribute('data-id', mk.id);
+    d.title = mk.label;
+    pg.overlay.appendChild(d);
+    styleMarkDom(mk);
+  }
+  function layoutMarks() { for (var i = 0; i < marks.length; i++) styleMarkDom(marks[i]); }
+  function rebuildMarkDoms() {
+    var olds = pagesEl.querySelectorAll('.mark');
+    for (var i = 0; i < olds.length; i++) olds[i].remove();
+    for (var j = 0; j < marks.length; j++) addMarkDom(marks[j]);
+  }
+  function addMark(spec) {
+    var mk = RedactCore.addMark(marks, spec);
+    addMarkDom(mk);
+    afterMarksChange();
+    return mk;
+  }
+  function removeMarkById(id) {
+    marks = RedactCore.removeMark(marks, id);
+    var d = markDomById(id);
+    if (d) d.remove();
+    if (selectedMarkId === id) selectedMarkId = null;
+    afterMarksChange();
+  }
+  function selectMark(id, scroll) {
+    selectedMarkId = id;
+    layoutMarks();
+    renderMarksList();
+    if (id && scroll) {
+      var d = markDomById(id);
+      if (d) {
+        d.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        d.classList.add('flash');
+        setTimeout(function () { d.classList.remove('flash'); }, 1100);
+      }
+    }
+  }
+  function afterMarksChange() { renderMarksList(); updateBar(); }
+  function renderMarksList() {
+    marksList.innerHTML = '';
+    marksEmpty.style.display = marks.length ? 'none' : '';
+    marksClear.style.display = marks.length ? '' : 'none';
+    var groups = RedactCore.groupMarksByPage(marks);
+    groups.forEach(function (g) {
+      var head = document.createElement('div');
+      head.className = 'markpghead';
+      head.textContent = 'Page ' + (g.page + 1) + ' — ' + g.marks.length + (g.marks.length === 1 ? ' area' : ' areas');
+      marksList.appendChild(head);
+      g.marks.forEach(function (mk) {
+        var row = document.createElement('div');
+        row.className = 'markrow' + (mk.id === selectedMarkId ? ' sel' : '');
+        var ic = document.createElement('span'); ic.className = 'mic'; ic.textContent = mk.fullPage ? '▦' : '⬛';
+        var lab = document.createElement('span'); lab.className = 'mlab'; lab.textContent = mk.label; lab.title = mk.label;
+        var del = document.createElement('button'); del.className = 'mdel'; del.type = 'button'; del.textContent = '✕'; del.title = 'Remove this mark';
+        del.addEventListener('click', function (ev) { ev.stopPropagation(); removeMarkById(mk.id); });
+        row.appendChild(ic); row.appendChild(lab); row.appendChild(del);
+        row.addEventListener('click', function () { selectMark(mk.id, true); });
+        marksList.appendChild(row);
+      });
+    });
+    var c = RedactCore.countMarks(marks);
+    marksSummary.textContent = marks.length
+      ? (c.total + (c.total === 1 ? ' mark' : ' marks') + ' on ' + c.pages + (c.pages === 1 ? ' page' : ' pages') + '. These areas will be destroyed when you redact.')
+      : '';
+  }
+  marksClear.addEventListener('click', function () {
+    marks = [];
+    selectedMarkId = null;
+    rebuildMarkDoms();
+    afterMarksChange();
+  });
+
+  function updateBar() {
+    var show = editorOpen && !successShown;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      barSummary.textContent = fileNameStr + ' · ' + pageCount + (pageCount === 1 ? ' page' : ' pages') + ' · ' + marks.length + (marks.length === 1 ? ' mark' : ' marks');
+    }
+    redactBtn.disabled = marks.length === 0 || applying;
+    redactBtn.title = marks.length === 0 ? 'Mark at least one area to redact' : '';
+  }
+
+  /* ---------------- toolbar / modes / zoom ---------------- */
+  function setMode(m) {
+    mode = m;
+    $('toolPan').classList.toggle('active', m === 'pan');
+    $('toolRedact').classList.toggle('active', m === 'redact');
+    $('toolEraser').classList.toggle('active', m === 'eraser');
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].overlay.classList.toggle('mode-redact', m === 'redact');
+      pages[i].overlay.classList.toggle('mode-eraser', m === 'eraser');
+    }
+  }
+  $('toolPan').addEventListener('click', function () { setMode('pan'); });
+  $('toolRedact').addEventListener('click', function () { setMode('redact'); });
+  $('toolEraser').addEventListener('click', function () { setMode('eraser'); });
+  $('toolRedactPage').addEventListener('click', function () {
+    if (!editorOpen) return;
+    var p = currentPageIndex();
+    if (RedactCore.hasFullPageMark(marks, p)) { selectMark(RedactCore.marksOnPage(marks, p).filter(function (m) { return m.fullPage; })[0].id, true); return; }
+    var mk = addMark({ page: p, fullPage: true, label: 'Full page', source: 'page' });
+    selectMark(mk.id, false);
+  });
+  function currentPageIndex() {
+    var mid = window.innerHeight / 2, best = 0, bestOverlap = -1;
+    for (var i = 0; i < pages.length; i++) {
+      var r = pages[i].wrap.getBoundingClientRect();
+      if (r.top <= mid && r.bottom >= mid) return i;
+      var overlap = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      if (overlap > bestOverlap) { bestOverlap = overlap; best = i; }
+    }
+    return best;
+  }
+  var zoomTimer = null;
+  function queueRender() {
+    if (zoomTimer) clearTimeout(zoomTimer);
+    zoomTimer = setTimeout(renderPages, 180);
+  }
+  $('zoomIn').addEventListener('click', function () {
+    zoom = Math.min(1.6, Math.round((zoom + 0.2) * 10) / 10);
+    $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+    queueRender();
+  });
+  $('zoomOut').addEventListener('click', function () {
+    zoom = Math.max(0.6, Math.round((zoom - 0.2) * 10) / 10);
+    $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+    queueRender();
+  });
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (!editorOpen) return;
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderPages, 250);
+  });
+
+  /* ---------------- pointer gestures ---------------- */
+  function eventPt(e, pg) {
+    var r = pg.overlay.getBoundingClientRect();
+    var x = (e.clientX - r.left) / pg.scale, y = (e.clientY - r.top) / pg.scale;
+    x = Math.max(0, Math.min(pg.viewW, x));
+    y = Math.max(0, Math.min(pg.viewH, y));
+    return { x: x, y: y };
+  }
+  function hitMark(pageIdx, pt) {
+    var list = RedactCore.marksOnPage(marks, pageIdx);
+    for (var i = list.length - 1; i >= 0; i--) {
+      var mk = list[i];
+      if (mk.fullPage) return mk;
+      if (mk.rect && pt.x >= mk.rect.x && pt.x <= mk.rect.x + mk.rect.w && pt.y >= mk.rect.y && pt.y <= mk.rect.y + mk.rect.h) return mk;
+    }
+    return null;
+  }
+  function onOverlayDown(e, idx) {
+    if (!editorOpen || applying) return;
+    var pg = pages[idx];
+    if (!pg) return;
+    var pt = eventPt(e, pg);
+    if (mode === 'eraser') {
+      var hitE = hitMark(idx, pt);
+      if (hitE) removeMarkById(hitE.id);
+      return;
+    }
+    if (mode === 'pan') {
+      var hitP = hitMark(idx, pt);
+      selectMark(hitP ? hitP.id : null, false);
+      return;
+    }
+    // redact: start drawing
+    e.preventDefault();
+    var tmp = document.createElement('div');
+    tmp.className = 'mark drawing';
+    pg.overlay.appendChild(tmp);
+    gesture = { page: idx, x0: pt.x, y0: pt.y, el: tmp };
+    drawTemp(pt);
+  }
+  function drawTemp(pt) {
+    if (!gesture) return;
+    var pg = pages[gesture.page];
+    var x = Math.min(gesture.x0, pt.x), y = Math.min(gesture.y0, pt.y);
+    var w = Math.abs(pt.x - gesture.x0), h = Math.abs(pt.y - gesture.y0);
+    gesture.rect = { x: x, y: y, w: w, h: h };
+    var sc = pg.scale;
+    gesture.el.style.left = (x * sc) + 'px';
+    gesture.el.style.top = (y * sc) + 'px';
+    gesture.el.style.width = Math.max(w * sc, 1) + 'px';
+    gesture.el.style.height = Math.max(h * sc, 1) + 'px';
+  }
+  window.addEventListener('pointermove', function (e) {
+    if (!gesture) return;
+    drawTemp(eventPt(e, pages[gesture.page]));
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (!gesture) return;
+    var g = gesture; gesture = null;
+    drawTemp(eventPt(e, pages[g.page]));
+    g.el.remove();
+    var r = g.rect;
+    if (r && r.w >= RedactCore._.MIN_MARK_PT && r.h >= RedactCore._.MIN_MARK_PT) {
+      var mk = addMark({ page: g.page, rect: r, label: 'Manual area', source: 'manual' });
+      selectMark(mk.id, false);
+    }
+  });
+
+  /* ---------------- detection ---------------- */
+  function setDetectionEnabled(on) {
+    searchInput.disabled = !on;
+    searchBtn.disabled = !on;
+    DETECT_KEYS.forEach(function (d) { $(d.key === 'card' ? 'detectCardsBtn' : d.key === 'phone' ? 'detectPhonesBtn' : 'detectEmailsBtn').disabled = !on; });
+    noTextAlert.style.display = on ? 'none' : 'block';
+  }
+  function renderResults(key, blockId, title, items, note) {
+    var block = $(blockId);
+    block.innerHTML = '';
+    if (!items.length) {
+      var h0 = document.createElement('div'); h0.className = 'reshead'; h0.textContent = title + ' — nothing found';
+      block.appendChild(h0);
+      return;
+    }
+    var head = document.createElement('div'); head.className = 'reshead';
+    head.textContent = title + ' — ' + items.length + (items.length === 1 ? ' match' : ' matches');
+    block.appendChild(head);
+    if (note) {
+      var nt = document.createElement('div'); nt.className = 'resnote'; nt.textContent = note;
+      block.appendChild(nt);
+    }
+    var byPage = {};
+    items.forEach(function (it) { (byPage[it.page] = byPage[it.page] || []).push(it); });
+    Object.keys(byPage).map(Number).sort(function (a, b) { return a - b; }).forEach(function (p) {
+      var ph = document.createElement('div'); ph.className = 'respghead'; ph.textContent = 'Page ' + (p + 1);
+      block.appendChild(ph);
+      byPage[p].forEach(function (it) {
+        var row = document.createElement('label');
+        row.className = 'resitem';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.checked = it.checked;
+        cb.addEventListener('change', function () { it.checked = cb.checked; refreshAccept(key, blockId); });
+        var tx = document.createElement('span'); tx.className = 'rtext'; tx.textContent = it.text;
+        row.appendChild(cb); row.appendChild(tx);
+        block.appendChild(row);
+      });
+    });
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'acceptbtn'; btn.id = 'accept-' + key;
+    btn.addEventListener('click', function () { acceptResults(key, blockId); });
+    block.appendChild(btn);
+    refreshAccept(key, blockId);
+  }
+  function refreshAccept(key, blockId) {
+    var btn = $('accept-' + key);
+    if (!btn) return;
+    var n = detectState[key].filter(function (it) { return it.checked; }).length;
+    btn.textContent = 'Add ' + n + ' mark' + (n === 1 ? '' : 's');
+    btn.disabled = n === 0;
+  }
+  function acceptResults(key, blockId) {
+    var chosen = detectState[key].filter(function (it) { return it.checked; });
+    chosen.forEach(function (it) {
+      RedactCore.addMark(marks, { page: it.page, rect: it.rect, label: it.text, text: it.text, source: key });
+    });
+    rebuildMarkDoms();
+    detectState[key] = [];
+    $(blockId).innerHTML = '';
+    afterMarksChange();
+    if (chosen.length) {
+      var first = findMark(marks[marks.length - chosen.length].id);
+      if (first) selectMark(first.id, true);
+    }
+  }
+  function toResultItems(found) {
+    return found.map(function (f) {
+      return { id: 'r' + (++resSeq), page: f.page, text: f.text, rect: f.rect, checked: true };
+    });
+  }
+  function runSearch() {
+    if (!docHasText) return;
+    var q = searchInput.value.trim();
+    if (!q) { $('searchResults').innerHTML = ''; detectState.search = []; return; }
+    var found = RedactCore.findText(pageLines, q, {});
+    detectState.search = toResultItems(found);
+    renderResults('search', 'searchResults', 'Search: “' + truncate(q, 30) + '”', detectState.search, null);
+  }
+  searchBtn.addEventListener('click', runSearch);
+  searchInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
+  function runDetect(kind) {
+    if (!docHasText) return;
+    var found = kind === 'card' ? RedactCore.findCards(pageLines)
+      : kind === 'phone' ? RedactCore.findPhones(pageLines)
+      : RedactCore.findEmails(pageLines);
+    detectState[kind] = toResultItems(found);
+    var meta = DETECT_KEYS.filter(function (d) { return d.key === kind; })[0];
+    renderResults(kind, meta.block, meta.title, detectState[kind], meta.note);
+  }
+  $('detectCardsBtn').addEventListener('click', function () { runDetect('card'); });
+  $('detectPhonesBtn').addEventListener('click', function () { runDetect('phone'); });
+  $('detectEmailsBtn').addEventListener('click', function () { runDetect('email'); });
+
+  /* ---------------- page rendering ---------------- */
+  async function buildPages() {
+    pagesEl.innerHTML = '';
+    pages = [];
+    pageLines = [];
+    var totalChars = 0;
+    for (var i = 1; i <= pageCount; i++) {
+      var pageObj = await pdfDoc.getPage(i);
+      var vp = pageObj.getViewport({ scale: 1 });
+      var block = document.createElement('div');
+      block.className = 'pageblock';
+      var lab = document.createElement('div');
+      lab.className = 'pagelabel';
+      lab.textContent = 'Page ' + i;
+      var wrap = document.createElement('div');
+      wrap.className = 'pagewrap';
+      var canvas = document.createElement('canvas');
+      var overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.setAttribute('data-page', String(i - 1));
+      wrap.appendChild(canvas);
+      wrap.appendChild(overlay);
+      block.appendChild(lab);
+      block.appendChild(wrap);
+      pagesEl.appendChild(block);
+      (function (idx, ov) {
+        ov.addEventListener('pointerdown', function (e) { onOverlayDown(e, idx); });
+      })(i - 1, overlay);
+      pages.push({ pageObj: pageObj, viewW: vp.width, viewH: vp.height, scale: 1, canvas: canvas, overlay: overlay, wrap: wrap });
+      // text layer for detection (displayed points, like the editor)
+      try {
+        var tc = await pageObj.getTextContent();
+        var items = tc.items.map(function (it) {
+          return { str: it.str, transform: it.transform, width: it.width, height: it.height, page: i - 1 };
+        });
+        var words = RedactCore.tokenizeItems(RedactCore.abstractItems(items, vp.transform), vp.height);
+        var lines = RedactCore.groupCharLines(words);
+        lines.forEach(function (l) { totalChars += l.text.replace(/\s/g, '').length; });
+        pageLines = pageLines.concat(lines);
+      } catch (te) { /* a page without a readable text layer simply yields no lines */ }
+    }
+    docHasText = totalChars > 0;
+    setDetectionEnabled(docHasText);
+    await renderPages();
+  }
+  async function renderPages() {
+    if (!editorOpen || !pages.length) return;
+    var token = ++renderToken;
+    var containerW = pagesEl.clientWidth || 700;
+    var cssW = Math.min(containerW, 760) * zoom;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    for (var i = 0; i < pages.length; i++) {
+      var pg = pages[i];
+      var scale = cssW / pg.viewW;
+      pg.scale = scale;
+      var viewport = pg.pageObj.getViewport({ scale: scale * dpr });
+      pg.canvas.width = Math.floor(viewport.width);
+      pg.canvas.height = Math.floor(viewport.height);
+      pg.canvas.style.width = (pg.viewW * scale) + 'px';
+      pg.canvas.style.height = (pg.viewH * scale) + 'px';
+      pg.wrap.style.width = (pg.viewW * scale) + 'px';
+      pg.wrap.style.height = (pg.viewH * scale) + 'px';
+      try {
+        await pg.pageObj.render({ canvasContext: pg.canvas.getContext('2d'), viewport: viewport }).promise;
+      } catch (err) { /* stale render after a newer zoom */ }
+      if (token !== renderToken) return;
+    }
+    layoutMarks();
+  }
+
+  /* ---------------- file loading ---------------- */
+  async function handleFile(file) {
+    hideError();
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
+      showError('Please choose a PDF file.');
+      return;
+    }
+    fileNameStr = file.name;
+    fileCard.classList.add('on');
+    fileNameEl.textContent = file.name;
+    fileMeta.textContent = fmtSize(file.size);
+    fileWarn.textContent = '';
+    showProcessing('Opening your PDF…', file.name);
+    try {
+      var buf = await file.arrayBuffer();
+      var head = new Uint8Array(buf.slice(0, 5));
+      var sig = '';
+      for (var i = 0; i < head.length; i++) sig += String.fromCharCode(head[i]);
+      if (sig !== '%PDF-') throw new Error(ERR_CORRUPT);
+      try {
+        await PDFLib.PDFDocument.load(buf.slice(0));
+      } catch (le) {
+        if (le && /encrypt/i.test(String(le.message || le))) throw new Error(ERR_ENC);
+        throw new Error(ERR_CORRUPT);
+      }
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      } catch (pe) {
+        if (pe && (pe.name === 'PasswordException' || /password/i.test(String(pe.message || '')))) throw new Error(ERR_ENC);
+        throw new Error(ERR_CORRUPT);
+      }
+      pdfBytes = buf;
+      pdfDoc = pdf;
+      pageCount = pdf.numPages;
+      marks = [];
+      selectedMarkId = null;
+      detectState = { search: [], card: [], phone: [], email: [] };
+      ['searchResults', 'cardResults', 'phoneResults', 'emailResults'].forEach(function (id) { $(id).innerHTML = ''; });
+      searchInput.value = '';
+      editorOpen = true;
+      layout.style.display = 'none';
+      editorLayout.classList.add('on');
+      hideProcessing();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await buildPages();
+      setMode('pan');
+      afterMarksChange();
+    } catch (err) {
+      hideProcessing();
+      editorOpen = false;
+      editorLayout.classList.remove('on');
+      layout.style.display = '';
+      fileWarn.textContent = err.message || ERR_CORRUPT;
+      showError(err.message || ERR_CORRUPT);
+    }
+  }
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+
+  /* ---------------- apply: true redaction ---------------- */
+  function canvasJpeg(canvas, q) {
+    return new Promise(function (resolve, reject) {
+      if (canvas.toBlob) {
+        canvas.toBlob(function (b) {
+          if (b) resolve(b);
+          else reject(new Error('Could not encode a page image.'));
+        }, 'image/jpeg', q);
+      } else {
+        try {
+          var bin = atob(canvas.toDataURL('image/jpeg', q).split(',')[1]);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          resolve(new Blob([arr], { type: 'image/jpeg' }));
+        } catch (err) { reject(err); }
+      }
+    });
+  }
+  redactBtn.addEventListener('click', async function () {
+    if (!marks.length || applying || !pdfDoc) return;
+    applying = true;
+    updateBar();
+    hideEditorError();
+    var dpi = parseInt(dpiSelect.value, 10) || 200;
+    var markedStrings = [];
+    marks.forEach(function (mk) {
+      if (mk.text && markedStrings.indexOf(mk.text) < 0) markedStrings.push(mk.text);
+    });
+    try {
+      var model = pages.map(function (pg, i) {
+        return { w: pg.viewW, h: pg.viewH, marks: RedactCore.marksOnPage(marks, i) };
+      });
+      var plan = RedactCore.planRedaction(model, dpi, {});
+      var out = await PDFLib.PDFDocument.create();
+      for (var p = 0; p < pages.length; p++) {
+        showProcessing('Redacting your document…', 'Rebuilding page ' + (p + 1) + ' of ' + pages.length + ' as an image');
+        var pg = pages[p], pp = plan.pages[p];
+        var canvas = document.createElement('canvas');
+        canvas.width = pp.canvasW;
+        canvas.height = pp.canvasH;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        var viewport = pg.pageObj.getViewport({ scale: pp.scale });
+        await pg.pageObj.render({ canvasContext: ctx, viewport: viewport }).promise;
+        ctx.fillStyle = '#000000';
+        pp.rectsPx.forEach(function (r) {
+          if (r.w > 0 && r.h > 0) ctx.fillRect(r.x, r.y, r.w, r.h);
+        });
+        var blob = await canvasJpeg(canvas, 0.92);
+        var imgBytes = new Uint8Array(await blob.arrayBuffer());
+        var img = await out.embedJpg(imgBytes);
+        var outPage = out.addPage([pg.viewW, pg.viewH]);
+        outPage.drawImage(img, { x: 0, y: 0, width: pg.viewW, height: pg.viewH });
+        canvas.width = 0; canvas.height = 0;
+      }
+      showProcessing('Redacting your document…', 'Assembling the new file');
+      var outBytes = await out.save();
+
+      /* Re-verify: re-open the finished file and search its text. */
+      showProcessing('Verifying the redaction…', 'Re-opening the finished file and searching it');
+      var outText = '', outChars = 0;
+      var vpdf = await pdfjsLib.getDocument({ data: outBytes.slice(0) }).promise;
+      for (var vp2 = 1; vp2 <= vpdf.numPages; vp2++) {
+        var vpage = await vpdf.getPage(vp2);
+        var vtc = await vpage.getTextContent();
+        vtc.items.forEach(function (it) {
+          outText += it.str + '\n';
+          outChars += String(it.str).replace(/\s/g, '').length;
+        });
+      }
+      try { vpdf.destroy(); } catch (e) {}
+      var v = RedactCore.verifyRemoved(outText, markedStrings);
+
+      var title = success.querySelector('h2');
+      var vline = $('verifyLine');
+      var list = $('resultList');
+      list.innerHTML = '';
+      if (!v.ok) {
+        title.textContent = 'Verification failed — no download';
+        $('successInfo').textContent = 'The finished file was re-opened and searched, and marked content could still be found in it, so it has NOT been offered for download. Please go back, check the marks, and try again.';
+        vline.className = 'verifyline bad';
+        vline.textContent = '✖ Still found after redaction: ' + v.found.join(' · ');
+      } else {
+        title.textContent = 'Your redacted PDF is ready!';
+        var info = pageCount + (pageCount === 1 ? ' page' : ' pages') + ' · ' + marks.length + (marks.length === 1 ? ' mark' : ' marks') + ' applied · ' + dpi + ' DPI · ' + fmtSize(outBytes.length);
+        if (plan.cappedPages > 0) info += ' · ' + plan.cappedPages + (plan.cappedPages === 1 ? ' page was' : ' pages were') + ' rendered slightly below the chosen DPI to stay within safe canvas limits';
+        $('successInfo').textContent = info;
+        vline.className = 'verifyline ok';
+        vline.textContent = outChars === 0
+          ? '✔ Verified on your device: the finished file was re-opened and searched — none of the marked content can be found in it, and it contains no text layer at all.'
+          : '✔ Verified on your device: the finished file was re-opened and searched — none of the marked content can be found in it.';
+        if (resultUrl) URL.revokeObjectURL(resultUrl);
+        resultUrl = URL.createObjectURL(new Blob([outBytes], { type: 'application/pdf' }));
+        var outName = RedactCore.outputName(fileNameStr);
+        var item = document.createElement('div');
+        item.className = 'resultitem';
+        var info2 = document.createElement('div');
+        var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = outName;
+        var rm = document.createElement('div'); rm.className = 'rmeta'; rm.textContent = 'Redacted PDF · ' + fmtSize(outBytes.length);
+        info2.appendChild(rn); info2.appendChild(rm);
+        var a = document.createElement('a');
+        a.className = 'dl'; a.href = resultUrl; a.setAttribute('download', outName); a.textContent = 'Download';
+        item.appendChild(info2); item.appendChild(a);
+        list.appendChild(item);
+      }
+      editorLayout.classList.remove('on');
+      success.classList.add('on');
+      successShown = true;
+      updateBar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      showEditorError('Something went wrong while redacting: ' + (err && err.message ? err.message : err));
+    } finally {
+      hideProcessing();
+      applying = false;
+      updateBar();
+    }
+  });
+
+  /* ---------------- reset ---------------- */
+  function resetAll() {
+    gesture = null;
+    marks = [];
+    selectedMarkId = null;
+    pageLines = [];
+    docHasText = false;
+    detectState = { search: [], card: [], phone: [], email: [] };
+    ['searchResults', 'cardResults', 'phoneResults', 'emailResults'].forEach(function (id) { $(id).innerHTML = ''; });
+    searchInput.value = '';
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    if (pdfDoc) { try { pdfDoc.destroy(); } catch (e) {} pdfDoc = null; }
+    pdfBytes = null;
+    pageCount = 0;
+    pages = [];
+    pagesEl.innerHTML = '';
+    editorOpen = false;
+    successShown = false;
+    success.classList.remove('on');
+    editorLayout.classList.remove('on');
+    layout.style.display = '';
+    fileInput.value = '';
+    fileCard.classList.remove('on');
+    hideError();
+    hideEditorError();
+    setMode('pan');
+    renderMarksList();
+    updateBar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  $('restartBtn').addEventListener('click', resetAll);
+  $('startOverBtn').addEventListener('click', resetAll);
+  $('removeFileBtn').addEventListener('click', resetAll);
+
+  setDetectionEnabled(false);
+  renderMarksList();
+  updateBar();
+})();
+</script>
+</body>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </html>
