@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word en PDF — PdfBleu.com</title>
+<meta name="description" content="Convertissez vos documents Word (.docx) en PDF gratuitement et sans inscription, directement dans votre navigateur : mise en page recréée sur votre appareil, aucun envoi sur un serveur.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#2F5AA8;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(47,90,168,.35)}
+.doctile .dw{font-size:32px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar label.flabel{display:block;font-weight:700;color:#1a237e;font-size:15px;margin-bottom:6px}
+.pagesel{width:100%;padding:11px 12px;border:1.5px solid #c5cae9;border-radius:10px;font-size:15px;background:#fff;color:#21243d;margin-bottom:6px;cursor:pointer}
+.pagesel:focus{outline:none;border-color:#3F51B5}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Accueil</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#DCE5FA"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#5F83C6"/><path d="M10 10 L16 16" stroke="#295795" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#295795"/><text x="30" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">W</text></svg></span>
+<h1>Convertir Word en PDF</h1>
+<p class="subtitle">Transformez vos documents Word (.docx) en PDF, directement dans votre navigateur.</p>
+</div>
+<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Conversion en cours…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier Word</button>
+<p class="droptxt">ou déposez votre document .docx ici</p>
+</div>
+<input type="file" id="fileInput" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">W</span><span class="dext">DOCX</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Word en PDF</h2>
+<label class="flabel" for="pageSizeSel">Format de page</label>
+<select class="pagesel" id="pageSizeSel">
+<option value="auto" selected>Automatique (selon le document)</option>
+<option value="a4">A4</option>
+<option value="letter">Lettre (US)</option>
+</select>
+<p>En mode automatique, la taille des pages et les marges sont celles définies dans votre document Word.</p>
+<div class="warnnote">⚠ <strong>Mise en page recréée :</strong> le document est relu et recomposé avec des polices standard (Helvetica, Times). Les documents simples — lettres, rapports, CV, devoirs — sont bien reproduits ; les documents complexes (zones de texte, images flottantes, tableaux élaborés, polices spéciales, en-têtes et pieds de page, langues s’écrivant de droite à gauche comme l’arabe) peuvent différer de l’original affiché dans Word. Seuls les fichiers <strong>.docx</strong> sont acceptés : un ancien fichier .doc doit d’abord être réenregistré au format .docx.</div>
+<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Votre PDF est prêt !</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convertir un autre fichier</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+
+<div class="howto">
+<h2>Comment convertir un Word en PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choisissez votre document</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier .docx dans la zone prévue. Un seul document suffit.</p></div>
+<div class="step"><span class="num">2</span><h3>Lancez la conversion</h3><p>Le document est relu et sa mise en page est recréée page par page : titres, paragraphes, listes, tableaux et images intégrées.</p></div>
+<div class="step"><span class="num">3</span><h3>Téléchargez le PDF</h3><p>Appuyez sur « Convertir en PDF », puis enregistrez votre fichier : le texte y reste sélectionnable, prêt à partager ou à imprimer.</p></div>
+</div>
+<div class="seo">
+<p>Notre convertisseur Word en PDF est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : la lecture du fichier .docx et la création du PDF ont lieu sur votre téléphone ou votre ordinateur, ce qui protège vos lettres, CV, rapports et documents confidentiels.</p>
+<p>Le convertisseur relit la structure de votre document — styles de titres, paragraphes alignés ou centrés, listes à puces et numérotées, tableaux simples et images intégrées au texte — puis recompose les pages au format PDF avec des polices standard. Le résultat convient à la grande majorité des documents du quotidien ; les mises en page très élaborées créées dans Word peuvent toutefois présenter des différences, comme indiqué ci-dessus.</p>
+</div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convertir en PDF</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+</footer>
+<script id="wordEngine">
+/* =====================================================================
+   Moteur de conversion Word (.docx) → PDF, 100 % local.
+   Le fichier .docx est décompressé avec JSZip, son XML est relu
+   (document, styles, numérotation, relations), puis la mise en page est
+   recréée page par page avec pdf-lib : le texte du PDF produit reste
+   sélectionnable. Aucune donnée ne quitte l'appareil.
+   Fonctions exposées : WordToPdf.convertDocxToPdf(data, options)
+   et WordToPdf.outputPdfName(nom).
+   ===================================================================== */
+var WordToPdf = (function () {
+  'use strict';
+
+  // ---------- Utilitaires XML (agnostiques des préfixes) ----------
+  function xKids(el, name) {
+    var out = [];
+    if (!el || !el.childNodes) return out;
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var n = el.childNodes[i];
+      if (n.nodeType === 1 && n.localName === name) out.push(n);
+    }
+    return out;
+  }
+  function xFirst(el, name) { var k = xKids(el, name); return k.length ? k[0] : null; }
+  function xDesc(el, name) {
+    var out = [];
+    if (!el || !el.getElementsByTagName) return out;
+    var all = el.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) if (all[i].localName === name) out.push(all[i]);
+    return out;
+  }
+  function xAttr(el, name) {
+    if (!el || !el.getAttribute) return null;
+    var prefixes = ['w:', 'r:', 'wp:', 'a:', ''];
+    for (var i = 0; i < prefixes.length; i++) {
+      var v = el.getAttribute(prefixes[i] + name);
+      if (v != null) return v;
+    }
+    if (el.getAttributeNS) { try { var v2 = el.getAttributeNS('*', name); if (v2 != null) return v2; } catch (e) {} }
+    return null;
+  }
+  function parseXml(str) { return new DOMParser().parseFromString(str, 'text/xml'); }
+  function numOr(v, d) { var n = parseFloat(v); return isFinite(n) ? n : d; }
+  function isOff(el) {
+    if (!el) return false;
+    var v = xAttr(el, 'val');
+    return v === '0' || v === 'false' || v === 'off' || v === 'none';
+  }
+  function mergeDefined(dst, src) {
+    if (src) for (var k in src) if (src[k] !== undefined) dst[k] = src[k];
+    return dst;
+  }
+
+  // ---------- Propriétés de run / paragraphe ----------
+  function parseRPr(rPr) {
+    var o = {};
+    if (!rPr) return o;
+    var rs = xFirst(rPr, 'rStyle'); if (rs) o.rStyle = xAttr(rs, 'val');
+    var rf = xFirst(rPr, 'rFonts');
+    if (rf) {
+      var f = xAttr(rf, 'ascii') || xAttr(rf, 'hAnsi') || xAttr(rf, 'cs') || xAttr(rf, 'eastAsia');
+      if (f) o.font = f;
+    }
+    var sz = xFirst(rPr, 'sz');
+    if (sz) { var s = parseFloat(xAttr(sz, 'val')); if (isFinite(s) && s > 0) o.size = s / 2; }
+    var b = xFirst(rPr, 'b'); if (b) o.bold = !isOff(b);
+    var it = xFirst(rPr, 'i'); if (it) o.italic = !isOff(it);
+    var u = xFirst(rPr, 'u'); if (u) o.underline = !isOff(u);
+    var c = xFirst(rPr, 'color');
+    if (c) { var cv = xAttr(c, 'val'); if (cv && /^[0-9A-Fa-f]{6}$/.test(cv)) o.color = cv; }
+    if (xFirst(rPr, 'vanish')) o.hidden = true;
+    return o;
+  }
+
+  function parsePPr(pPr) {
+    var o = {};
+    if (!pPr) return o;
+    var ps = xFirst(pPr, 'pStyle'); if (ps) o.styleId = xAttr(ps, 'val');
+    var jc = xFirst(pPr, 'jc');
+    if (jc) {
+      var j = xAttr(jc, 'val');
+      if (j === 'both') j = 'justify';
+      if (j === 'start') j = 'left';
+      if (j === 'end') j = 'right';
+      if (j) o.align = j;
+    }
+    var sp = xFirst(pPr, 'spacing');
+    if (sp) {
+      var bef = xAttr(sp, 'before'); if (bef != null) o.before = parseFloat(bef) / 20;
+      var aft = xAttr(sp, 'after'); if (aft != null) o.after = parseFloat(aft) / 20;
+      var ln = xAttr(sp, 'line');
+      if (ln != null) { o.line = parseFloat(ln); var lr = xAttr(sp, 'lineRule'); o.lineRule = lr || 'auto'; }
+    }
+    var ind = xFirst(pPr, 'ind');
+    if (ind) {
+      var il = xAttr(ind, 'left'); if (il != null) o.indL = parseFloat(il) / 20;
+      var ir = xAttr(ind, 'right'); if (ir != null) o.indR = parseFloat(ir) / 20;
+      var fl = xAttr(ind, 'firstLine'); if (fl != null) o.indFirst = parseFloat(fl) / 20;
+      var hg = xAttr(ind, 'hanging'); if (hg != null) o.indHang = parseFloat(hg) / 20;
+    }
+    var np = xFirst(pPr, 'numPr');
+    if (np) {
+      var ilvl = xFirst(np, 'ilvl'); var nid = xFirst(np, 'numId');
+      o.numIlvl = ilvl ? (parseInt(xAttr(ilvl, 'val'), 10) || 0) : 0;
+      o.numId = nid ? xAttr(nid, 'val') : null;
+    }
+    if (xFirst(pPr, 'pageBreakBefore')) o.pageBreakBefore = true;
+    return o;
+  }
+
+  // ---------- Styles ----------
+  function parseStyles(stylesDoc) {
+    var res = { byId: {}, docRPr: {}, defaultParaId: null };
+    if (!stylesDoc || !stylesDoc.documentElement) return res;
+    var root = stylesDoc.documentElement;
+    var dd = xFirst(root, 'docDefaults');
+    if (dd) {
+      var rprd = xFirst(dd, 'rPrDefault');
+      if (rprd) res.docRPr = parseRPr(xFirst(rprd, 'rPr'));
+    }
+    xKids(root, 'style').forEach(function (st) {
+      var id = xAttr(st, 'styleId'); if (!id) return;
+      var type = xAttr(st, 'type') || 'paragraph';
+      var nameEl = xFirst(st, 'name');
+      var basedEl = xFirst(st, 'basedOn');
+      res.byId[id] = {
+        id: id,
+        name: nameEl ? (xAttr(nameEl, 'val') || id) : id,
+        type: type,
+        basedOn: basedEl ? xAttr(basedEl, 'val') : null,
+        rPr: parseRPr(xFirst(st, 'rPr')),
+        pPr: parsePPr(xFirst(st, 'pPr'))
+      };
+      if (type === 'paragraph' && xAttr(st, 'default') === '1') res.defaultParaId = id;
+    });
+    return res;
+  }
+  function styleChain(styles, id) {
+    var chain = [], seen = {}, cur = id, guard = 0;
+    while (cur && styles.byId[cur] && !seen[cur] && guard++ < 20) {
+      seen[cur] = true;
+      chain.unshift(styles.byId[cur]);
+      cur = styles.byId[cur].basedOn;
+    }
+    return chain;
+  }
+  function resolveStyle(styles, styleId) {
+    var rPr = {}, pPr = {};
+    styleChain(styles, styleId).forEach(function (rec) {
+      mergeDefined(rPr, rec.rPr);
+      mergeDefined(pPr, rec.pPr);
+    });
+    return { rPr: rPr, pPr: pPr };
+  }
+  function normalizeName(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
+  }
+  function headingLevelOf(styles, styleId) {
+    var chain = styleChain(styles, styleId);
+    for (var i = chain.length - 1; i >= 0; i--) {
+      var idn = normalizeName(chain[i].id), nmn = normalizeName(chain[i].name);
+      var m = idn.match(/^(?:heading|titre)([1-6])$/) || nmn.match(/^(?:heading|titre)([1-6])$/);
+      if (m) return parseInt(m[1], 10);
+      if (idn === 'title' || nmn === 'title' || idn === 'titre' || nmn === 'titre') return 0;
+    }
+    return -1;
+  }
+  var HEADING_FB = {
+    0: { size: 26 },
+    1: { size: 16, bold: true }, 2: { size: 14, bold: true },
+    3: { size: 12.5, bold: true }, 4: { size: 11.5, bold: true },
+    5: { size: 11, bold: true }, 6: { size: 11, bold: true, italic: true }
+  };
+
+  // ---------- Numérotation (listes) ----------
+  function parseNumbering(numDoc) {
+    var res = { numToAbs: {}, abs: {} };
+    if (!numDoc || !numDoc.documentElement) return res;
+    var root = numDoc.documentElement;
+    xKids(root, 'abstractNum').forEach(function (an) {
+      var absId = xAttr(an, 'abstractNumId'); if (absId == null) return;
+      var lvls = {};
+      xKids(an, 'lvl').forEach(function (lv) {
+        var ilvl = parseInt(xAttr(lv, 'ilvl'), 10) || 0;
+        var fmtEl = xFirst(lv, 'numFmt'), stEl = xFirst(lv, 'start'), txEl = xFirst(lv, 'lvlText');
+        lvls[ilvl] = {
+          fmt: fmtEl ? (xAttr(fmtEl, 'val') || 'bullet') : 'bullet',
+          start: stEl ? (parseInt(xAttr(stEl, 'val'), 10) || 1) : 1,
+          text: txEl ? (xAttr(txEl, 'val') || '') : ''
+        };
+      });
+      res.abs[String(absId)] = lvls;
+    });
+    xKids(root, 'num').forEach(function (n) {
+      var numId = xAttr(n, 'numId'), aEl = xFirst(n, 'abstractNumId');
+      if (numId != null && aEl) res.numToAbs[String(numId)] = String(xAttr(aEl, 'val'));
+    });
+    return res;
+  }
+  function lvlDef(numbering, numId, ilvl) {
+    if (!numbering || numId == null) return null;
+    var absId = numbering.numToAbs[String(numId)];
+    if (absId == null) return null;
+    var lvls = numbering.abs[absId];
+    return lvls ? (lvls[ilvl] || lvls[0] || null) : null;
+  }
+  function toRoman(n) {
+    if (n <= 0 || n > 3999) return String(n);
+    var table = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+    var s = '';
+    table.forEach(function (p) { while (n >= p[0]) { s += p[1]; n -= p[0]; } });
+    return s;
+  }
+  function toLetters(n) {
+    var s = '';
+    while (n > 0) { n--; s = String.fromCharCode(97 + (n % 26)) + s; n = Math.floor(n / 26); }
+    return s || 'a';
+  }
+  function formatCounter(n, fmt) {
+    switch (fmt) {
+      case 'lowerLetter': return toLetters(n);
+      case 'upperLetter': return toLetters(n).toUpperCase();
+      case 'lowerRoman': return toRoman(n).toLowerCase();
+      case 'upperRoman': return toRoman(n);
+      default: return String(n);
+    }
+  }
+
+  // ---------- Relations (images) ----------
+  function parseRels(relsDoc) {
+    var map = {};
+    if (!relsDoc || !relsDoc.getElementsByTagName) return map;
+    var all = relsDoc.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.localName !== 'Relationship') continue;
+      var id = el.getAttribute('Id'), target = el.getAttribute('Target');
+      if (id && target) map[id] = target;
+    }
+    return map;
+  }
+  function zipPathFor(target) {
+    var t = String(target || '');
+    if (t.charAt(0) === '/') return t.slice(1);
+    var parts = ('word/' + t).split('/'), out = [];
+    parts.forEach(function (p) { if (p === '..') out.pop(); else if (p !== '.') out.push(p); });
+    return out.join('/');
+  }
+
+  // ---------- Polices ----------
+  function fontFamilyOf(name) {
+    var n = String(name || '').toLowerCase();
+    if (/times|georgia|garamond|book/.test(n)) return 'times';
+    if (/courier|consolas|mono/.test(n)) return 'courier';
+    return 'helvetica';
+  }
+  var STD_FONTS = {
+    helvetica: { r: 'Helvetica', b: 'HelveticaBold', i: 'HelveticaOblique', bi: 'HelveticaBoldOblique' },
+    times: { r: 'TimesRoman', b: 'TimesRomanBold', i: 'TimesRomanItalic', bi: 'TimesRomanBoldItalic' },
+    courier: { r: 'Courier', b: 'CourierBold', i: 'CourierOblique', bi: 'CourierBoldOblique' }
+  };
+  function stdFontKey(fmt) {
+    var fam = STD_FONTS[fmt.family] || STD_FONTS.helvetica;
+    if (fmt.bold && fmt.italic) return fam.bi;
+    if (fmt.bold) return fam.b;
+    if (fmt.italic) return fam.i;
+    return fam.r;
+  }
+  var LINK_COLOR = '0563C1';
+  var _colorCache = {};
+  function hexColor(hex) {
+    if (!_colorCache[hex]) {
+      _colorCache[hex] = PDFLib.rgb(
+        parseInt(hex.slice(0, 2), 16) / 255,
+        parseInt(hex.slice(2, 4), 16) / 255,
+        parseInt(hex.slice(4, 6), 16) / 255);
+    }
+    return _colorCache[hex];
+  }
+
+  // ---------- Section (format de page) ----------
+  function parseSection(docXml, pageSizeOpt) {
+    var W = 595.28, H = 841.89;
+    var mar = { t: 72, r: 72, b: 72, l: 72 };
+    var body = xDesc(docXml, 'body')[0];
+    var sectPr = null;
+    if (body) {
+      var direct = xKids(body, 'sectPr');
+      if (direct.length) sectPr = direct[0];
+      else { var any = xDesc(body, 'sectPr'); if (any.length) sectPr = any[0]; }
+    }
+    if (sectPr) {
+      var pgSz = xFirst(sectPr, 'pgSz');
+      if (pgSz) {
+        var w = parseFloat(xAttr(pgSz, 'w')), h = parseFloat(xAttr(pgSz, 'h'));
+        if (isFinite(w) && w > 0) W = w / 20;
+        if (isFinite(h) && h > 0) H = h / 20;
+        if (xAttr(pgSz, 'orient') === 'landscape' && H > W) { var tmp = W; W = H; H = tmp; }
+      }
+      var pgMar = xFirst(sectPr, 'pgMar');
+      if (pgMar) {
+        [['top', 't'], ['right', 'r'], ['bottom', 'b'], ['left', 'l']].forEach(function (pair) {
+          var v = xAttr(pgMar, pair[0]);
+          if (v != null && isFinite(parseFloat(v))) mar[pair[1]] = Math.max(0, parseFloat(v) / 20);
+        });
+      }
+    }
+    if (pageSizeOpt === 'a4') { W = 595.28; H = 841.89; }
+    else if (pageSizeOpt === 'letter') { W = 612; H = 792; }
+    if (mar.l + mar.r > W - 144) { var s1 = (W - 144) / Math.max(1, mar.l + mar.r); mar.l *= s1; mar.r *= s1; }
+    if (mar.t + mar.b > H - 144) { var s2 = (H - 144) / Math.max(1, mar.t + mar.b); mar.t *= s2; mar.b *= s2; }
+    return { w: W, h: H, mar: mar };
+  }
+
+  // ---------- Construction du modèle de document ----------
+  function effectivePara(ctx, pEl) {
+    var pPrEl = xFirst(pEl, 'pPr');
+    var direct = parsePPr(pPrEl);
+    var styleId = direct.styleId || ctx.styles.defaultParaId;
+    var resolved = styleId ? resolveStyle(ctx.styles, styleId) : { rPr: {}, pPr: {} };
+    var pPr = mergeDefined(mergeDefined({}, resolved.pPr), direct);
+    var baseRPr = mergeDefined(mergeDefined({}, ctx.styles.docRPr), resolved.rPr);
+    var markRPr = parseRPr(xFirst(pPrEl, 'rPr'));
+    mergeDefined(baseRPr, markRPr);
+    var lvl = styleId ? headingLevelOf(ctx.styles, styleId) : -1;
+    if (lvl >= 0 && resolved.rPr.size === undefined && !resolved.rPr.bold) {
+      var fb = HEADING_FB[lvl];
+      if (fb) {
+        if (fb.size && baseRPr.size === undefined) baseRPr.size = fb.size;
+        if (fb.bold) baseRPr.bold = true;
+        if (fb.italic) baseRPr.italic = true;
+      }
+    }
+    return { pPr: pPr, baseRPr: baseRPr };
+  }
+
+  function resolveRunFmt(ctx, baseRPr, rPrEl, inLink) {
+    var direct = parseRPr(rPrEl);
+    var fmt = mergeDefined({}, baseRPr);
+    if (direct.rStyle && ctx.styles.byId[direct.rStyle]) {
+      mergeDefined(fmt, resolveStyle(ctx.styles, direct.rStyle).rPr);
+    }
+    mergeDefined(fmt, direct);
+    var out = {
+      fontName: fmt.font || 'Calibri',
+      size: (fmt.size && fmt.size > 0) ? fmt.size : 11,
+      bold: !!fmt.bold, italic: !!fmt.italic, underline: !!fmt.underline,
+      color: fmt.color || null, hidden: !!fmt.hidden
+    };
+    out.family = fontFamilyOf(out.fontName);
+    if (inLink && !direct.color) { out.color = LINK_COLOR; out.underline = true; }
+    return out;
+  }
+
+  async function pushDrawing(dr, ctx, out) {
+    var inlines = xDesc(dr, 'inline');
+    if (!inlines.length) { if (xDesc(dr, 'anchor').length) ctx.stats.skipped++; return; }
+    var inl = inlines[0];
+    var blips = xDesc(inl, 'blip');
+    if (!blips.length) { ctx.stats.skipped++; return; }
+    var rid = xAttr(blips[0], 'embed');
+    var target = rid ? ctx.rels[rid] : null;
+    if (!target) { ctx.stats.skipped++; return; }
+    var path = zipPathFor(target);
+    var ext = (path.split('.').pop() || '').toLowerCase();
+    if (ext !== 'png' && ext !== 'jpg' && ext !== 'jpeg') { ctx.stats.skipped++; return; }
+    var file = ctx.zip.file(path);
+    if (!file) { ctx.stats.skipped++; return; }
+    var bytes = await file.async('uint8array');
+    var wPt = 0, hPt = 0;
+    var extEl = xFirst(inl, 'extent');
+    if (extEl) {
+      var cx = parseFloat(xAttr(extEl, 'cx')), cy = parseFloat(xAttr(extEl, 'cy'));
+      if (isFinite(cx) && cx > 0) wPt = cx / 12700;
+      if (isFinite(cy) && cy > 0) hPt = cy / 12700;
+    }
+    out.push({ kind: 'image', bytes: bytes, ext: ext, wPt: wPt, hPt: hPt, pdfImage: null, bad: false });
+  }
+
+  async function pushRunItems(rEl, inLink, ctx, paraCtx, out) {
+    var fmt = resolveRunFmt(ctx, paraCtx.baseRPr, xFirst(rEl, 'rPr'), inLink);
+    if (fmt.hidden) return;
+    for (var i = 0; i < rEl.childNodes.length; i++) {
+      var n = rEl.childNodes[i];
+      if (n.nodeType !== 1) continue;
+      var ln = n.localName;
+      if (ln === 't') {
+        var txt = n.textContent || '';
+        if (txt) out.push({ kind: 'run', text: txt, fmt: fmt });
+      }
+      else if (ln === 'tab') out.push({ kind: 'tab', fmt: fmt });
+      else if (ln === 'br') out.push(xAttr(n, 'type') === 'page' ? { kind: 'pagebreak' } : { kind: 'br' });
+      else if (ln === 'cr') out.push({ kind: 'br' });
+      else if (ln === 'noBreakHyphen') out.push({ kind: 'run', text: '-', fmt: fmt });
+      else if (ln === 'drawing') await pushDrawing(n, ctx, out);
+      else if (ln === 'pict') ctx.stats.skipped++;
+      // instrText, sym, références de notes… : ignorés
+    }
+  }
+
+  var SKIP_INLINE = {
+    pPr: 1, rPr: 1, del: 1, bookmarkStart: 1, bookmarkEnd: 1, proofErr: 1,
+    commentRangeStart: 1, commentRangeEnd: 1, commentReference: 1,
+    moveFromRangeStart: 1, moveFromRangeEnd: 1, moveToRangeStart: 1, moveToRangeEnd: 1,
+    customXmlInsRangeStart: 1, customXmlInsRangeEnd: 1, customXmlDelRangeStart: 1, customXmlDelRangeEnd: 1,
+    customXmlMoveFromRangeStart: 1, customXmlMoveFromRangeEnd: 1, customXmlMoveToRangeStart: 1, customXmlMoveToRangeEnd: 1
+  };
+  async function walkInlines(el, inLink, ctx, paraCtx, out) {
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var n = el.childNodes[i];
+      if (n.nodeType !== 1) continue;
+      var ln = n.localName;
+      if (ln === 'r') await pushRunItems(n, inLink, ctx, paraCtx, out);
+      else if (ln === 'hyperlink') await walkInlines(n, true, ctx, paraCtx, out);
+      else if (SKIP_INLINE[ln]) { /* ignoré */ }
+      else await walkInlines(n, inLink, ctx, paraCtx, out); // smartTag, ins, fldSimple, sdt…
+    }
+  }
+
+  async function buildParagraph(pEl, ctx) {
+    var eff = effectivePara(ctx, pEl);
+    var pPr = eff.pPr;
+    var inlines = [];
+    await walkInlines(pEl, false, ctx, { baseRPr: eff.baseRPr }, inlines);
+    var baseSize = eff.baseRPr.size || 11;
+    inlines.forEach(function (it) { if (it.kind === 'run' && it.fmt.size > baseSize) baseSize = it.fmt.size; });
+    var baseFmt = {
+      fontName: eff.baseRPr.font || 'Calibri', size: eff.baseRPr.size || 11,
+      bold: !!eff.baseRPr.bold, italic: !!eff.baseRPr.italic,
+      underline: false, color: eff.baseRPr.color || null
+    };
+    baseFmt.family = fontFamilyOf(baseFmt.fontName);
+    return {
+      type: 'p',
+      align: pPr.align || 'left',
+      before: numOr(pPr.before, 0), after: numOr(pPr.after, 0),
+      line: pPr.line, lineRule: pPr.lineRule || 'auto',
+      indL: numOr(pPr.indL, 0), indR: numOr(pPr.indR, 0),
+      indFirst: numOr(pPr.indFirst, 0), indHang: numOr(pPr.indHang, 0),
+      numId: (pPr.numId != null ? String(pPr.numId) : null), numIlvl: pPr.numIlvl || 0,
+      pageBreakBefore: !!pPr.pageBreakBefore,
+      inlines: inlines, baseSize: baseSize, baseFmt: baseFmt,
+      _tokKey: null, _tokens: null
+    };
+  }
+
+  function parseCellMargins(el) {
+    var m = {};
+    if (!el) return m;
+    [['top', 't'], ['start', 'l'], ['left', 'l'], ['bottom', 'b'], ['end', 'r'], ['right', 'r']].forEach(function (p) {
+      var n = xFirst(el, p[0]);
+      if (n) { var v = parseFloat(xAttr(n, 'w')); if (isFinite(v)) m[p[1]] = v / 20; }
+    });
+    return m;
+  }
+
+  async function buildTable(tblEl, ctx) {
+    var tblPr = xFirst(tblEl, 'tblPr');
+    var tblMar = parseCellMargins(tblPr ? xFirst(tblPr, 'tblCellMar') : null);
+    var grid = [];
+    var gridEl = xFirst(tblEl, 'tblGrid');
+    if (gridEl) xKids(gridEl, 'gridCol').forEach(function (gc) {
+      var w = parseFloat(xAttr(gc, 'w'));
+      if (isFinite(w) && w > 0) grid.push(w / 20);
+    });
+    var rows = [];
+    var trList = xKids(tblEl, 'tr');
+    for (var ri = 0; ri < trList.length; ri++) {
+      var cells = [];
+      var tcList = xKids(trList[ri], 'tc');
+      for (var ci = 0; ci < tcList.length; ci++) {
+        var tc = tcList[ci];
+        var tcPr = xFirst(tc, 'tcPr');
+        var span = 1, fill = null, vMerge = false, vAlign = null;
+        var mar = mergeDefined(mergeDefined({}, tblMar), parseCellMargins(tcPr ? xFirst(tcPr, 'tcMar') : null));
+        if (tcPr) {
+          var gs = xFirst(tcPr, 'gridSpan'); if (gs) span = parseInt(xAttr(gs, 'val'), 10) || 1;
+          var shd = xFirst(tcPr, 'shd');
+          if (shd) { var f = xAttr(shd, 'fill'); if (f && /^[0-9A-Fa-f]{6}$/.test(f)) fill = f; }
+          if (xFirst(tcPr, 'vMerge')) vMerge = true;
+          var va = xFirst(tcPr, 'vAlign'); if (va) vAlign = xAttr(va, 'val');
+        }
+        var paras = [];
+        for (var bi = 0; bi < tc.childNodes.length; bi++) {
+          var bn = tc.childNodes[bi];
+          if (bn.nodeType !== 1) continue;
+          if (bn.localName === 'p') paras.push(await buildParagraph(bn, ctx));
+          else if (bn.localName === 'tbl') {
+            var sub = await buildTable(bn, ctx);
+            sub.rows.forEach(function (sr) { sr.cells.forEach(function (sc) { paras = paras.concat(sc.paras); }); });
+          }
+        }
+        cells.push({ span: span, fill: fill, vMerge: vMerge, vAlign: vAlign, mar: mar, paras: paras });
+      }
+      rows.push({ cells: cells });
+    }
+    if (!grid.length) {
+      var n = 0;
+      rows.forEach(function (r) { var c = 0; r.cells.forEach(function (cell) { c += cell.span; }); if (c > n) n = c; });
+      for (var gi = 0; gi < n; gi++) grid.push(100);
+    }
+    return { type: 'tbl', grid: grid, rows: rows };
+  }
+
+  async function buildBlocks(bodyEl, ctx) {
+    var blocks = [];
+    async function scan(el) {
+      for (var i = 0; i < el.childNodes.length; i++) {
+        var n = el.childNodes[i];
+        if (n.nodeType !== 1) continue;
+        if (n.localName === 'p') blocks.push(await buildParagraph(n, ctx));
+        else if (n.localName === 'tbl') blocks.push(await buildTable(n, ctx));
+        else if (n.localName === 'sdt') { var c = xFirst(n, 'sdtContent'); if (c) await scan(c); }
+      }
+    }
+    await scan(bodyEl);
+    return blocks;
+  }
+
+  // ---------- Hauteur de ligne / découpage en lignes ----------
+  function lineHeightFor(para, maxSize) {
+    if (para.line) {
+      if (para.lineRule === 'exact') return Math.max(para.line / 20, maxSize * 0.9);
+      if (para.lineRule === 'atLeast') return Math.max(para.line / 20, maxSize * 1.15);
+      return maxSize * (para.line / 240);
+    }
+    return maxSize * 1.15;
+  }
+
+  function packLines(tokens, para, x0, firstStartX, startX, rightEdge) {
+    var lines = [];
+    var cur = [], curW = 0, curMaxSize = 0, curImgH = 0, lineIdx = 0;
+    function limit() { return rightEdge - (lineIdx === 0 ? firstStartX : startX); }
+    function flush(forced) {
+      while (cur.length && cur[cur.length - 1].t === 's') { curW -= cur[cur.length - 1].w; cur.pop(); }
+      var maxSize = curMaxSize || para.baseSize;
+      var h = lineHeightFor(para, maxSize);
+      if (curImgH > h) h = curImgH;
+      lines.push({ tokens: cur, w: curW, h: h, maxSize: maxSize, forced: !!forced, pageBreakAfter: false, isLast: false });
+      cur = []; curW = 0; curMaxSize = 0; curImgH = 0; lineIdx++;
+    }
+    function addTok(tk) {
+      cur.push(tk); curW += tk.w;
+      if (tk.fmt && tk.fmt.size > curMaxSize) curMaxSize = tk.fmt.size;
+      if (tk.t === 'img' && tk.h > curImgH) curImgH = tk.h;
+    }
+    var i = 0, guard = 0;
+    while (i < tokens.length && guard++ < 200000) {
+      var tk = tokens[i];
+      if (tk.t === 'br') { flush(true); i++; continue; }
+      if (tk.t === 'pb') {
+        if (cur.length) flush(false);
+        if (lines.length) lines[lines.length - 1].pageBreakAfter = true;
+        i++; continue;
+      }
+      if (tk.t === 's') {
+        if (!cur.length) { i++; continue; }
+        if (curW + tk.w <= limit()) addTok(tk); else flush(false);
+        i++; continue;
+      }
+      if (tk.t === 'tab') {
+        var sx = lineIdx === 0 ? firstStartX : startX;
+        var pos = sx + curW;
+        var tw = (x0 + (Math.floor((pos - x0) / 36) + 1) * 36) - pos;
+        if (tw < 4) tw += 36;
+        if (curW + tw > limit() && cur.length) { flush(false); continue; }
+        addTok({ t: 'tab', fmt: tk.fmt, font: tk.font, w: tw });
+        i++; continue;
+      }
+      // mot ou image
+      if (curW + tk.w <= limit()) { addTok(tk); i++; continue; }
+      if (!cur.length) {
+        if (tk.t === 'w') {
+          var lim2 = limit(), fit = 0, acc = 0;
+          while (fit < tk.text.length) {
+            var cw = tk.font.widthOfTextAtSize(tk.text.charAt(fit), tk.fmt.size);
+            if (acc + cw > lim2 && fit > 0) break;
+            acc += cw; fit++;
+          }
+          if (fit === 0) fit = 1;
+          var headText = tk.text.slice(0, fit), tailText = tk.text.slice(fit);
+          addTok({ t: 'w', text: headText, fmt: tk.fmt, font: tk.font, w: acc });
+          if (tailText) tokens[i] = { t: 'w', text: tailText, fmt: tk.fmt, font: tk.font, w: tk.font.widthOfTextAtSize(tailText, tk.fmt.size) };
+          else i++;
+          flush(false);
+          continue;
+        }
+        addTok(tk); i++; continue; // image plus large que la ligne (déjà plafonnée)
+      }
+      flush(false);
+    }
+    if (cur.length) flush(false);
+    if (!lines.length) {
+      lines.push({ tokens: [], w: 0, h: lineHeightFor(para, para.baseSize), maxSize: para.baseSize, forced: false, pageBreakAfter: false, isLast: true });
+    }
+    return lines;
+  }
+
+  // ---------- Moteur de rendu ----------
+  function Renderer(doc, section) {
+    this.doc = doc;
+    this.pw = section.w; this.ph = section.h; this.mar = section.mar;
+    this.page = null; this.y = section.mar.t; this.pageCount = 0;
+    this.fonts = {}; this.replaced = 0; this.counters = {}; this.numbering = null;
+  }
+  Renderer.prototype.topY = function () { return this.mar.t; };
+  Renderer.prototype.limitY = function () { return this.ph - this.mar.b; };
+  Renderer.prototype.newPage = function () {
+    this.page = this.doc.addPage([this.pw, this.ph]);
+    this.pageCount++;
+    this.y = this.mar.t;
+  };
+  Renderer.prototype.fontFor = async function (fmt) {
+    var key = stdFontKey(fmt);
+    if (!this.fonts[key]) this.fonts[key] = await this.doc.embedFont(PDFLib.StandardFonts[key]);
+    return this.fonts[key];
+  };
+  // Les polices standard de pdf-lib ne couvrent que WinAnsi : tout caractère
+  // hors de ce jeu est remplacé par « ? » et compté.
+  Renderer.prototype.sanitize = function (font, text) {
+    try { font.encodeText(text); return text; } catch (e) { /* repli caractère par caractère */ }
+    if (!font.__badSet) font.__badSet = {};
+    var out = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (font.__badSet[ch]) { out += '?'; this.replaced++; continue; }
+      try { font.encodeText(ch); out += ch; }
+      catch (e2) { font.__badSet[ch] = true; out += '?'; this.replaced++; }
+    }
+    return out;
+  };
+  Renderer.prototype.tokensFor = async function (para, availW) {
+    var key = Math.round(availW * 2);
+    if (para._tokKey === key && para._tokens) return para._tokens;
+    var tokens = [];
+    for (var i = 0; i < para.inlines.length; i++) {
+      var it = para.inlines[i];
+      if (it.kind === 'run') {
+        var font = await this.fontFor(it.fmt);
+        var clean = this.sanitize(font, it.text);
+        var parts = clean.split(/(\s+)/);
+        for (var j = 0; j < parts.length; j++) {
+          var p = parts[j];
+          if (p === '') continue;
+          var isSpace = /^\s+$/.test(p);
+          tokens.push({ t: isSpace ? 's' : 'w', text: p, fmt: it.fmt, font: font, w: font.widthOfTextAtSize(p, it.fmt.size) });
+        }
+      } else if (it.kind === 'tab') {
+        tokens.push({ t: 'tab', fmt: it.fmt, font: await this.fontFor(it.fmt) });
+      } else if (it.kind === 'br') {
+        tokens.push({ t: 'br' });
+      } else if (it.kind === 'pagebreak') {
+        tokens.push({ t: 'pb' });
+      } else if (it.kind === 'image') {
+        if (it.bad || !it.pdfImage) continue;
+        var w = it.wPt || 0, h = it.hPt || 0;
+        if (!w || !h) { var px = it.pdfImage.scale(1); w = px.width * 0.75; h = px.height * 0.75; }
+        if (w > availW && w > 0) { h = h * availW / w; w = availW; }
+        tokens.push({ t: 'img', img: it.pdfImage, w: w, h: h });
+      }
+    }
+    para._tokKey = key;
+    para._tokens = tokens;
+    return tokens;
+  };
+  // Marqueur de liste : À N'APPELER QU'EN MODE DESSIN (compteurs incrémentés).
+  Renderer.prototype.listMarker = function (para) {
+    if (para.numId == null) return null;
+    var def = lvlDef(this.numbering, para.numId, para.numIlvl);
+    if (!def) return null;
+    var fmt = def.fmt || 'bullet';
+    if (fmt === 'none') return '';
+    if (fmt === 'bullet') {
+      var lt = def.text || '';
+      if (lt.length === 1) {
+        var code = lt.charCodeAt(0);
+        if (code >= 0x21 && code < 0xF000) return lt;
+      }
+      return '•';
+    }
+    var ctr = this.counters[para.numId];
+    if (!ctr) { ctr = {}; this.counters[para.numId] = ctr; }
+    Object.keys(ctr).forEach(function (k) { if (parseInt(k, 10) > para.numIlvl) delete ctr[k]; });
+    if (ctr[para.numIlvl] == null) ctr[para.numIlvl] = def.start || 1;
+    else ctr[para.numIlvl]++;
+    var tmpl = def.text || '%1.';
+    var self = this;
+    return tmpl.replace(/%([1-9])/g, function (m, d) {
+      var lvl = parseInt(d, 10) - 1;
+      var d2 = lvlDef(self.numbering, para.numId, lvl);
+      var v = ctr[lvl] != null ? ctr[lvl] : (d2 ? (d2.start || 1) : 1);
+      return formatCounter(v, d2 ? d2.fmt : 'decimal');
+    });
+  };
+  Renderer.prototype.drawLineAt = function (para, line, sx, rightEdge, isFirst, marker, markerFont, markerX, yTop) {
+    var page = this.page;
+    if (!page) return;
+    var limitW = rightEdge - sx;
+    var offset = 0, extra = 0;
+    if (para.align === 'center') offset = Math.max(0, (limitW - line.w) / 2);
+    else if (para.align === 'right') offset = Math.max(0, limitW - line.w);
+    else if (para.align === 'justify' && !line.forced && !line.isLast) {
+      var spaces = 0;
+      line.tokens.forEach(function (t) { if (t.t === 's') spaces++; });
+      if (spaces > 0 && line.w < limitW) extra = (limitW - line.w) / spaces;
+    }
+    var baselinePdfY = this.ph - (yTop + line.maxSize * 0.85);
+    if (isFirst && marker && markerFont) {
+      page.drawText(marker, { x: markerX, y: baselinePdfY, size: para.baseSize, font: markerFont, color: hexColor(para.baseFmt.color || '000000') });
+    }
+    var cx = sx + offset;
+    var self = this;
+    line.tokens.forEach(function (tk) {
+      if (tk.t === 'w') {
+        var col = hexColor(tk.fmt.color || '000000');
+        page.drawText(tk.text, { x: cx, y: baselinePdfY, size: tk.fmt.size, font: tk.font, color: col });
+        if (tk.fmt.underline) {
+          var uy = baselinePdfY - Math.max(1, tk.fmt.size * 0.12);
+          page.drawLine({ start: { x: cx, y: uy }, end: { x: cx + tk.w, y: uy }, thickness: Math.max(0.6, tk.fmt.size * 0.06), color: col });
+        }
+        cx += tk.w;
+      } else if (tk.t === 's') {
+        cx += tk.w + extra;
+      } else if (tk.t === 'tab') {
+        cx += tk.w;
+      } else if (tk.t === 'img') {
+        page.drawImage(tk.img, { x: cx, y: self.ph - (yTop + line.h), width: tk.w, height: tk.h });
+        cx += tk.w;
+      }
+    });
+  };
+  Renderer.prototype.layoutParagraph = async function (para, x0, availW, pen, draw) {
+    var indL = para.indL, indR = para.indR;
+    if (para.numId != null && !indL) indL = (para.numIlvl + 1) * 24;
+    var contentX = x0 + indL;
+    var contentW = Math.max(40, availW - indL - indR);
+    var tokens = await this.tokensFor(para, contentW);
+    var startX = contentX, firstStartX = contentX, markerX = null, marker = null, markerFont = null;
+    if (para.numId != null) {
+      var hang = para.indHang || 18;
+      markerX = Math.max(x0, contentX - hang);
+      if (draw) {
+        marker = this.listMarker(para);
+        if (marker) markerFont = await this.fontFor(para.baseFmt);
+      }
+    } else {
+      firstStartX = contentX + (para.indHang ? -para.indHang : (para.indFirst || 0));
+      if (firstStartX < x0) firstStartX = x0;
+    }
+    var lines = packLines(tokens, para, contentX, firstStartX, startX, contentX + contentW);
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li];
+      line.isLast = (li === lines.length - 1);
+      if (pen.breakable && pen.y + line.h > this.limitY() && pen.y > this.topY()) {
+        this.newPage();
+        pen.y = this.y;
+      }
+      if (draw) this.drawLineAt(para, line, li === 0 ? firstStartX : startX, contentX + contentW, li === 0, marker, markerFont, markerX, pen.y);
+      pen.y += line.h;
+      if (line.pageBreakAfter && pen.breakable) { this.newPage(); pen.y = this.y; }
+    }
+  };
+  Renderer.prototype.flowParagraph = async function (para, x0, availW) {
+    if (para.pageBreakBefore && this.y > this.topY() + 0.5) this.newPage();
+    if (this.y > this.topY() + 0.5 && para.before) this.y += para.before;
+    var pen = { y: this.y, breakable: true };
+    await this.layoutParagraph(para, x0, availW, pen, true);
+    this.y = pen.y;
+    if (para.after) this.y += para.after;
+  };
+  Renderer.prototype.flowTable = async function (tbl, x0, availW) {
+    var total = 0;
+    tbl.grid.forEach(function (g) { total += g; });
+    var scale = (total > availW && total > 0) ? availW / total : 1;
+    var cols = tbl.grid.map(function (g) { return g * scale; });
+    var borderCol = PDFLib.rgb(0.75, 0.75, 0.75);
+    for (var ri = 0; ri < tbl.rows.length; ri++) {
+      var row = tbl.rows[ri];
+      var cellX = [], gx = 0;
+      row.cells.forEach(function (cell) {
+        cellX.push(gx);
+        var wsum = 0;
+        for (var s = 0; s < cell.span; s++) wsum += cols[gx + s] || 0;
+        cell._w = wsum;
+        gx += cell.span;
+      });
+      function cellMar(cell) {
+        return {
+          l: cell.mar.l != null ? cell.mar.l : 8,
+          r: cell.mar.r != null ? cell.mar.r : 8,
+          t: cell.mar.t != null ? cell.mar.t : 4,
+          b: cell.mar.b != null ? cell.mar.b : 4
+        };
+      }
+      // Mesure (sans dessin) : hauteur de chaque cellule
+      var heights = [];
+      for (var ci = 0; ci < row.cells.length; ci++) {
+        var cellM = row.cells[ci], mm = cellMar(cellM);
+        var innerW = Math.max(30, cellM._w - mm.l - mm.r);
+        var penM = { y: 0, breakable: false };
+        for (var pi = 0; pi < cellM.paras.length; pi++) {
+          var cp = cellM.paras[pi];
+          if (pi > 0) penM.y += cp.before;
+          await this.layoutParagraph(cp, 0, innerW, penM, false);
+          penM.y += cp.after;
+        }
+        heights.push(penM.y + mm.t + mm.b);
+      }
+      var rowH = Math.max.apply(null, heights.concat([10]));
+      if (this.y + rowH > this.limitY() && this.y > this.topY() && rowH <= this.limitY() - this.topY()) this.newPage();
+      var rowTop = this.y;
+      for (var cj = 0; cj < row.cells.length; cj++) {
+        var cell2 = row.cells[cj], m2 = cellMar(cell2);
+        var cx0 = x0 + cellX[cj];
+        var rectOpts = {
+          x: cx0, y: this.ph - (rowTop + rowH), width: cell2._w, height: rowH,
+          borderColor: borderCol, borderWidth: 0.5
+        };
+        if (cell2.fill) rectOpts.color = hexColor(cell2.fill);
+        this.page.drawRectangle(rectOpts);
+        var contentH = heights[cj] - m2.t - m2.b;
+        var startY = rowTop + m2.t;
+        if (cell2.vAlign === 'center') startY = rowTop + Math.max(m2.t, (rowH - contentH) / 2);
+        var pen2 = { y: startY, breakable: false };
+        var innerW2 = Math.max(30, cell2._w - m2.l - m2.r);
+        for (var pj = 0; pj < cell2.paras.length; pj++) {
+          var cp2 = cell2.paras[pj];
+          if (pj > 0) pen2.y += cp2.before;
+          await this.layoutParagraph(cp2, cx0 + m2.l, innerW2, pen2, true);
+          pen2.y += cp2.after;
+        }
+      }
+      this.y = rowTop + rowH;
+    }
+  };
+
+  // ---------- Conversion complète ----------
+  function outputPdfName(fileName) {
+    var base = String(fileName || 'document').replace(/\.[^.]+$/, '');
+    if (!base) base = 'document';
+    return base + '.pdf';
+  }
+  function fail(code) { var e = new Error(code); e.code = code; return e; }
+
+  async function convertDocxToPdf(data, opts) {
+    opts = opts || {};
+    var bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
+    // Signature OLE héritée = ancien .doc binaire, non pris en charge.
+    if (bytes.length >= 8 && bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0) {
+      throw fail('legacy-doc');
+    }
+    if (opts.onProgress) opts.onProgress('parse');
+    var zip;
+    try { zip = await JSZip.loadAsync(bytes); }
+    catch (e) { throw fail('corrupt'); }
+    var docFile = zip.file('word/document.xml');
+    if (!docFile) throw fail('corrupt');
+    var docXml = parseXml(await docFile.async('string'));
+    if (!docXml || !docXml.documentElement || docXml.documentElement.localName !== 'document') throw fail('corrupt');
+    var stylesXml = null, numberingXml = null, rels = {};
+    var stFile = zip.file('word/styles.xml');
+    if (stFile) stylesXml = parseXml(await stFile.async('string'));
+    var nuFile = zip.file('word/numbering.xml');
+    if (nuFile) numberingXml = parseXml(await nuFile.async('string'));
+    var relFile = zip.file('word/_rels/document.xml.rels');
+    if (relFile) rels = parseRels(parseXml(await relFile.async('string')));
+    var ctx = {
+      styles: parseStyles(stylesXml),
+      numbering: parseNumbering(numberingXml),
+      rels: rels, zip: zip, stats: { skipped: 0 }
+    };
+    var body = xFirst(docXml.documentElement, 'body');
+    if (!body) throw fail('corrupt');
+    var section = parseSection(docXml, opts.pageSize || 'auto');
+    var blocks = await buildBlocks(body, ctx);
+    var allParas = [];
+    blocks.forEach(function (b) {
+      if (b.type === 'p') allParas.push(b);
+      else b.rows.forEach(function (rw) { rw.cells.forEach(function (c) { c.paras.forEach(function (p) { allParas.push(p); }); }); });
+    });
+    var hasContent = allParas.some(function (p) {
+      return p.inlines.some(function (it) {
+        return (it.kind === 'run' && /\S/.test(it.text)) || it.kind === 'image';
+      });
+    });
+    if (!hasContent) throw fail('empty');
+    if (opts.onProgress) opts.onProgress('layout');
+    var pdfDoc = await PDFLib.PDFDocument.create();
+    for (var ai = 0; ai < allParas.length; ai++) {
+      var inls = allParas[ai].inlines;
+      for (var ii = 0; ii < inls.length; ii++) {
+        var item = inls[ii];
+        if (item.kind !== 'image') continue;
+        try {
+          item.pdfImage = item.ext === 'png' ? await pdfDoc.embedPng(item.bytes) : await pdfDoc.embedJpg(item.bytes);
+        } catch (e1) {
+          try {
+            item.pdfImage = item.ext === 'png' ? await pdfDoc.embedJpg(item.bytes) : await pdfDoc.embedPng(item.bytes);
+          } catch (e2) { item.bad = true; ctx.stats.skipped++; }
+        }
+      }
+    }
+    var renderer = new Renderer(pdfDoc, section);
+    renderer.numbering = ctx.numbering;
+    renderer.newPage();
+    var contentW = section.w - section.mar.l - section.mar.r;
+    for (var bi = 0; bi < blocks.length; bi++) {
+      var blk = blocks[bi];
+      if (blk.type === 'p') await renderer.flowParagraph(blk, section.mar.l, contentW);
+      else await renderer.flowTable(blk, section.mar.l, contentW);
+    }
+    var outBytes = await pdfDoc.save({ useObjectStreams: false });
+    return { bytes: outBytes, pageCount: renderer.pageCount, replaced: renderer.replaced, skipped: ctx.stats.skipped };
+  }
+
+  return { convertDocxToPdf: convertDocxToPdf, outputPdfName: outputPdfName };
+})();
+</script>
+<script>
+(function () {
+  var MSG_LEGACY = 'Les anciens fichiers .doc ne sont pas pris en charge : ouvrez le document dans Word ou LibreOffice et enregistrez-le au format .docx, puis réessayez.';
+  var MSG_CORRUPT = 'Ce fichier semble corrompu ou illisible.';
+
+  var current = null; // {file, name, base, buf, bad}
+  var resultUrl = null;
+  var resultName = '';
+
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+  var pageSizeSel = document.getElementById('pageSizeSel');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' o';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
+    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+  }
+
+  function updateBar() {
+    var show = !!current && !success.classList.contains('on');
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) barSummary.textContent = current.name + ' • Document Word';
+    convertBtn.disabled = !(current && !current.bad);
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    fileNameEl.textContent = current.name;
+    fileMetaEl.textContent = 'Document Word (.docx) • ' + formatSize(current.file.size);
+    if (current.bad === 'legacy') fileWarnEl.textContent = 'Ancien format .doc non pris en charge';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    else fileWarnEl.textContent = '';
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var name = f ? f.name : '';
+    if (/\.docx$/i.test(name)) {
+      current = { file: f, name: name, base: name.replace(/\.docx$/i, ''), buf: null, bad: null };
+      renderFileCard();
+      updateBar();
+      try {
+        var buf = await f.arrayBuffer();
+        current.buf = buf;
+        var u8 = new Uint8Array(buf);
+        if (u8.length >= 8 && u8[0] === 0xD0 && u8[1] === 0xCF && u8[2] === 0x11 && u8[3] === 0xE0) {
+          current.bad = 'legacy';
+          showError(MSG_LEGACY);
+        } else {
+          var zip = await JSZip.loadAsync(u8);
+          if (!zip.file('word/document.xml')) {
+            current.bad = 'corrupt';
+            showError(MSG_CORRUPT);
+          }
+        }
+      } catch (e) {
+        current.bad = 'corrupt';
+        showError(MSG_CORRUPT);
+      }
+    } else if (/\.doc$/i.test(name)) {
+      current = null;
+      showError(MSG_LEGACY);
+    } else {
+      current = null;
+      showError('« ' + name + ' » n’est pas un document Word .docx. Veuillez choisir un fichier .docx.');
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    updateBar();
+  });
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Veuillez d’abord choisir un fichier .docx.'); return; }
+    if (current.bad === 'legacy') { showError(MSG_LEGACY); return; }
+    if (current.bad === 'corrupt') { showError(MSG_CORRUPT + ' Choisissez un autre fichier.'); return; }
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = 'Lecture du document…';
+    try {
+      var buf = current.buf || await current.file.arrayBuffer();
+      var res = await WordToPdf.convertDocxToPdf(buf, {
+        pageSize: pageSizeSel.value,
+        fileName: current.name,
+        onProgress: function (stage) {
+          processingDetail.textContent = stage === 'layout' ? 'Mise en page et création du PDF…' : 'Lecture du document…';
+        }
+      });
+      var blob = new Blob([res.bytes], { type: 'application/pdf' });
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultName = WordToPdf.outputPdfName(current.name);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
+      var rm = document.createElement('div'); rm.className = 'rmeta';
+      rm.textContent = formatSize(blob.size) + ' • ' + res.pageCount + (res.pageCount > 1 ? ' pages' : ' page');
+      left.appendChild(rn); left.appendChild(rm);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .pdf';
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + res.pageCount + (res.pageCount > 1 ? ' pages' : ' page') + ').';
+      var notes = [];
+      if (res.replaced > 0) notes.push(res.replaced + ' caractère(s) non pris en charge par les polices intégrées ont été remplacés (documents en arabe ou symboles spéciaux).');
+      if (res.skipped > 0) notes.push(res.skipped + ' élément(s) n’ont pas pu être reproduits (images flottantes ou formats d’image non pris en charge : GIF, BMP, TIFF…).');
+      if (notes.length) {
+        scanNote.style.display = 'block';
+        scanNote.textContent = '⚠ ' + notes.join(' ');
+      } else {
+        scanNote.style.display = 'none';
+      }
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      var code = err && err.code;
+      if (code === 'legacy-doc') showError(MSG_LEGACY);
+      else if (code === 'corrupt') showError(MSG_CORRUPT);
+      else if (code === 'empty') showError('Ce document semble vide : aucun texte ni image n’a été trouvé, il n’y a donc rien à convertir en PDF.');
+      else if (code === 'not-docx') showError('Ce fichier n’est pas un document Word .docx…');
+      else showError('Une erreur est survenue pendant la conversion. Veuillez réessayer avec un autre document.');
+    } finally {
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+    }
+  });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    resultName = '';
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+  </html>
