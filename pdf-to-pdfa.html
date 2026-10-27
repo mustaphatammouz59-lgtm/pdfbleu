@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to PDF/A — PdfBleu.com</title>
+<meta name="description" content="Convert PDF to PDF/A in your browser for free: real archival conversion with Ghostscript — fonts embedded, colours converted, PDF/A-1b, 2b and 3b. No upload, your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard .coverph .lockic{font-size:22px;display:block;margin-bottom:2px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .note{font-size:12.5px;color:#666c8a;margin-top:4px}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.detecting{background:#eceff9;color:#5c6bc0}
+.chip.ready{background:#e3f2fd;color:#0d47a1}
+.chip.locked{background:#fff8e1;color:#6d4c00;border:1px solid #ffcc80}
+.chip.damaged{background:#fdecea;color:#b71c1c}
+.chip.done{background:#2e7d32;color:#fff}
+.chip.warnchip{background:#ef6c00;color:#fff}
+.chip.failed{background:#e53935;color:#fff}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.prop-row{margin-bottom:12px}
+.prop-row:last-child{margin-bottom:0}
+.prop-row label{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:5px}
+.prop-row select{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 11px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.leveldesc{display:none;font-size:13px;color:#444a6d;background:#f4f6fb;border:1px solid #e0e4f5;border-radius:8px;padding:9px 12px;margin-top:10px}
+.leveldesc.on{display:block}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.footnote.err{color:#b71c1c;font-weight:600}
+.checkrow{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer;flex-shrink:0;margin-top:2px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem.warn{border-color:#ffcc80;background:#fffdf5}
+.resultitem.fail{border-color:#ef9a9a;background:#fdf3f3}
+.resultitem .rleft{flex:1;min-width:200px}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a;margin-top:2px}
+.resultitem .failwhy{font-size:13px;color:#b71c1c;margin-top:4px}
+.resultitem .warnwhy{font-size:13px;color:#6d4c00;margin-top:4px}
+.lvlbadge{display:inline-block;background:#3F51B5;color:#fff;font-size:11.5px;font-weight:700;border-radius:10px;padding:2px 9px;vertical-align:1px}
+.checks{list-style:none;margin-top:7px;font-size:13px}
+.checks li{margin:2px 0;color:#2e7d32}
+.checks li.no{color:#b71c1c;font-weight:600}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#C0CFE1"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#4A7AAB"/><path d="M38 10 L32 16" stroke="#204160" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#204160"/><text x="18" y="37" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">/A</text></svg></span>
+<h1>PDF to PDF/A</h1>
+<p class="subtitle">Convert your PDFs to PDF/A — the ISO format built for long-term archiving — with every font embedded and colours made device-independent, right here in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the conversion runs entirely in your browser, so contracts, invoices and records stay exactly where they belong — with you.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
+</div>
+<div class="filelist" id="fileList"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>PDF to PDF/A</h2>
+<p>PDF/A is the archival form of PDF, standardized as ISO 19005. An ordinary PDF is allowed to borrow fonts from the reader's system and to describe colour in device-dependent terms; a PDF/A file must instead carry everything it needs inside itself — fonts embedded, colour pinned to an output profile, identification metadata included — so that it still renders the same way decades from now.</p>
+<div class="optgroup">
+<div class="prop-row">
+<label for="levelSel">Conformance level</label>
+<select id="levelSel">
+<option value="2b" selected>PDF/A-2b — recommended for most archives</option>
+<option value="1b">PDF/A-1b — oldest, strictest (PDF 1.4)</option>
+<option value="3b">PDF/A-3b — like 2b, allows embedded files</option>
+</select>
+<div class="leveldesc" id="lvl-2b"><strong>PDF/A-2b (basic).</strong> Based on PDF 1.7. The general-purpose archival level: transparency and modern image compression are allowed, while fonts must be embedded, colour must be device-independent and the file must identify itself. The right default for most archives.</div>
+<div class="leveldesc" id="lvl-1b"><strong>PDF/A-1b (basic).</strong> Based on PDF 1.4 — the oldest and strictest level. No transparency, no JPEG 2000 images, no layers. Choose it for maximum compatibility with older archive systems, or when a specification explicitly asks for PDF/A-1.</div>
+<div class="leveldesc" id="lvl-3b"><strong>PDF/A-3b (basic).</strong> Everything PDF/A-2b requires, plus the document is allowed to carry other files embedded inside it — a spreadsheet, an XML invoice, source data. Choose it when those attachments are part of the record.</div>
+<p class="footnote">Why are there no “a” or “u” levels here? The <strong>a</strong> levels (accessible) demand a fully tagged document structure — headings, reading order, alternative text — which only the document's author can supply; a converter cannot invent it, and claiming it could would be false. The <strong>u</strong> levels additionally demand complete Unicode mappings for every font. If your source PDF is already tagged, converting to PDF/A-2b preserves that structure.</p>
+</div>
+</div>
+<div class="optgroup">
+<label class="checkrow"><input type="checkbox" id="adjustChk" checked> Adjust parts that can't meet the chosen level</label>
+<p class="footnote">Ticked: when something in the file clashes with the chosen level — a colour the level cannot express, a feature it forbids — the engine reworks that part (converts the colour, drops the feature) and still finishes the conversion. Unticked: the engine <strong>stops with an error</strong> instead, so you never receive a file that may not conform.</p>
+</div>
+<div class="optgroup">
+<p class="footnote" id="engineStatus">The conversion engine (Ghostscript, running as WebAssembly, about 16 MB) downloads once, the first time you convert — after that, everything runs on your device. Converting large files can take a while on a phone.</p>
+</div>
+<div class="honestnote">⚠️ <strong>Honest note:</strong> your file is produced by Ghostscript's PDF/A engine — the same open-source engine used by desktop tools. No converter can promise ISO conformance for every possible input, though. If you need certified conformance (a court filing, a government archive), validate the result with <strong>veraPDF</strong>, the free official PDF/A validator.</div>
+<div class="freenote">Everything here is 100% free, with no limits: convert as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2 id="successTitle">Your PDF/A files are ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="skipNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convert more files</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why convert with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🗄️</span><h3>A real conversion, not a relabel</h3><p>Ghostscript's pdfwrite engine rebuilds your document to the standard: fonts are embedded, colours are converted to the sRGB output intent, and the pdfaid identity is stamped into the metadata. Nothing is merely renamed or re-tagged.</p></div>
+<div class="step"><span class="fic">🎚️</span><h3>Levels 1b, 2b and 3b</h3><p>Pick the strict, original PDF/A-1b, the recommended PDF/A-2b, or PDF/A-3b when embedded files belong to the record — each converted by the engine and then checked by this page before you download.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private — runs on your device</h3><p>There is no server and no upload. The engine is downloaded once as code; your documents are converted in this tab and never travel over the network.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to convert to PDF/A</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. You can convert several PDFs in one go.</p></div>
+<div class="step"><span class="num">2</span><h3>Choose a level</h3><p>PDF/A-2b suits most archives. Pick 1b for old, strict specifications, or 3b if the file carries embedded attachments that belong to the record.</p></div>
+<div class="step"><span class="num">3</span><h3>Press Convert</h3><p>The Ghostscript engine downloads once, then converts each file on your device — rebuilding it with embedded fonts and device-independent colour.</p></div>
+<div class="step"><span class="num">4</span><h3>Check the ticks, download</h3><p>Every result is verified — output intent, pdfaid identity, embedded fonts, page count — and the checks are shown on its card before you save it, singly or in a ZIP.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is the difference between PDF and PDF/A?</h3><p>PDF/A is a restricted profile of PDF (ISO 19005) designed for keeping documents readable far into the future. Anything the page needs must live inside the file: fonts are embedded rather than borrowed from the viewer's system, colour is tied to an output profile instead of a particular device, and features that depend on outside content — external links to missing files, encryption, certain multimedia — are excluded. An ordinary PDF makes no such promises.</p></div>
+<div class="qa"><h3>Which level should I choose?</h3><p>For most archives, <strong>PDF/A-2b</strong>: it is the widely accepted modern level and it tolerates transparency and current image compression. Choose <strong>PDF/A-1b</strong> when an older system or a written specification demands PDF/A-1 — it is stricter and forbids more, so some modern files cannot meet it. Choose <strong>PDF/A-3b</strong> when the document carries embedded files (an XML invoice, a spreadsheet) that form part of the record.</p></div>
+<div class="qa"><h3>Why don't you offer PDF/A-1a or PDF/A-2a?</h3><p>The “a” stands for accessible, and it requires a fully tagged document: a logical structure of headings, paragraphs and reading order, plus alternative text for images. That structure is authored when the document is created — a converter looking only at the finished pages cannot know which text was a heading, so it cannot honestly produce it. If your source was authored with tags, converting it to PDF/A-2b keeps the structure it already has.</p></div>
+<div class="qa"><h3>Can I convert a PDF/A file back to a normal PDF?</h3><p>There is nothing to convert back: a PDF/A file <em>is</em> a normal PDF, and any reader or editor will open it. You can edit it freely — just know that editing can break the conformance (a new font that isn't embedded, for example), after which the file is an ordinary PDF again and would need re-validating, or re-converting, to claim PDF/A.</p></div>
+<div class="qa"><h3>Is the result certified as conforming?</h3><p>No converter can certify its own output. This page converts with Ghostscript's PDF/A engine and then runs structural checks on every file — output intent with an embedded ICC profile, the pdfaid identity matching the level you chose, every font embedded, the page count unchanged — and shows you the results. For a formal verdict, run the file through <strong>veraPDF</strong>, the free validator maintained for the PDF/A standard; that is what archives and courts themselves use.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Converting to PDF/A…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button" disabled>Convert to PDF/A</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="pdfaCore">
+/* =====================================================================
+   PdfBleu PDF to PDF/A — pure helpers (no DOM in here, so this part can
+   be unit-tested headlessly). The browser-only work (loading the
+   Ghostscript WebAssembly engine, file cards) lives in the main script.
+
+   convert(): the engine is Ghostscript (pdfwrite device) compiled to
+   WebAssembly (@okathira/ghostpdl-wasm). pdfwrite only stamps a file as
+   PDF/A when it is handed a "PDFA definition" prefix file that sets up
+   the OutputIntent; PDFA_DEF below is that file — a minimal definition
+   written from the Ghostscript documentation template. It creates an
+   ICC profile stream from srgb.icc (the sRGB profile Ghostscript itself
+   bundles for this purpose, Artifex Software sRGB ICC Profile, embedded
+   here as base64) and registers it as the document OutputIntent.
+
+   buildArgs(levelId, adjust) -> the Ghostscript argv:
+     -dPDFA=<1|2|3>                 target part
+     -sColorConversionStrategy=RGB  colours converted to the sRGB intent
+     -dPDFACompatibilityPolicy=1    adjust: the engine reworks offending
+                                    elements and finishes the conversion
+     -dPDFACompatibilityPolicy=2    strict: the engine stops with an
+                                    error rather than emit a suspect file
+     --permit-file-read=srgb.icc    Ghostscript's sandbox (SAFER) only
+                                    lets the definition file read the
+                                    ICC profile we provisioned for it
+
+   assess() turns an engine run + the pdf-lib inspection of its output
+   into a verdict: 'ok' only when EVERY check passes; any failed check
+   downgrades the result to 'warnings' (the file is still offered, but
+   it is never silently called conformant); a failed engine run or an
+   unreadable output is 'failed' and nothing is offered.
+   ===================================================================== */
+var PdfaCore = (function () {
+  'use strict';
+
+  var IN_FILE = 'in.pdf';
+  var OUT_FILE = 'out.pdf';
+  var DEF_FILE = 'PDFA_def.ps';
+  var ICC_FILE = 'srgb.icc';
+
+  var LEVELS = {
+    '2b': { id: '2b', pdfta: 2, part: '2', conf: 'B', label: 'PDF/A-2b' },
+    '1b': { id: '1b', pdfta: 1, part: '1', conf: 'B', label: 'PDF/A-1b' },
+    '3b': { id: '3b', pdfta: 3, part: '3', conf: 'B', label: 'PDF/A-3b' }
+  };
+
+  var PDFA_DEF = [
+    '%!PS-Adobe-3.0',
+    '%%Title: PdfBleu PDF/A definition (OutputIntent setup for Ghostscript pdfwrite)',
+    '% --- ICC profile stream (sRGB, 3 components) ---',
+    '[ /_objdef {icc_PDFA} /type /stream /OBJ pdfmark',
+    '[ {icc_PDFA} << /N 3 >> /PUT pdfmark',
+    '[ {icc_PDFA} (srgb.icc) (r) file /PUT pdfmark',
+    '% --- OutputIntent dictionary referencing that profile ---',
+    '[ /_objdef {OutputIntent_PDFA} /type /dict /OBJ pdfmark',
+    '[ {OutputIntent_PDFA} <<',
+    '  /Type /OutputIntent',
+    '  /S /GTS_PDFA1',
+    '  /DestOutputProfile {icc_PDFA}',
+    '  /OutputConditionIdentifier (sRGB IEC61966-2.1)',
+    '  /RegistryName (http://www.color.org)',
+    '  /Info (sRGB IEC61966-2.1)',
+    '>> /PUT pdfmark',
+    '[ {Catalog} << /OutputIntents [ {OutputIntent_PDFA} ] >> /PUT pdfmark',
+    ''
+  ].join('\n');
+
+  // The sRGB ICC profile Ghostscript bundles for PDF/A output intents
+  // ("Artifex Software sRGB ICC Profile", 2,576 bytes), base64-encoded.
+  var SRGB_ICC_B64 = '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';
+
+  function iccBytes() {
+    var bin = atob(SRGB_ICC_B64);
+    var out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i) & 0xff;
+    return out;
+  }
+
+  function buildArgs(levelId, adjust) {
+    var lvl = LEVELS[levelId] || LEVELS['2b'];
+    return [
+      '-sDEVICE=pdfwrite',
+      '-dPDFA=' + lvl.pdfta,
+      '-dBATCH',
+      '-dNOPAUSE',
+      '-dNOOUTERSAVE',
+      '-sColorConversionStrategy=RGB',
+      '-dPDFACompatibilityPolicy=' + (adjust ? '1' : '2'),
+      '--permit-file-read=' + ICC_FILE,
+      '-sOutputFile=' + OUT_FILE,
+      DEF_FILE,
+      IN_FILE
+    ];
+  }
+
+  // pdfaid identification out of an XMP packet: element form
+  // (<pdfaid:part>2</pdfaid:part>) or attribute form, either quote style
+  // (Ghostscript writes attributes with single quotes).
+  function parsePdfaid(xmp) {
+    if (!xmp || typeof xmp !== 'string') return null;
+    var pm = xmp.match(/pdfaid:part>(\d)</) || xmp.match(/pdfaid:part\s*=\s*["'](\d)["']/);
+    var cm = xmp.match(/pdfaid:conformance>([A-Za-z])</) || xmp.match(/pdfaid:conformance\s*=\s*["']([A-Za-z])["']/);
+    if (!pm || !cm) return null;
+    return { part: pm[1], conf: cm[1].toUpperCase() };
+  }
+
+  // Font-embedding verdict over extracted font descriptors:
+  // [{base, subtype, embedded}] -> {total, allEmbedded, missing:[names]}
+  function checkFonts(fontInfos) {
+    var infos = Array.isArray(fontInfos) ? fontInfos : [];
+    var missing = [];
+    infos.forEach(function (f) {
+      if (!f.embedded) missing.push(f.base || '(unnamed font)');
+    });
+    return {
+      total: infos.length,
+      allEmbedded: infos.length > 0 && missing.length === 0,
+      missing: missing
+    };
+  }
+
+  /* ---- pdf-lib based extraction (the library is a page global here,
+         and a require() in the node tests) ---- */
+
+  function lib() {
+    if (typeof PDFLib !== 'undefined') return PDFLib;
+    if (typeof globalThis !== 'undefined' && globalThis.PDFLib) return globalThis.PDFLib;
+    throw new Error('pdf-lib is not available');
+  }
+
+  function streamText(L, doc, obj) {
+    var s = doc.context.lookup(obj);
+    if (s instanceof L.PDFStream) {
+      try {
+        var bytes = L.decodePDFRawStream(s).decode();
+        var txt = '';
+        for (var i = 0; i < bytes.length; i++) txt += String.fromCharCode(bytes[i]);
+        return txt;
+      } catch (e) { return ''; }
+    }
+    return '';
+  }
+
+  // Walk every page's resources (incl. Form XObjects) and collect one
+  // descriptor per distinct font; Type0 (composite) fonts are judged by
+  // their descendant CIDFont's descriptor, per the PDF/A rules.
+  function extractFontInfo(doc) {
+    var L = lib();
+    var ctx = doc.context;
+    var N = L.PDFName.of;
+    var fonts = [];
+    var seen = {};
+    function checkFont(fontDict) {
+      if (!(fontDict instanceof L.PDFDict)) return;
+      var subtype = String(fontDict.get(N('Subtype')) || '');
+      var base = String(fontDict.get(N('BaseFont')) || '');
+      if (subtype === '/Type0') {
+        var arr = ctx.lookup(fontDict.get(N('DescendantFonts')));
+        if (arr instanceof L.PDFArray) {
+          for (var i = 0; i < arr.size(); i++) checkFont(ctx.lookup(arr.get(i)));
+        }
+        return;
+      }
+      var fd = ctx.lookup(fontDict.get(N('FontDescriptor')));
+      var embedded = false;
+      if (fd instanceof L.PDFDict) {
+        embedded = !!(fd.get(N('FontFile')) || fd.get(N('FontFile2')) || fd.get(N('FontFile3')));
+      }
+      var key = base + '|' + subtype;
+      if (!seen[key]) { seen[key] = true; fonts.push({ base: base, subtype: subtype, embedded: embedded }); }
+    }
+    function walkResources(resObj, depth) {
+      var res = ctx.lookup(resObj);
+      if (!(res instanceof L.PDFDict) || depth > 6) return;
+      var fm = ctx.lookup(res.get(N('Font')));
+      if (fm instanceof L.PDFDict) {
+        var entries = fm.entries();
+        for (var e of entries) checkFont(ctx.lookup(fm.get(e[0])));
+      }
+      var xo = ctx.lookup(res.get(N('XObject')));
+      if (xo instanceof L.PDFDict) {
+        var xentries = xo.entries();
+        for (var x of xentries) {
+          var o = ctx.lookup(xo.get(x[0]));
+          if (o instanceof L.PDFStream) walkResources(o.dict.get(N('Resources')), depth + 1);
+          else if (o instanceof L.PDFDict) walkResources(o.get(N('Resources')), depth + 1);
+        }
+      }
+    }
+    var pages = doc.getPages();
+    for (var p = 0; p < pages.length; p++) {
+      var node = pages[p].node;
+      var resRef = null;
+      try { resRef = node.Resources(); } catch (e) { /* fall back below */ }
+      walkResources(resRef || node.get(N('Resources')), 0);
+    }
+    return fonts;
+  }
+
+  // Full inspection of a converted file: everything assess() needs.
+  function inspectOutput(doc) {
+    var L = lib();
+    var ctx = doc.context;
+    var N = L.PDFName.of;
+    var xmp = '';
+    var mdRef = doc.catalog.get(N('Metadata'));
+    if (mdRef) xmp = streamText(L, doc, mdRef);
+    var hasOI = false;
+    var oiArr = ctx.lookup(doc.catalog.get(N('OutputIntents')));
+    if (oiArr instanceof L.PDFArray && oiArr.size() > 0) {
+      var first = ctx.lookup(oiArr.get(0));
+      if (first instanceof L.PDFDict) {
+        hasOI = ctx.lookup(first.get(N('DestOutputProfile'))) instanceof L.PDFStream;
+      }
+    }
+    var fonts = extractFontInfo(doc);
+    return {
+      pages: doc.getPageCount(),
+      xmp: xmp,
+      pdfaid: parsePdfaid(xmp),
+      outputIntent: hasOI,
+      fonts: fonts,
+      fontCheck: checkFonts(fonts)
+    };
+  }
+
+  // Decide the verdict shown to the user. `run` is
+  // {code, trapped, bytesLength}; `insp` is inspectOutput() of the
+  // produced file (or null when it could not even be opened).
+  function assess(run, insp, levelId, srcPages) {
+    var lvl = LEVELS[levelId] || LEVELS['2b'];
+    if (!run || run.trapped) {
+      return { status: 'failed', reason: 'engine-stop', level: lvl, checks: [] };
+    }
+    if (run.code !== 0 || !run.bytesLength) {
+      return { status: 'failed', reason: 'engine', level: lvl, checks: [] };
+    }
+    if (!insp) {
+      return { status: 'failed', reason: 'verify', level: lvl, checks: [] };
+    }
+    var aidOk = !!(insp.pdfaid && insp.pdfaid.part === lvl.part && insp.pdfaid.conf === lvl.conf);
+    var checks = [
+      { key: 'intent', ok: !!insp.outputIntent, label: 'Output intent with an embedded ICC profile' },
+      { key: 'pdfaid', ok: aidOk, label: 'pdfaid identity declares ' + lvl.label },
+      { key: 'fonts', ok: insp.fontCheck.allEmbedded, label: insp.fontCheck.allEmbedded ? 'All fonts embedded (' + insp.fontCheck.total + ')' : 'Fonts not embedded: ' + insp.fontCheck.missing.join(', ') },
+      { key: 'pages', ok: !srcPages || insp.pages === srcPages, label: (!srcPages || insp.pages === srcPages) ? 'Page count matches the original (' + insp.pages + ')' : 'Page count is ' + insp.pages + ' — the original has ' + srcPages }
+    ];
+    var allOk = checks.every(function (c) { return c.ok; });
+    return { status: allOk ? 'ok' : 'warnings', reason: null, level: lvl, checks: checks };
+  }
+
+  return {
+    LEVELS: LEVELS,
+    PDFA_DEF: PDFA_DEF,
+    SRGB_ICC_B64: SRGB_ICC_B64,
+    iccBytes: iccBytes,
+    buildArgs: buildArgs,
+    parsePdfaid: parsePdfaid,
+    checkFonts: checkFonts,
+    extractFontInfo: extractFontInfo,
+    inspectOutput: inspectOutput,
+    assess: assess,
+    IN_FILE: IN_FILE,
+    OUT_FILE: OUT_FILE,
+    DEF_FILE: DEF_FILE,
+    ICC_FILE: ICC_FILE
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var GS_BASE = 'https://cdn.jsdelivr.net/npm/@okathira/ghostpdl-wasm@1.1.0/dist/';
+  var GS_JS = GS_BASE + 'gs.js';
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      levelSel = $('levelSel'), adjustChk = $('adjustChk'),
+      engineStatus = $('engineStatus'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+      resultList = $('resultList'), zipBtn = $('zipBtn'),
+      skipNote = $('skipNote'), restartBtn = $('restartBtn');
+
+  var state = {
+    files: [],   // {uid, name, size, bytes, status, numPages, cover, result}
+    uidSeq: 0,
+    busy: false,
+    sortAsc: true
+  };
+
+  var engineMod = null, enginePromise = null;
+  var gsLog = [];
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function baseName(name) { return name.replace(/\.pdf$/i, ''); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function currentLevel() {
+    return PdfaCore.LEVELS[levelSel.value] ? levelSel.value : '2b';
+  }
+
+  /* ---------------- Ghostscript engine: lazy load ---------------- */
+
+  function setEngineStatus(text, isError) {
+    engineStatus.textContent = text;
+    engineStatus.classList.toggle('err', !!isError);
+  }
+
+  function ensureEngine() {
+    if (engineMod) return Promise.resolve(engineMod);
+    if (enginePromise) return enginePromise;
+    setEngineStatus('Downloading the conversion engine… (one-time, about 16 MB)');
+    enginePromise = import(GS_JS).then(function (mod) {
+      var factory = mod && mod.default;
+      if (typeof factory !== 'function') throw new Error('engine factory missing');
+      return factory({
+        locateFile: function (path) { return GS_BASE + path; },
+        print: function (t) { gsLog.push(t); },
+        printErr: function (t) { gsLog.push(t); }
+      });
+    }).then(function (m) {
+      engineMod = m;
+      enginePromise = null;
+      setEngineStatus('Conversion engine ready ✓ — Ghostscript runs entirely on your device.');
+      return m;
+    }).catch(function (err) {
+      enginePromise = null;
+      setEngineStatus('The conversion engine could not be loaded — check your connection, then press Convert to PDF/A to try again.', true);
+      throw err;
+    });
+    return enginePromise;
+  }
+
+  // One pdfwrite PDF/A run inside the wasm virtual file system.
+  // The definition file and the ICC profile are provisioned fresh for
+  // every run. A WebAssembly trap (the engine dying on hostile content)
+  // is reported, never thrown past this function, and it retires the
+  // engine instance: the next file gets a freshly built one.
+  function runConvert(mod, bytes, levelId, adjust) {
+    gsLog = [];
+    var FS = mod.FS;
+    [PdfaCore.OUT_FILE, PdfaCore.IN_FILE, PdfaCore.DEF_FILE, PdfaCore.ICC_FILE].forEach(function (f) {
+      try { FS.unlink(f); } catch (e) {}
+    });
+    FS.writeFile(PdfaCore.DEF_FILE, new TextEncoder().encode(PdfaCore.PDFA_DEF));
+    FS.writeFile(PdfaCore.ICC_FILE, PdfaCore.iccBytes());
+    FS.writeFile(PdfaCore.IN_FILE, bytes);
+    var code = 0, trapped = false;
+    try {
+      var r = mod.callMain(PdfaCore.buildArgs(levelId, adjust));
+      code = (typeof r === 'number') ? r : 0;
+    } catch (e) {
+      trapped = true;
+      code = (e && typeof e.status === 'number') ? e.status : -1;
+    }
+    var out = null;
+    if (!trapped) {
+      try {
+        var o = FS.readFile(PdfaCore.OUT_FILE);
+        if (o && o.length) out = o;
+      } catch (e) {}
+    }
+    [PdfaCore.OUT_FILE, PdfaCore.IN_FILE].forEach(function (f) {
+      try { FS.unlink(f); } catch (e) {}
+    });
+    if (trapped) {
+      engineMod = null;
+      setEngineStatus('The engine stopped on a file and was reset — the next conversion rebuilds it.', true);
+    }
+    return { code: code, trapped: trapped, bytes: out, logTail: gsLog.slice(-4).join(' ') };
+  }
+
+  /* ---------------- file handling + detection ---------------- */
+
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+
+  function addFiles(fileListIn) {
+    var added = 0;
+    Array.prototype.forEach.call(fileListIn, function (file) {
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') return;
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, status: 'detecting', numPages: 0, cover: null, result: null
+      };
+      state.files.push(rec);
+      added++;
+      detectFile(rec, file);
+    });
+    if (!added) showError('Please choose PDF files — the files you dropped were not PDFs.');
+    else showError(null);
+    renderFileList();
+    refreshChrome();
+  }
+
+  function isEncryptedError(e) {
+    var s = String((e && (e.name || '')) + ' ' + (e && (e.message || '')));
+    return /encrypt/i.test(s);
+  }
+
+  async function detectFile(rec, file) {
+    try {
+      var buf = await file.arrayBuffer();
+      rec.bytes = new Uint8Array(buf);
+
+      var libOk = false, encrypted = false;
+      try {
+        var ld = await PDFLib.PDFDocument.load(rec.bytes.slice(0));
+        libOk = true;
+        rec.numPages = ld.getPageCount();
+      } catch (e) {
+        if (isEncryptedError(e)) encrypted = true;
+      }
+
+      // pdf.js supplies the cover, and settles files pdf-lib refused:
+      // restrictions-only PDFs open here; open-password PDFs ask.
+      var jsOk = false;
+      try {
+        var doc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+        jsOk = true;
+        rec.numPages = doc.numPages;
+        try {
+          var page = await doc.getPage(1);
+          var vp = page.getViewport({ scale: 1 });
+          var scale = Math.min(128 / vp.width, 164 / vp.height);
+          var viewport = page.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(viewport.width);
+          canvas.height = Math.round(viewport.height);
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+          rec.cover = canvas.toDataURL('image/png');
+        } catch (e) { rec.cover = null; }
+        try { await doc.destroy(); } catch (e) {}
+      } catch (e) {
+        if (e && (e.name === 'PasswordException' || e.code === 1)) encrypted = true;
+      }
+
+      if (libOk || jsOk) rec.status = 'ready';
+      else if (encrypted) rec.status = 'locked';
+      else rec.status = 'damaged';
+    } catch (e) {
+      rec.status = 'damaged';
+    }
+    renderFileList();
+    refreshChrome();
+  }
+
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    renderFileList();
+    refreshChrome();
+    renderResults();
+  }
+
+  /* ---------------- file cards ---------------- */
+
+  var CHIP_TEXT = {
+    detecting: 'Checking…',
+    ready: 'Ready',
+    locked: 'Password-protected — unlock it first',
+    damaged: 'Damaged / can’t be read'
+  };
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    state.files.forEach(function (f) {
+      var card = document.createElement('div');
+      card.className = 'filecard' + (f.status === 'damaged' ? ' bad' : '');
+
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (f.cover) {
+        var img = document.createElement('img');
+        img.src = f.cover; img.alt = '';
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('div');
+        ph.className = 'coverph';
+        if (f.status === 'locked') ph.innerHTML = '<span class="lockic">🔒</span>Locked';
+        else if (f.status === 'damaged') ph.textContent = 'Can’t be read';
+        else if (f.status === 'detecting') ph.textContent = 'Checking…';
+        else ph.textContent = 'PDF';
+        cover.appendChild(ph);
+      }
+      card.appendChild(cover);
+
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('div');
+      nm.className = 'fname'; nm.textContent = f.name;
+      info.appendChild(nm);
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = fmtSize(f.size) + (f.numPages ? ' · ' + f.numPages + (f.numPages === 1 ? ' page' : ' pages') : '');
+      info.appendChild(meta);
+
+      var chip = document.createElement('span');
+      if (f.result && f.result.status === 'ok') { chip.className = 'chip done'; chip.textContent = 'Converted ✓'; }
+      else if (f.result && f.result.status === 'warnings') { chip.className = 'chip warnchip'; chip.textContent = 'Converted with warnings'; }
+      else if (f.result && f.result.status === 'failed') { chip.className = 'chip failed'; chip.textContent = 'Conversion failed'; }
+      else { chip.className = 'chip ' + f.status; chip.textContent = CHIP_TEXT[f.status] || f.status; }
+      info.appendChild(chip);
+
+      if (f.status === 'locked' && !f.result) {
+        var nt = document.createElement('div');
+        nt.className = 'note';
+        nt.textContent = 'This tool asks for no passwords — remove the password with Unlock PDF first, then convert the unlocked copy.';
+        info.appendChild(nt);
+      }
+      card.appendChild(info);
+
+      var rm = document.createElement('button');
+      rm.className = 'rm'; rm.type = 'button'; rm.textContent = '✕';
+      rm.title = 'Remove this file';
+      rm.addEventListener('click', function () { removeFile(f.uid); });
+      card.appendChild(rm);
+
+      fileList.appendChild(card);
+    });
+    fileTools.classList.toggle('on', state.files.length > 0);
+  }
+
+  sortBtn.addEventListener('click', function () {
+    state.sortAsc = !state.sortAsc;
+    var dir = state.sortAsc ? 1 : -1;
+    state.files.sort(function (a, b) { return dir * a.name.localeCompare(b.name); });
+    sortBtn.textContent = state.sortAsc ? 'Sort Z–A' : 'Sort A–Z';
+    renderFileList();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('nocovers');
+    coversBtn.classList.toggle('on', !hidden);
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+  });
+
+  /* ---------------- options ---------------- */
+
+  function showLevelDesc() {
+    ['2b', '1b', '3b'].forEach(function (id) {
+      $('lvl-' + id).classList.toggle('on', levelSel.value === id);
+    });
+  }
+  levelSel.addEventListener('change', showLevelDesc);
+  showLevelDesc();
+
+  /* ---------------- action bar / processing ---------------- */
+
+  function actionableFiles() {
+    return state.files.filter(function (f) {
+      return f.status === 'ready' && !(f.result && f.result.status !== 'failed');
+    });
+  }
+  function refreshChrome() {
+    var has = state.files.length > 0;
+    actionBar.classList.toggle('on', has);
+    document.body.classList.toggle('bar-visible', has);
+    var todo = actionableFiles();
+    var detecting = state.files.some(function (f) { return f.status === 'detecting'; });
+    var done = state.files.filter(function (f) { return f.result && f.result.status === 'ok'; }).length;
+    var warned = state.files.filter(function (f) { return f.result && f.result.status === 'warnings'; }).length;
+    barSummary.textContent = !has ? '' :
+      state.files.length + (state.files.length === 1 ? ' file' : ' files') +
+      (done ? ' · ' + done + ' converted' : '') +
+      (warned ? ' · ' + warned + ' with warnings' : '') +
+      (todo.length ? ' · ' + todo.length + ' to convert' : (detecting ? ' · checking…' : ''));
+    applyBtn.disabled = state.busy || detecting || todo.length === 0;
+    applyBtn.textContent = 'Convert to ' + PdfaCore.LEVELS[currentLevel()].label;
+  }
+  levelSel.addEventListener('change', refreshChrome);
+  adjustChk.addEventListener('change', refreshChrome);
+
+  applyBtn.addEventListener('click', async function () {
+    var targets = actionableFiles();
+    if (!targets.length || state.busy) return;
+    var levelId = currentLevel();
+    var lvl = PdfaCore.LEVELS[levelId];
+    var adjust = !!adjustChk.checked;
+    state.busy = true;
+    refreshChrome();
+    showError(null);
+    processing.classList.add('on');
+    processingDetail.textContent = 'Preparing the conversion engine…';
+    try {
+      await ensureEngine();
+    } catch (e) {
+      processing.classList.remove('on');
+      state.busy = false;
+      refreshChrome();
+      showError('The conversion engine could not be loaded — check your connection and try again. Nothing was processed.');
+      return;
+    }
+    for (var i = 0; i < targets.length; i++) {
+      var f = targets[i];
+      processingDetail.textContent = 'Converting ' + f.name + ' to ' + lvl.label + ' (' + (i + 1) + ' of ' + targets.length + ')…';
+      // Let the overlay paint before the synchronous wasm run.
+      await new Promise(function (r) { setTimeout(r, 30); });
+      var mod;
+      try {
+        mod = await ensureEngine();
+      } catch (e) {
+        f.result = { status: 'failed', reason: 'engine-load', levelId: levelId };
+        continue;
+      }
+      var run = runConvert(mod, f.bytes, levelId, adjust);
+      if (run.trapped || run.code !== 0 || !run.bytes) {
+        f.result = {
+          status: 'failed',
+          reason: run.trapped ? 'engine-stop' : 'engine',
+          code: run.code, levelId: levelId
+        };
+        continue;
+      }
+      // Verify before offering: the produced file must re-open, and it
+      // must show the output intent, the pdfaid identity for the level
+      // requested, fully embedded fonts and the original page count.
+      try {
+        var vdoc = await PDFLib.PDFDocument.load(run.bytes.slice(0));
+        var insp = PdfaCore.inspectOutput(vdoc);
+        var verdict = PdfaCore.assess(
+          { code: run.code, trapped: run.trapped, bytesLength: run.bytes.length },
+          insp, levelId, f.numPages);
+        if (verdict.status === 'failed') {
+          f.result = { status: 'failed', reason: verdict.reason, levelId: levelId };
+        } else {
+          f.result = {
+            status: verdict.status,
+            checks: verdict.checks,
+            levelId: levelId,
+            blob: new Blob([run.bytes], { type: 'application/pdf' }),
+            outName: baseName(f.name) + '_pdfa.pdf',
+            size: run.bytes.length
+          };
+        }
+      } catch (e) {
+        f.result = { status: 'failed', reason: 'verify', levelId: levelId };
+      }
+    }
+    processing.classList.remove('on');
+    state.busy = false;
+    renderFileList();
+    refreshChrome();
+    renderResults(true);
+  });
+
+  /* ---------------- results ---------------- */
+
+  function downloadable() {
+    return state.files.filter(function (f) {
+      return f.result && (f.result.status === 'ok' || f.result.status === 'warnings');
+    });
+  }
+
+  var FAIL_TEXT = {
+    'engine-load': 'the conversion engine could not be loaded',
+    'engine': 'Ghostscript could not convert this file',
+    'engine-stop': 'the engine stopped while converting this file',
+    'verify': 'the converted copy could not be verified, so it was not offered for download'
+  };
+
+  function renderResults(scroll) {
+    var withResult = state.files.filter(function (f) { return f.result; });
+    var skipped = state.files.filter(function (f) {
+      return !f.result && (f.status === 'locked' || f.status === 'damaged');
+    });
+    var anyRun = withResult.length > 0;
+    success.classList.toggle('on', anyRun);
+    if (!anyRun) { zipBtn.style.display = 'none'; return; }
+
+    var ok = withResult.filter(function (f) { return f.result.status === 'ok'; });
+    var warned = withResult.filter(function (f) { return f.result.status === 'warnings'; });
+    var failed = withResult.filter(function (f) { return f.result.status === 'failed'; });
+    successTitle.textContent = ok.length || warned.length ? 'Your PDF/A files are ready!' : 'Nothing was converted this time';
+    successInfo.textContent =
+      (ok.length ? ok.length + (ok.length === 1 ? ' file' : ' files') + ' converted and fully verified. ' : '') +
+      (warned.length ? warned.length + ' converted with warnings — read the flagged check on ' + (warned.length === 1 ? 'its' : 'their') + ' card. ' : '') +
+      (failed.length ? failed.length + ' could not be converted. ' : '') +
+      (ok.length || warned.length ? 'Save your files below.' : 'See the notes below and try again.');
+
+    // De-duplicate output names for the ZIP.
+    var seen = {};
+    downloadable().forEach(function (f) {
+      var n = f.result.outName;
+      if (seen[n]) { var k = 2; while (seen[baseName(n) + ' (' + k + ').pdf']) k++; n = baseName(n) + ' (' + k + ').pdf'; f.result.zipName = n; }
+      else f.result.zipName = n;
+      seen[f.result.zipName] = true;
+    });
+
+    resultList.innerHTML = '';
+    withResult.forEach(function (f) {
+      var r = f.result;
+      var item = document.createElement('div');
+      item.className = 'resultitem' + (r.status === 'warnings' ? ' warn' : (r.status === 'failed' ? ' fail' : ''));
+      var left = document.createElement('div');
+      left.className = 'rleft';
+      var rn = document.createElement('div');
+      rn.className = 'rname'; rn.textContent = r.outName || f.name;
+      var rm2 = document.createElement('div');
+      rm2.className = 'rmeta';
+      rm2.innerHTML = (r.size ? fmtSize(r.size) + ' · ' : '') + '<span class="lvlbadge">' + esc(PdfaCore.LEVELS[r.levelId || currentLevel()].label) + '</span>';
+      left.appendChild(rn); left.appendChild(rm2);
+
+      if ((r.status === 'ok' || r.status === 'warnings') && r.checks) {
+        var ul = document.createElement('ul');
+        ul.className = 'checks';
+        r.checks.forEach(function (c) {
+          var li = document.createElement('li');
+          if (!c.ok) li.className = 'no';
+          li.textContent = (c.ok ? '✓ ' : '✗ ') + c.label;
+          ul.appendChild(li);
+        });
+        left.appendChild(ul);
+      }
+      if (r.status === 'warnings') {
+        var ww = document.createElement('div');
+        ww.className = 'warnwhy';
+        ww.textContent = 'Converted with warnings: the check marked ✗ could not be confirmed, so do not treat this file as fully conformant.';
+        left.appendChild(ww);
+      }
+      if (r.status === 'failed') {
+        var fw = document.createElement('div');
+        fw.className = 'failwhy';
+        var why = FAIL_TEXT[r.reason] || 'conversion failed';
+        if (r.reason === 'engine-stop' && r.levelId === '1b') {
+          why += ' — PDF/A-1b forbids transparency and several other modern features, and files using them can halt this converter. Try PDF/A-2b, which allows transparency';
+        } else if (r.reason === 'engine-stop') {
+          why += ' — the file stays in the list above; press Convert to try again';
+        } else if (r.reason === 'engine' && typeof r.code === 'number' && r.code) {
+          why += ' (engine exit code ' + r.code + ') — with “Adjust parts…” unticked the engine stops rather than emit a file that may not conform; tick it to let the engine rework problem parts';
+        }
+        fw.textContent = f.name + ' — ' + why + '.';
+        left.appendChild(fw);
+      }
+      item.appendChild(left);
+
+      if (r.status === 'ok' || r.status === 'warnings') {
+        var a = document.createElement('a');
+        a.className = 'dl'; a.textContent = 'Download';
+        a.href = URL.createObjectURL(r.blob);
+        a.setAttribute('download', r.outName);
+        item.appendChild(a);
+      }
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = downloadable().length > 1 ? 'block' : 'none';
+
+    if (skipped.length) {
+      skipNote.style.display = 'block';
+      skipNote.innerHTML = skipped.map(function (f) {
+        return '• ' + esc(f.name) + (f.status === 'locked'
+          ? ' — password-protected, so it was skipped. Unlock it first, then convert the unlocked copy.'
+          : ' — could not be read, so it was skipped.');
+      }).join('<br>');
+    } else skipNote.style.display = 'none';
+
+    if (scroll) success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  zipBtn.addEventListener('click', async function () {
+    var ok = downloadable();
+    if (ok.length < 2) return;
+    zipBtn.disabled = true;
+    try {
+      var zip = new JSZip();
+      ok.forEach(function (f) { zip.file(f.result.zipName || f.result.outName, f.result.blob); });
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.setAttribute('download', 'pdfbleu-pdfa.zip');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+    }
+  });
+
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  restartBtn.addEventListener('click', function () { location.reload(); });
+
+  renderFileList();
+  refreshChrome();
+})();
+</script>
+</body>
+</html>
