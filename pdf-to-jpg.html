@@ -4,47 +4,95 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF to JPG — PdfBleu.com</title>
-<meta name="description" content="Convert each page of your PDF into a high-quality JPG image, right in your browser. Free and 100% private.">
+<meta name="description" content="Convert each page of a PDF into a JPG image, or extract the images embedded in a PDF, free and with no sign-up. Everything happens in your browser: no upload to any server.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
 header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
 header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
 header .logo .com{color:#4ADE80}
 header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
-h1{font-size:27px;color:#1a237e;margin-bottom:8px}
-.intro{color:#444a6d;margin-bottom:16px}
-.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
-.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
-.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
 .drop.drag{background:#dfe5f9}
-.drop .icon{font-size:40px;display:block;margin-bottom:6px}
-.drop p{color:#3F51B5;font-weight:600}
-.drop small{color:#666c8a}
-button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
-button.action{background:#2e7d32}
-button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
-button:disabled{opacity:.5;cursor:not-allowed}
-label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
-input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-input[type=number]{width:130px;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-select{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px;background:#fff}
-input[type=range]{width:100%;margin-top:8px}
-.hint{font-size:13px;color:#666c8a;margin-top:5px}
-.note{font-size:13px;color:#666c8a;margin-top:12px}
-.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
-.choices{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.choices label{flex:1;min-width:110px;text-align:center;border:1.5px solid #c5cae9;border-radius:10px;padding:12px 6px;cursor:pointer;font-weight:700;color:#3F51B5;background:#fff;font-size:14px}
-.choices input{margin-right:5px}
-.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
-.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
-.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
-.tiles{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.tile{background:#eef1fb;border:1.5px solid #c5cae9;border-radius:10px;padding:10px 6px;text-align:center;width:106px}
-.tile .pname{font-weight:700;color:#1a237e;font-size:14px;margin-bottom:8px}
-.tile button{background:#fff;border:1.5px solid #3F51B5;color:#3F51B5;border-radius:14px;padding:3px 8px;cursor:pointer;font-size:13px;margin:2px}
-.tile button.del{border-color:#e53935;color:#e53935}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:110px;height:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:12.5px;text-align:center;padding:8px}
+.filecard .coverph.bad{color:#b71c1c}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar h3{font-size:16px;color:#1a237e;margin:16px 0 8px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.levels{display:grid;gap:10px;margin-bottom:4px}
+.levelcard{position:relative;display:block;border:1.5px solid #c5cae9;border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.levelcard:hover{border-color:#3F51B5}
+.levelcard.sel{border-color:#2e7d32;background:#e8f5e9;box-shadow:0 2px 8px rgba(46,125,50,.14)}
+.levelcard input{position:absolute;opacity:0;pointer-events:none}
+.levelcard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:15.5px}
+.levelcard .ldesc{display:block;font-size:13px;color:#666c8a;margin-top:2px}
+#qualityBlock.qdisabled{opacity:.45;pointer-events:none}
+.qhint{display:none;font-size:13px;color:#444a6d;background:#eef1fb;border:1px solid #c5cae9;border-radius:8px;padding:9px 12px;margin-top:10px}
+.qhint.on{display:block}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .thumb{width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #e0e4f5;background:#fff;flex-shrink:0}
+.resultitem .rinfo{flex:1;min-width:0}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
 .ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
 .ad-300{width:300px;max-width:100%;height:250px}
 .ad-fluid{width:100%;min-height:110px}
@@ -52,8 +100,8 @@ input[type=range]{width:100%;margin-top:8px}
 footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
 footer a{color:#3F51B5;text-decoration:none}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <header>
@@ -61,97 +109,726 @@ footer a{color:#3F51B5;text-decoration:none}
 <a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>PDF to JPG</h1>
-<p class="intro">Turn the pages of your PDF document into crisp JPG images, ready to share or insert into another document.</p>
-<div class="private-note">🔒 Your file never leaves your device: the conversion happens entirely in your browser.</div>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#FBEFA8"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#D6BF2D"/><path d="M38 10 L32 16" stroke="#B7A001" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#B7A001"/><circle cx="13" cy="25" r="3.4" fill="#ffffff"/><polygon points="8,40 16,29 22,36 25,32 30,40" fill="#ffffff"/></svg></span>
+<h1>Convert PDF to JPG</h1>
+<p class="subtitle">Turn each page of your PDF into a JPG image, or extract the pictures embedded in it.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: conversion happens entirely in your browser, with no upload to any server.</div>
+
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
-<div class="tool">
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Converting…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
 <div class="drop" id="drop">
-<span class="icon">📄</span>
-<p>Drop your PDF file here</p>
-<small>or tap the button below to select it</small>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
 </div>
-<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
-<p class="fileinfo" id="fileInfo"></p>
-<p class="note">Each page of your PDF will be converted into a good-quality JPG image (page-1.jpg, page-2.jpg, …) and downloaded separately. <strong>Good to know:</strong> your browser may ask permission for multiple downloads — allow it so you receive every page.</p>
-<div class="status" id="status">Processing… please wait.</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Loading preview…</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
 <div class="error" id="error"></div>
-<div class="result" id="result"></div>
-<button class="action" id="goBtn" type="button" disabled>Convert and download the images</button>
 </div>
+</div>
+<aside class="sidebar">
+<h2>PDF to JPG</h2>
+<p>PDF to JPG options:</p>
+<div class="levels" role="radiogroup" aria-label="Conversion mode">
+<label class="levelcard sel" id="modePages">
+<input type="radio" name="pdfjpg_mode" value="pages" checked>
+<span class="ltitle">Page to JPG</span>
+<span class="ldesc">Every page of this PDF will be converted into a JPG file. <span id="modePagesCount">–</span> JPG will be created.</span>
+</label>
+<label class="levelcard" id="modeExtract">
+<input type="radio" name="pdfjpg_mode" value="extract">
+<span class="ltitle">Extract images</span>
+<span class="ldesc">All the images embedded in your PDF are extracted as JPG files, at their original resolution.</span>
+</label>
+</div>
+<div id="qualityBlock">
+<h3>Image quality</h3>
+<div class="levels" role="radiogroup" aria-label="Image quality">
+<label class="levelcard sel" id="qualityNormal">
+<input type="radio" name="pdfjpg_quality" value="150" checked>
+<span class="ltitle">Normal</span>
+<span class="ldesc">150 DPI — Recommended.</span>
+</label>
+<label class="levelcard" id="qualityHigh">
+<input type="radio" name="pdfjpg_quality" value="300">
+<span class="ltitle">High</span>
+<span class="ldesc">300 DPI — Larger files, sharper images.</span>
+</label>
+</div>
+</div>
+<div class="qhint" id="qualityHint">Image quality only applies to Page to JPG: extracted images keep their original resolution.</div>
+<div class="warnnote">⚠ <strong>Good to know:</strong> in Page to JPG mode, each page is drawn as an image, so its text is no longer selectable in the JPGs. Very large pages at 300 DPI may be slightly reduced to stay within your browser's canvas limits, and this is reported after the conversion. In Extract images mode, pictures are re-encoded as JPG: transparent areas become white, and some unusual image formats stored inside a PDF may be skipped — they are counted and reported too.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your JPG images are ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convert another file</button>
+</div>
+
 <div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to convert a PDF to JPG</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choose your PDF</h3><p>Click the select button or drop your file into the area provided. The first page appears as a preview, with the page count.</p></div>
+<div class="step"><span class="num">2</span><h3>Pick a mode and a quality</h3><p>Convert every page into a JPG at 150 or 300 DPI, or extract only the images embedded in the document.</p></div>
+<div class="step"><span class="num">3</span><h3>Download your JPGs</h3><p>Press “Convert to JPG”, then save each image separately, or all of them together in a single ZIP file.</p></div>
+</div>
+<div class="seo">
+<p>Our PDF to JPG converter is completely free and works with no sign-up. Unlike typical services, your document is never uploaded to a server: the pages are rendered and the images are extracted on your phone or computer, which protects your contracts, photos and personal documents.</p>
+<p>Page to JPG is ideal for sharing a document where PDFs are not accepted, inserting a page into a presentation, or posting it on a website. Extract images mode recovers the original pictures stored inside the file — handy for reusing a logo, a chart or photos from a brochure without re-rendering the whole page. Either way, you get clean JPG files at the quality you chose, with no watermark and no daily limit.</p>
+</div>
+</div>
 </main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convert to JPG</button>
+</div>
+
 <footer>
 <p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
+<script id="jpgCore">
+/* =====================================================================
+   PdfToJpgCore — pure, testable helpers for PDF -> JPG.
+   No DOM access in here (except the pdf.js globals handed to us):
+   naming, DPI/canvas-cap maths, embedded-image listing via the
+   operator list, and raw image-data -> RGBA conversion flattened
+   on white (JPEG has no transparency).
+   ===================================================================== */
+var PdfToJpgCore = (function () {
+  'use strict';
+
+  var MAX_PIXELS = 40000000;   // 40 MP canvas cap
+  var MAX_DIMENSION = 12000;   // px per side
+
+  function padNumber(n, total) {
+    var w = String(total).length;
+    var s = String(n);
+    while (s.length < w) s = '0' + s;
+    return s;
+  }
+  function pageName(base, i, total) {
+    return String(base) + '_page-' + padNumber(i, total) + '.jpg';
+  }
+  function imageName(base, i, total) {
+    return String(base) + '_image-' + padNumber(i, total) + '.jpg';
+  }
+  function dpiToScale(dpi) { return dpi / 72; }
+
+  // Scale for a page of pageWpt x pageHpt points at the given DPI,
+  // reduced proportionally when the raster would exceed the caps.
+  function cappedScale(pageWpt, pageHpt, dpi) {
+    var scale = dpiToScale(dpi);
+    var w = pageWpt * scale;
+    var h = pageHpt * scale;
+    var factor = 1;
+    if (w > 0 && h > 0) {
+      factor = Math.min(1, MAX_DIMENSION / w, MAX_DIMENSION / h, Math.sqrt(MAX_PIXELS / (w * h)));
+    }
+    return { scale: scale * factor, reduced: factor < 1 };
+  }
+
+  // Flatten an RGBA buffer over a white background (JPEG is opaque).
+  function flattenOnWhite(rgba) {
+    var out = new Uint8ClampedArray(rgba.length);
+    for (var i = 0; i + 3 < rgba.length + 1 && i < rgba.length; i += 4) {
+      var a = rgba[i + 3] / 255;
+      out[i] = rgba[i] * a + 255 * (1 - a);
+      out[i + 1] = rgba[i + 1] * a + 255 * (1 - a);
+      out[i + 2] = rgba[i + 2] * a + 255 * (1 - a);
+      out[i + 3] = 255;
+    }
+    return out;
+  }
+
+  // Convert a pdf.js image object (img.data + img.kind) to RGBA pixels
+  // flattened on white. Returns null when the caller should use
+  // img.bitmap directly, or when the data cannot be understood.
+  // pdf.js ImageKind: 1 = grayscale 1bpp, 2 = RGB 24bpp, 3 = RGBA 32bpp.
+  function pdfImageToRgba(img) {
+    if (!img) return null;
+    if (img.bitmap) return null;
+    var w = img.width, h = img.height;
+    if (!w || !h) return null;
+    var data = img.data;
+    if (!data || !data.length) return null;
+    var px = w * h;
+    var kind = img.kind;
+    var mode = null;
+    if (kind === 3 || data.length === px * 4) mode = 'rgba';
+    else if (kind === 2 || data.length === px * 3) mode = 'rgb';
+    else if (kind === 1) mode = '1bpp';
+    else if (data.length === px) mode = 'gray';
+    else if (data.length >= px * 4) mode = 'rgba';
+    else if (data.length >= px * 3) mode = 'rgb';
+    else if (data.length >= px) mode = 'gray';
+    else if (data.length >= Math.ceil(w / 8) * h) mode = '1bpp';
+    else return null;
+
+    var rgba = new Uint8ClampedArray(px * 4);
+    var i, x, y, o;
+    if (mode === 'rgba') {
+      var n = Math.min(px * 4, data.length);
+      for (i = 0; i < n; i++) rgba[i] = data[i];
+      for (i = n; i < px * 4; i += 4) { rgba[i + 3] = 255; }
+    } else if (mode === 'rgb') {
+      for (i = 0; i < px; i++) {
+        o = i * 4;
+        rgba[o] = data[i * 3];
+        rgba[o + 1] = data[i * 3 + 1];
+        rgba[o + 2] = data[i * 3 + 2];
+        rgba[o + 3] = 255;
+      }
+    } else if (mode === 'gray') {
+      for (i = 0; i < px; i++) {
+        o = i * 4;
+        rgba[o] = data[i];
+        rgba[o + 1] = data[i];
+        rgba[o + 2] = data[i];
+        rgba[o + 3] = 255;
+      }
+    } else { // '1bpp': one bit per pixel, row-major, MSB first; 1 = white
+      var rowBytes = Math.ceil(w / 8);
+      for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+          var byte = data[y * rowBytes + (x >> 3)] || 0;
+          var bit = (byte >> (7 - (x & 7))) & 1;
+          var v = bit ? 255 : 0;
+          o = (y * w + x) * 4;
+          rgba[o] = v; rgba[o + 1] = v; rgba[o + 2] = v; rgba[o + 3] = 255;
+        }
+      }
+    }
+    return { width: w, height: h, rgba: flattenOnWhite(rgba) };
+  }
+
+  // Tiny FNV-1a hash over ~64 sampled bytes (plus the last byte),
+  // used only to recognise repeated images for deduplication.
+  function sampleHash(data) {
+    if (!data || !data.length) return 'empty';
+    var hash = 0x811c9dc5;
+    var step = Math.max(1, Math.floor(data.length / 64));
+    for (var i = 0; i < data.length; i += step) {
+      hash ^= data[i];
+      hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    hash ^= data[data.length - 1];
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+    return ('0000000' + hash.toString(16)).slice(-8);
+  }
+
+  // Walk every page's operator list and record where images are painted.
+  // onProgress(pageNumber, numPages) is optional.
+  async function listImageOccurrences(pdfDoc, onProgress) {
+    var occ = [];
+    var lib = (typeof pdfjsLib !== 'undefined') ? pdfjsLib : null;
+    var OPS = lib ? lib.OPS : null;
+    if (!OPS) throw new Error('pdf.js OPS enum unavailable');
+    var total = pdfDoc.numPages;
+    for (var p = 1; p <= total; p++) {
+      if (onProgress) onProgress(p, total);
+      var page = await pdfDoc.getPage(p);
+      var opList = await page.getOperatorList();
+      var fns = opList.fnArray || [];
+      var args = opList.argsArray || [];
+      for (var j = 0; j < fns.length; j++) {
+        var a0 = args[j] ? args[j][0] : undefined;
+        if (fns[j] === OPS.paintImageXObject || fns[j] === OPS.paintJpegXObject) {
+          occ.push({ pageNumber: p, name: (typeof a0 === 'string' ? a0 : null), inline: null });
+        } else if (OPS.paintInlineImageXObject !== undefined && fns[j] === OPS.paintInlineImageXObject) {
+          occ.push({ pageNumber: p, name: null, inline: a0 || null });
+        }
+      }
+    }
+    return occ;
+  }
+
+  // Fetch one image object from a page, callback form wrapped in a
+  // Promise, with a timeout so a broken image can never hang the run.
+  function getImageObject(page, name, timeoutMs) {
+    var ms = timeoutMs || 10000;
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var timer = setTimeout(function () {
+        if (!done) { done = true; reject(new Error('timeout')); }
+      }, ms);
+      try {
+        page.objs.get(name, function (img) {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          if (img) resolve(img);
+          else reject(new Error('empty image'));
+        });
+      } catch (e) {
+        if (!done) { done = true; clearTimeout(timer); reject(e); }
+      }
+    });
+  }
+
+  return {
+    MAX_PIXELS: MAX_PIXELS,
+    MAX_DIMENSION: MAX_DIMENSION,
+    padNumber: padNumber,
+    pageName: pageName,
+    imageName: imageName,
+    dpiToScale: dpiToScale,
+    cappedScale: cappedScale,
+    flattenOnWhite: flattenOnWhite,
+    pdfImageToRgba: pdfImageToRgba,
+    sampleHash: sampleHash,
+    listImageOccurrences: listImageOccurrences,
+    getImageObject: getImageObject
+  };
+})();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = PdfToJpgCore;
+}
+</script>
 <script>
 (function () {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  var file = null;
+  'use strict';
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var MSG_ENCRYPTED = 'This PDF is password-protected. PdfBleu cannot open protected files — please remove the password first and try again.';
+  var MSG_CORRUPT = 'This file could not be read. It may be damaged, or it is not a real PDF.';
+  var MSG_NO_IMAGES = 'No embedded images were found in this PDF. If your document is a text PDF, its pages are not stored as images — use the "Page to JPG" mode instead to turn each page into a JPG.';
+
+  var current = null;   // {file, name, base, pages, thumb, bad, pdfDoc}
+  var results = [];     // {name, blob, widthPx, heightPx, url}
+  var lastMode = 'pages';
+
   var drop = document.getElementById('drop');
   var input = document.getElementById('fileInput');
-  var goBtn = document.getElementById('goBtn');
-  var status = document.getElementById('status');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var coverWrap = document.getElementById('coverWrap');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
   var errorBox = document.getElementById('error');
-  var fileInfo = document.getElementById('fileInfo');
-  var result = document.getElementById('result');
-  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = msg ? 'block' : 'none'; }
-  function setFile(f) {
-    showError(''); result.style.display = 'none';
-    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
-    file = f;
-    fileInfo.textContent = 'File: ' + f.name + '.';
-    fileInfo.style.display = 'block';
-    goBtn.disabled = false;
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var zipBtn = document.getElementById('zipBtn');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+  var modePagesCount = document.getElementById('modePagesCount');
+  var qualityBlock = document.getElementById('qualityBlock');
+  var qualityHint = document.getElementById('qualityHint');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
   }
-  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  function selectedMode() {
+    var checked = document.querySelector('input[name="pdfjpg_mode"]:checked');
+    return checked && checked.value === 'extract' ? 'extract' : 'pages';
+  }
+  function selectedDpi() {
+    var checked = document.querySelector('input[name="pdfjpg_quality"]:checked');
+    return checked && checked.value === '300' ? 300 : 150;
+  }
+
+  function syncOptionCards() {
+    var mode = selectedMode();
+    document.getElementById('modePages').classList.toggle('sel', mode === 'pages');
+    document.getElementById('modeExtract').classList.toggle('sel', mode === 'extract');
+    var dpi = selectedDpi();
+    document.getElementById('qualityNormal').classList.toggle('sel', dpi === 150);
+    document.getElementById('qualityHigh').classList.toggle('sel', dpi === 300);
+    var extract = mode === 'extract';
+    qualityBlock.classList.toggle('qdisabled', extract);
+    qualityHint.classList.toggle('on', extract);
+  }
+  document.querySelectorAll('input[name="pdfjpg_mode"]').forEach(function (inp) {
+    inp.addEventListener('change', syncOptionCards);
+  });
+  document.querySelectorAll('input[name="pdfjpg_quality"]').forEach(function (inp) {
+    inp.addEventListener('change', syncOptionCards);
+  });
+  document.getElementById('modePages').addEventListener('click', syncOptionCards);
+  document.getElementById('modeExtract').addEventListener('click', syncOptionCards);
+  document.getElementById('qualityNormal').addEventListener('click', syncOptionCards);
+  document.getElementById('qualityHigh').addEventListener('click', syncOptionCards);
+  syncOptionCards();
+
+  function updateBar() {
+    var show = !!current;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) {
+      var total = current.pages || 0;
+      barSummary.textContent = current.name + ' · ' + total + (total === 1 ? ' page' : ' pages');
+    }
+    convertBtn.disabled = !(current && !current.bad && current.pages);
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    coverWrap.innerHTML = '';
+    if (current.thumb) {
+      var img = document.createElement('img');
+      img.src = current.thumb;
+      img.alt = 'Cover of ' + current.name;
+      coverWrap.appendChild(img);
+    } else {
+      var ph = document.createElement('span');
+      ph.className = 'coverph' + (current.bad ? ' bad' : '');
+      ph.id = 'coverPh';
+      ph.textContent = current.bad ? '⚠ Preview unavailable' : 'Loading preview…';
+      coverWrap.appendChild(ph);
+    }
+    fileNameEl.textContent = current.name;
+    var total = current.pages || 0;
+    fileMetaEl.textContent = (total ? total + (total === 1 ? ' page' : ' pages') : '… pages') + ' · ' + formatSize(current.file.size);
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Password-protected';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
+    else fileWarnEl.textContent = '';
+    modePagesCount.textContent = total ? String(total) : '–';
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('"' + (f ? f.name : '') + '" is not a PDF file. Please choose a PDF file.'); return; }
+    current = {
+      file: f,
+      name: f.name,
+      base: f.name.replace(/\.pdf$/i, '') || 'document',
+      pages: null, thumb: null, bad: null, pdfDoc: null
+    };
+    renderFileCard();
+    updateBar();
+    try {
+      var buf = await f.arrayBuffer();
+      var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      current.pdfDoc = pdf;
+      current.pages = pdf.numPages;
+      try {
+        var first = await pdf.getPage(1);
+        var baseVp = first.getViewport({ scale: 1 });
+        var scale = Math.min(1.6, 220 / baseVp.width);
+        var vp = first.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.floor(vp.width);
+        canvas.height = Math.floor(vp.height);
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await first.render({ canvasContext: ctx, viewport: vp }).promise;
+        current.thumb = canvas.toDataURL('image/jpeg', 0.72);
+      } catch (thumbErr) { /* preview is optional */ }
+    } catch (err) {
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) {
+        current.bad = 'encrypted';
+        showError(MSG_ENCRYPTED);
+      } else {
+        current.bad = 'corrupt';
+        showError(MSG_CORRUPT);
+      }
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
   drop.addEventListener('click', function () { input.click(); });
-  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
   drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
   drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
   drop.addEventListener('drop', function (e) {
-    e.preventDefault(); drop.classList.remove('drag');
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
   });
-  function sleep(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
-  goBtn.addEventListener('click', async function () {
-    showError(''); result.style.display = 'none';
-    if (!file) { showError('Please select a PDF file first.'); return; }
-    goBtn.disabled = true; status.style.display = 'block';
-    try {
-      var buf = await file.arrayBuffer();
-      var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
-      for (var i = 1; i <= pdf.numPages; i++) {
-        status.textContent = 'Converting… page ' + i + ' of ' + pdf.numPages + '.';
-        var page = await pdf.getPage(i);
-        var viewport = page.getViewport({ scale: 2 });
-        var canvas = document.createElement('canvas');
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-        var blob = await new Promise(function (res) { canvas.toBlob(res, 'image/jpeg', 0.92); });
-        if (!blob) throw new Error('render');
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url; a.download = 'page-' + i + '.jpg';
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(function (u) { URL.revokeObjectURL(u); }, 6000, url);
-        await sleep(350);
+
+  function clearResults() {
+    results.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); });
+    results = [];
+    resultList.innerHTML = '';
+    zipBtn.style.display = 'none';
+  }
+
+  function resetAll() {
+    clearResults();
+    current = null;
+    showError('');
+    modePagesCount.textContent = '–';
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  }
+  removeFileBtn.addEventListener('click', resetAll);
+  restartBtn.addEventListener('click', resetAll);
+
+  function canvasToJpegBlob(canvas) {
+    return new Promise(function (resolve) { canvas.toBlob(resolve, 'image/jpeg', 0.92); });
+  }
+
+  async function ensurePdfDoc() {
+    if (current.pdfDoc) return current.pdfDoc;
+    var buf = await current.file.arrayBuffer();
+    var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+    current.pdfDoc = pdf;
+    return pdf;
+  }
+
+  async function convertPages(pdf, dpi) {
+    var out = [];
+    var reduced = 0;
+    var total = pdf.numPages;
+    for (var p = 1; p <= total; p++) {
+      processingDetail.textContent = 'Page ' + p + ' of ' + total;
+      var page = await pdf.getPage(p);
+      var baseVp = page.getViewport({ scale: 1 });
+      var cap = PdfToJpgCore.cappedScale(baseVp.width, baseVp.height, dpi);
+      if (cap.reduced) reduced++;
+      var vp = page.getViewport({ scale: cap.scale });
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.floor(vp.width));
+      canvas.height = Math.max(1, Math.floor(vp.height));
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      var blob = await canvasToJpegBlob(canvas);
+      if (!blob) throw new Error('render');
+      out.push({
+        name: PdfToJpgCore.pageName(current.base, p, total),
+        blob: blob, widthPx: canvas.width, heightPx: canvas.height, url: null
+      });
+      canvas.width = 0; canvas.height = 0;
+    }
+    return { items: out, reduced: reduced, duplicates: 0, skipped: 0 };
+  }
+
+  async function convertExtract(pdf) {
+    var occurrences = await PdfToJpgCore.listImageOccurrences(pdf, function (p, total) {
+      processingDetail.textContent = 'Scanning page ' + p + ' of ' + total;
+    });
+    var kept = [];
+    var seen = {};
+    var duplicates = 0;
+    var skipped = 0;
+    var pageCache = {};
+    async function pageFor(n) {
+      if (!pageCache[n]) pageCache[n] = await pdf.getPage(n);
+      return pageCache[n];
+    }
+    for (var k = 0; k < occurrences.length; k++) {
+      var occ = occurrences[k];
+      processingDetail.textContent = 'Extracting image ' + (k + 1) + ' of ' + occurrences.length;
+      var img = null;
+      try {
+        if (occ.inline) img = occ.inline;
+        else if (occ.name) img = await PdfToJpgCore.getImageObject(await pageFor(occ.pageNumber), occ.name, 10000);
+      } catch (e) { img = null; }
+      if (!img || !(img.width > 0) || !(img.height > 0)) { skipped++; continue; }
+
+      // Deduplication key from the raw data when available.
+      var key = null;
+      if (img.data && img.data.length) {
+        key = img.width + 'x' + img.height + ':' + img.data.length + ':' + PdfToJpgCore.sampleHash(img.data);
+      } else if (!img.bitmap) {
+        key = img.width + 'x' + img.height + ':nodata';
       }
-      result.textContent = '✅ Done! ' + pdf.numPages + ' JPG image(s) downloaded. If some pages are missing, allow multiple downloads in your browser, then run the conversion again.';
-      result.style.display = 'block';
+      if (key) {
+        if (seen[key]) { duplicates++; continue; }
+        seen[key] = true;
+      }
+
+      var blob = null, wPx = img.width, hPx = img.height;
+      try {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (img.bitmap) {
+          ctx.drawImage(img.bitmap, 0, 0);
+        } else {
+          var conv = PdfToJpgCore.pdfImageToRgba(img);
+          if (!conv) { skipped++; continue; }
+          var raw = document.createElement('canvas');
+          raw.width = conv.width; raw.height = conv.height;
+          raw.getContext('2d').putImageData(new ImageData(conv.rgba, conv.width, conv.height), 0, 0);
+          ctx.drawImage(raw, 0, 0);
+        }
+        blob = await canvasToJpegBlob(canvas);
+        canvas.width = 0; canvas.height = 0;
+      } catch (e2) { blob = null; }
+      if (!blob) { skipped++; continue; }
+      kept.push({ name: '', blob: blob, widthPx: wPx, heightPx: hPx, url: null });
+    }
+    kept.forEach(function (item, idx) {
+      item.name = PdfToJpgCore.imageName(current.base, idx + 1, kept.length);
+    });
+    return { items: kept, reduced: 0, duplicates: duplicates, skipped: skipped };
+  }
+
+  function showSuccess(infoText, notes) {
+    successInfo.textContent = infoText;
+    resultList.innerHTML = '';
+    results.forEach(function (r) {
+      r.url = URL.createObjectURL(r.blob);
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var thumb = document.createElement('img');
+      thumb.className = 'thumb';
+      thumb.src = r.url;
+      thumb.alt = r.name;
+      var info = document.createElement('div');
+      info.className = 'rinfo';
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = r.name;
+      var rm = document.createElement('div'); rm.className = 'rmeta';
+      rm.textContent = r.widthPx + ' × ' + r.heightPx + ' px · ' + formatSize(r.blob.size);
+      info.appendChild(rn); info.appendChild(rm);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = r.url; a.download = r.name; a.textContent = 'Download';
+      item.appendChild(thumb); item.appendChild(info); item.appendChild(a);
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = results.length > 1 ? 'block' : 'none';
+    zipBtn.disabled = false;
+    zipBtn.textContent = 'Download all (.zip)';
+    if (notes && notes.length) {
+      scanNote.innerHTML = '';
+      notes.forEach(function (n) {
+        var d = document.createElement('div');
+        d.textContent = '⚠ ' + n;
+        scanNote.appendChild(d);
+      });
+      scanNote.style.display = 'block';
+    } else {
+      scanNote.style.display = 'none';
+    }
+    layout.style.display = 'none';
+    success.classList.add('on');
+    actionBar.classList.remove('on');
+    document.body.classList.remove('bar-visible');
+    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Please first choose a PDF file.'); return; }
+    if (current.bad === 'encrypted') { showError(MSG_ENCRYPTED); return; }
+    if (current.bad === 'corrupt') { showError(MSG_CORRUPT); return; }
+    var mode = selectedMode();
+    var dpi = selectedDpi();
+    lastMode = mode;
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = '';
+    clearResults();
+    try {
+      var pdf = await ensurePdfDoc();
+      var outcome = mode === 'extract' ? await convertExtract(pdf) : await convertPages(pdf, dpi);
+      if (mode === 'extract' && outcome.items.length === 0) {
+        processing.classList.remove('on');
+        showError(MSG_NO_IMAGES);
+        convertBtn.disabled = false;
+        updateBar();
+        return;
+      }
+      results = outcome.items;
+      var notes = [];
+      if (outcome.reduced > 0) notes.push(outcome.reduced + ' page(s) were slightly reduced to fit your browser\u2019s canvas limits at 300 DPI.');
+      if (outcome.duplicates > 0) notes.push(outcome.duplicates + ' repeated image(s) were skipped — the same picture appears several times in the document.');
+      if (outcome.skipped > 0) notes.push(outcome.skipped + ' embedded image(s) could not be decoded and were skipped.');
+      var info;
+      if (mode === 'extract') {
+        info = results.length + ' image(s) extracted from ' + pdf.numPages + ' page(s).';
+      } else {
+        info = results.length + ' page(s) converted to JPG at ' + dpi + ' DPI.';
+      }
+      showSuccess(info, notes);
     } catch (err) {
-      showError('An error occurred during the conversion. The file may be protected or damaged. Please try again.');
+      if (err && (err.name === 'PasswordException' || /password/i.test(String(err && err.message)))) showError(MSG_ENCRYPTED);
+      else showError('An error occurred during the conversion. The file may be protected or damaged. Please try again.');
     } finally {
-      status.style.display = 'none';
-      status.textContent = 'Processing… please wait.';
-      goBtn.disabled = false;
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+      if (success.classList.contains('on')) {
+        actionBar.classList.remove('on');
+        document.body.classList.remove('bar-visible');
+      }
     }
   });
+
+  zipBtn.addEventListener('click', async function () {
+    if (!results.length) return;
+    var original = zipBtn.textContent;
+    zipBtn.disabled = true;
+    zipBtn.textContent = 'Preparing ZIP…';
+    try {
+      var zip = new JSZip();
+      results.forEach(function (r) { zip.file(r.name, r.blob); });
+      var blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/zip' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = lastMode === 'extract' ? 'pdfbleu-extracted-images.zip' : 'pdfbleu-pages-to-jpg.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 6000);
+    } catch (e) {
+      showError('The ZIP file could not be prepared. You can still download the images one by one.');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } finally {
+      zipBtn.disabled = false;
+      zipBtn.textContent = original;
+    }
+  });
+
+  updateBar();
 })();
 </script>
 </body>
