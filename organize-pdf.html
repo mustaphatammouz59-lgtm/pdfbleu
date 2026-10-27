@@ -4,47 +4,127 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Organize PDF — PdfBleu.com</title>
-<meta name="description" content="Reorganize the pages of a PDF: change their order and delete the ones you don't need, right in your browser. Free and 100% private.">
+<meta name="description" content="Organize PDF pages online for free: drag pages into any order, mix pages from several PDFs, delete pages you don't need and insert blank pages. Everything runs in your browser — your files are never uploaded.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
 header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
 header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
 header .logo .com{color:#4ADE80}
 header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
-main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
-h1{font-size:27px;color:#1a237e;margin-bottom:8px}
-.intro{color:#444a6d;margin-bottom:16px}
-.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
-.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
-.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
 .drop.drag{background:#dfe5f9}
-.drop .icon{font-size:40px;display:block;margin-bottom:6px}
-.drop p{color:#3F51B5;font-weight:600}
-.drop small{color:#666c8a}
-button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
-button.action{background:#2e7d32}
-button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
-button:disabled{opacity:.5;cursor:not-allowed}
-label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
-input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-input[type=number]{width:130px;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
-select{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px;background:#fff}
-input[type=range]{width:100%;margin-top:8px}
-.hint{font-size:13px;color:#666c8a;margin-top:5px}
-.note{font-size:13px;color:#666c8a;margin-top:12px}
-.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
-.choices{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.choices label{flex:1;min-width:110px;text-align:center;border:1.5px solid #c5cae9;border-radius:10px;padding:12px 6px;cursor:pointer;font-weight:700;color:#3F51B5;background:#fff;font-size:14px}
-.choices input{margin-right:5px}
-.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
-.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
-.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
-.tiles{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.tile{background:#eef1fb;border:1.5px solid #c5cae9;border-radius:10px;padding:10px 6px;text-align:center;width:106px}
-.tile .pname{font-weight:700;color:#1a237e;font-size:14px;margin-bottom:8px}
-.tile button{background:#fff;border:1.5px solid #3F51B5;color:#3F51B5;border-radius:14px;padding:3px 8px;cursor:pointer;font-size:13px;margin:2px}
-.tile button.del{border-color:#e53935;color:#e53935}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.toolbar{display:none;gap:9px;flex-wrap:wrap;align-items:center;margin-top:18px;border-top:1px solid #e0e4f5;padding-top:16px}
+.toolbar.on{display:flex}
+.toolbtn{border:1.5px solid #3F51B5;background:#fff;color:#3F51B5;border-radius:20px;padding:9px 16px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px}
+.toolbtn:active{transform:scale(.97)}
+.toolbtn:disabled{opacity:.45;cursor:not-allowed}
+.toolbtn .tbic{font-size:16px;line-height:1}
+.toolbar .tspacer{flex:1}
+.gridwrap{display:none;margin-top:16px}
+.gridwrap.on{display:block}
+.gridlabel{font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:10px}
+.pagegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(164px,1fr));gap:12px}
+.tile{background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:9px;text-align:center;position:relative;cursor:grab}
+.tile.dragging{opacity:.4}
+.tile.dragover{outline:2.5px dashed #3F51B5;outline-offset:-5px}
+.tile.blanktile{background:#fff}
+.posnum{position:absolute;top:6px;left:6px;background:#1a237e;color:#fff;font-weight:800;font-size:14.5px;border-radius:9px;padding:2px 9px;z-index:2;box-shadow:0 1px 4px rgba(26,35,126,.35);min-width:30px}
+.thumbwrap{position:relative;display:flex;align-items:flex-start;justify-content:center;min-height:118px}
+.thumbwrap img{display:block;width:150px;max-width:100%;height:auto;background:#fff;box-shadow:0 1px 6px rgba(26,35,126,.25);border-radius:2px}
+.thumbwrap .thumbph{color:#8a90b8;font-size:12px;padding-top:44px}
+.blankpage{background:#fff;border:1.5px dashed #9fa8da;border-radius:2px;box-shadow:0 1px 6px rgba(26,35,126,.18);display:flex;align-items:center;justify-content:center;color:#5c6bc0;font-weight:700;font-size:14px;width:150px;max-width:100%}
+.tile .prov{margin-top:7px;font-size:11.5px;color:#888fb0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tilebtns{display:flex;gap:5px;justify-content:center;margin-top:7px;flex-wrap:wrap}
+.tilebtns button{width:32px;height:32px;border-radius:50%;border:1.5px solid #3F51B5;background:#fff;color:#3F51B5;font-size:14.5px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+.tilebtns button:active{background:#3F51B5;color:#fff;transform:scale(.92)}
+.tilebtns button.del{border-color:#e53935;color:#e53935}
+.tilebtns button.del:active{background:#e53935;color:#fff}
+.addblank{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed #9fa8da;background:#eef1fb;color:#3F51B5;cursor:pointer;min-height:190px;font-family:inherit;width:100%}
+.addblank .bigplus{font-size:38px;line-height:1;font-weight:300}
+.addblank .ablabel{font-size:14.5px;font-weight:700}
+.addblank:active{transform:scale(.98)}
+.removedstrip{display:none;margin-top:12px;background:#fff8e1;border:1px solid #ffcc80;color:#6d4c00;border-radius:8px;padding:9px 12px;font-size:13.5px}
+.removedstrip.on{display:block}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.grouplabel{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:8px}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:6px}
+.filerow{display:flex;align-items:center;gap:8px;border:1.5px solid #dfe3f7;border-radius:10px;padding:8px 10px;margin-bottom:8px;background:#f9faff}
+.filerow.dragover{outline:2.5px dashed #3F51B5;outline-offset:-4px}
+.filerow .finfo{flex:1;min-width:0}
+.filerow .fname{display:block;font-weight:700;font-size:13.5px;color:#21243d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.filerow .fmeta{display:block;font-size:12px;color:#666c8a;margin-top:1px}
+.filerow .fmeta.err{color:#b71c1c;font-weight:600;white-space:normal}
+.frowbtns{display:flex;gap:4px;flex-shrink:0}
+.frowbtns button{width:28px;height:28px;border-radius:50%;border:1.5px solid #3F51B5;background:#fff;color:#3F51B5;font-size:12.5px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;padding:0}
+.frowbtns button:active{background:#3F51B5;color:#fff}
+.frowbtns button.rmf{border-color:#e53935;color:#e53935}
+.frowbtns button.rmf:active{background:#e53935;color:#fff}
+.frowbtns button:disabled{opacity:.35;cursor:not-allowed}
+.filesempty{font-size:13.5px;color:#888fb0;padding:4px 0 2px}
+.sumline{font-size:14.5px;font-weight:700;color:#1a237e}
+.resetrow{text-align:right;margin-top:12px}
+.resetrow button{background:none;border:none;color:#3F51B5;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:underline;padding:2px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
 .ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
 .ad-300{width:300px;max-width:100%;height:250px}
 .ad-fluid{width:100%;min-height:110px}
@@ -53,6 +133,7 @@ footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
 footer a{color:#3F51B5;text-decoration:none}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 <header>
@@ -60,132 +141,930 @@ footer a{color:#3F51B5;text-decoration:none}
 <a class="home" href="index.html">Home</a>
 </header>
 <main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#EE6C4D"/><polygon points="10,18 15,9 20,18" fill="#fff"/><polygon points="10,30 15,39 20,30" fill="#fff"/><text x="31" y="21" font-size="13" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">A</text><text x="31" y="39" font-size="13" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">B</text></svg></span>
 <h1>Organize PDF</h1>
-<p class="intro">Reorder the pages of your document exactly the way you want, then download the reorganized PDF.</p>
-<div class="private-note">🔒 Your file never leaves your device: the reorganization happens entirely in your browser.</div>
+<p class="subtitle">Put every page exactly where you want it: drag pages into order, mix pages from several PDFs, drop the ones you don't need and slip in blank pages — all in one combined stream.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: opening the PDFs, previewing the pages and building the new file all happen entirely in your browser.</div>
+
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
-<div class="tool">
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
 <div class="drop" id="drop">
-<span class="icon">📄</span>
-<p>Drop your PDF file here</p>
-<small>or tap the button below to select it</small>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here — you can add more files at any time</p>
 </div>
-<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
-<p class="fileinfo" id="fileInfo"></p>
-<p class="hint" style="margin-top:14px">After you select a file, each page appears below with its original number. Move pages with ◀ ▶, remove the ones you no longer want, then create the new PDF.</p>
-<div class="tiles" id="tiles"></div>
-<button class="secondary" id="resetBtn" type="button" disabled>Reset order</button>
-<div class="status" id="status">Processing… please wait.</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="toolbar" id="orgToolbar">
+<button class="toolbtn" id="sortBtn" type="button"><span class="tbic">⇅</span><span id="sortLabel">Sort by page number ↑</span></button>
+<button class="toolbtn" id="mixBtn" type="button"><span class="tbic">🔀</span>Mix files</button>
+<span class="tspacer"></span>
+<button class="toolbtn" id="resetBtn" type="button"><span class="tbic">↩</span>Reset all</button>
+</div>
+<div class="gridwrap" id="gridWrap">
+<p class="gridlabel">Your pages, in output order. Drag a page to move it, or use the buttons under it.</p>
+<div class="pagegrid" id="pageGrid"></div>
+<div class="removedstrip" id="removedStrip"></div>
+</div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Create the reorganized PDF</button>
 </div>
+</div>
+
+<aside class="sidebar">
+<h2>Organize PDF</h2>
+<p>Every page from every file lives in one stream. Reorder whole files here — their pages regroup, keeping the order you gave them — or fine-tune page by page in the grid.</p>
+<div class="optgroup">
+<span class="grouplabel">Files:</span>
+<div id="filesList"><p class="filesempty">No files yet — add a PDF to get started.</p></div>
+</div>
+<div class="optgroup">
+<span class="grouplabel">Summary</span>
+<p class="sumline" id="sumLine">0 pages · 0 files</p>
+<p class="footnote">Removed pages are kept aside, not lost: sorting or resetting brings them back before you save.</p>
+<div class="resetrow"><button id="sideReset" type="button">Reset all</button></div>
+</div>
+<div class="optgroup">
+<p style="margin-bottom:0">When the order looks right, press the <strong>Organize PDF</strong> button below to build and download your new file.</p>
+</div>
+<div class="freenote">Everything here is 100% free, with no limits: organize as many pages and files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your organized PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<button class="again" id="restartBtn" type="button">Organize another PDF</button>
+</div>
+
 <div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why organize with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">👁️</span><h3>See every page</h3><p>Real thumbnails of every page, from every file, in one stream — with its original page number and source file printed under it. You always know exactly what sits where before you save.</p></div>
+<div class="step"><span class="fic">🔀</span><h3>Mix whole files together</h3><p>Interleave two documents page by page — page 1 of each, then page 2 of each — or sort everything back into page-number order across all files with a single tap.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Nothing is uploaded</h3><p>Pages are copied from file to file entirely inside your browser. Your original documents are never changed and never sent anywhere.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to organize a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. Every page of every file appears in one combined stream of thumbnails.</p></div>
+<div class="step"><span class="num">2</span><h3>Arrange the pages</h3><p>Drag a thumbnail to its new place, or use its buttons: ◀ ▶ nudge it, ⧉ duplicate it, ＋ slip a blank page in after it, ✕ remove it.</p></div>
+<div class="step"><span class="num">3</span><h3>Sort or mix (optional)</h3><p>The toolbar can sort everything by original page number, mix files page by page, or reset the whole stream back to the original order.</p></div>
+<div class="step"><span class="num">4</span><h3>Save your PDF</h3><p>Press “Organize PDF” and download the new file. Pages are copied untouched, and your originals stay exactly as they were.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>Can I combine pages from several PDFs into one?</h3><p>Yes — that is exactly what this tool is for. Add as many files as you like: all their pages live in one stream, and the download is a single PDF in precisely the order you arranged. The Mix button even interleaves the files page by page for you.</p></div>
+<div class="qa"><h3>Does organizing change the quality of my pages?</h3><p>No. Pages are copied from the original files exactly as they are — the text, images and vector drawings are never re-rendered, resampled or compressed. Only the order (and which pages are included) changes.</p></div>
+<div class="qa"><h3>Can I add a blank page?</h3><p>Yes. The ＋ button under any page inserts a blank right after it, and there is an “Add blank page” tile at the end of the grid. A blank takes the size of the page before it — or standard A4 when it comes first.</p></div>
+<div class="qa"><h3>I deleted a page by mistake — can I get it back?</h3><p>Yes. Removed pages are kept aside (the counter under the grid tells you how many), and sorting or pressing “Reset all” brings them back into the stream. Nothing is final until you press “Organize PDF”.</p></div>
+<div class="qa"><h3>Are my files uploaded to a server?</h3><p>No. Your PDFs are opened, rearranged and saved entirely on your own device — nothing is sent anywhere. That makes the tool safe for sensitive documents: contracts, ID scans and personal files never pass through a third-party server.</p></div>
+</div>
 </main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Building your PDF…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button" disabled>Organize PDF</button>
+</div>
+</div>
+
 <footer>
 <p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
-<script>
-(function () {
-  var file = null;
-  var pageCount = 0;
-  var order = [];
-  var drop = document.getElementById('drop');
-  var input = document.getElementById('fileInput');
-  var goBtn = document.getElementById('goBtn');
-  var resetBtn = document.getElementById('resetBtn');
-  var status = document.getElementById('status');
-  var errorBox = document.getElementById('error');
-  var fileInfo = document.getElementById('fileInfo');
-  var tiles = document.getElementById('tiles');
-  function showError(msg) { errorBox.textContent = msg; errorBox.style.display = msg ? 'block' : 'none'; }
-  function renderTiles() {
-    tiles.innerHTML = '';
-    order.forEach(function (pageIdx, pos) {
-      var tile = document.createElement('div');
-      tile.className = 'tile';
-      var name = document.createElement('div');
-      name.className = 'pname';
-      name.textContent = 'Page ' + (pageIdx + 1);
-      tile.appendChild(name);
-      var left = document.createElement('button');
-      left.type = 'button'; left.textContent = '◀'; left.title = 'Move left';
-      left.disabled = pos === 0;
-      left.addEventListener('click', function () {
-        var t = order[pos - 1]; order[pos - 1] = order[pos]; order[pos] = t; renderTiles();
+<script id="organizeCore">
+/* =====================================================================
+   PdfBleu Organize — page-sequence engine, 100 % local.
+   A document being organized is ONE sequence of items:
+     real page : { fileId, page }            (page = 0-based, in source)
+     blank page: { blank:true, w, h, anchor } (anchor = {fileId, page}
+                  of the real page it follows, or null when it was
+                  inserted with no real page before it)
+   Every transform is pure: it returns a NEW array and never mutates
+   its input, so the whole engine can be tested headlessly. buildPdf()
+   is the only async piece; it copies pages with pdf-lib, strictly in
+   sequence order, and never re-renders or re-encodes page content.
+   ===================================================================== */
+var OrganizeCore = (function () {
+  'use strict';
+
+  var A4 = { w: 595, h: 842 }; // A4 in PDF points, used when a blank has no page before it
+
+  function isBlank(it) { return !!(it && it.blank); }
+
+  function copyItem(it) {
+    var o = {};
+    for (var k in it) o[k] = it[k];
+    if (it && it.anchor) o.anchor = { fileId: it.anchor.fileId, page: it.anchor.page };
+    return o;
+  }
+
+  // Move the item at index i so it ends up at index j (both 0-based,
+  // j clamped into range). Returns a new array.
+  function move(seq, i, j) {
+    var s = seq.slice();
+    if (i < 0 || i >= s.length) return s;
+    var it = s.splice(i, 1)[0];
+    j = Math.max(0, Math.min(j, s.length));
+    s.splice(j, 0, it);
+    return s;
+  }
+
+  function removeAt(seq, i) {
+    var s = seq.slice();
+    if (i >= 0 && i < s.length) s.splice(i, 1);
+    return s;
+  }
+
+  // Insert a copy of the item at i right after it. A duplicated blank
+  // keeps its size and its anchor.
+  function duplicateAt(seq, i) {
+    var s = seq.slice();
+    if (i < 0 || i >= s.length) return s;
+    s.splice(i + 1, 0, copyItem(s[i]));
+    return s;
+  }
+
+  // Insert a blank page right after index i (i = -1 puts it at the
+  // very start; i past the end appends). The blank takes the size of
+  // the nearest real page at or before i — sizeOf(realItem) must
+  // return {w, h} — and remembers that page as its anchor. With no
+  // real page before it, the blank is A4 and anchorless.
+  function insertBlankAfter(seq, i, sizeOf) {
+    var s = seq.slice();
+    var anchor = null, size = null;
+    for (var k = Math.min(i, s.length - 1); k >= 0; k--) {
+      if (!isBlank(s[k])) { anchor = s[k]; break; }
+    }
+    if (anchor && typeof sizeOf === 'function') size = sizeOf(anchor);
+    if (!size || !(size.w > 0) || !(size.h > 0)) size = { w: A4.w, h: A4.h };
+    var blank = {
+      blank: true, w: size.w, h: size.h,
+      anchor: anchor ? { fileId: anchor.fileId, page: anchor.page } : null
+    };
+    var at = Math.max(0, Math.min(i + 1, s.length));
+    s.splice(at, 0, blank);
+    return s;
+  }
+
+  function rankMap(fileOrder) {
+    var m = {};
+    (fileOrder || []).forEach(function (f, idx) { if (!(f in m)) m[f] = idx; });
+    return m;
+  }
+
+  // Sort by original page number. The direction flips ONLY the page
+  // number; ties always break by file order, then by current
+  // position, so the sort is fully deterministic. A blank carries
+  // the key of the page it follows, so it stays glued right behind
+  // that page in both directions.
+  function sortByNumber(seq, dir, fileOrder) {
+    var rank = rankMap(fileOrder);
+    var mul = dir === 'desc' ? -1 : 1;
+    function key(it, idx) {
+      if (isBlank(it)) {
+        var a = it.anchor;
+        return {
+          p: a ? a.page : -1,
+          r: a ? (rank[a.fileId] != null ? rank[a.fileId] : 999) : -1,
+          b: 1, c: idx
+        };
+      }
+      return { p: it.page, r: rank[it.fileId] != null ? rank[it.fileId] : 999, b: 0, c: idx };
+    }
+    return seq.map(function (it, idx) { return { it: it, k: key(it, idx) }; })
+      .sort(function (x, y) {
+        var d = x.k.p - y.k.p;
+        if (d) return mul * d;
+        d = x.k.r - y.k.r;
+        if (d) return d;
+        d = x.k.b - y.k.b;
+        if (d) return d;
+        return x.k.c - y.k.c;
+      })
+      .map(function (w) { return w.it; });
+  }
+
+  // Round-robin interleave: page 1 of each file (in file order),
+  // then page 2 of each, and so on. Internally the sequence is split
+  // into per-file "units" — one real page plus the blanks glued
+  // behind it — so a blank always travels with the page it follows.
+  // A blank whose anchor page is not in the stream joins the last
+  // unit of its anchor's file (or opens a page-less unit for it).
+  function mix(seq, fileOrder) {
+    var units = {};       // fileId -> [ {items:[...]} ]
+    var lastUnit = {};    // fileId -> its most recent unit
+    var lastFile = null;
+    function ensure(f) { if (!units[f]) units[f] = []; return units[f]; }
+    seq.forEach(function (it) {
+      if (!isBlank(it)) {
+        var u = { items: [it] };
+        ensure(it.fileId).push(u);
+        lastUnit[it.fileId] = u;
+        lastFile = it.fileId;
+      } else {
+        var f = it.anchor && it.anchor.fileId != null ? it.anchor.fileId : lastFile;
+        if (f == null) f = (fileOrder || [])[0];
+        if (f == null) return; // no files at all: nowhere to put it
+        ensure(f);
+        var u2 = lastUnit[f];
+        if (!u2) { u2 = { items: [] }; units[f].push(u2); lastUnit[f] = u2; }
+        u2.items.push(it);
+      }
+    });
+    var order = (fileOrder || []).slice();
+    Object.keys(units).forEach(function (f) { if (order.indexOf(f) === -1) order.push(f); });
+    var maxLen = 0;
+    order.forEach(function (f) { maxLen = Math.max(maxLen, (units[f] || []).length); });
+    var out = [];
+    for (var r = 0; r < maxLen; r++) {
+      order.forEach(function (f) {
+        var u = (units[f] || [])[r];
+        if (u) u.items.forEach(function (it) { out.push(it); });
       });
-      var right = document.createElement('button');
-      right.type = 'button'; right.textContent = '▶'; right.title = 'Move right';
-      right.disabled = pos === order.length - 1;
-      right.addEventListener('click', function () {
-        var t = order[pos + 1]; order[pos + 1] = order[pos]; order[pos] = t; renderTiles();
-      });
-      var del = document.createElement('button');
-      del.type = 'button'; del.textContent = 'Remove'; del.className = 'del';
-      del.addEventListener('click', function () { order.splice(pos, 1); renderTiles(); });
-      tile.appendChild(left); tile.appendChild(right); tile.appendChild(del);
-      tiles.appendChild(tile);
+    }
+    return out;
+  }
+
+  // The export plan: sequence -> [{type:'copy', fileId, page} |
+  // {type:'blank', w, h}], in order.
+  function planExport(seq) {
+    return seq.map(function (it) {
+      if (isBlank(it)) return { type: 'blank', w: it.w, h: it.h };
+      return { type: 'copy', fileId: it.fileId, page: it.page };
     });
   }
-  async function setFile(f) {
-    showError('');
-    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
-    try {
-      var buf = await f.arrayBuffer();
-      var doc = await PDFLib.PDFDocument.load(buf);
-      pageCount = doc.getPageCount();
-      file = f;
-      order = [];
-      for (var i = 0; i < pageCount; i++) order.push(i);
-      fileInfo.textContent = 'File: ' + f.name + ' — ' + pageCount + ' page(s).';
-      fileInfo.style.display = 'block';
-      goBtn.disabled = false; resetBtn.disabled = false;
-      renderTiles();
-    } catch (err) {
-      file = null; pageCount = 0; order = []; tiles.innerHTML = '';
-      goBtn.disabled = true; resetBtn.disabled = true;
-      showError('Could not read this PDF. It may be password-protected or damaged.');
+
+  // Build the final PDF. docsById maps fileId -> pdf-lib PDFDocument
+  // of that source. Pages are bulk-copied per source in one
+  // copyPages() call (unique pages, first-appearance order); a page
+  // used more than once (a duplicate) gets one extra copyPages()
+  // call per repeat, because a copied page object can only be added
+  // once. Pages land in the output strictly in sequence order.
+  async function buildPdf(seq, docsById, PDFLibImpl) {
+    var L = PDFLibImpl || (typeof PDFLib !== 'undefined' ? PDFLib : null);
+    if (!L) throw new Error('The PDF library is not available.');
+    var plan = planExport(seq);
+    if (!plan.length) throw new Error('There are no pages to save.');
+    var out = await L.PDFDocument.create();
+    var uniq = {};
+    plan.forEach(function (p) {
+      if (p.type !== 'copy') return;
+      var m = uniq[p.fileId] || (uniq[p.fileId] = []);
+      if (m.indexOf(p.page) === -1) m.push(p.page);
+    });
+    var cache = {};
+    for (var fid in uniq) {
+      var src = docsById[fid];
+      if (!src) throw new Error('A source file is missing — please reload the page and try again.');
+      var copied = await out.copyPages(src, uniq[fid]);
+      var mp = {};
+      uniq[fid].forEach(function (pg, ix) { mp[pg] = copied[ix]; });
+      cache[fid] = mp;
     }
+    var used = {};
+    for (var i = 0; i < plan.length; i++) {
+      var p = plan[i];
+      if (p.type === 'blank') { out.addPage([p.w, p.h]); continue; }
+      var key = p.fileId + ':' + p.page;
+      if (!used[key]) {
+        used[key] = true;
+        out.addPage(cache[p.fileId][p.page]);
+      } else {
+        var fresh = await out.copyPages(docsById[p.fileId], [p.page]);
+        out.addPage(fresh[0]);
+      }
+    }
+    return await out.save();
   }
-  resetBtn.addEventListener('click', function () {
-    if (!file) return;
-    order = [];
-    for (var i = 0; i < pageCount; i++) order.push(i);
-    showError('');
-    renderTiles();
+
+  // Output file name: a sequence drawn from exactly one source file
+  // keeps that file's name; anything mixed becomes pdfbleu-organized.
+  function outputNameFor(baseNames) {
+    if (baseNames && baseNames.length === 1) {
+      var b = String(baseNames[0] || '').replace(/\.pdf$/i, '');
+      if (!b) b = 'document';
+      return b + '_organized.pdf';
+    }
+    return 'pdfbleu-organized.pdf';
+  }
+
+  return {
+    A4: A4,
+    isBlank: isBlank,
+    move: move,
+    removeAt: removeAt,
+    duplicateAt: duplicateAt,
+    insertBlankAfter: insertBlankAfter,
+    sortByNumber: sortByNumber,
+    mix: mix,
+    planExport: planExport,
+    buildPdf: buildPdf,
+    outputNameFor: outputNameFor
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      orgToolbar = $('orgToolbar'), sortBtn = $('sortBtn'), sortLabel = $('sortLabel'),
+      mixBtn = $('mixBtn'), resetBtn = $('resetBtn'),
+      gridWrap = $('gridWrap'), pageGrid = $('pageGrid'), removedStrip = $('removedStrip'),
+      errorBox = $('error'), layout = $('layout'),
+      filesList = $('filesList'), sumLine = $('sumLine'), sideReset = $('sideReset'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successInfo = $('successInfo'), resultList = $('resultList'),
+      restartBtn = $('restartBtn');
+
+  var DISPLAY_W = 150; // thumbnail width in CSS pixels
+
+  var state = {
+    files: [],       // add order: {uid, name, size, bytes, libDoc, numPages, pageDims[], thumbs{}, ok, loaded, errMsg}
+    fileOrder: [],   // uids in current file order
+    seq: [],         // the combined page sequence (OrganizeCore items)
+    deleted: {},     // uid -> Set of page indexes currently removed from the sequence
+    sortDir: 'asc',  // direction the NEXT sort click applies
+    uidSeq: 0,
+    dragIdx: null,
+    fileDragUid: null,
+    resultUrl: null,
+    loadQueue: Promise.resolve()
+  };
+
+  /* ---------------- helpers ---------------- */
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function fileById(uid) {
+    for (var i = 0; i < state.files.length; i++) if (state.files[i].uid === uid) return state.files[i];
+    return null;
+  }
+  function okFiles() { return state.files.filter(function (f) { return f.ok; }); }
+  function removedCount() {
+    var n = 0;
+    for (var uid in state.deleted) n += state.deleted[uid].size;
+    return n;
+  }
+  function sizeOf(item) {
+    var rec = fileById(item.fileId);
+    if (!rec) return null;
+    var d = rec.pageDims[item.page];
+    return d ? { w: d.width, h: d.height } : null;
+  }
+  function applySeq(newSeq) {
+    state.seq = newSeq;
+    renderGrid();
+    refreshChrome();
+  }
+
+  /* ---------------- file handling ---------------- */
+
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
   });
-  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
-  drop.addEventListener('click', function () { input.click(); });
-  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
-  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
-  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
   drop.addEventListener('drop', function (e) {
-    e.preventDefault(); drop.classList.remove('drag');
-    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
   });
-  goBtn.addEventListener('click', async function () {
-    showError('');
-    if (!file) { showError('Please select a PDF file first.'); return; }
-    if (!order.length) { showError('No pages left: the resulting PDF would be empty. Reset the order or reload the file to start over.'); return; }
-    goBtn.disabled = true; status.style.display = 'block';
+
+  function addFiles(list) {
+    var added = 0;
+    Array.prototype.forEach.call(list, function (file) {
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') return;
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, libDoc: null, numPages: 0, pageDims: [], thumbs: {},
+        ok: false, loaded: false, errMsg: ''
+      };
+      state.files.push(rec);
+      state.fileOrder.push(rec.uid);
+      added++;
+      // Serialize loads so pages always land grouped in file order.
+      state.loadQueue = state.loadQueue.then(function () { return loadFile(rec, file); });
+    });
+    if (!added) showError('Please choose PDF files — the files you dropped were not PDFs.');
+    else showError(null);
+    renderFilesList();
+    refreshChrome();
+  }
+
+  async function loadFile(rec, file) {
     try {
       var buf = await file.arrayBuffer();
-      var src = await PDFLib.PDFDocument.load(buf);
-      var out = await PDFLib.PDFDocument.create();
-      var pages = await out.copyPages(src, order);
-      pages.forEach(function (p) { out.addPage(p); });
-      var bytes = await out.save();
+      rec.bytes = new Uint8Array(buf);
+      var libDoc = await PDFLib.PDFDocument.load(rec.bytes);
+      rec.libDoc = libDoc;
+      rec.numPages = libDoc.getPageCount();
+      rec.pageDims = libDoc.getPages().map(function (p) { return p.getSize(); });
+      rec.ok = true;
+      for (var i = 0; i < rec.numPages; i++) state.seq.push({ fileId: rec.uid, page: i });
+    } catch (e) {
+      // pdf-lib refused the file. If pdf.js can open it (or demands a
+      // password), the file is encrypted: say so, and point at Unlock.
+      var encrypted = false;
+      try {
+        var probe = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+        encrypted = true;
+        if (probe && probe.destroy) probe.destroy();
+      } catch (e2) {
+        if (e2 && e2.name === 'PasswordException') encrypted = true;
+      }
+      rec.ok = false;
+      rec.errMsg = encrypted
+        ? 'Password-protected — unlock it first with Unlock PDF, then organize it here.'
+        : 'Could not be opened — the file may be damaged.';
+    }
+    rec.loaded = true;
+    if (state.files.indexOf(rec) === -1) return; // removed while loading
+    renderFilesList();
+    renderGrid();
+    refreshChrome();
+    if (rec.ok) renderThumbs(rec);
+  }
+
+  async function renderThumbs(rec) {
+    try {
+      var pdfDoc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+      for (var i = 0; i < rec.numPages; i++) {
+        if (state.files.indexOf(rec) === -1) { if (pdfDoc.destroy) pdfDoc.destroy(); return; }
+        var page = await pdfDoc.getPage(i + 1);
+        var base = page.getViewport({ scale: 1 });
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var viewport = page.getViewport({ scale: (DISPLAY_W / base.width) * dpr });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        rec.thumbs[i] = canvas.toDataURL('image/jpeg', 0.85);
+        paintThumb(rec.uid, i);
+      }
+      if (pdfDoc.destroy) pdfDoc.destroy();
+    } catch (e) { /* thumbnails are a preview only — placeholders stay */ }
+  }
+
+  function paintThumb(uid, page) {
+    var imgs = pageGrid.querySelectorAll('img[data-fid="' + uid + '"][data-page="' + page + '"]');
+    var rec = fileById(uid);
+    if (!rec || !rec.thumbs[page]) return;
+    Array.prototype.forEach.call(imgs, function (img) {
+      img.src = rec.thumbs[page];
+      var ph = img.previousElementSibling;
+      if (ph && ph.className === 'thumbph') ph.style.display = 'none';
+    });
+  }
+
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    state.fileOrder = state.fileOrder.filter(function (f) { return f !== uid; });
+    state.seq = state.seq.filter(function (it) {
+      if (OrganizeCore.isBlank(it)) return !(it.anchor && it.anchor.fileId === uid);
+      return it.fileId !== uid;
+    });
+    delete state.deleted[uid];
+    renderFilesList();
+    renderGrid();
+    refreshChrome();
+  }
+
+  /* ---------------- page grid ---------------- */
+
+  function buildTile(item, idx) {
+    var tile = document.createElement('div');
+    tile.className = 'tile' + (OrganizeCore.isBlank(item) ? ' blanktile' : '');
+    tile.draggable = true;
+    tile.dataset.idx = idx;
+
+    var pos = document.createElement('span');
+    pos.className = 'posnum';
+    pos.textContent = idx + 1;
+    tile.appendChild(pos);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'thumbwrap';
+    var prov = document.createElement('div');
+    prov.className = 'prov';
+
+    if (OrganizeCore.isBlank(item)) {
+      var bp = document.createElement('div');
+      bp.className = 'blankpage';
+      bp.style.width = DISPLAY_W + 'px';
+      bp.style.height = Math.max(40, Math.min(300, Math.round(DISPLAY_W * item.h / item.w))) + 'px';
+      bp.textContent = 'Blank';
+      wrap.appendChild(bp);
+      prov.textContent = 'Blank · ' + Math.round(item.w) + ' × ' + Math.round(item.h) + ' pt';
+    } else {
+      var rec = fileById(item.fileId);
+      var ph = document.createElement('span');
+      ph.className = 'thumbph';
+      ph.textContent = 'Page ' + (item.page + 1);
+      var img = document.createElement('img');
+      img.alt = '';
+      img.dataset.fid = item.fileId;
+      img.dataset.page = item.page;
+      if (rec && rec.thumbs[item.page]) {
+        img.src = rec.thumbs[item.page];
+        ph.style.display = 'none';
+      }
+      wrap.appendChild(ph);
+      wrap.appendChild(img);
+      prov.textContent = 'p.' + (item.page + 1) + ' · ' + (rec ? rec.name : '');
+      prov.title = rec ? rec.name : '';
+    }
+    tile.appendChild(wrap);
+    tile.appendChild(prov);
+
+    var btns = document.createElement('div');
+    btns.className = 'tilebtns';
+    function mkBtn(glyph, title, fn, cls) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = glyph;
+      b.title = title;
+      b.setAttribute('aria-label', title);
+      if (cls) b.className = cls;
+      b.addEventListener('click', function (ev) { ev.stopPropagation(); fn(); });
+      return b;
+    }
+    btns.appendChild(mkBtn('◀', 'Move this page earlier', function () { applySeq(OrganizeCore.move(state.seq, idx, idx - 1)); }));
+    btns.appendChild(mkBtn('▶', 'Move this page later', function () { applySeq(OrganizeCore.move(state.seq, idx, idx + 1)); }));
+    btns.appendChild(mkBtn('⧉', 'Duplicate this page', function () { applySeq(OrganizeCore.duplicateAt(state.seq, idx)); }));
+    btns.appendChild(mkBtn('＋', 'Insert a blank page after this one', function () { applySeq(OrganizeCore.insertBlankAfter(state.seq, idx, sizeOf)); }));
+    btns.appendChild(mkBtn('✕', 'Remove this page', function () { doRemove(idx); }, 'del'));
+    tile.appendChild(btns);
+
+    tile.addEventListener('dragstart', function (e) {
+      state.dragIdx = idx;
+      tile.classList.add('dragging');
+      if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(idx)); } catch (err) {} }
+    });
+    tile.addEventListener('dragend', function () {
+      state.dragIdx = null;
+      tile.classList.remove('dragging');
+      Array.prototype.forEach.call(pageGrid.querySelectorAll('.tile.dragover'), function (t) { t.classList.remove('dragover'); });
+    });
+    tile.addEventListener('dragover', function (e) {
+      e.preventDefault();
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      if (state.dragIdx !== null && state.dragIdx !== idx) tile.classList.add('dragover');
+    });
+    tile.addEventListener('dragleave', function () { tile.classList.remove('dragover'); });
+    tile.addEventListener('drop', function (e) {
+      e.preventDefault();
+      tile.classList.remove('dragover');
+      if (state.dragIdx !== null && state.dragIdx !== idx) {
+        applySeq(OrganizeCore.move(state.seq, state.dragIdx, idx));
+      }
+      state.dragIdx = null;
+    });
+    return tile;
+  }
+
+  function renderGrid() {
+    pageGrid.innerHTML = '';
+    state.seq.forEach(function (item, idx) { pageGrid.appendChild(buildTile(item, idx)); });
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'tile addblank';
+    var plus = document.createElement('span');
+    plus.className = 'bigplus'; plus.textContent = '+';
+    var lab = document.createElement('span');
+    lab.className = 'ablabel'; lab.textContent = 'Add blank page';
+    add.appendChild(plus); add.appendChild(lab);
+    add.addEventListener('click', function () {
+      applySeq(OrganizeCore.insertBlankAfter(state.seq, state.seq.length - 1, sizeOf));
+    });
+    pageGrid.appendChild(add);
+    var n = removedCount();
+    if (n > 0) {
+      removedStrip.textContent = n + (n === 1 ? ' page' : ' pages') + ' removed — Sort or Reset brings them back before you save.';
+      removedStrip.classList.add('on');
+    } else {
+      removedStrip.classList.remove('on');
+    }
+  }
+
+  function doRemove(idx) {
+    var item = state.seq[idx];
+    var newSeq = OrganizeCore.removeAt(state.seq, idx);
+    if (item && !OrganizeCore.isBlank(item)) {
+      var stillThere = newSeq.some(function (it) {
+        return !OrganizeCore.isBlank(it) && it.fileId === item.fileId && it.page === item.page;
+      });
+      if (!stillThere) {
+        if (!state.deleted[item.fileId]) state.deleted[item.fileId] = new Set();
+        state.deleted[item.fileId].add(item.page);
+      }
+    }
+    applySeq(newSeq);
+  }
+
+  /* ---------------- sidebar files list ---------------- */
+
+  function renderFilesList() {
+    filesList.innerHTML = '';
+    if (!state.files.length) {
+      var p = document.createElement('p');
+      p.className = 'filesempty';
+      p.textContent = 'No files yet — add a PDF to get started.';
+      filesList.appendChild(p);
+      return;
+    }
+    state.fileOrder.forEach(function (uid, pos) {
+      var rec = fileById(uid);
+      if (!rec) return;
+      var row = document.createElement('div');
+      row.className = 'filerow';
+      row.draggable = true;
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('span');
+      nm.className = 'fname'; nm.textContent = rec.name; nm.title = rec.name;
+      var meta = document.createElement('span');
+      if (!rec.loaded) meta.textContent = 'Loading…';
+      else if (rec.ok) meta.textContent = rec.numPages + (rec.numPages === 1 ? ' page' : ' pages') + ' · ' + fmtSize(rec.size);
+      else { meta.textContent = rec.errMsg; meta.className = 'fmeta err'; }
+      if (!meta.className) meta.className = 'fmeta';
+      info.appendChild(nm); info.appendChild(meta);
+      var btns = document.createElement('div');
+      btns.className = 'frowbtns';
+      var up = document.createElement('button');
+      up.type = 'button'; up.textContent = '▲'; up.title = 'Move this file earlier';
+      up.setAttribute('aria-label', 'Move ' + rec.name + ' earlier');
+      up.disabled = pos === 0;
+      up.addEventListener('click', function () { moveFile(uid, -1); });
+      var down = document.createElement('button');
+      down.type = 'button'; down.textContent = '▼'; down.title = 'Move this file later';
+      down.setAttribute('aria-label', 'Move ' + rec.name + ' later');
+      down.disabled = pos === state.fileOrder.length - 1;
+      down.addEventListener('click', function () { moveFile(uid, 1); });
+      var rm = document.createElement('button');
+      rm.type = 'button'; rm.textContent = '✕'; rm.title = 'Remove this file and all its pages';
+      rm.setAttribute('aria-label', 'Remove ' + rec.name);
+      rm.className = 'rmf';
+      rm.addEventListener('click', function () { removeFile(uid); });
+      btns.appendChild(up); btns.appendChild(down); btns.appendChild(rm);
+      row.appendChild(info); row.appendChild(btns);
+      row.addEventListener('dragstart', function (e) {
+        state.fileDragUid = uid;
+        if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', 'file:' + uid); } catch (err) {} }
+      });
+      row.addEventListener('dragend', function () {
+        state.fileDragUid = null;
+        Array.prototype.forEach.call(filesList.querySelectorAll('.filerow.dragover'), function (r) { r.classList.remove('dragover'); });
+      });
+      row.addEventListener('dragover', function (e) {
+        if (state.fileDragUid === null || state.fileDragUid === uid) return;
+        e.preventDefault();
+        row.classList.add('dragover');
+      });
+      row.addEventListener('dragleave', function () { row.classList.remove('dragover'); });
+      row.addEventListener('drop', function (e) {
+        e.preventDefault();
+        row.classList.remove('dragover');
+        var from = state.fileDragUid;
+        state.fileDragUid = null;
+        if (from === null || from === uid) return;
+        var order = state.fileOrder.slice();
+        var fi = order.indexOf(from), ti = order.indexOf(uid);
+        if (fi === -1 || ti === -1) return;
+        order.splice(fi, 1);
+        order.splice(ti, 0, from);
+        applyFileOrder(order);
+      });
+      filesList.appendChild(row);
+    });
+  }
+
+  function moveFile(uid, delta) {
+    var i = state.fileOrder.indexOf(uid);
+    var j = i + delta;
+    if (i === -1 || j < 0 || j >= state.fileOrder.length) return;
+    var order = state.fileOrder.slice();
+    var t = order[i]; order[i] = order[j]; order[j] = t;
+    applyFileOrder(order);
+  }
+
+  // Reordering FILES regroups the sequence: for each file in the new
+  // order, its pages in their current relative order. A blank page
+  // belongs to the file it was inserted into — the file of the real
+  // page it follows (its anchor). A blank with no anchor follows the
+  // file of the page physically before it, or of the next real page.
+  function applyFileOrder(order) {
+    state.fileOrder = order;
+    var parts = {};
+    order.forEach(function (f) { parts[f] = []; });
+    var nextReal = new Array(state.seq.length).fill(null);
+    var nf = null;
+    for (var i = state.seq.length - 1; i >= 0; i--) {
+      if (!OrganizeCore.isBlank(state.seq[i])) nf = state.seq[i].fileId;
+      nextReal[i] = nf;
+    }
+    var lastF = null;
+    state.seq.forEach(function (it, i) {
+      if (!OrganizeCore.isBlank(it)) {
+        if (parts[it.fileId]) parts[it.fileId].push(it);
+        lastF = it.fileId;
+      } else {
+        var f = it.anchor ? it.anchor.fileId : (lastF || nextReal[i] || order[0]);
+        if (f == null || !parts[f]) f = order[0];
+        if (f != null && parts[f]) parts[f].push(it);
+      }
+    });
+    var out = [];
+    order.forEach(function (f) { parts[f].forEach(function (it) { out.push(it); }); });
+    state.seq = out;
+    renderFilesList();
+    renderGrid();
+    refreshChrome();
+  }
+
+  /* ---------------- toolbar actions ---------------- */
+
+  function restoreDeleted() {
+    if (!removedCount()) return;
+    state.fileOrder.forEach(function (uid) {
+      var set = state.deleted[uid];
+      if (!set) return;
+      Array.from(set).sort(function (a, b) { return a - b; }).forEach(function (pg) {
+        state.seq.push({ fileId: uid, page: pg });
+      });
+    });
+    state.deleted = {};
+  }
+
+  function doSort() {
+    restoreDeleted(); // sorting works on the full page set — removed pages come back
+    state.seq = OrganizeCore.sortByNumber(state.seq, state.sortDir, state.fileOrder);
+    state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+    sortLabel.textContent = state.sortDir === 'asc' ? 'Sort by page number ↑' : 'Sort by page number ↓';
+    renderGrid();
+    refreshChrome();
+  }
+
+  function doMix() {
+    if (okFiles().length < 2) return;
+    applySeq(OrganizeCore.mix(state.seq, state.fileOrder));
+  }
+
+  function doReset() {
+    state.fileOrder = state.files.map(function (f) { return f.uid; }); // original add order
+    state.seq = [];
+    state.files.forEach(function (rec) {
+      if (!rec.ok) return;
+      for (var i = 0; i < rec.numPages; i++) state.seq.push({ fileId: rec.uid, page: i });
+    });
+    state.deleted = {};
+    state.sortDir = 'asc';
+    sortLabel.textContent = 'Sort by page number ↑';
+    renderFilesList();
+    renderGrid();
+    refreshChrome();
+  }
+
+  sortBtn.addEventListener('click', doSort);
+  mixBtn.addEventListener('click', doMix);
+  resetBtn.addEventListener('click', doReset);
+  sideReset.addEventListener('click', doReset);
+
+  /* ---------------- chrome / export ---------------- */
+
+  function refreshChrome() {
+    var ok = okFiles();
+    orgToolbar.classList.toggle('on', ok.length > 0);
+    gridWrap.classList.toggle('on', ok.length > 0);
+    mixBtn.disabled = ok.length < 2;
+    actionBar.classList.toggle('on', ok.length > 0);
+    document.body.classList.toggle('bar-visible', ok.length > 0);
+    if (!ok.length) {
+      barSummary.textContent = '';
+      sumLine.textContent = '0 pages · 0 files';
+    } else if (state.seq.length === 0) {
+      barSummary.textContent = 'A PDF needs at least one page — add a blank page or reset.';
+      sumLine.textContent = '0 pages in the new PDF · ' + ok.length + (ok.length === 1 ? ' file' : ' files');
+    } else {
+      barSummary.textContent = state.seq.length + (state.seq.length === 1 ? ' page' : ' pages') + ' · ' + ok.length + (ok.length === 1 ? ' file' : ' files') + ' ready';
+      sumLine.textContent = state.seq.length + (state.seq.length === 1 ? ' page' : ' pages') + ' in the new PDF · ' + ok.length + (ok.length === 1 ? ' file' : ' files');
+    }
+    applyBtn.disabled = !(ok.length > 0 && state.seq.length >= 1);
+  }
+
+  function startOver() {
+    if (state.resultUrl) { URL.revokeObjectURL(state.resultUrl); state.resultUrl = null; }
+    state.files = [];
+    state.fileOrder = [];
+    state.seq = [];
+    state.deleted = {};
+    state.sortDir = 'asc';
+    sortLabel.textContent = 'Sort by page number ↑';
+    success.classList.remove('on');
+    layout.style.display = '';
+    showError(null);
+    renderFilesList();
+    renderGrid();
+    refreshChrome();
+  }
+
+  startOverBtn.addEventListener('click', startOver);
+  restartBtn.addEventListener('click', startOver);
+
+  applyBtn.addEventListener('click', async function () {
+    if (!state.seq.length) return;
+    processingDetail.textContent = state.seq.length + (state.seq.length === 1 ? ' page' : ' pages') + ' from ' + okFiles().length + (okFiles().length === 1 ? ' file' : ' files');
+    processing.classList.add('on');
+    try {
+      var docsById = {};
+      for (var i = 0; i < state.files.length; i++) {
+        var rec = state.files[i];
+        if (!rec.ok) continue;
+        if (!rec.libDoc) rec.libDoc = await PDFLib.PDFDocument.load(rec.bytes);
+        docsById[rec.uid] = rec.libDoc;
+      }
+      var bytes = await OrganizeCore.buildPdf(state.seq, docsById, PDFLib);
+      var seen = [], baseNames = [];
+      state.seq.forEach(function (it) {
+        if (OrganizeCore.isBlank(it) || seen.indexOf(it.fileId) !== -1) return;
+        seen.push(it.fileId);
+        var r = fileById(it.fileId);
+        if (r) baseNames.push(r.name);
+      });
+      var outName = OrganizeCore.outputNameFor(baseNames);
       var blob = new Blob([bytes], { type: 'application/pdf' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'pdfbleu-organized.pdf';
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-    } catch (err) {
-      showError('An error occurred during the reorganization. Please try again.');
-    } finally { status.style.display = 'none'; goBtn.disabled = false; }
+      if (state.resultUrl) URL.revokeObjectURL(state.resultUrl);
+      state.resultUrl = URL.createObjectURL(blob);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var rinfo = document.createElement('div');
+      var rname = document.createElement('div');
+      rname.className = 'rname'; rname.textContent = outName;
+      var rmeta = document.createElement('div');
+      rmeta.className = 'rmeta';
+      rmeta.textContent = state.seq.length + (state.seq.length === 1 ? ' page' : ' pages') + ' · ' + fmtSize(blob.size);
+      rinfo.appendChild(rname); rinfo.appendChild(rmeta);
+      var dl = document.createElement('a');
+      dl.className = 'dl'; dl.href = state.resultUrl; dl.download = outName; dl.textContent = 'Download';
+      item.appendChild(rinfo); item.appendChild(dl);
+      resultList.appendChild(item);
+      successInfo.textContent = 'Your pages were copied untouched into one PDF, in exactly the order you arranged.';
+      layout.style.display = 'none';
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.classList.add('on');
+      success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      showError('Something went wrong while building your PDF' + (e && e.message ? ': ' + e.message : '.'));
+    } finally {
+      processing.classList.remove('on');
+    }
   });
+
+  renderFilesList();
+  renderGrid();
+  refreshChrome();
 })();
 </script>
 </body>
