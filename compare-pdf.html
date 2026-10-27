@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare PDF — PdfBleu.com</title>
+<meta name="description" content="Compare two PDF files for free, right in your browser: see text changes highlighted side by side, overlay pages to spot visual differences, and download a change report — no upload, your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1280px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:680px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.slots{display:grid;gap:14px}
+@media(min-width:860px){.slots{grid-template-columns:1fr 1fr}}
+.slot{border:1.5px solid #dfe3f7;border-radius:12px;padding:14px;background:#f9faff}
+.slot.drag{border-color:#3F51B5;background:#e6eafc}
+.slot h3{font-size:16px;color:#1a237e;margin-bottom:10px}
+.slot h3 .tag{font-weight:400;color:#666c8a;font-size:13.5px}
+.slot .drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:22px 12px;text-align:center;background:#eef1fb;cursor:pointer}
+.slot .drop .droptxt{color:#666c8a;margin-top:12px;font-size:14px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:12px 24px;border-radius:26px;font-size:15.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.slotfile{display:flex;align-items:flex-start;gap:12px}
+.slotfile .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.slotfile .coverwrap img{max-width:100%;max-height:100%;display:block}
+.slotfile .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.slotfile .coverph .bigic{font-size:24px;display:block;margin-bottom:2px}
+.slotfile .finfo{flex:1;min-width:0}
+.slotfile .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.slotfile .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.slotfile .fnote{font-size:13px;color:#666c8a;margin-top:4px}
+.slotfile .fnote.red{color:#b71c1c;font-weight:600}
+.slotbtns{display:flex;gap:8px;flex-shrink:0}
+.slotbtns button{border:1.5px solid #c5cae9;background:#fff;color:#333a5e;border-radius:16px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.slotbtns button.rm{border:none;background:#e53935;color:#fff;border-radius:50%;width:28px;height:28px;padding:0;font-size:14px;line-height:1}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.loading{background:#eceff9;color:#5c6bc0}
+.chip.ready{background:#e8f5e9;color:#1b5e20}
+.chip.locked{background:#e3f2fd;color:#0d47a1}
+.chip.bad{background:#fdecea;color:#b71c1c}
+.sloterror{display:none;margin-top:10px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:9px 12px;font-size:13.5px}
+.sloterror.on{display:block}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.tabs{display:flex;gap:8px;margin:22px 0 0;flex-wrap:wrap}
+.tabs button{border:1.5px solid #c5cae9;background:#fff;color:#333a5e;border-radius:22px;padding:9px 20px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.tabs button.on{border-color:#3F51B5;background:#3F51B5;color:#fff}
+.summarybar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:12px 16px;margin-top:14px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.summarybar .counts{font-size:14.5px;color:#333a5e;font-weight:600}
+.summarybar .counts b{color:#1a237e}
+.summarybar .nodiff{color:#1b5e20;font-weight:700}
+#reportBtn{background:#2e7d32;color:#fff;border:none;padding:11px 22px;border-radius:22px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+#reportBtn:disabled{opacity:.55;cursor:not-allowed}
+.semlayout{display:flex;flex-direction:column;gap:16px;margin-top:16px}
+@media(min-width:1020px){.semlayout{flex-direction:row;align-items:flex-start}.viewerwrap{flex:1;min-width:0}.report{width:340px;flex-shrink:0}}
+.viewerwrap{background:#fff;border:1px solid #e0e4f5;border-radius:14px;padding:14px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;color:#1a237e;font-size:14.5px;margin-bottom:10px;flex-wrap:wrap}
+.viewer-head .sync{font-weight:600;color:#444a6d;font-size:13.5px;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.panes{display:flex;gap:12px}
+.pane{flex:1;min-width:0;height:76vh;min-height:340px;overflow-y:auto;background:#eceff6;border:1px solid #dfe3f7;border-radius:10px;padding:10px}
+.pagebox{margin-bottom:12px}
+.pagebox-inner{position:relative;background:#fff;box-shadow:0 1px 6px rgba(26,35,126,.18);margin:0 auto}
+.pagebox canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pagebox .pageno{position:absolute;left:6px;bottom:6px;background:rgba(26,35,126,.78);color:#fff;font-size:11.5px;font-weight:700;border-radius:10px;padding:2px 9px;z-index:3}
+.pagebox .nopage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8a90b8;font-size:13px;text-align:center;padding:10px;background:repeating-linear-gradient(45deg,#fff,#fff 10px,#f4f6fb 10px,#f4f6fb 20px)}
+.pagebox.flashbox .pagebox-inner{outline:3px solid #f9a825;outline-offset:1px}
+.emptyview{color:#666c8a;font-size:14.5px;text-align:center;padding:26px 14px;border:2px dashed #c5cae9;border-radius:10px;background:#f9faff}
+.report{background:#fff;border:1px solid #e0e4f5;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.report h2{font-size:18px;color:#1a237e;margin-bottom:10px}
+.report input[type=search]{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;margin-bottom:8px}
+.reportlist{max-height:76vh;overflow-y:auto;padding-right:2px}
+@media(max-width:1019px){.reportlist{max-height:50vh}}
+.pghead{font-weight:800;color:#1a237e;font-size:14px;margin:14px 0 7px}
+.pghead:first-child{margin-top:2px}
+.chg{display:block;width:100%;text-align:left;border:1.5px solid;border-radius:9px;padding:8px 11px;margin-bottom:8px;cursor:pointer;font-family:inherit;font-size:13.5px}
+.chg.del{border-color:#ef9a9a;background:#fdf3f3}
+.chg.ins{border-color:#a5d6a7;background:#f3faf3}
+.chg .ch{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;margin-bottom:3px}
+.chg.del .ch{color:#b71c1c}
+.chg.ins .ch{color:#1b5e20}
+.chg .ct{color:#333a5e;word-break:break-word;white-space:pre-wrap}
+.chg.on{outline:2.5px solid #f9a825}
+.reportempty{color:#666c8a;font-size:14px;padding:8px 0}
+.scannednote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:6px}
+.ovwrap{background:#fff;border:1px solid #e0e4f5;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:16px}
+.ovcontrols{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ovfile{flex:1;min-width:230px;display:flex;gap:11px;align-items:center;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:10px 12px}
+.ovfile img{width:44px;height:56px;object-fit:contain;background:#fff;border:1px solid #e0e4f5;border-radius:4px}
+.ovfile .ovname{font-size:13.5px;font-weight:700;word-break:break-all;line-height:1.3}
+.ovfile .ovpg{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:13px;color:#444a6d}
+.ovfile .ovpg input{width:74px;border:1.5px solid #c5cae9;border-radius:7px;padding:5px 8px;font-size:13.5px;font-family:inherit}
+.ovstats{font-size:14.5px;color:#333a5e;font-weight:600;margin-bottom:12px}
+.ovstats b{color:#c2185b}
+.ovcanvaswrap{text-align:center;background:#eceff6;border:1px solid #dfe3f7;border-radius:10px;padding:12px}
+#ovCanvas{max-width:100%;height:auto;background:#fff;box-shadow:0 1px 6px rgba(26,35,126,.18)}
+.fadebox{max-width:560px;margin:14px auto 0}
+.fadebox input[type=range]{width:100%}
+.fadelabels{display:flex;justify-content:space-between;font-size:12.5px;color:#666c8a;font-weight:600}
+.ovhint{color:#666c8a;font-size:14.5px;text-align:center;padding:22px 14px;border:2px dashed #c5cae9;border-radius:10px;background:#f9faff}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#3F51B5;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><rect x="20" y="9" width="19" height="30" rx="2" fill="#BCD1E6"/><rect x="9" y="9" width="19" height="30" rx="2" fill="#fff"/><path d="M14 16 H23 M14 22 H23 M14 28 H19" stroke="#4A7AAB" stroke-width="2" fill="none"/><path d="M32 16 H36 M32 22 H36" stroke="#4A7AAB" stroke-width="2" fill="none"/></svg></span>
+<h1>Compare PDF</h1>
+<p class="subtitle">See exactly what changed between two versions of a document — side by side, with every edit highlighted.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: both documents are read and compared entirely in your browser — nothing is uploaded, so even a confidential draft stays confidential.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="tool" id="toolCard">
+<div class="slots">
+<div class="slot" id="slotA">
+<h3>First PDF <span class="tag">(older version)</span></h3>
+<div class="drop" id="dropA">
+<button class="pick" id="pickA" type="button"><span class="plus">+</span>Select PDF</button>
+<p class="droptxt">or drop the first PDF here</p>
+</div>
+<div class="slotfile" id="fileA" hidden>
+<div class="coverwrap" id="coverWrapA"><span class="coverph"><span class="bigic">📄</span>PDF</span></div>
+<div class="finfo">
+<div class="fname" id="nameA"></div>
+<div class="fmeta" id="metaA"></div>
+<span class="chip loading" id="chipA">Reading…</span>
+<div class="fnote red" id="noteA"></div>
+</div>
+<div class="slotbtns">
+<button id="replaceA" type="button">Replace</button>
+<button class="rm" id="rmA" type="button" title="Remove this file">✕</button>
+</div>
+</div>
+<input type="file" id="inputA" accept=".pdf,application/pdf" hidden>
+<div class="sloterror" id="errorA"></div>
+</div>
+
+<div class="slot" id="slotB">
+<h3>Second PDF <span class="tag">(newer version)</span></h3>
+<div class="drop" id="dropB">
+<button class="pick" id="pickB" type="button"><span class="plus">+</span>Select PDF</button>
+<p class="droptxt">or drop the second PDF here</p>
+</div>
+<div class="slotfile" id="fileB" hidden>
+<div class="coverwrap" id="coverWrapB"><span class="coverph"><span class="bigic">📄</span>PDF</span></div>
+<div class="finfo">
+<div class="fname" id="nameB"></div>
+<div class="fmeta" id="metaB"></div>
+<span class="chip loading" id="chipB">Reading…</span>
+<div class="fnote red" id="noteB"></div>
+</div>
+<div class="slotbtns">
+<button id="replaceB" type="button">Replace</button>
+<button class="rm" id="rmB" type="button" title="Remove this file">✕</button>
+</div>
+</div>
+<input type="file" id="inputB" accept=".pdf,application/pdf" hidden>
+<div class="sloterror" id="errorB"></div>
+</div>
+</div>
+<div class="honestnote">⚠️ <strong>How the comparison works — and its one real limit.</strong> The text comparison reads the text stored inside the two PDFs and lines the pages up in order: page 1 against page 1, page 2 against page 2, and so on. A scanned PDF has no stored text — it is just a picture — so there is nothing for the text comparison to read. For scanned files, use the <strong>Content Overlay</strong> tab below to compare pages visually, or make them searchable first with <a href="ocr-pdf.html">OCR PDF</a> and compare again.</div>
+<div class="freenote">Everything here is 100% free, with no limits: compare as many document pairs as you like — no subscription, no sign-up.</div>
+</div>
+
+<div class="tabs">
+<button class="tab on" id="tabSemanticBtn" type="button">Semantic Text</button>
+<button class="tab" id="tabOverlayBtn" type="button">Content Overlay</button>
+</div>
+
+<section id="panelSemantic">
+<div class="summarybar" id="summaryBar" hidden>
+<span class="counts" id="summaryCounts"></span>
+<button id="reportBtn" type="button" disabled>Download report</button>
+</div>
+<div class="semlayout">
+<div class="viewerwrap">
+<div class="viewer-head">
+<span>First PDF</span>
+<label class="sync"><input type="checkbox" id="syncScroll" checked> Scroll sync</label>
+<span>Second PDF</span>
+</div>
+<div class="emptyview" id="emptyView">Add both PDFs above, then press <strong>Compare</strong>. The two documents will appear here, page by page, with every text change highlighted.</div>
+<div class="panes" id="panes" hidden>
+<div class="pane" id="paneA"></div>
+<div class="pane" id="paneB"></div>
+</div>
+</div>
+<aside class="report">
+<h2>Change report (<span id="changeCount">0</span>)</h2>
+<input type="search" id="searchBox" placeholder="Search changes…">
+<div class="reportlist" id="reportList">
+<p class="reportempty" id="reportEmpty">No comparison yet. Load both documents and press Compare — every text change will be listed here, grouped by page. Click an entry to jump to it in the documents.</p>
+</div>
+<div class="scannednote" id="scannedNote" hidden>These documents carry no selectable text at all — they look like scanned or image-only PDFs, so the text comparison found nothing to compare. Use the <strong>Content Overlay</strong> tab for a visual page comparison, or run <a href="ocr-pdf.html">OCR PDF</a> on them first to make them searchable, then compare again.</div>
+</aside>
+</div>
+</section>
+
+<section id="panelOverlay" hidden>
+<div class="ovwrap">
+<div class="ovcontrols">
+<div class="ovfile">
+<img id="ovThumbA" alt="First document cover">
+<div>
+<div class="ovname" id="ovNameA">First PDF</div>
+<div class="ovpg"><label for="ovPageA">Page</label><input type="number" id="ovPageA" min="1" value="1"><span id="ovMaxA"></span></div>
+</div>
+</div>
+<div class="ovfile">
+<img id="ovThumbB" alt="Second document cover">
+<div>
+<div class="ovname" id="ovNameB">Second PDF</div>
+<div class="ovpg"><label for="ovPageB">Page</label><input type="number" id="ovPageB" min="1" value="1"><span id="ovMaxB"></span></div>
+</div>
+</div>
+</div>
+<div class="ovhint" id="ovHint">Load both PDFs above to compare a pair of pages visually. The overlay stacks the two pages and paints every pixel that differs in bright pink.</div>
+<div id="ovBody" hidden>
+<p class="ovstats" id="ovStats"></p>
+<div class="ovcanvaswrap"><canvas id="ovCanvas" width="300" height="200"></canvas></div>
+<div class="fadebox">
+<input type="range" id="fadeRange" min="0" max="100" value="50">
+<div class="fadelabels"><span>First page</span><span>Differences</span><span>Second page</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why compare with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔍</span><h3>Word-level precision</h3><p>The comparison works word by word, not page by page: a single corrected figure in a long contract is one small change entry, not a whole flagged page.</p></div>
+<div class="step"><span class="fic">🖼️</span><h3>Visual overlay too</h3><p>Some changes are not words — a moved logo, a swapped chart, a new stamp. The Content Overlay mode stacks any two pages and paints every differing pixel in bright pink.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>Drafts under comparison are often the documents you least want on someone else's server — negotiations, contracts, manuscripts. Here nothing is uploaded at all: the whole comparison runs on your device.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to compare two PDFs</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add the older PDF</h3><p>Load the earlier version of the document into the First PDF slot — click the button or drop the file onto the slot.</p></div>
+<div class="step"><span class="num">2</span><h3>Add the newer PDF</h3><p>Load the revised version into the Second PDF slot the same way. Both files stay on your device the whole time.</p></div>
+<div class="step"><span class="num">3</span><h3>Press Compare</h3><p>The text of both documents is read and diffed page by page. Changed words are highlighted in the side-by-side view and listed in the change report.</p></div>
+<div class="step"><span class="num">4</span><h3>Review and save</h3><p>Click a change to jump straight to it, check the visuals in the Content Overlay tab, and download a PDF change report to keep or share.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>How does the text comparison work?</h3><p>Both documents are opened in your browser and their stored text is extracted page by page. Pages are lined up in order — page 1 against page 1, and so on — and each pair of pages is compared word by word. Words that disappeared are listed as <strong>Old</strong> changes and highlighted in red on the first document; words that appeared are <strong>New</strong> changes, highlighted in green on the second. If one document has more pages, the extra pages are reported as whole-page additions or removals.</p></div>
+<div class="qa"><h3>What do the colours mean?</h3><p>In the text view, <strong>red</strong> marks text that is in the first document but not in the second (removed or replaced), and <strong>green</strong> marks text that is new in the second document. In the Content Overlay, differing pixels are painted <strong>bright pink</strong> over a faded copy of the second page — anything that did not change stays pale and quiet.</p></div>
+<div class="qa"><h3>My documents are scans. Why does the text comparison find nothing?</h3><p>A scanned page is a photograph: it contains no stored text for any tool to read, however clear it looks. That is a property of the file, not a failure of the comparison. You have two routes: the <strong>Content Overlay</strong> tab compares the pages as pictures and still shows you what moved, and <a href="ocr-pdf.html">OCR PDF</a> can recognize the text in the scans first — after that, the text comparison works on them like any other PDF.</p></div>
+<div class="qa"><h3>The two documents have different page counts. What happens?</h3><p>Pages are compared in order up to the shorter document. Every extra page on either side is reported as one whole-page change — an added page in the second document, or a removed page that only exists in the first. One inserted page near the start will shift the pairing for everything after it, which the report will honestly show as changes on the following pages; that is the known behaviour of in-order comparison, and the overlay tab lets you verify any page pair by hand.</p></div>
+<div class="qa"><h3>What is in the downloaded report?</h3><p>A plain PDF listing the two file names, the date, the summary counts, and then every change grouped by page — the removed text in red, the added text in green — so you can file it, print it, or send it to whoever made the edits. Characters that the report's font cannot represent are replaced with “?” and the replacement count is stated on the report itself.</p></div>
+<div class="qa"><h3>Are my documents uploaded anywhere?</h3><p>No. Both files are opened, read and compared entirely in your browser, on your device. Nothing is sent to a server — there is not even an upload step in the code — which makes the tool safe to use on contracts, drafts and other documents that should never leave your hands.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Comparing your documents…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="compareBtn" type="button" disabled>Compare</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="compareCore">
+/* =====================================================================
+   PdfBleu Compare — pure, node-testable helpers (no DOM in here).
+
+   The pipeline the DOM layer drives:
+     1. abstractItems(items, viewportTransform) converts raw pdf.js
+        text items into {str, x, y, w, h}: points in DISPLAYED page
+        space (origin top-left, y downward, y = top of the text box).
+        The scale-1 viewport already accounts for the page /Rotate,
+        so these boxes line up with the rendered canvas.
+     2. tokenizeItems splits each item's string into word boxes,
+        splitting the item's width proportionally to character counts
+        (a highlight-box approximation, nothing more).
+     3. diffWords runs an LCS word diff per page pair. When a page
+        pair is huge (a.length * b.length over CELL_LIMIT), it first
+        diffs by lines, then word-diffs each changed line pair in
+        order — the op format is identical either way.
+     4. groupChanges folds the op stream into report entries; adjacent
+        delete and insert runs stay separate entries on purpose (the
+        report shows a red "Old" block and a green "New" block).
+     5. pixelDiff compares two same-size RGBA buffers for the overlay
+        mode. Composite rule: an unchanged pixel is the SECOND page's
+        pixel lightened toward white by 35%; a changed pixel (any
+        channel off by more than the tolerance) becomes solid
+        (230, 30, 90); alpha is always 255 in the composite.
+     6. buildReportModel turns results into printable lines, replacing
+        characters the report font (Helvetica / WinAnsi) cannot show
+        with '?' and counting them — the count is printed on the
+        report's own last line by the DOM layer.
+   ===================================================================== */
+var CompareCore = (function () {
+  'use strict';
+
+  var CELL_LIMIT = 4000000;
+  var OVERLAY_TOLERANCE = 16;
+  var FADE = 0.35;              // overlay: unchanged pixels fade toward white by this much
+  var DIFF_RGB = [230, 30, 90]; // overlay: the "this pixel changed" paint
+
+  function sanitizeBase(name) {
+    var s = String(name == null ? '' : name).replace(/[^A-Za-z0-9._-]/g, '_').replace(/^\.+/, '').replace(/\.+$/, '');
+    return s || 'document';
+  }
+
+  /* 2D affine multiply, same convention as pdf.js Util.transform:
+     returns m1 ∘ m2 (m2 applied first). */
+  function multiply(m1, m2) {
+    return [
+      m1[0] * m2[0] + m1[2] * m2[1],
+      m1[1] * m2[0] + m1[3] * m2[1],
+      m1[0] * m2[2] + m1[2] * m2[3],
+      m1[1] * m2[2] + m1[3] * m2[3],
+      m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
+      m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+    ];
+  }
+
+  /* Raw pdf.js items -> abstract items in displayed points.
+     item.transform is the text matrix (user space, y up); combining it
+     with the scale-1 viewport transform lands x/y in displayed space
+     (y down) with y at the text baseline, so the box top is
+     baseline - fontHeight. The advance width scales by the ratio of
+     the combined horizontal vector to the item's own. */
+  function abstractItems(items, vpTransform) {
+    var out = [];
+    (items || []).forEach(function (it) {
+      if (!it || typeof it.str !== 'string') return;
+      var itm = it.transform || [1, 0, 0, 1, 0, 0];
+      var t = multiply(vpTransform || [1, 0, 0, 1, 0, 0], itm);
+      var fontH = Math.hypot(t[2] || 0, t[3] || 0);
+      if (!fontH || !isFinite(fontH)) fontH = it.height || 0;
+      var advItem = Math.hypot(itm[0] || 0, itm[1] || 0);
+      var advDisp = Math.hypot(t[0] || 0, t[1] || 0);
+      var ratio = advItem ? advDisp / advItem : 1;
+      out.push({
+        str: it.str,
+        x: t[4] || 0,
+        y: (t[5] || 0) - fontH,
+        w: (it.width || 0) * ratio,
+        h: fontH,
+        page: it.page
+      });
+    });
+    return out;
+  }
+
+  /* Abstract items -> word boxes. Each word's share of the item width
+     is proportional to its character span inside the item string. */
+  function tokenizeItems(items, pageHeightPt) {
+    var words = [];
+    (items || []).forEach(function (it) {
+      var str = String(it.str == null ? '' : it.str);
+      if (!str) return;
+      var len = str.length;
+      var y = it.y || 0;
+      if (pageHeightPt && y > pageHeightPt) y = pageHeightPt;
+      if (y < 0) y = 0;
+      var re = /\S+/g, m;
+      while ((m = re.exec(str)) !== null) {
+        var start = m.index, end = start + m[0].length;
+        var x0 = (it.x || 0) + (it.w || 0) * (start / len);
+        var x1 = (it.x || 0) + (it.w || 0) * (end / len);
+        words.push({
+          text: m[0],
+          page: it.page || 0,
+          x: x0,
+          y: y,
+          w: Math.max(0, x1 - x0),
+          h: it.h || 0
+        });
+      }
+    });
+    return words;
+  }
+
+  /* Group words (in reading order) into lines by vertical proximity
+     to the line's first word. Returns [{text, words, refs, y, h}];
+     refs are the words' indexes in the input array. */
+  function groupLines(words) {
+    var lines = [];
+    var cur = null;
+    (words || []).forEach(function (w, i) {
+      var h = w.h || 10;
+      var center = (w.y || 0) + h / 2;
+      if (!cur || Math.abs(center - cur.anchor) > Math.max(2, 0.6 * Math.max(h, cur.h))) {
+        cur = { anchor: center, y: w.y || 0, h: h, words: [], refs: [] };
+        lines.push(cur);
+      }
+      cur.words.push(w);
+      cur.refs.push(i);
+    });
+    return lines.map(function (l) {
+      return {
+        text: l.words.map(function (w) { return w.text; }).join(' '),
+        words: l.words,
+        refs: l.refs,
+        y: l.y,
+        h: l.h
+      };
+    });
+  }
+
+  /* Generic LCS over two arrays with an equality function. Returns
+     per-element ops [{type, aIndex?, bIndex?}] (no text attached). */
+  function lcsOps(a, b, eq) {
+    var n = a.length, m = b.length, i, j;
+    var dp = new Array(n + 1);
+    for (i = 0; i <= n; i++) dp[i] = new Uint32Array(m + 1);
+    for (i = n - 1; i >= 0; i--) {
+      for (j = m - 1; j >= 0; j--) {
+        dp[i][j] = eq(a[i], b[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+      }
+    }
+    var ops = [];
+    i = 0; j = 0;
+    while (i < n && j < m) {
+      if (eq(a[i], b[j])) { ops.push({ type: 'equal', aIndex: i, bIndex: j }); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) { ops.push({ type: 'delete', aIndex: i }); i++; }
+      else { ops.push({ type: 'insert', bIndex: j }); j++; }
+    }
+    while (i < n) { ops.push({ type: 'delete', aIndex: i }); i++; }
+    while (j < m) { ops.push({ type: 'insert', bIndex: j }); j++; }
+    return ops;
+  }
+
+  function wordTextEq(x, y) { return x.text === y.text; }
+
+  function toWordOp(o, a, b) {
+    if (o.type === 'equal') return { type: 'equal', aIndex: o.aIndex, bIndex: o.bIndex, text: a[o.aIndex].text };
+    if (o.type === 'delete') return { type: 'delete', aIndex: o.aIndex, text: a[o.aIndex].text };
+    return { type: 'insert', bIndex: o.bIndex, text: b[o.bIndex].text };
+  }
+
+  /* Oversized page pair: diff by lines first; each changed line pair
+     (k-th deleted line with k-th inserted line, in order) is then
+     word-diffed; unpaired lines expand to whole-line word ops. */
+  function diffWordsByLines(a, b) {
+    var la = groupLines(a), lb = groupLines(b);
+    var lineOps = lcsOps(la, lb, function (x, y) { return x.text === y.text; });
+    var ops = [];
+    var dels = [], inss = [];
+    function flush() {
+      var k = Math.min(dels.length, inss.length), t, r;
+      for (t = 0; t < k; t++) {
+        var dl = dels[t], il = inss[t];
+        var sub = lcsOps(dl.words, il.words, wordTextEq);
+        sub.forEach(function (o) {
+          if (o.type === 'equal') ops.push({ type: 'equal', aIndex: dl.refs[o.aIndex], bIndex: il.refs[o.bIndex], text: dl.words[o.aIndex].text });
+          else if (o.type === 'delete') ops.push({ type: 'delete', aIndex: dl.refs[o.aIndex], text: dl.words[o.aIndex].text });
+          else ops.push({ type: 'insert', bIndex: il.refs[o.bIndex], text: il.words[o.bIndex].text });
+        });
+      }
+      for (t = k; t < dels.length; t++) for (r = 0; r < dels[t].refs.length; r++) ops.push({ type: 'delete', aIndex: dels[t].refs[r], text: a[dels[t].refs[r]].text });
+      for (t = k; t < inss.length; t++) for (r = 0; r < inss[t].refs.length; r++) ops.push({ type: 'insert', bIndex: inss[t].refs[r], text: b[inss[t].refs[r]].text });
+      dels = []; inss = [];
+    }
+    lineOps.forEach(function (o) {
+      if (o.type === 'equal') {
+        flush();
+        var laRefs = la[o.aIndex].refs, lbRefs = lb[o.bIndex].refs;
+        for (var r = 0; r < laRefs.length; r++) ops.push({ type: 'equal', aIndex: laRefs[r], bIndex: lbRefs[r], text: a[laRefs[r]].text });
+      } else if (o.type === 'delete') dels.push(la[o.aIndex]);
+      else inss.push(lb[o.bIndex]);
+    });
+    flush();
+    return ops;
+  }
+
+  /* Word-level LCS diff. opts.cellLimit overrides the oversized-page
+     threshold (CELL_LIMIT by default) — the tests use it to exercise
+     the line-fallback path on small inputs. */
+  function diffWords(a, b, opts) {
+    a = a || []; b = b || [];
+    var limit = (opts && opts.cellLimit) || CELL_LIMIT;
+    if (a.length * b.length <= limit) {
+      return lcsOps(a, b, wordTextEq).map(function (o) { return toWordOp(o, a, b); });
+    }
+    return diffWordsByLines(a, b);
+  }
+
+  /* Fold an op stream into report entries. Consecutive deletes merge
+     into one entry, consecutive inserts into another; an insert run
+     right after a delete run stays a separate entry (reference
+     behaviour: red Old block, green New block). */
+  function groupChanges(ops, page) {
+    var raw = [], cur = null;
+    function flush() { if (cur) { raw.push(cur); cur = null; } }
+    (ops || []).forEach(function (o) {
+      if (o.type === 'equal') { flush(); return; }
+      if (!cur || cur.type !== o.type) {
+        flush();
+        cur = { type: o.type, texts: [], wordRefs: [] };
+      }
+      cur.texts.push(o.text);
+      cur.wordRefs.push(o.type === 'delete' ? o.aIndex : o.bIndex);
+    });
+    flush();
+    return raw.map(function (e) {
+      var text = e.texts.join(' ');
+      return { type: e.type, page: page || 0, text: text, charCount: text.length, wordRefs: e.wordRefs };
+    });
+  }
+
+  function pageEntries(aWords, bWords, page, opts) {
+    return groupChanges(diffWords(aWords, bWords, opts), page);
+  }
+
+  /* A page that exists on only one side: one whole-page entry whose
+     text is the page's full text (possibly empty for image pages). */
+  function wholePageEntry(words, type, page) {
+    words = words || [];
+    var text = words.map(function (w) { return w.text; }).join(' ');
+    return {
+      type: type,
+      page: page || 0,
+      text: text,
+      charCount: text.length,
+      wordRefs: words.map(function (_, i) { return i; })
+    };
+  }
+
+  function alignPages(countA, countB) {
+    var n = Math.max(countA || 0, countB || 0), pairs = [];
+    for (var i = 0; i < n; i++) {
+      pairs.push({ a: i < countA ? i : null, b: i < countB ? i : null });
+    }
+    return pairs;
+  }
+
+  /* pagesResults: [{aPage, bPage, entries}] with 0-based page indexes
+     (null on the missing side). */
+  function summarize(pagesResults) {
+    var s = { pagesCompared: 0, pagesChanged: 0, wordsDeleted: 0, wordsInserted: 0, changes: 0, pagesAdded: 0, pagesRemoved: 0 };
+    (pagesResults || []).forEach(function (p) {
+      if (p.aPage != null && p.bPage != null) s.pagesCompared++;
+      if (p.aPage == null && p.bPage != null) s.pagesAdded++;
+      if (p.bPage == null && p.aPage != null) s.pagesRemoved++;
+      var es = p.entries || [];
+      if (es.length) s.pagesChanged++;
+      s.changes += es.length;
+      es.forEach(function (e) {
+        if (e.type === 'delete') s.wordsDeleted += e.wordRefs.length;
+        else s.wordsInserted += e.wordRefs.length;
+      });
+    });
+    return s;
+  }
+
+  /* Pixel comparison for the overlay mode. A pixel counts as changed
+     when any RGB channel differs by MORE than tol (default 16). */
+  function pixelDiff(dataA, dataB, w, h, tol) {
+    if (tol == null) tol = OVERLAY_TOLERANCE;
+    var total = (w || 0) * (h || 0);
+    var out = new Uint8ClampedArray(total * 4);
+    var changed = 0;
+    for (var i = 0; i < total; i++) {
+      var o = i * 4;
+      if (Math.abs(dataA[o] - dataB[o]) > tol ||
+          Math.abs(dataA[o + 1] - dataB[o + 1]) > tol ||
+          Math.abs(dataA[o + 2] - dataB[o + 2]) > tol) {
+        changed++;
+        out[o] = DIFF_RGB[0]; out[o + 1] = DIFF_RGB[1]; out[o + 2] = DIFF_RGB[2]; out[o + 3] = 255;
+      } else {
+        out[o] = dataB[o] + (255 - dataB[o]) * FADE;
+        out[o + 1] = dataB[o + 1] + (255 - dataB[o + 1]) * FADE;
+        out[o + 2] = dataB[o + 2] + (255 - dataB[o + 2]) * FADE;
+        out[o + 3] = 255;
+      }
+    }
+    return { changed: changed, total: total, pct: total ? (changed / total) * 100 : 0, out: out };
+  }
+
+  /* --- Report model ------------------------------------------------
+     Everything the PDF report prints goes through here, so the '?'
+     replacement (Helvetica can only show WinAnsi characters) and its
+     count are pure and testable. Line-wrapping is left to the layout
+     layer, which knows the real font metrics. */
+  var WINANSI_EXTRA = {};
+  [0x20AC, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030,
+   0x0160, 0x2039, 0x0152, 0x017D, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022,
+   0x2013, 0x2014, 0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x017E, 0x0178
+  ].forEach(function (c) { WINANSI_EXTRA[c] = true; });
+
+  function isWinAnsi(cp) {
+    return (cp >= 0x20 && cp <= 0x7E) || (cp >= 0xA0 && cp <= 0xFF) || !!WINANSI_EXTRA[cp];
+  }
+
+  function toWinAnsi(s) {
+    var str = String(s == null ? '' : s), out = '', n = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (isWinAnsi(str.charCodeAt(i))) out += str[i];
+      else { out += '?'; n++; }
+    }
+    return { text: out, replaced: n };
+  }
+
+  function buildReportModel(summary, pagesResults, nameA, nameB, dateStr) {
+    var replaced = 0;
+    function line(text, kind) {
+      var r = toWinAnsi(text);
+      replaced += r.replaced;
+      return { text: r.text, kind: kind };
+    }
+    var lines = [];
+    lines.push(line('PDF comparison report', 'title'));
+    lines.push(line('First PDF (older): ' + (nameA || 'document'), 'meta'));
+    lines.push(line('Second PDF (newer): ' + (nameB || 'document'), 'meta'));
+    if (dateStr) lines.push(line('Date: ' + dateStr, 'meta'));
+    var s = summary || { pagesCompared: 0, pagesChanged: 0, wordsDeleted: 0, wordsInserted: 0, changes: 0, pagesAdded: 0, pagesRemoved: 0 };
+    lines.push(line('Pages compared: ' + s.pagesCompared +
+      ' - Pages with changes: ' + s.pagesChanged +
+      ' - Total changes: ' + s.changes, 'meta'));
+    lines.push(line('Words removed: ' + s.wordsDeleted + ' - Words added: ' + s.wordsInserted, 'meta'));
+    if (s.pagesAdded || s.pagesRemoved) {
+      lines.push(line('Whole pages added: ' + (s.pagesAdded || 0) + ' - Whole pages removed: ' + (s.pagesRemoved || 0), 'meta'));
+    }
+    (pagesResults || []).forEach(function (p) {
+      var es = p.entries || [];
+      if (!es.length) return;
+      var pageNo = (p.bPage != null ? p.bPage : p.aPage) + 1;
+      lines.push(line('Page ' + pageNo, 'page'));
+      es.forEach(function (e) {
+        var txt = e.text ? e.text : '(no text on this page)';
+        /* ASCII '-' here on purpose: the report font cannot show the
+           U+2212 minus sign (it would turn into a '?' below). */
+        if (e.type === 'delete') lines.push(line('- Old: ' + txt, 'del'));
+        else lines.push(line('+ New: ' + txt, 'ins'));
+      });
+    });
+    if (!s.changes) lines.push(line('No differences were found between the two documents.', 'note'));
+    if (replaced > 0) {
+      lines.push({ text: 'Note: ' + replaced + ' character(s) in the documents could not be represented in the report font and were replaced with "?".', kind: 'note' });
+    }
+    return { lines: lines, replacedChars: replaced };
+  }
+
+  return {
+    CELL_LIMIT: CELL_LIMIT,
+    OVERLAY_TOLERANCE: OVERLAY_TOLERANCE,
+    sanitizeBase: sanitizeBase,
+    abstractItems: abstractItems,
+    tokenizeItems: tokenizeItems,
+    groupLines: groupLines,
+    diffWords: diffWords,
+    groupChanges: groupChanges,
+    pageEntries: pageEntries,
+    wholePageEntry: wholePageEntry,
+    alignPages: alignPages,
+    summarize: summarize,
+    pixelDiff: pixelDiff,
+    buildReportModel: buildReportModel
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  function freshSlot(side) {
+    return { side: side, file: null, name: '', size: 0, bytes: null, doc: null, pages: 0, status: 'empty', coverUrl: '' };
+  }
+  var slots = { a: freshSlot('a'), b: freshSlot('b') };
+  var state = { compared: false, hasText: false, results: [], pageWords: [], pageDims: [], summary: null, flash: null, flashTimer: 0 };
+  var compareToken = 0;
+  var observer = null;
+
+  function fmtSize(n) {
+    if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
+    if (n >= 1024) return (n / 1024).toFixed(1) + ' KB';
+    return n + ' B';
+  }
+  function bothReady() { return slots.a.status === 'ready' && slots.b.status === 'ready'; }
+
+  /* ------------------------------------------------ slots */
+  function renderSlot(side) {
+    var S = side.toUpperCase(), slot = slots[side];
+    var drop = $('drop' + S), fileBox = $('file' + S), err = $('error' + S);
+    if (slot.status === 'empty') {
+      drop.hidden = false; fileBox.hidden = true; err.className = 'sloterror'; err.textContent = '';
+      return;
+    }
+    drop.hidden = true; fileBox.hidden = false;
+    $('name' + S).textContent = slot.name;
+    $('meta' + S).textContent = slot.pages ? slot.pages + (slot.pages === 1 ? ' page' : ' pages') + ' · ' + fmtSize(slot.size) : fmtSize(slot.size);
+    var chip = $('chip' + S), note = $('note' + S);
+    note.textContent = '';
+    err.className = 'sloterror'; err.textContent = '';
+    if (slot.status === 'loading') { chip.className = 'chip loading'; chip.textContent = 'Reading…'; }
+    else if (slot.status === 'ready') { chip.className = 'chip ready'; chip.textContent = 'Ready'; }
+    else if (slot.status === 'encrypted') {
+      chip.className = 'chip locked'; chip.textContent = 'Password-protected';
+      note.textContent = 'This file asks for an open password, so nothing inside it can be read. Unlock it first with Unlock PDF, then load the unlocked copy here.';
+    } else if (slot.status === 'error') {
+      chip.className = 'chip bad'; chip.textContent = 'Could not read';
+      err.textContent = 'This file could not be opened as a PDF. It may be damaged, or not a PDF at all.';
+      err.className = 'sloterror on';
+    }
+    var wrap = $('coverWrap' + S);
+    wrap.innerHTML = '';
+    if (slot.coverUrl) {
+      var img = document.createElement('img');
+      img.src = slot.coverUrl; img.alt = 'Cover of ' + slot.name;
+      wrap.appendChild(img);
+    } else {
+      var ph = document.createElement('span');
+      ph.className = 'coverph';
+      ph.innerHTML = '<span class="bigic">📄</span>PDF';
+      wrap.appendChild(ph);
+    }
+  }
+
+  function updateBar() {
+    var any = slots.a.status !== 'empty' || slots.b.status !== 'empty';
+    $('actionBar').className = 'actionbar' + (any ? ' on' : '');
+    document.body.classList.toggle('bar-visible', any);
+    if (bothReady()) $('barSummary').textContent = 'Ready to compare';
+    else if (slots.a.status === 'ready' || slots.b.status === 'ready') $('barSummary').textContent = 'Add the other PDF to compare';
+    else $('barSummary').textContent = 'Add both PDFs to compare';
+    $('compareBtn').disabled = !bothReady();
+  }
+
+  async function loadSlot(side, file) {
+    if (!file) return;
+    clearResults();
+    var slot = slots[side] = freshSlot(side);
+    slot.file = file; slot.name = file.name || 'document.pdf'; slot.size = file.size || 0;
+    slot.status = 'loading';
+    renderSlot(side); updateBar(); refreshOverlayMeta();
+    try {
+      slot.bytes = new Uint8Array(await file.arrayBuffer());
+      var doc = await pdfjsLib.getDocument({ data: slot.bytes.slice(0) }).promise;
+      slot.doc = doc; slot.pages = doc.numPages; slot.status = 'ready';
+      try {
+        var page = await doc.getPage(1);
+        var vp1 = page.getViewport({ scale: 1 });
+        var scale = Math.min(120 / vp1.width, 160 / vp1.height);
+        var vp = page.getViewport({ scale: scale });
+        var cv = document.createElement('canvas');
+        cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+        var cx = cv.getContext('2d');
+        cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+        await page.render({ canvasContext: cx, viewport: vp }).promise;
+        slot.coverUrl = cv.toDataURL('image/png');
+      } catch (e) { /* cover is decorative; the file itself is fine */ }
+    } catch (e) {
+      slot.status = (e && e.name === 'PasswordException') ? 'encrypted' : 'error';
+    }
+    renderSlot(side); updateBar(); refreshOverlayMeta();
+  }
+
+  function removeSlot(side) {
+    compareToken++;
+    slots[side] = freshSlot(side);
+    clearResults();
+    renderSlot(side); updateBar(); refreshOverlayMeta();
+  }
+
+  function wireSlot(side) {
+    var S = side.toUpperCase();
+    var slotEl = $('slot' + S), input = $('input' + S);
+    $('drop' + S).addEventListener('click', function () { input.click(); });
+    $('replace' + S).addEventListener('click', function () { input.click(); });
+    $('rm' + S).addEventListener('click', function () { removeSlot(side); });
+    input.addEventListener('change', function () {
+      if (input.files && input.files[0]) loadSlot(side, input.files[0]);
+      input.value = '';
+    });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      slotEl.addEventListener(ev, function (e) { e.preventDefault(); slotEl.classList.add('drag'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      slotEl.addEventListener(ev, function (e) { e.preventDefault(); slotEl.classList.remove('drag'); });
+    });
+    slotEl.addEventListener('drop', function (e) {
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) loadSlot(side, f);
+    });
+  }
+
+  /* ------------------------------------------------ results state */
+  function clearResults() {
+    state.compared = false; state.hasText = false;
+    state.results = []; state.pageWords = []; state.pageDims = []; state.summary = null;
+    state.flash = null;
+    if (observer) { observer.disconnect(); observer = null; }
+    $('summaryBar').hidden = true;
+    $('reportBtn').disabled = true;
+    $('changeCount').textContent = '0';
+    $('scannedNote').hidden = true;
+    $('panes').hidden = true;
+    $('paneA').innerHTML = ''; $('paneB').innerHTML = '';
+    $('emptyView').hidden = false;
+    var rl = $('reportList');
+    rl.innerHTML = '';
+    var p = document.createElement('p');
+    p.className = 'reportempty'; p.id = 'reportEmpty';
+    p.textContent = 'No comparison yet. Load both documents and press Compare — every text change will be listed here, grouped by page. Click an entry to jump to it in the documents.';
+    rl.appendChild(p);
+  }
+
+  function showProcessing(detail) {
+    $('processingDetail').textContent = detail || '';
+    $('processing').className = 'processing on';
+  }
+  function hideProcessing() { $('processing').className = 'processing'; }
+
+  /* ------------------------------------------------ semantic compare */
+  async function extractPage(doc, pageIdx) {
+    var page = await doc.getPage(pageIdx + 1);
+    var vp = page.getViewport({ scale: 1 });
+    var tc = await page.getTextContent();
+    var items = CompareCore.abstractItems(tc.items, vp.transform);
+    items.forEach(function (it) { it.page = pageIdx; });
+    var words = CompareCore.tokenizeItems(items, vp.height);
+    return { words: words, w: vp.width, h: vp.height };
+  }
+
+  async function runCompare() {
+    if (!bothReady()) return;
+    var my = ++compareToken;
+    showProcessing('Reading the text of both documents…');
+    try {
+      var pairs = CompareCore.alignPages(slots.a.pages, slots.b.pages);
+      var results = [], pageWords = [], pageDims = [], totalTextChars = 0, i;
+      for (i = 0; i < pairs.length; i++) {
+        $('processingDetail').textContent = 'Comparing page ' + (i + 1) + ' of ' + pairs.length + '…';
+        var pair = pairs[i];
+        var ea = pair.a != null ? await extractPage(slots.a.doc, pair.a) : null;
+        var eb = pair.b != null ? await extractPage(slots.b.doc, pair.b) : null;
+        if (my !== compareToken) { hideProcessing(); return; }
+        var wordsA = ea ? ea.words : [], wordsB = eb ? eb.words : [];
+        wordsA.forEach(function (w) { totalTextChars += w.text.length; });
+        wordsB.forEach(function (w) { totalTextChars += w.text.length; });
+        pageDims.push({ a: ea ? { w: ea.w, h: ea.h } : null, b: eb ? { w: eb.w, h: eb.h } : null });
+        pageWords.push({ a: wordsA, b: wordsB });
+        var entries;
+        if (pair.a == null) entries = [CompareCore.wholePageEntry(wordsB, 'insert', pair.b + 1)];
+        else if (pair.b == null) entries = [CompareCore.wholePageEntry(wordsA, 'delete', pair.a + 1)];
+        else entries = CompareCore.pageEntries(wordsA, wordsB, pair.a + 1);
+        results.push({ aPage: pair.a, bPage: pair.b, entries: entries });
+      }
+      state.results = results; state.pageWords = pageWords; state.pageDims = pageDims;
+      state.summary = CompareCore.summarize(results);
+      state.hasText = totalTextChars > 0;
+      state.compared = true;
+      renderResults();
+    } catch (e) {
+      var p = $('reportEmpty');
+      if (p) p.textContent = 'Something went wrong while comparing these documents: ' + (e && e.message ? e.message : e);
+    }
+    hideProcessing();
+  }
+
+  function renderResults() {
+    var s = state.summary;
+    $('summaryBar').hidden = false;
+    $('changeCount').textContent = String(s.changes);
+    $('scannedNote').hidden = state.hasText;
+    if (!state.hasText) {
+      $('summaryCounts').textContent = 'No selectable text was found in either document — see the note in the change report.';
+      $('reportBtn').disabled = true;
+    } else if (s.changes === 0) {
+      $('summaryCounts').innerHTML = 'Pages compared: <b>' + s.pagesCompared + '</b> · <span class="nodiff">No differences — the text of the two documents is identical.</span>';
+      $('reportBtn').disabled = false;
+    } else {
+      $('summaryCounts').innerHTML = 'Pages compared: <b>' + s.pagesCompared + '</b> · Pages with changes: <b>' + s.pagesChanged + '</b> · Words removed: <b>' + s.wordsDeleted + '</b> · Words added: <b>' + s.wordsInserted + '</b>';
+      $('reportBtn').disabled = false;
+    }
+    renderReport();
+    buildViewer();
+  }
+
+  function renderReport() {
+    var rl = $('reportList');
+    rl.innerHTML = '';
+    var any = false;
+    state.results.forEach(function (res, pairIdx) {
+      if (!res.entries.length) return;
+      any = true;
+      var pageNo = (res.aPage != null ? res.aPage : res.bPage) + 1;
+      var head = document.createElement('div');
+      head.className = 'pghead';
+      head.textContent = 'Page ' + pageNo;
+      rl.appendChild(head);
+      res.entries.forEach(function (e) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chg ' + (e.type === 'delete' ? 'del' : 'ins');
+        btn.dataset.text = e.text.toLowerCase();
+        var ch = document.createElement('div');
+        ch.className = 'ch';
+        var kind = document.createElement('span');
+        kind.textContent = e.type === 'delete' ? 'Old' : 'New';
+        var cnt = document.createElement('span');
+        cnt.textContent = e.charCount + (e.charCount === 1 ? ' character' : ' characters');
+        ch.appendChild(kind); ch.appendChild(cnt);
+        var ct = document.createElement('div');
+        ct.className = 'ct';
+        ct.textContent = e.text ? e.text : '(no text on this page)';
+        btn.appendChild(ch); btn.appendChild(ct);
+        btn.addEventListener('click', function () { activateEntry(pairIdx, e, btn); });
+        rl.appendChild(btn);
+      });
+    });
+    if (!any) {
+      var p = document.createElement('p');
+      p.className = 'reportempty'; p.id = 'reportEmpty';
+      p.textContent = state.hasText
+        ? 'No differences found — the two documents carry exactly the same text, page by page.'
+        : 'The text comparison found nothing to compare in these documents.';
+      rl.appendChild(p);
+    }
+  }
+
+  /* ------------------------------------------------ side-by-side viewer */
+  function makeBox(side, pairIdx) {
+    var res = state.results[pairIdx];
+    var pageIdx = side === 'a' ? res.aPage : res.bPage;
+    var dims = state.pageDims[pairIdx][side];
+    var box = document.createElement('div');
+    box.className = 'pagebox';
+    box.dataset.pair = String(pairIdx);
+    box.dataset.side = side;
+    var inner = document.createElement('div');
+    inner.className = 'pagebox-inner';
+    if (pageIdx == null || !dims) {
+      inner.style.aspectRatio = '3 / 4';
+      var np = document.createElement('div');
+      np.className = 'nopage';
+      np.textContent = 'No page in this document';
+      inner.appendChild(np);
+    } else {
+      inner.style.aspectRatio = dims.w + ' / ' + dims.h;
+      var cv = document.createElement('canvas'); cv.className = 'pcv';
+      var hl = document.createElement('canvas'); hl.className = 'hlcv';
+      var pn = document.createElement('div'); pn.className = 'pageno'; pn.textContent = 'Page ' + (pageIdx + 1);
+      inner.appendChild(cv); inner.appendChild(hl); inner.appendChild(pn);
+      box._render = { cv: cv, hl: hl, done: false, busy: false };
+    }
+    box.appendChild(inner);
+    return box;
+  }
+
+  function buildViewer() {
+    var paneA = $('paneA'), paneB = $('paneB');
+    paneA.innerHTML = ''; paneB.innerHTML = '';
+    if (observer) observer.disconnect();
+    observer = new IntersectionObserver(function (list) {
+      list.forEach(function (en) { if (en.isIntersecting) renderBox(en.target); });
+    }, { root: null, rootMargin: '300px' });
+    state.results.forEach(function (_, pairIdx) {
+      var ba = makeBox('a', pairIdx), bb = makeBox('b', pairIdx);
+      paneA.appendChild(ba); paneB.appendChild(bb);
+      if (ba._render) { observer.observe(ba); }
+      if (bb._render) { observer.observe(bb); }
+    });
+    $('emptyView').hidden = true;
+    $('panes').hidden = false;
+  }
+
+  async function renderBox(box) {
+    var r = box._render;
+    if (!r || r.done || r.busy) return;
+    r.busy = true; r.done = true;
+    var side = box.dataset.side, pairIdx = +box.dataset.pair;
+    var pageIdx = side === 'a' ? state.results[pairIdx].aPage : state.results[pairIdx].bPage;
+    var dims = state.pageDims[pairIdx][side];
+    try {
+      var page = await slots[side].doc.getPage(pageIdx + 1);
+      var innerW = box.firstChild.clientWidth || 320;
+      var scale = Math.min(innerW / dims.w, 1100 / dims.w);
+      if (!(scale > 0) || !isFinite(scale)) scale = 1;
+      var vp = page.getViewport({ scale: scale });
+      r.cv.width = Math.max(1, Math.round(vp.width));
+      r.cv.height = Math.max(1, Math.round(vp.height));
+      r.hl.width = r.cv.width; r.hl.height = r.cv.height;
+      var ctx = r.cv.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, r.cv.width, r.cv.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      drawHighlights(box);
+    } catch (e) { /* a page that fails to render simply stays blank */ }
+    r.busy = false;
+  }
+
+  function drawHighlights(box) {
+    var r = box._render;
+    if (!r || !r.hl.width) return;
+    var side = box.dataset.side, pairIdx = +box.dataset.pair;
+    var dims = state.pageDims[pairIdx][side];
+    if (!dims) return;
+    var ctx = r.hl.getContext('2d');
+    ctx.clearRect(0, 0, r.hl.width, r.hl.height);
+    var sx = r.hl.width / dims.w, sy = r.hl.height / dims.h;
+    var words = state.pageWords[pairIdx][side];
+    state.results[pairIdx].entries.forEach(function (e) {
+      var mine = (side === 'a' && e.type === 'delete') || (side === 'b' && e.type === 'insert');
+      if (!mine) return;
+      var isFlash = !!(state.flash && state.flash.pair === pairIdx && state.flash.entry === e);
+      var pad = 1.5;
+      ctx.fillStyle = e.type === 'delete'
+        ? 'rgba(229,57,53,' + (isFlash ? 0.55 : 0.35) + ')'
+        : 'rgba(46,160,67,' + (isFlash ? 0.55 : 0.35) + ')';
+      e.wordRefs.forEach(function (wi) {
+        var w = words[wi]; if (!w) return;
+        ctx.fillRect((w.x - pad) * sx, (w.y - pad) * sy, (w.w + 2 * pad) * sx, (w.h + 2 * pad) * sy);
+      });
+      if (isFlash) {
+        ctx.strokeStyle = '#f9a825'; ctx.lineWidth = 2;
+        e.wordRefs.forEach(function (wi) {
+          var w = words[wi]; if (!w) return;
+          ctx.strokeRect((w.x - pad) * sx, (w.y - pad) * sy, (w.w + 2 * pad) * sx, (w.h + 2 * pad) * sy);
+        });
+      }
+    });
+  }
+
+  function paneBox(side, pairIdx) {
+    return (side === 'a' ? $('paneA') : $('paneB')).querySelector('[data-pair="' + pairIdx + '"]');
+  }
+  function scrollPaneTo(side, box) {
+    var pane = side === 'a' ? $('paneA') : $('paneB');
+    pane.scrollTop += box.getBoundingClientRect().top - pane.getBoundingClientRect().top - 10;
+  }
+
+  function activateEntry(pairIdx, entry, el) {
+    document.querySelectorAll('.chg.on').forEach(function (n) { n.classList.remove('on'); });
+    if (el) el.classList.add('on');
+    state.flash = { pair: pairIdx, entry: entry };
+    ['a', 'b'].forEach(function (side) {
+      var box = paneBox(side, pairIdx);
+      if (!box) return;
+      scrollPaneTo(side, box);
+      box.classList.add('flashbox');
+      setTimeout(function () { box.classList.remove('flashbox'); }, 1500);
+      if (box._render && box._render.done) drawHighlights(box);
+    });
+    clearTimeout(state.flashTimer);
+    state.flashTimer = setTimeout(function () {
+      state.flash = null;
+      ['a', 'b'].forEach(function (side) {
+        var box = paneBox(side, pairIdx);
+        if (box && box._render && box._render.done) drawHighlights(box);
+      });
+    }, 1600);
+  }
+
+  function linkScroll(src, dst) {
+    src.addEventListener('scroll', function () {
+      if (!$('syncScroll').checked) return;
+      var maxS = src.scrollHeight - src.clientHeight;
+      var maxD = dst.scrollHeight - dst.clientHeight;
+      if (maxS <= 0 || maxD <= 0) return;
+      var target = (src.scrollTop / maxS) * maxD;
+      if (Math.abs(dst.scrollTop - target) > 1) dst.scrollTop = target;
+    });
+  }
+
+  /* ------------------------------------------------ report download */
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 400);
+  }
+
+  async function downloadReport() {
+    if (!state.compared || !state.hasText) return;
+    var model = CompareCore.buildReportModel(state.summary, state.results, slots.a.name, slots.b.name, new Date().toLocaleString());
+    var doc = await PDFLib.PDFDocument.create();
+    var fReg = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+    var fBold = await doc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+    var W = 595.28, H = 841.89, M = 54, maxW = W - 2 * M;
+    var page = doc.addPage([W, H]);
+    var y = H - M;
+    var conf = {
+      title: { font: fBold, size: 17, color: PDFLib.rgb(0.10, 0.14, 0.49), after: 10 },
+      meta: { font: fReg, size: 10.5, color: PDFLib.rgb(0.27, 0.29, 0.43), after: 2 },
+      page: { font: fBold, size: 12.5, color: PDFLib.rgb(0.10, 0.14, 0.49), after: 4 },
+      del: { font: fReg, size: 10.5, color: PDFLib.rgb(0.72, 0.11, 0.11), after: 2 },
+      ins: { font: fReg, size: 10.5, color: PDFLib.rgb(0.07, 0.45, 0.18), after: 2 },
+      note: { font: fReg, size: 10.5, color: PDFLib.rgb(0.40, 0.42, 0.55), after: 4 }
+    };
+    function wrap(text, font, size) {
+      var words = String(text).split(' '), lines = [], cur = '';
+      words.forEach(function (wd) {
+        var test = cur ? cur + ' ' + wd : wd;
+        if (font.widthOfTextAtSize(test, size) <= maxW || !cur) cur = test;
+        else { lines.push(cur); cur = wd; }
+      });
+      if (cur) lines.push(cur);
+      return lines.length ? lines : [''];
+    }
+    model.lines.forEach(function (ln) {
+      var c = conf[ln.kind] || conf.meta;
+      if (ln.kind === 'page') y -= 6;
+      wrap(ln.text, c.font, c.size).forEach(function (wl) {
+        if (y - c.size - 4 < M) { page = doc.addPage([W, H]); y = H - M; }
+        y -= c.size + 3;
+        page.drawText(wl, { x: M, y: y, size: c.size, font: c.font, color: c.color });
+      });
+      y -= c.after;
+    });
+    var bytes = await doc.save();
+    saveBlob(new Blob([bytes], { type: 'application/pdf' }), 'pdfbleu-compared.pdf');
+  }
+
+  /* ------------------------------------------------ overlay mode */
+  var ov = { busy: false, token: 0, rendered: false, cA: null, cB: null, cComp: null, w: 0, h: 0 };
+
+  function clampOvPage(side) {
+    var S = side.toUpperCase(), inp = $('ovPage' + S);
+    var max = slots[side].pages || 1;
+    var v = parseInt(inp.value, 10);
+    if (!v || v < 1) v = 1;
+    if (v > max) v = max;
+    inp.value = String(v);
+    return v;
+  }
+
+  function refreshOverlayMeta() {
+    ['a', 'b'].forEach(function (side) {
+      var S = side.toUpperCase(), slot = slots[side];
+      $('ovName' + S).textContent = slot.file ? slot.name : (side === 'a' ? 'First PDF' : 'Second PDF');
+      $('ovMax' + S).textContent = slot.pages ? 'of ' + slot.pages : '';
+      var inp = $('ovPage' + S);
+      inp.max = String(slot.pages || 1);
+      if (+inp.value > (slot.pages || 1)) inp.value = String(slot.pages || 1);
+      if (+inp.value < 1) inp.value = '1';
+      var th = $('ovThumb' + S);
+      if (slot.coverUrl) { th.src = slot.coverUrl; th.style.visibility = 'visible'; }
+      else th.style.visibility = 'hidden';
+    });
+    var ready = bothReady();
+    $('ovHint').hidden = ready;
+    $('ovBody').hidden = !ready;
+    if (ready && !$('panelOverlay').hidden) renderOverlay();
+  }
+
+  async function renderPageFrame(page, scale, W, H) {
+    var vp = page.getViewport({ scale: scale });
+    var pc = document.createElement('canvas');
+    pc.width = Math.max(1, Math.round(vp.width)); pc.height = Math.max(1, Math.round(vp.height));
+    var pctx = pc.getContext('2d');
+    pctx.fillStyle = '#fff'; pctx.fillRect(0, 0, pc.width, pc.height);
+    await page.render({ canvasContext: pctx, viewport: vp }).promise;
+    var frame = document.createElement('canvas');
+    frame.width = W; frame.height = H;
+    var fctx = frame.getContext('2d');
+    fctx.fillStyle = '#fff'; fctx.fillRect(0, 0, W, H);
+    fctx.drawImage(pc, Math.round((W - pc.width) / 2), Math.round((H - pc.height) / 2));
+    return frame;
+  }
+
+  async function renderOverlay() {
+    if (!bothReady() || ov.busy) return;
+    ov.busy = true;
+    var my = ++ov.token;
+    try {
+      var pa = clampOvPage('a'), pb = clampOvPage('b');
+      var pageA = await slots.a.doc.getPage(pa);
+      var pageB = await slots.b.doc.getPage(pb);
+      var vA = pageA.getViewport({ scale: 1 }), vB = pageB.getViewport({ scale: 1 });
+      var longPt = Math.max(vA.width, vA.height, vB.width, vB.height);
+      var scale = Math.min(2, 1600 / longPt);
+      var W = Math.round(Math.max(vA.width, vB.width) * scale);
+      var H = Math.round(Math.max(vA.height, vB.height) * scale);
+      var cA = await renderPageFrame(pageA, scale, W, H);
+      var cB = await renderPageFrame(pageB, scale, W, H);
+      if (my !== ov.token) { ov.busy = false; return; }
+      var dA = cA.getContext('2d').getImageData(0, 0, W, H);
+      var dB = cB.getContext('2d').getImageData(0, 0, W, H);
+      var diff = CompareCore.pixelDiff(dA.data, dB.data, W, H, CompareCore.OVERLAY_TOLERANCE);
+      var cComp = document.createElement('canvas');
+      cComp.width = W; cComp.height = H;
+      cComp.getContext('2d').putImageData(new ImageData(diff.out, W, H), 0, 0);
+      ov.cA = cA; ov.cB = cB; ov.cComp = cComp; ov.w = W; ov.h = H; ov.rendered = true;
+      $('ovStats').innerHTML = 'Page ' + pa + ' of the first document vs page ' + pb + ' of the second: <b>' +
+        diff.pct.toFixed(1) + '% of pixels differ</b> (' + diff.changed.toLocaleString() + ' of ' + diff.total.toLocaleString() + ' pixels).';
+      drawFade();
+    } catch (e) { /* leave the previous overlay in place */ }
+    ov.busy = false;
+  }
+
+  function drawFade() {
+    if (!ov.rendered) return;
+    var out = $('ovCanvas');
+    out.width = ov.w; out.height = ov.h;
+    var ctx = out.getContext('2d');
+    var v = +$('fadeRange').value;
+    ctx.globalAlpha = 1;
+    if (v <= 50) {
+      ctx.drawImage(ov.cA, 0, 0);
+      if (v > 0) { ctx.globalAlpha = v / 50; ctx.drawImage(ov.cComp, 0, 0); }
+    } else {
+      ctx.drawImage(ov.cComp, 0, 0);
+      ctx.globalAlpha = (v - 50) / 50;
+      ctx.drawImage(ov.cB, 0, 0);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ------------------------------------------------ tabs & wiring */
+  function setTab(which) {
+    var sem = which === 'semantic';
+    $('tabSemanticBtn').classList.toggle('on', sem);
+    $('tabOverlayBtn').classList.toggle('on', !sem);
+    $('panelSemantic').hidden = !sem;
+    $('panelOverlay').hidden = sem;
+    if (!sem) refreshOverlayMeta();
+  }
+
+  function startOver() {
+    compareToken++;
+    ov.token++;
+    slots.a = freshSlot('a'); slots.b = freshSlot('b');
+    ov.rendered = false;
+    clearResults();
+    renderSlot('a'); renderSlot('b');
+    updateBar(); refreshOverlayMeta();
+    setTab('semantic');
+  }
+
+  wireSlot('a');
+  wireSlot('b');
+  $('compareBtn').addEventListener('click', runCompare);
+  $('startOverBtn').addEventListener('click', startOver);
+  $('reportBtn').addEventListener('click', downloadReport);
+  $('tabSemanticBtn').addEventListener('click', function () { setTab('semantic'); });
+  $('tabOverlayBtn').addEventListener('click', function () { setTab('overlay'); });
+  $('searchBox').addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#reportList .chg').forEach(function (el) {
+      el.style.display = (!q || (el.dataset.text || '').indexOf(q) >= 0) ? '' : 'none';
+    });
+    document.querySelectorAll('#reportList .pghead').forEach(function (h) {
+      var n = h.nextElementSibling, any = false;
+      while (n && !n.classList.contains('pghead')) {
+        if (n.classList.contains('chg') && n.style.display !== 'none') any = true;
+        n = n.nextElementSibling;
+      }
+      h.style.display = any ? '' : 'none';
+    });
+  });
+  $('fadeRange').addEventListener('input', drawFade);
+  $('ovPageA').addEventListener('change', renderOverlay);
+  $('ovPageB').addEventListener('change', renderOverlay);
+  linkScroll($('paneA'), $('paneB'));
+  linkScroll($('paneB'), $('paneA'));
+  renderSlot('a'); renderSlot('b');
+  updateBar();
+})();
+</script>
+</body>
+  </html>
