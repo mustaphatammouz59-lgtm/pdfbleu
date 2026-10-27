@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR PDF — PdfBleu.com</title>
+<meta name="description" content="OCR PDF online for free: make scanned PDFs searchable and selectable with text recognition that runs entirely in your browser — no upload, your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard .coverph .bigic{font-size:24px;display:block;margin-bottom:2px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+.filecard.warn{border-color:#ffcc80;background:#fffdf5}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .fnote{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .fnote.red{color:#b71c1c;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.detecting{background:#eceff9;color:#5c6bc0}
+.chip.healthy{background:#e8f5e9;color:#1b5e20}
+.chip.damaged{background:#fff8e1;color:#6d4c00;border:1px solid #ffcc80}
+.chip.notpdf{background:#fdecea;color:#b71c1c}
+.chip.locked{background:#e3f2fd;color:#0d47a1}
+.chip.done{background:#2e7d32;color:#fff}
+.chip.partial{background:#ef6c00;color:#fff}
+.chip.failed{background:#e53935;color:#fff}
+.chip.working{background:#3F51B5;color:#fff}
+.chip.cancelled{background:#eceff9;color:#5c6bc0;border:1px solid #c5cae9}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar ol.rsteps{margin:0 0 4px 18px;font-size:14px;color:#444a6d}
+.sidebar ol.rsteps li{margin-bottom:7px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.footnote.err{color:#b71c1c;font-weight:600}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.langgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+label.lang{display:flex;gap:8px;align-items:center;font-size:13.5px;font-weight:600;color:#333a5e;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:9px;padding:7px 9px;cursor:pointer}
+label.lang input{accent-color:#3F51B5;width:16px;height:16px;flex-shrink:0}
+label.lang.on{border-color:#3F51B5;background:#eef1fb}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d;max-width:520px}
+.processing button.cancelbtn{background:#fff;color:#b71c1c;border:1.5px solid #e53935;padding:11px 26px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:6px}
+.resultitem{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a;margin-top:2px}
+.resultitem .rstatus{font-weight:700;font-size:13.5px;margin-top:2px}
+.resultitem .rstatus.ok{color:#1b5e20}
+.resultitem .rstatus.warn{color:#e65100}
+.resultitem .rstatus.bad{color:#b71c1c}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.success button.again{display:block;margin:10px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.5/tesseract.min.js" onerror="window.__TESS_LOAD_FAILED=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#8FBC5D"/><path d="M10 16 V10 H16 M32 10 H38 V16 M38 32 V38 H32 M16 38 H10 V32" stroke="#fff" stroke-width="2.4" fill="none"/><rect x="13" y="8" width="22" height="32" rx="2" fill="#fff"/><text x="24" y="28" font-size="9.5" font-weight="700" fill="#558B2F" text-anchor="middle" font-family="Arial,sans-serif">OCR</text></svg></span>
+<h1>OCR PDF</h1>
+<p class="subtitle">Make scanned PDFs searchable and selectable — text is recognized right in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: every page is rendered, recognized and rebuilt entirely in your browser — a scanned contract or statement is never uploaded anywhere.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your scanned PDFs here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
+</div>
+<div class="filelist" id="fileList"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>OCR PDF options</h2>
+<div class="optgroup">
+<p><strong>Document languages</strong></p>
+<p>The accuracy of detection is increased by correctly selecting the document's languages. Tick every language the document uses — up to 3.</p>
+<div class="langgrid" id="langGrid">
+<label class="lang on"><input type="checkbox" name="ocrLang" value="eng" checked>English</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="ara">Arabic</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="fra">French</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="spa">Spanish</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="deu">German</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="ita">Italian</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="por">Portuguese</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="nld">Dutch</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="tur">Turkish</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="rus">Russian</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="ukr">Ukrainian</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="pol">Polish</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="chi_sim">Chinese (Simplified)</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="jpn">Japanese</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="kor">Korean</label>
+<label class="lang"><input type="checkbox" name="ocrLang" value="hin">Hindi</label>
+</div>
+<p class="footnote" id="langHint">Each selected language downloads once (a few MB) and is cached by your browser for next time.</p>
+</div>
+<div class="optgroup">
+<p class="footnote" id="engineStatus">The OCR engine stays asleep until you press Apply OCR. The first time, your browser downloads the recognition engine and the language files you selected; the two text-layer fonts (about 1.2 MB together) download only when a page actually needs OCR. Everything is cached for your next visit — and recognition itself always runs on your device.</p>
+</div>
+<div class="honestnote">⚠️ <strong>Honest expectations.</strong> Recognition runs 100% on your device — your files never leave it; only the engine, language files and fonts are downloaded <em>from</em> a public CDN. A page takes a few seconds on a computer and longer on a phone, and accuracy depends on scan quality: straight, sharp, well-lit pages recognize best. Handwriting is recognized poorly — this is a tool for printed text. Pages that already contain real text are detected and left untouched.</div>
+<div class="freenote">Everything here is 100% free, with no limits: OCR as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">🔍</span>
+<h2 id="successTitle">OCR results</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<button class="again" id="restartBtn" type="button">OCR more files</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why OCR with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔍</span><h3>Real recognition, on your device</h3><p>The Tesseract OCR engine runs in your browser and reads every scanned page at 300 dpi, then lays the recognized words invisibly over the page — so the PDF looks identical, but its text can be searched, selected and copied.</p></div>
+<div class="step"><span class="fic">🗂️</span><h3>Page-by-page smarts</h3><p>Mixed documents are handled page by page: pages that already carry real text are left exactly as they are, and only true scans are recognized. If a whole file turns out to be digital already, we tell you instead of selling you a pointless copy.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>Scans are usually the most sensitive documents of all — contracts, statements, ID papers. Nothing is uploaded: rendering, recognition and rebuilding all happen on your own device.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to OCR a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your scanned PDFs</h3><p>Click the select button or drop your files into the area provided. You can OCR several files in one go — each is handled independently.</p></div>
+<div class="step"><span class="num">2</span><h3>Tick the languages</h3><p>Choose the language(s) the document is written in — up to 3 for mixed-language documents. English is pre-ticked. The right languages make a real difference to accuracy.</p></div>
+<div class="step"><span class="num">3</span><h3>Press Apply OCR</h3><p>Each scanned page is recognized and given an invisible, searchable text layer. Watch the progress page by page — and cancel any time; files already finished keep their downloads.</p></div>
+<div class="step"><span class="num">4</span><h3>Download searchable PDFs</h3><p>Download each OCR'd file on its own, or all of them together in a ZIP. Try it: open the result and search for a word from the scan.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What does “searchable PDF” actually mean?</h3><p>A scanned PDF is just a photograph of a page — there is no text inside to find. OCR reads the photograph and places an <strong>invisible layer of real text</strong> exactly over the words. The page looks exactly the same, but you can search it (Ctrl+F), select and copy passages, highlight text, and screen readers can read it aloud.</p></div>
+<div class="qa"><h3>Why do I have to pick the document's languages?</h3><p>The recognition engine reads with a language model: telling it which languages to expect noticeably improves accuracy, especially for accents and special characters. Tick up to 3 for mixed-language documents. Each language file (roughly 1–20 MB) downloads once from a public content network and is then cached by your browser.</p></div>
+<div class="qa"><h3>My PDF is already digital. What happens?</h3><p>Every page is checked first: a page that already carries real selectable text (25 characters or more) is left completely untouched. If <em>every</em> page of a file already has text, the result simply says “Already searchable” and no copy is produced — we never hand you an unchanged file dressed up as an OCR result.</p></div>
+<div class="qa"><h3>How long does OCR take?</h3><p>Expect a few seconds per page on a computer and noticeably longer on a phone — recognizing a page is heavy work, and your device does all of it. The first run also downloads the engine and your selected languages, so it starts slower than later runs. Long documents are fine, but bring a little patience; you can cancel at any time and keep whatever finished.</p></div>
+<div class="qa"><h3>Is my document uploaded anywhere?</h3><p>No. The file is opened, rendered, recognized and rebuilt entirely in your browser; nothing is sent to a server. The only network traffic is your browser downloading public program files (the OCR engine, language data and two fonts) <em>from</em> a content network — those downloads contain none of your data.</p></div>
+<div class="qa"><h3>Can it read handwriting, Arabic, or Chinese?</h3><p>Handwriting: poorly, honestly — the engine is trained on print. Arabic: yes for printed text, with a caveat — the in-browser engine hands Arabic words back in visual order, so PdfBleu re-orders them automatically; words built on fused letter forms (ligatures) can occasionally stay imperfect in the searchable layer. Chinese, Japanese, Korean and Hindi are recognized, but the fonts used for the invisible layer do not cover those scripts, so their words may not become searchable — the result line counts any words left out, so you always know.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Recognizing text…</p>
+<p class="pdetail" id="processingDetail"></p>
+<button class="cancelbtn" id="cancelBtn" type="button">Cancel</button>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button" disabled>Apply OCR</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="ocrCore">
+/* =====================================================================
+   PdfBleu OCR — pure, node-testable helpers (no DOM in here).
+
+   Pipeline contract (the DOM layer drives it):
+     1. needsOcr(textItems) decides per page: a page that already
+        carries >= EXISTING_TEXT_MIN non-space characters is left
+        untouched; only real scans are recognized.
+     2. The page is rendered at 300 dpi (capped by fitScale) and
+        Tesseract returns words {text, bbox(px), confidence, line}.
+     3. fixRtlOrder repairs the reading order of Arabic text: the
+        in-browser Tesseract engine returns Arabic in VISUAL order
+        (words and letters), this converts Arabic-majority lines back
+        to logical order.
+     4. buildTextLayerStream turns words into a raw content stream
+        with text rendering mode 3 (invisible), one BT block per word:
+        font size = the word's bbox height, Tz stretches the word to
+        its bbox width, Tm carries the rotation matrix so words read
+        upright on rotated pages. Geometry is computed in displayed
+        space and mapped to user space with viewToUser — the same
+        convention as the Page Numbers / Watermark engines.
+     5. addLayer appends that stream to a pdf-lib page's Contents and
+        registers the two embedded fonts (DejaVu Sans for most
+        scripts, Amiri for Arabic) in the page Resources, merging
+        with whatever the document already has.
+
+   Words whose glyphs the routed font does not contain (encodeText
+   yields only glyph 0 — e.g. CJK or Devanagari in DejaVu Sans) are
+   SKIPPED and counted, never silently faked: the result line
+   reports them (see summarize).
+   ===================================================================== */
+var OcrCore = (function () {
+  'use strict';
+
+  var EXISTING_TEXT_MIN = 25;      // non-space chars that make a page "already searchable"
+  var RENDER_DPI = 300;
+  var MAX_SIDE_PX = 12000;         // sibling pixel caps for rendered pages
+  var MAX_PIXELS = 40000000;
+  var MAX_LANGS = 3;
+
+  var LANGS = [
+    { code: 'eng', name: 'English' },
+    { code: 'ara', name: 'Arabic' },
+    { code: 'fra', name: 'French' },
+    { code: 'spa', name: 'Spanish' },
+    { code: 'deu', name: 'German' },
+    { code: 'ita', name: 'Italian' },
+    { code: 'por', name: 'Portuguese' },
+    { code: 'nld', name: 'Dutch' },
+    { code: 'tur', name: 'Turkish' },
+    { code: 'rus', name: 'Russian' },
+    { code: 'ukr', name: 'Ukrainian' },
+    { code: 'pol', name: 'Polish' },
+    { code: 'chi_sim', name: 'Chinese (Simplified)' },
+    { code: 'jpn', name: 'Japanese' },
+    { code: 'kor', name: 'Korean' },
+    { code: 'hin', name: 'Hindi' }
+  ];
+  var LANG_NAME = {};
+  LANGS.forEach(function (l) { LANG_NAME[l.code] = l.name; });
+
+  /* validateLangs(codes) -> {langs, empty, trimmed, unknown}
+     Dedupes, drops unknown codes, keeps at most MAX_LANGS (the
+     extras are trimmed, in the order given). */
+  function validateLangs(codes) {
+    var seen = {}, out = [], unknown = 0;
+    (codes || []).forEach(function (c) {
+      c = String(c == null ? '' : c);
+      if (!LANG_NAME[c]) { unknown++; return; }
+      if (seen[c]) return;
+      seen[c] = 1;
+      out.push(c);
+    });
+    var trimmed = false;
+    if (out.length > MAX_LANGS) { out = out.slice(0, MAX_LANGS); trimmed = true; }
+    return { langs: out, empty: out.length === 0, trimmed: trimmed, unknown: unknown };
+  }
+  function langString(codes) {
+    return validateLangs(codes).langs.join('+');
+  }
+
+  /* Count non-space characters in pdf.js text items ([{str}, ...];
+     plain strings are also accepted). */
+  function countTextChars(items) {
+    var n = 0;
+    (items || []).forEach(function (it) {
+      var s = typeof it === 'string' ? it : (it && it.str) || '';
+      n += String(s).replace(/\s+/g, '').length;
+    });
+    return n;
+  }
+  function needsOcr(items) {
+    return countTextChars(items) < EXISTING_TEXT_MIN;
+  }
+
+  /* Render scale for a page whose DISPLAYED size is dispW x dispH pt.
+     Wants dpi (default 300); backs off to honour the pixel caps and
+     reports whether it had to (capped pages are named in the result). */
+  function fitScale(dispW, dispH, dpi) {
+    var s = (Number(dpi) || RENDER_DPI) / 72;
+    var w = dispW * s, h = dispH * s, k = 1;
+    if (w > MAX_SIDE_PX) k = Math.min(k, MAX_SIDE_PX / w);
+    if (h > MAX_SIDE_PX) k = Math.min(k, MAX_SIDE_PX / h);
+    if (w * h > MAX_PIXELS) k = Math.min(k, Math.sqrt(MAX_PIXELS / (w * h)));
+    var capped = k < 1;
+    if (capped) s = s * k;
+    return { scale: s, capped: capped, pxW: Math.round(dispW * s), pxH: Math.round(dispH * s) };
+  }
+
+  function normalizeRotation(r) {
+    r = ((Math.round(Number(r) || 0) % 360) + 360) % 360;
+    return (r === 90 || r === 180 || r === 270) ? r : 0;
+  }
+  // Same mapping as the Watermark / Page Numbers engines: a point in
+  // displayed space (top-left origin) -> user space (bottom-left).
+  function viewToUser(rot, W, H, vx, vy) {
+    if (rot === 90) return [vy, vx];
+    if (rot === 180) return [W - vx, vy];
+    if (rot === 270) return [W - vy, H - vx];
+    return [vx, H - vy];
+  }
+
+  function fmt(n) {
+    var v = Math.round(n * 10000) / 10000;
+    if (v === 0) v = 0; // avoid "-0"
+    return String(v);
+  }
+
+  /* wordPlacement(word, scale, pageW, pageH, rotation, measure)
+     word: {text, bbox:{x0,y0,x1,y1}} in rendered-image pixels,
+     scale: image px per displayed pt, pageW/pageH: UNROTATED page
+     size in pt, measure(text, fontSize) -> natural width in pt with
+     the routed font. Returns the text-matrix placement:
+     {x, y (baseline start, user space), fontSize, tzPct, a,b,c,d}. */
+  function wordPlacement(word, scale, pageW, pageH, rotation, measure) {
+    var rot = normalizeRotation(rotation);
+    var bw = Math.max(0, (word.bbox.x1 - word.bbox.x0) / scale);
+    var bh = Math.max(0, (word.bbox.y1 - word.bbox.y0) / scale);
+    var fontSize = Math.max(1, bh);
+    var vx = word.bbox.x0 / scale;        // displayed pt, left edge
+    var vBot = word.bbox.y1 / scale;      // displayed pt, baseline ~ bbox bottom (top origin)
+    var up = viewToUser(rot, pageW, pageH, vx, vBot);
+    var nat = (typeof measure === 'function') ? Number(measure(word.text, fontSize)) : 0;
+    if (!(nat > 0)) nat = Math.max(0.01, fontSize * 0.5 * String(word.text).length);
+    var tz = Math.min(1000, Math.max(10, 100 * bw / nat));
+    var phi = rot * Math.PI / 180, cos = Math.cos(phi), sin = Math.sin(phi);
+    return {
+      x: up[0], y: up[1], fontSize: fontSize, tzPct: tz,
+      a: cos, b: sin, c: -sin, d: cos, widthPt: bw, heightPt: bh
+    };
+  }
+
+  /* ---- Arabic reading-order repair --------------------------------
+     The in-browser engine returns Arabic words in visual order (the
+     word sequence of a line and the letters inside each word). For a
+     line whose words are mostly Arabic we reverse the word sequence
+     and reverse each Arabic word's letters back to logical order.
+     The fused "الله" ligature is emitted by the engine as one
+     already-logical chunk, so it is kept atomic while reversing. */
+  var ARABIC_RE = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+  function isArabicWord(t) { return ARABIC_RE.test(String(t == null ? '' : t)); }
+  var ALLAH = '\u0627\u0644\u0644\u0647'; // الله
+  function reverseArabicWord(t) {
+    var chars = Array.from(String(t == null ? '' : t));
+    var units = [];
+    for (var i = 0; i < chars.length;) {
+      if (chars.slice(i, i + 4).join('') === ALLAH) { units.push(ALLAH); i += 4; }
+      else { units.push(chars[i]); i++; }
+    }
+    return units.reverse().join('');
+  }
+  function fixRtlOrder(words) {
+    var order = [], byLine = {};
+    (words || []).forEach(function (w) {
+      if (!w) return;
+      var k = (w.line != null) ? String(w.line) : '0';
+      if (!byLine[k]) { byLine[k] = []; order.push(k); }
+      byLine[k].push(w);
+    });
+    var out = [];
+    order.forEach(function (k) {
+      var line = byLine[k], ar = 0, i, w;
+      for (i = 0; i < line.length; i++) if (isArabicWord(line[i].text)) ar++;
+      if (line.length && ar > line.length / 2) {
+        var rev = line.slice().reverse();
+        for (i = 0; i < rev.length; i++) {
+          w = rev[i];
+          if (isArabicWord(w.text)) {
+            var copy = {};
+            for (var p in w) copy[p] = w[p];
+            copy.text = reverseArabicWord(w.text);
+            out.push(copy);
+          } else out.push(w);
+        }
+      } else {
+        for (i = 0; i < line.length; i++) out.push(line[i]);
+      }
+    });
+    return out;
+  }
+
+  function hexIsAllZeros(hex) {
+    var body = String(hex == null ? '' : hex).replace(/[<>\s]/g, '');
+    return body.length > 0 && /^0+$/.test(body);
+  }
+
+  /* buildTextLayerStream(words, fonts, scale, pageW, pageH, rotation)
+     fonts: {main: {res, encode, measure}, arabic: {res, encode, measure}}
+       res: resource name without the slash; encode(text) -> "<hex>"
+       string for a Tj; measure forwarded to wordPlacement.
+     A word is tried with its script's font first, then with the
+     other font: shaping does not matter for an invisible layer, so a
+     word the first font cannot encode (all-zero glyphs, or the
+     shaper throwing — e.g. Amiri/fontkit chokes on some tanwin
+     sequences that DejaVu Sans accepts) is still placed whenever
+     either font can carry it. Only a word NEITHER font can encode
+     lands in skipped, never silently in the stream.
+     Returns {stream, placed, skipped:[word,...]}. */
+  function buildTextLayerStream(words, fonts, scale, pageW, pageH, rotation) {
+    var ops = 'q\n3 Tr\n';
+    var placed = 0, skipped = [];
+    (words || []).forEach(function (w) {
+      if (!w || !w.text || !String(w.text).trim() || !w.bbox) return;
+      var first = isArabicWord(w.text) ? fonts.arabic : fonts.main;
+      var candidates = [first, first === fonts.arabic ? fonts.main : fonts.arabic];
+      var done = false;
+      for (var ci = 0; ci < candidates.length && !done; ci++) {
+        var f = candidates[ci];
+        if (!f) continue;
+        var enc;
+        try { enc = f.encode(w.text); } catch (e) { continue; }
+        if (hexIsAllZeros(enc)) continue;
+        var p = wordPlacement(w, scale, pageW, pageH, rotation, f.measure);
+        ops += 'BT /' + f.res + ' ' + fmt(p.fontSize) + ' Tf ' + fmt(p.tzPct) + ' Tz ' +
+          fmt(p.a) + ' ' + fmt(p.b) + ' ' + fmt(p.c) + ' ' + fmt(p.d) + ' ' +
+          fmt(p.x) + ' ' + fmt(p.y) + ' Tm ' + enc + ' Tj ET\n';
+        placed++;
+        done = true;
+      }
+      if (!done) skipped.push(w);
+    });
+    return { stream: ops + 'Q\n', placed: placed, skipped: skipped };
+  }
+
+  /* addLayer(pdfDoc, pageIndex, words, fonts, scale, PDFLibImpl)
+     fonts here carry the embedded pdf-lib fonts too:
+       {main: {res, font, encode, measure}, arabic: {...}}
+     Appends the layer stream at the END of the page's Contents and
+     registers both fonts in the page's Font resources, merging with
+     the resources the document already has. Returns the
+     buildTextLayerStream result. */
+  function addLayer(pdfDoc, pageIndex, words, fonts, scale, L) {
+    var page = pdfDoc.getPages()[pageIndex];
+    if (!page) return { stream: '', placed: 0, skipped: (words || []).slice() };
+    var mb = page.getMediaBox();
+    var rot = 0;
+    try { rot = page.getRotation().angle; } catch (e) {}
+    var built = buildTextLayerStream(words, fonts, scale, mb.width, mb.height, rot);
+    if (!built.placed) return built;
+    var ctx = pdfDoc.context, PN = L.PDFName;
+    var res = page.node.Resources();
+    if (!res || typeof res.set !== 'function') {
+      res = ctx.obj({});
+      page.node.set(PN.of('Resources'), res);
+    }
+    var fontDict = res.get(PN.of('Font'));
+    fontDict = fontDict ? ctx.lookup(fontDict) : null;
+    if (!fontDict || typeof fontDict.set !== 'function') {
+      fontDict = ctx.obj({});
+      res.set(PN.of('Font'), fontDict);
+    }
+    if (fonts.main && fonts.main.font) fontDict.set(PN.of(fonts.main.res), fonts.main.font.ref);
+    if (fonts.arabic && fonts.arabic.font) fontDict.set(PN.of(fonts.arabic.res), fonts.arabic.font.ref);
+    var streamRef = ctx.register(ctx.flateStream(built.stream));
+    var raw = page.node.get(PN.of('Contents'));
+    var refs = [];
+    if (raw) {
+      var looked = ctx.lookup(raw);
+      if (looked && typeof looked.size === 'function' && typeof looked.get === 'function') {
+        for (var i = 0; i < looked.size(); i++) {
+          var el = looked.get(i);
+          refs.push(el instanceof L.PDFRef ? el : ctx.register(el));
+        }
+      } else if (looked) {
+        refs.push(raw instanceof L.PDFRef ? raw : ctx.register(looked));
+      }
+    }
+    page.node.set(PN.of('Contents'), ctx.obj(refs.concat([streamRef])));
+    return built;
+  }
+
+  /* The per-file summary sentence shown on the result card. */
+  function summarize(r) {
+    r = r || {};
+    var o = r.pagesOcr || 0, e = r.pagesExisting || 0,
+        w = r.wordsAdded || 0, s = r.wordsSkipped || 0, c = r.pagesCapped || 0;
+    var parts = [o + ' page' + (o === 1 ? '' : 's') + ' recognized'];
+    if (e) parts.push(e + ' page' + (e === 1 ? '' : 's') + ' already had text');
+    parts.push(w + ' word' + (w === 1 ? '' : 's') + ' added');
+    var out = parts.join(' · ');
+    if (s) out += ' · ' + s + ' word' + (s === 1 ? '' : 's') + ' in a script the text-layer fonts cannot embed ' + (s === 1 ? 'was' : 'were') + ' left out';
+    if (c) out += ' · ' + c + ' oversized page' + (c === 1 ? '' : 's') + ' recognized at a lower resolution';
+    return out;
+  }
+
+  function sanitizeBase(name) {
+    var b = String(name == null ? 'document' : name).replace(/\.pdf$/i, '');
+    b = b.replace(/[\\\/:*?"<>|#]+/g, '-').replace(/\s+/g, ' ').trim();
+    if (!b) b = 'document';
+    return b;
+  }
+  function outputName(name) { return sanitizeBase(name) + '_ocr.pdf'; }
+
+  return {
+    EXISTING_TEXT_MIN: EXISTING_TEXT_MIN,
+    RENDER_DPI: RENDER_DPI,
+    LANGS: LANGS,
+    validateLangs: validateLangs,
+    langString: langString,
+    countTextChars: countTextChars,
+    needsOcr: needsOcr,
+    fitScale: fitScale,
+    wordPlacement: wordPlacement,
+    buildTextLayerStream: buildTextLayerStream,
+    addLayer: addLayer,
+    fixRtlOrder: fixRtlOrder,
+    summarize: summarize,
+    sanitizeBase: sanitizeBase,
+    outputName: outputName,
+    _: {
+      normalizeRotation: normalizeRotation, viewToUser: viewToUser,
+      isArabicWord: isArabicWord, reverseArabicWord: reverseArabicWord,
+      hexIsAllZeros: hexIsAllZeros, fmt: fmt
+    }
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  /* Verified CDN locations (STEP 0 proof, 2026-10-27):
+     - Tesseract.js v5 bundle: cdnjs (script tag in <head>).
+     - workerPath / corePath: jsdelivr npm builds. corePath is the
+       package DIRECTORY — the worker itself picks the SIMD or
+       plain LSTM core file inside it.
+     - Language data: NO langPath is passed on purpose. Tesseract.js
+       v5's default resolves each language from its own package:
+       https://cdn.jsdelivr.net/npm/@tesseract.js-data/<lang>/4.0.0/
+       <lang>.traineddata.gz (verified live for all 16 languages).
+     - Fonts for the invisible layer: full DejaVu Sans (Latin,
+       Cyrillic, Greek…) + Amiri (Arabic), both via jsdelivr. */
+  var TESS_WORKER = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/worker.min.js';
+  var TESS_CORE = 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1';
+  var FONT_MAIN = 'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf';
+  var FONT_ARABIC = 'https://cdn.jsdelivr.net/npm/@expo-google-fonts/amiri@0.2.3/Amiri_400Regular.ttf';
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      langGrid = $('langGrid'), langHint = $('langHint'), engineStatus = $('engineStatus'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'), cancelBtn = $('cancelBtn'),
+      success = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+      resultList = $('resultList'), zipBtn = $('zipBtn'),
+      restartBtn = $('restartBtn');
+
+  var LANG_HINT_DEFAULT = 'Each selected language downloads once (a few MB) and is cached by your browser for next time.';
+  var CANCELLED = { cancelled: true };
+
+  var state = {
+    files: [],   // {uid, name, size, bytes, status, numPages, cover, result}
+    uidSeq: 0,
+    busy: false,
+    cancelled: false,
+    sortAsc: true
+  };
+  var progCtx = { label: '' };
+  var cancelReject = null;
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function setEngineStatus(text, isError) {
+    engineStatus.textContent = text;
+    engineStatus.classList.toggle('err', !!isError);
+  }
+  function setLangHint(text, isError) {
+    if (text) { langHint.textContent = text; langHint.classList.toggle('err', !!isError); }
+    else { langHint.textContent = LANG_HINT_DEFAULT; langHint.classList.remove('err'); }
+  }
+
+  /* ---------------- languages ---------------- */
+  function langBoxes() {
+    return Array.prototype.slice.call(langGrid.querySelectorAll('input[name="ocrLang"]'));
+  }
+  function selectedLangs() {
+    return langBoxes().filter(function (b) { return b.checked; }).map(function (b) { return b.value; });
+  }
+  langBoxes().forEach(function (box) {
+    box.addEventListener('change', function () {
+      if (box.checked && selectedLangs().length > 3) {
+        box.checked = false;
+        setLangHint('You can pick at most 3 languages — that last one was not added. Mixed-language documents rarely need more.', true);
+      } else if (!selectedLangs().length) {
+        setLangHint('Pick at least one language — the engine needs to know what to read.', true);
+      } else {
+        setLangHint(null);
+      }
+      langBoxes().forEach(function (b) {
+        var l = b.closest('label');
+        if (l) l.classList.toggle('on', b.checked);
+      });
+      updateBar();
+    });
+  });
+
+  /* ---------------- file intake ---------------- */
+  function chipFor(rec) {
+    switch (rec.status) {
+      case 'reading': return '<span class="chip detecting">Reading…</span>';
+      case 'ready': return '<span class="chip healthy">Ready</span>';
+      case 'locked': return '<span class="chip locked">Password-protected</span>';
+      case 'bad': return '<span class="chip notpdf">Couldn’t read this file</span>';
+      case 'working': return '<span class="chip working">Recognizing…</span>';
+      case 'done': return '<span class="chip done">Searchable ✓</span>';
+      case 'already': return '<span class="chip healthy">Already searchable</span>';
+      case 'failed': return '<span class="chip failed">Failed</span>';
+      case 'cancelled': return '<span class="chip cancelled">Cancelled</span>';
+      default: return '';
+    }
+  }
+  function noteFor(rec) {
+    if (rec.status === 'locked') return '<p class="fnote red">This file asks for an open password, so nothing can read it. Unlock it first with Unlock PDF, then OCR the unlocked copy.</p>';
+    if (rec.status === 'bad') return '<p class="fnote red">This file could not be opened as a PDF. If it might be damaged, Repair PDF may be able to rebuild it first.</p>';
+    if (rec.result && rec.result.kind === 'done') return '<p class="fnote">' + esc(rec.result.summary) + '</p>';
+    if (rec.result && rec.result.kind === 'already') return '<p class="fnote">Every page already contains real text — no OCR needed, and no copy was made.</p>';
+    if (rec.result && rec.result.kind === 'failed') return '<p class="fnote red">' + esc(rec.result.message) + '</p>';
+    return '';
+  }
+  function renderCard(rec) {
+    var el = $('fc-' + rec.uid);
+    if (!el) return;
+    el.className = 'filecard' + (rec.status === 'bad' || rec.status === 'failed' ? ' bad' : (rec.status === 'locked' ? ' warn' : ''));
+    var cover = rec.cover
+      ? '<img alt="" src="' + rec.cover + '">'
+      : '<span class="coverph"><span class="bigic">' + (rec.status === 'locked' ? '🔒' : '📄') + '</span>PDF</span>';
+    el.innerHTML =
+      '<div class="coverwrap">' + cover + '</div>' +
+      '<div class="finfo"><p class="fname">' + esc(rec.name) + '</p>' +
+      '<p class="fmeta">' + fmtSize(rec.size) + (rec.numPages ? ' · ' + rec.numPages + ' page' + (rec.numPages === 1 ? '' : 's') : '') + '</p>' +
+      chipFor(rec) + noteFor(rec) + '</div>' +
+      '<button class="rm" type="button" title="Remove this file" aria-label="Remove this file">✕</button>';
+    el.querySelector('.rm').addEventListener('click', function () { removeFile(rec.uid); });
+  }
+  function renderList() {
+    fileList.innerHTML = '';
+    state.files.forEach(function (rec) {
+      var el = document.createElement('div');
+      el.id = 'fc-' + rec.uid;
+      fileList.appendChild(el);
+      renderCard(rec);
+    });
+    fileTools.classList.toggle('on', state.files.length > 0);
+    updateBar();
+  }
+  function updateBar() {
+    var n = state.files.length;
+    actionBar.classList.toggle('on', n > 0);
+    document.body.classList.toggle('bar-visible', n > 0);
+    if (!n) { barSummary.textContent = ''; applyBtn.disabled = true; return; }
+    var ready = state.files.filter(function (r) { return r.status === 'ready'; }).length;
+    barSummary.textContent = n + ' PDF file' + (n === 1 ? '' : 's') + (ready ? ' · ' + ready + ' ready' : '');
+    applyBtn.disabled = state.busy || !ready || !selectedLangs().length;
+  }
+  function removeFile(uid) {
+    if (state.busy) return;
+    state.files = state.files.filter(function (r) { return r.uid !== uid; });
+    renderList();
+  }
+
+  async function diagnose(rec) {
+    var doc = null;
+    try {
+      doc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+      rec.numPages = doc.numPages;
+      if (!rec.numPages || rec.numPages < 1) throw new Error('empty');
+      try {
+        var page = await doc.getPage(1);
+        var base = page.getViewport({ scale: 1 });
+        var scale = Math.min(160 / base.width, 210 / base.height);
+        var viewport = page.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        var cx = canvas.getContext('2d');
+        cx.fillStyle = '#fff'; cx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvasContext: cx, viewport: viewport }).promise;
+        rec.cover = canvas.toDataURL('image/png');
+      } catch (e) { /* cover is optional */ }
+      rec.status = 'ready';
+    } catch (e) {
+      if (e && (e.name === 'PasswordException' || e.code === 1)) rec.status = 'locked';
+      else rec.status = 'bad';
+    } finally {
+      if (doc) { try { await doc.destroy(); } catch (e2) {} }
+      renderCard(rec); updateBar();
+    }
+  }
+
+  async function addFiles(fileListObj) {
+    showError(null);
+    var added = 0;
+    for (var i = 0; i < fileListObj.length; i++) {
+      var f = fileListObj[i];
+      if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') continue;
+      var rec = {
+        uid: ++state.uidSeq, name: f.name, size: f.size,
+        bytes: new Uint8Array(await f.arrayBuffer()),
+        status: 'reading', numPages: 0, cover: null, result: null
+      };
+      state.files.push(rec); added++;
+      var el = document.createElement('div');
+      el.id = 'fc-' + rec.uid;
+      fileList.appendChild(el);
+      renderCard(rec);
+      diagnose(rec);
+    }
+    fileTools.classList.toggle('on', state.files.length > 0);
+    updateBar();
+    if (!added && fileListObj.length) showError('No PDF files were found in that selection.');
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+  sortBtn.addEventListener('click', function () {
+    if (state.busy) return;
+    state.sortAsc = !state.sortAsc;
+    var dir = state.sortAsc ? 1 : -1;
+    state.files.sort(function (a, b) { return a.name.localeCompare(b.name) * dir; });
+    sortBtn.textContent = state.sortAsc ? 'Sort Z → A' : 'Sort A → Z';
+    renderList();
+  });
+  coversBtn.addEventListener('click', function () {
+    document.body.classList.toggle('nocovers');
+    var hidden = document.body.classList.contains('nocovers');
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+    coversBtn.classList.toggle('on', !hidden);
+  });
+
+  /* ---------------- OCR engine (lazy, one per language set) -------- */
+  var tessWorker = null, tessWorkerKey = null, tessCreating = null;
+  function onTessLogger(m) {
+    if (!m) return;
+    if (m.status === 'recognizing text') {
+      var pct = Math.round((m.progress || 0) * 100);
+      processingDetail.textContent = progCtx.label + ' — recognizing text ' + pct + '%';
+    } else if (state.busy) {
+      processingDetail.textContent = progCtx.label + ' — ' + m.status + '…';
+    }
+  }
+  function ensureWorker(langs) {
+    var key = OcrCore.langString(langs);
+    if (tessWorker && tessWorkerKey === key) return Promise.resolve(tessWorker);
+    if (tessCreating && tessWorkerKey === key) return tessCreating;
+    var create = async function () {
+      if (tessWorker) { try { await tessWorker.terminate(); } catch (e) {} tessWorker = null; }
+      setEngineStatus('Preparing the OCR engine and downloading the language files (first time only)…');
+      var oem = (window.Tesseract && Tesseract.OEM && Tesseract.OEM.LSTM_ONLY) || '1';
+      var w = await Tesseract.createWorker(langs, oem, {
+        workerPath: TESS_WORKER,
+        corePath: TESS_CORE,
+        cacheMethod: 'write',
+        logger: onTessLogger
+      });
+      tessWorker = w; tessWorkerKey = key;
+      setEngineStatus('OCR engine ready ✓ — recognition runs entirely on your device. Language files are cached for next time.');
+      return w;
+    };
+    tessCreating = create().then(function (w) { tessCreating = null; return w; },
+      function (err) { tessCreating = null; tessWorkerKey = null; throw err; });
+    tessWorkerKey = key;
+    return tessCreating;
+  }
+
+  /* ---------------- text-layer fonts (lazy, fetched once) ---------- */
+  var fontBytes = null, fontPromise = null;
+  function ensureFontBytes() {
+    if (fontBytes) return Promise.resolve(fontBytes);
+    if (fontPromise) return fontPromise;
+    fontPromise = (async function () {
+      setEngineStatus('Downloading the two text-layer fonts (about 1.2 MB, first time only)…');
+      var pair = await Promise.all([
+        fetch(FONT_MAIN).then(function (r) { if (!r.ok) throw new Error('font download failed'); return r.arrayBuffer(); }),
+        fetch(FONT_ARABIC).then(function (r) { if (!r.ok) throw new Error('font download failed'); return r.arrayBuffer(); })
+      ]);
+      fontBytes = { main: new Uint8Array(pair[0]), arabic: new Uint8Array(pair[1]) };
+      setEngineStatus('OCR engine ready ✓ — recognition runs entirely on your device.');
+      return fontBytes;
+    })();
+    fontPromise.catch(function () { fontPromise = null; });
+    return fontPromise;
+  }
+  function makeAdapters(mainFont, arabicFont) {
+    function mk(font, res) {
+      return {
+        res: res, font: font,
+        measure: function (t, s) { return font.widthOfTextAtSize(t, s); },
+        encode: function (t) { return font.encodeText(t).toString(); }
+      };
+    }
+    return { main: mk(mainFont, 'PdfBleuOcrF1'), arabic: mk(arabicFont, 'PdfBleuOcrF2') };
+  }
+
+  function flattenWords(data) {
+    var words = [];
+    var blocks = (data && data.blocks) || [];
+    blocks.forEach(function (b, bi) {
+      (b.paragraphs || []).forEach(function (p, pi) {
+        (p.lines || []).forEach(function (l, li) {
+          (l.words || []).forEach(function (w) {
+            if (w && w.text && String(w.text).trim()) {
+              words.push({ text: w.text, bbox: w.bbox, confidence: w.confidence, line: bi + '-' + pi + '-' + li });
+            }
+          });
+        });
+      });
+    });
+    if (!words.length && data && Array.isArray(data.words)) {
+      data.words.forEach(function (w, wi) {
+        if (w && w.text && String(w.text).trim()) words.push({ text: w.text, bbox: w.bbox, confidence: w.confidence, line: '0-0-' + wi });
+      });
+    }
+    return words;
+  }
+
+  function cancellable(promise) {
+    var cp = new Promise(function (_, rej) { cancelReject = function () { rej(CANCELLED); }; });
+    return Promise.race([promise, cp]);
+  }
+  function throwIfCancelled() { if (state.cancelled) throw CANCELLED; }
+
+  /* ---------------- per-file pipeline ---------------- */
+  async function processFile(rec, langs) {
+    rec.status = 'working'; rec.result = null; renderCard(rec);
+    var jsDoc = null;
+    try {
+      var worker = await cancellable(ensureWorker(langs));
+      throwIfCancelled();
+      jsDoc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+      var numPages = jsDoc.numPages;
+      rec.numPages = numPages;
+      var pagesOcr = 0, pagesExisting = 0, wordsAdded = 0, wordsSkipped = 0, pagesCapped = 0;
+      var libDoc = null, adapters = null;
+      for (var i = 1; i <= numPages; i++) {
+        throwIfCancelled();
+        progCtx.label = rec.name + ' — page ' + i + ' of ' + numPages;
+        processingDetail.textContent = progCtx.label;
+        var page = await jsDoc.getPage(i);
+        var tc = await page.getTextContent();
+        if (!OcrCore.needsOcr(tc.items)) {
+          pagesExisting++;
+          if (page.cleanup) page.cleanup();
+          continue;
+        }
+        var vp1 = page.getViewport({ scale: 1 });
+        var fit = OcrCore.fitScale(vp1.width, vp1.height, OcrCore.RENDER_DPI);
+        if (fit.capped) pagesCapped++;
+        var viewport = page.getViewport({ scale: fit.scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        var cx = canvas.getContext('2d');
+        cx.fillStyle = '#ffffff';
+        cx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvasContext: cx, viewport: viewport }).promise;
+        if (page.cleanup) page.cleanup();
+        throwIfCancelled();
+        var recognized;
+        try {
+          recognized = await cancellable(worker.recognize(canvas, {}, { blocks: true }));
+        } catch (e) {
+          if (e === CANCELLED || state.cancelled) throw CANCELLED;
+          throw e;
+        }
+        throwIfCancelled();
+        var words = OcrCore.fixRtlOrder(flattenWords(recognized.data));
+        if (!libDoc) {
+          var fb = await ensureFontBytes();
+          throwIfCancelled();
+          libDoc = await PDFLib.PDFDocument.load(rec.bytes.slice(0));
+          if (typeof fontkit === 'undefined') throw new Error('The font engine could not be loaded — check your connection, then reload this page.');
+          libDoc.registerFontkit(fontkit);
+          var mainFont = await libDoc.embedFont(fb.main, { subset: true });
+          var arabicFont = await libDoc.embedFont(fb.arabic, { subset: true });
+          adapters = makeAdapters(mainFont, arabicFont);
+        }
+        var built = OcrCore.addLayer(libDoc, i - 1, words, adapters, fit.scale, PDFLib);
+        pagesOcr++;
+        wordsAdded += built.placed;
+        wordsSkipped += built.skipped.length;
+        canvas.width = 0; canvas.height = 0;
+      }
+      throwIfCancelled();
+      if (!pagesOcr) {
+        rec.status = 'already';
+        rec.result = { kind: 'already', pagesExisting: pagesExisting };
+      } else {
+        var outBytes = await libDoc.save();
+        rec.status = 'done';
+        rec.result = {
+          kind: 'done',
+          blob: new Blob([outBytes], { type: 'application/pdf' }),
+          outName: OcrCore.outputName(rec.name),
+          summary: OcrCore.summarize({
+            pagesOcr: pagesOcr, pagesExisting: pagesExisting,
+            wordsAdded: wordsAdded, wordsSkipped: wordsSkipped, pagesCapped: pagesCapped
+          })
+        };
+      }
+    } catch (e) {
+      if (e === CANCELLED || state.cancelled) {
+        rec.status = 'cancelled';
+        rec.result = { kind: 'cancelled' };
+      } else {
+        rec.status = 'failed';
+        rec.result = {
+          kind: 'failed',
+          message: 'OCR failed on this file: ' + (e && e.message ? e.message : 'unknown error') +
+            ' — check your connection (the engine and language files download on first use), then try again.'
+        };
+      }
+    } finally {
+      if (jsDoc) { try { await jsDoc.destroy(); } catch (e2) {} }
+      renderCard(rec); updateBar();
+    }
+  }
+
+  /* ---------------- results ---------------- */
+  function showResults() {
+    var done = [], already = 0, failed = 0, cancelled = 0;
+    resultList.innerHTML = '';
+    state.files.forEach(function (rec) {
+      if (!rec.result) return;
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = '<div><p class="rname">' + esc(rec.name) + '</p>';
+      var right = '';
+      if (rec.result.kind === 'done') {
+        done.push(rec);
+        left += '<p class="rstatus ok">Searchable PDF created</p><p class="rmeta">' + esc(rec.result.summary) + '</p>';
+        var url = URL.createObjectURL(rec.result.blob);
+        right = '<a class="dl" href="' + url + '" download="' + esc(rec.result.outName) + '">Download</a>';
+      } else if (rec.result.kind === 'already') {
+        already++;
+        left += '<p class="rstatus warn">Already searchable — this file’s text is already selectable, no OCR needed</p>' +
+          '<p class="rmeta">No download: we never hand you an unchanged copy as an “OCR” result.</p>';
+      } else if (rec.result.kind === 'cancelled') {
+        cancelled++;
+        left += '<p class="rstatus warn">Cancelled</p><p class="rmeta">This file was not finished. Files completed before it keep their downloads below.</p>';
+      } else {
+        failed++;
+        left += '<p class="rstatus bad">Failed</p><p class="rmeta">' + esc(rec.result.message) + '</p>';
+      }
+      left += '</div>';
+      item.innerHTML = left + right;
+      resultList.appendChild(item);
+    });
+    var parts = [];
+    if (done.length) parts.push(done.length + ' file' + (done.length === 1 ? '' : 's') + ' made searchable');
+    if (already) parts.push(already + ' already searchable');
+    if (cancelled) parts.push(cancelled + ' cancelled');
+    if (failed) parts.push(failed + ' failed');
+    successInfo.textContent = parts.join(' · ');
+    successTitle.textContent = done.length ? 'Your searchable PDFs are ready' : 'OCR results';
+    zipBtn.style.display = done.length > 1 ? 'block' : 'none';
+    success.classList.add('on');
+    success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  zipBtn.addEventListener('click', async function () {
+    var done = state.files.filter(function (r) { return r.result && r.result.kind === 'done'; });
+    if (done.length < 2) return;
+    zipBtn.disabled = true;
+    zipBtn.textContent = 'Building ZIP…';
+    try {
+      var zip = new JSZip();
+      var counts = {};
+      for (var i = 0; i < done.length; i++) {
+        var name = done[i].result.outName;
+        counts[name] = (counts[name] || 0) + 1;
+        if (counts[name] > 1) name = name.replace(/\.pdf$/i, '') + ' (' + counts[name] + ').pdf';
+        zip.file(name, done[i].result.blob);
+      }
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pdfbleu-ocr.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+      zipBtn.textContent = 'Download all (.zip)';
+    }
+  });
+
+  /* ---------------- run / cancel / reset ---------------- */
+  applyBtn.addEventListener('click', async function () {
+    var langs = selectedLangs();
+    if (!langs.length) { setLangHint('Pick at least one language — the engine needs to know what to read.', true); return; }
+    if (window.__TESS_LOAD_FAILED || typeof Tesseract === 'undefined') {
+      showError('The OCR engine could not be loaded — check your connection, then reload this page.');
+      return;
+    }
+    showError(null);
+    success.classList.remove('on');
+    state.busy = true;
+    state.cancelled = false;
+    cancelReject = null;
+    updateBar();
+    processing.classList.add('on');
+    processingDetail.textContent = 'Preparing the OCR engine…';
+    progCtx.label = 'Preparing the OCR engine';
+    try {
+      for (var i = 0; i < state.files.length; i++) {
+        var rec = state.files[i];
+        if (rec.status !== 'ready') continue;
+        if (state.cancelled) break;
+        await processFile(rec, langs);
+        if (state.cancelled) break;
+      }
+    } finally {
+      state.busy = false;
+      processing.classList.remove('on');
+      updateBar();
+    }
+    showResults();
+  });
+
+  cancelBtn.addEventListener('click', function () {
+    state.cancelled = true;
+    processingDetail.textContent = 'Cancelling…';
+    if (cancelReject) { var r = cancelReject; cancelReject = null; r(); }
+    if (tessWorker) {
+      var w = tessWorker;
+      tessWorker = null; tessWorkerKey = null;
+      if (w.terminate) { try { var p = w.terminate(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+    }
+  });
+
+  function resetAll() {
+    if (state.busy) return;
+    state.files = [];
+    state.cancelled = false;
+    success.classList.remove('on');
+    resultList.innerHTML = '';
+    showError(null);
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  startOverBtn.addEventListener('click', resetAll);
+  restartBtn.addEventListener('click', resetAll);
+
+  renderList();
+})();
+</script>
+</body>
+  </html>
