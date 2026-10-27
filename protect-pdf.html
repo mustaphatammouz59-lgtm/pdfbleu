@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protect PDF — PdfBleu.com</title>
+<meta name="description" content="Encrypt a PDF with a password for free: AES-256 protection and permission controls, applied right in your browser. No upload — your files and your passwords never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:118px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:330px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard .coverph .lockic{font-size:22px;display:block;margin-bottom:2px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .note{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.detecting{background:#eceff9;color:#5c6bc0}
+.chip.plain{background:#e8f5e9;color:#1b5e20}
+.chip.restricted{background:#e3f2fd;color:#0d47a1}
+.chip.locked{background:#fff8e1;color:#6d4c00;border:1px solid #ffcc80}
+.chip.damaged{background:#fdecea;color:#b71c1c}
+.chip.done{background:#2e7d32;color:#fff}
+.chip.failed{background:#e53935;color:#fff}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.prop-row{margin-bottom:12px}
+.prop-row:last-child{margin-bottom:0}
+.prop-row label{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:5px}
+.prop-row input[type=text],.prop-row input[type=password]{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 11px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.pwfield{display:flex;gap:8px;align-items:center}
+.pwfield input{flex:1;min-width:0}
+.pwfield .eye{border:1.5px solid #c5cae9;background:#fff;border-radius:8px;width:42px;height:40px;cursor:pointer;font-size:16px;flex-shrink:0}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.footnote.err{color:#b71c1c;font-weight:600}
+.checkrow{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer}
+.permrow{display:flex;align-items:center;gap:9px;font-size:14.5px;color:#333a5e;cursor:pointer;padding:5px 0}
+.permrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer;flex-shrink:0}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabbtn{flex:1;border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:10px;padding:10px 8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.tabbtn.on{border-color:#3F51B5;background:#3F51B5;color:#fff}
+.strength{height:6px;background:#eceff9;border-radius:3px;overflow:hidden;margin-top:10px}
+.strength .sfill{height:100%;width:0;background:#e53935;border-radius:3px;transition:width .25s ease,background .25s ease}
+.schecks{list-style:none;margin:9px 0 2px;padding:0}
+.schecks li{font-size:13px;color:#888fb0;padding:1.5px 0}
+.schecks li::before{content:'○ '}
+.schecks li.ok{color:#1b5e20;font-weight:600}
+.schecks li.ok::before{content:'✓ '}
+.matchwarn{display:none;font-size:13px;color:#b71c1c;background:#fdecea;border:1px solid #ef9a9a;border-radius:8px;padding:8px 11px;margin-top:9px;font-weight:600}
+.matchwarn.on{display:block}
+.docpwwrap{display:none}
+.docpwwrap.on{display:block}
+.validmsg{display:none;font-size:13.5px;color:#b71c1c;background:#fdecea;border:1px solid #ef9a9a;border-radius:8px;padding:9px 12px;margin-top:14px;font-weight:600}
+.validmsg.on{display:block}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:10px 12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .barwarn{flex-basis:100%;font-size:13px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:7px 11px}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.resultitem.skipped{background:#f4f6fb}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.scannote.red{color:#b71c1c;background:#fdecea;border-color:#ef9a9a}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><path d="M24 6 L37 10.5 V23 C37 32.5 31 38.5 24 42 C17 38.5 11 32.5 11 23 V10.5 Z" fill="#fff"/><rect x="19.5" y="21" width="9" height="8" rx="1.6" fill="#4A7AAB"/><path d="M21.5 21 v-2 a2.5 2.5 0 0 1 5 0 v2" stroke="#4A7AAB" stroke-width="1.8" fill="none"/></svg></span>
+<h1>Protect PDF</h1>
+<p class="subtitle">Encrypt your PDFs with a password and decide exactly what readers may do with them — printing, copying, editing and more — all right here in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the encryption runs entirely in your browser, and the password you set exists only in this page's memory — it is never sent or stored.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
+</div>
+<div class="filelist" id="fileList"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>Protect PDF</h2>
+<div class="tabs">
+<button class="tabbtn on" id="tabBasic" type="button">Basic</button>
+<button class="tabbtn" id="tabAdvanced" type="button">Advanced</button>
+</div>
+
+<div id="panelBasic">
+<p>One password locks the file completely: nobody can open it without the password, and anyone who opens it can use it fully. Encrypted with AES-256.</p>
+<div class="prop-row">
+<label for="pwd">Password</label>
+<div class="pwfield"><input type="password" id="pwd" autocomplete="new-password" placeholder="Type a password"><button class="eye" id="pwdEye" type="button" title="Show or hide the password">👁</button></div>
+<div id="meterBasic">
+<div class="strength"><div class="sfill"></div></div>
+<ul class="schecks">
+<li data-k="lowerUpper">Lowercase &amp; uppercase letters</li>
+<li data-k="number">A number (0–9)</li>
+<li data-k="special">A special character (!@#$…)</li>
+<li data-k="eight">At least 8 characters</li>
+</ul>
+</div>
+</div>
+<div class="prop-row">
+<label for="pwd2">Repeat password</label>
+<div class="pwfield"><input type="password" id="pwd2" autocomplete="new-password" placeholder="Type it again"><button class="eye" id="pwd2Eye" type="button" title="Show or hide the password">👁</button></div>
+<div class="matchwarn" id="basicMatchWarn">Passwords do not match.</div>
+</div>
+</div>
+
+<div id="panelAdvanced" style="display:none">
+<label class="checkrow"><input type="checkbox" id="restrictAccess"> Restrict access</label>
+<p class="footnote">Tick this to require a password just to open the file. Leave it unticked and the file opens freely — only the permissions below are guarded.</p>
+<div class="docpwwrap" id="docPwWrap">
+<div class="prop-row" style="margin-top:12px">
+<label for="docPw">Document password (to open)</label>
+<div class="pwfield"><input type="password" id="docPw" autocomplete="new-password" placeholder="Password readers must enter"><button class="eye" id="docPwEye" type="button" title="Show or hide the password">👁</button></div>
+<div id="meterDoc">
+<div class="strength"><div class="sfill"></div></div>
+<ul class="schecks">
+<li data-k="lowerUpper">Lowercase &amp; uppercase letters</li>
+<li data-k="number">A number (0–9)</li>
+<li data-k="special">A special character (!@#$…)</li>
+<li data-k="eight">At least 8 characters</li>
+</ul>
+</div>
+</div>
+<div class="prop-row">
+<label for="docPw2">Repeat document password</label>
+<div class="pwfield"><input type="password" id="docPw2" autocomplete="new-password" placeholder="Type it again"><button class="eye" id="docPw2Eye" type="button" title="Show or hide the password">👁</button></div>
+<div class="matchwarn" id="docMatchWarn">Passwords do not match.</div>
+</div>
+</div>
+
+<div class="optgroup">
+<p style="font-weight:700;color:#1a237e;font-size:15px;margin-bottom:6px">Permissions password</p>
+<p class="footnote" style="margin:0 0 10px">This separate password guards the permission settings below. It is required whenever the file itself opens without a password or any permission is restricted — otherwise the restrictions would have nothing protecting them. If you set a document password and leave this empty, the permissions password simply becomes the same as the document password.</p>
+<div class="prop-row">
+<label for="ownerPw">Permissions password</label>
+<div class="pwfield"><input type="password" id="ownerPw" autocomplete="new-password" placeholder="Password guarding the permissions"><button class="eye" id="ownerPwEye" type="button" title="Show or hide the password">👁</button></div>
+<div id="meterOwner">
+<div class="strength"><div class="sfill"></div></div>
+<ul class="schecks">
+<li data-k="lowerUpper">Lowercase &amp; uppercase letters</li>
+<li data-k="number">A number (0–9)</li>
+<li data-k="special">A special character (!@#$…)</li>
+<li data-k="eight">At least 8 characters</li>
+</ul>
+</div>
+</div>
+<div class="prop-row">
+<label for="ownerPw2">Repeat permissions password</label>
+<div class="pwfield"><input type="password" id="ownerPw2" autocomplete="new-password" placeholder="Type it again"><button class="eye" id="ownerPw2Eye" type="button" title="Show or hide the password">👁</button></div>
+<div class="matchwarn" id="ownerMatchWarn">Passwords do not match.</div>
+</div>
+</div>
+
+<div class="optgroup">
+<p style="font-weight:700;color:#1a237e;font-size:15px;margin-bottom:4px">Permissions for readers</p>
+<label class="permrow"><input type="checkbox" id="permPrint"> Disable printing</label>
+<label class="permrow"><input type="checkbox" id="permModify"> Disable content modification</label>
+<label class="permrow"><input type="checkbox" id="permCopy"> Disable content copy and extraction</label>
+<label class="permrow"><input type="checkbox" id="permAnnotate"> Disable comments</label>
+<label class="permrow"><input type="checkbox" id="permFill"> Disable form filling</label>
+<label class="permrow"><input type="checkbox" id="permAccessibility"> Disable content extraction for accessibility</label>
+<label class="permrow"><input type="checkbox" id="permAssemble"> Disable document assembly</label>
+<p class="footnote">Some applications don't follow the PDF standard and may not honour these restrictions; the well-known readers do. One modern-format note: AES-256 files no longer carry a separate accessibility permission — the encryption itself folds it into the copy permission, so the copy checkbox above is the one that governs accessibility extraction too.</p>
+<div class="honestnote">⚠️ <strong>Restrictions are flags, not a lock.</strong> Well-behaved readers respect them, but anyone with a tool like our own Unlock PDF can lift restrictions-only protection without a password. Only a document password truly locks the content, because the content itself is encrypted.</div>
+</div>
+</div>
+
+<div class="optgroup">
+<p class="footnote" id="engineStatus">The protection engine (qpdf, running as WebAssembly) downloads once, the first time you add a file — after that, everything runs on your device.</p>
+<p class="footnote" style="margin-top:8px">Your passwords are used only in this page's memory, on your own device. They are never sent anywhere and never stored — close the tab and they are gone.</p>
+</div>
+<div class="validmsg" id="validMsg"></div>
+<div class="freenote">Everything here is 100% free, with no limits: protect as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2 id="successTitle">Your protected PDFs are ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="skipNote" style="display:none"></div>
+<div class="scannote red" id="failNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Protect more files</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why protect with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🛡️</span><h3>AES-256 encryption</h3><p>Your files are locked with the same 256-bit AES standard that modern PDF readers use worldwide — strong enough for contracts, invoices and ID documents.</p></div>
+<div class="step"><span class="fic">🎛️</span><h3>Basic or full control</h3><p>Keep it simple with one password for everything, or go Advanced: a separate password to open the file, another guarding the permissions, and seven individual switches for printing, copying, editing and more.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>The encryption runs locally with the qpdf engine compiled to WebAssembly. Your documents and your new passwords never travel over the network — there is no server copy to leak.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to protect a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. You can protect several PDFs with the same settings in one go.</p></div>
+<div class="step"><span class="num">2</span><h3>Choose Basic or Advanced</h3><p>Basic asks for a single password that locks the file completely. Advanced separates the open password from the permissions password and adds the permission switches.</p></div>
+<div class="step"><span class="num">3</span><h3>Set your password</h3><p>Type the password twice and watch the strength meter. Write it down somewhere safe — if it is lost, the protected file cannot be opened again.</p></div>
+<div class="step"><span class="num">4</span><h3>Protect and download</h3><p>Press “Protect PDF”. Every protected copy is verified — it must refuse to open without the password and open correctly with it — before you save it, one by one or in a ZIP.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is the difference between the document password and the permissions password?</h3><p>The <strong>document password</strong> (also called the user or open password) encrypts the content itself: nobody can even open the file without it. The <strong>permissions password</strong> (owner password) guards the settings — printing, copying, editing and the rest. A file can have either or both: permissions alone let everyone read the file but ask honest readers to respect the limits you set.</p></div>
+<div class="qa"><h3>How strong is AES-256 protection?</h3><p>Very strong — provided the password is. AES-256 is the encryption standard used by banks and governments, and guessing a good password (long, mixed letters, numbers and symbols) is computationally out of reach. A short or common password is the weak point of any encryption, which is why the meter encourages at least 8 characters with a mix of character types.</p></div>
+<div class="qa"><h3>Can the protection be removed later?</h3><p>Yes — with the password. Our Unlock PDF tool removes the protection from any file whose password you know, returning the original document. Honest warning: protection that consists of permissions alone (no document password) can be lifted without the password by tools like that same Unlock PDF, because the file's content was never truly locked. For real secrecy, always set a document password.</p></div>
+<div class="qa"><h3>What happens if I forget the password?</h3><p>The file stays locked — permanently. AES-256 cannot be cracked or bypassed, this page keeps no copy of your password, and there is no recovery service. Always keep an unprotected copy of important documents and store the password in a safe place before you share the protected version.</p></div>
+<div class="qa"><h3>Are my files or passwords uploaded anywhere?</h3><p>No. The encryption engine is downloaded once as code (qpdf compiled to WebAssembly) and then runs entirely on your device. Your documents are never transmitted, and the passwords you type exist only in this tab's memory until you close it.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Encrypting your PDFs…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<div class="barwarn">⚠️ If you forget this password, the file cannot be opened — there is no recovery. Keep it somewhere safe.</div>
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button">Protect PDF</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="protectCore">
+/* =====================================================================
+   PdfBleu Protect — pure helpers (no DOM, no wasm in here, so this
+   part can be unit-tested headlessly).
+
+   classify({pdfLibOk, pdfJsNeedsPassword, pdfJsOk}) -> one of:
+     'plain'      no encryption at all (pdf-lib opened it): ready
+     'restricted' encrypted with an EMPTY user password: pdf.js opens
+                  it, only owner restrictions exist -> protecting it
+                  here simply replaces those restrictions
+     'locked'     pdf.js demands a password before showing anything:
+                  an open password protects it, so this tool leaves it
+                  alone (remove the password with Unlock PDF first)
+     'damaged'    neither library could make sense of the file
+
+   buildArgs({mode, userPw, ownerPw, perms}) -> the qpdf argv (after
+   the program name) for an --encrypt run between the fixed virtual
+   paths /input.pdf and /output.pdf. Passwords travel as single argv
+   elements, never through a shell. Basic mode: the one password is
+   used as BOTH user and owner password. Advanced: an empty owner
+   password defaults to the user password (an empty owner password
+   next to a user password is rejected by qpdf at 256 bits anyway).
+   perms = {print, modify, copy, annotate, fill, accessibility,
+   assemble} with true = allowed. Only RESTRICTIONS are emitted as
+   flags — allowed permissions are qpdf's default. Every flag below
+   was probe-verified against the real qpdf 12.2 wasm build and its
+   effect read back through pdf.js getPermissions():
+     --print=none       clears PRINT (and high-quality print)
+     --modify-other=n   clears MODIFY only (--modify=<level> is a
+                        composite that would also clobber the
+                        annotate/form/assemble bits, so it is
+                        deliberately never used)
+     --extract=n        clears COPY
+     --annotate=n       clears ANNOTATE only (form bit untouched)
+     --form=n           clears FILL_FORM only
+     --accessibility=n accepted by qpdf but ignored by the modern
+                        AES-256 format (the accessibility bit stays
+                        set in every output; the page says so)
+     --assemble=n       clears ASSEMBLE
+
+   strength(pw) -> {lowerUpper, number, special, eight, score 0..4}
+
+   validate({...}) -> array of error codes (empty = ready):
+     basic-password-required, basic-passwords-differ,
+     doc-password-required, doc-passwords-differ,
+     owner-passwords-differ, permissions-need-password,
+     password-required
+   ===================================================================== */
+var ProtectCore = (function () {
+  'use strict';
+
+  var INPUT_PATH = '/input.pdf';
+  var OUTPUT_PATH = '/output.pdf';
+
+  var ALL_PERMS = {
+    print: true, modify: true, copy: true, annotate: true,
+    fill: true, accessibility: true, assemble: true
+  };
+
+  function classify(flags) {
+    flags = flags || {};
+    if (flags.pdfLibOk) return 'plain';
+    if (flags.pdfJsNeedsPassword) return 'locked';
+    if (flags.pdfJsOk) return 'restricted';
+    return 'damaged';
+  }
+
+  function permFlags(perms) {
+    var p = perms || ALL_PERMS;
+    var flags = [];
+    if (!p.print) flags.push('--print=none');
+    if (!p.modify) flags.push('--modify-other=n');
+    if (!p.copy) flags.push('--extract=n');
+    if (!p.annotate) flags.push('--annotate=n');
+    if (!p.fill) flags.push('--form=n');
+    if (!p.accessibility) flags.push('--accessibility=n');
+    if (!p.assemble) flags.push('--assemble=n');
+    return flags;
+  }
+
+  function buildArgs(opts) {
+    opts = opts || {};
+    var userPw = opts.userPw || '';
+    var ownerPw = opts.ownerPw || '';
+    if (opts.mode === 'basic') {
+      ownerPw = userPw;
+    } else if (!ownerPw) {
+      ownerPw = userPw;
+    }
+    var args = ['--encrypt', userPw, ownerPw, '256'];
+    if (opts.mode !== 'basic') args = args.concat(permFlags(opts.perms));
+    args.push('--', INPUT_PATH, OUTPUT_PATH);
+    return args;
+  }
+
+  function strength(pw) {
+    pw = pw || '';
+    var r = {
+      lowerUpper: /[a-z]/.test(pw) && /[A-Z]/.test(pw),
+      number: /[0-9]/.test(pw),
+      special: /[^A-Za-z0-9]/.test(pw),
+      eight: pw.length >= 8
+    };
+    r.score = (r.lowerUpper ? 1 : 0) + (r.number ? 1 : 0) +
+              (r.special ? 1 : 0) + (r.eight ? 1 : 0);
+    return r;
+  }
+
+  function validate(o) {
+    o = o || {};
+    var errors = [];
+    if (o.mode === 'basic') {
+      if (!o.pw) errors.push('basic-password-required');
+      else if (o.pw !== o.pw2) errors.push('basic-passwords-differ');
+      return errors;
+    }
+    var docSet = false;
+    if (o.restrictAccess) {
+      if (!o.docPw) errors.push('doc-password-required');
+      else if (o.docPw !== o.docPw2) errors.push('doc-passwords-differ');
+      else docSet = true;
+    }
+    if (o.ownerPw && o.ownerPw !== o.ownerPw2) errors.push('owner-passwords-differ');
+    var effectiveOwner = o.ownerPw || (docSet ? o.docPw : '');
+    if (!errors.length && !docSet && !effectiveOwner) {
+      errors.push(o.anyPermRestricted ? 'permissions-need-password' : 'password-required');
+    }
+    return errors;
+  }
+
+  return {
+    classify: classify,
+    buildArgs: buildArgs,
+    strength: strength,
+    validate: validate,
+    INPUT_PATH: INPUT_PATH,
+    OUTPUT_PATH: OUTPUT_PATH,
+    ALL_PERMS: ALL_PERMS
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var QPDF_BASE = 'https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@0.3.0/dist/';
+  var QPDF_JS = QPDF_BASE + 'qpdf.js';
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      engineStatus = $('engineStatus'), validMsg = $('validMsg'),
+      tabBasic = $('tabBasic'), tabAdvanced = $('tabAdvanced'),
+      panelBasic = $('panelBasic'), panelAdvanced = $('panelAdvanced'),
+      pwd = $('pwd'), pwd2 = $('pwd2'), basicMatchWarn = $('basicMatchWarn'),
+      meterBasic = $('meterBasic'),
+      restrictAccess = $('restrictAccess'), docPwWrap = $('docPwWrap'),
+      docPw = $('docPw'), docPw2 = $('docPw2'), docMatchWarn = $('docMatchWarn'),
+      meterDoc = $('meterDoc'),
+      ownerPw = $('ownerPw'), ownerPw2 = $('ownerPw2'), ownerMatchWarn = $('ownerMatchWarn'),
+      meterOwner = $('meterOwner'),
+      permPrint = $('permPrint'), permModify = $('permModify'), permCopy = $('permCopy'),
+      permAnnotate = $('permAnnotate'), permFill = $('permFill'),
+      permAccessibility = $('permAccessibility'), permAssemble = $('permAssemble'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+      resultList = $('resultList'), zipBtn = $('zipBtn'),
+      skipNote = $('skipNote'), failNote = $('failNote'),
+      restartBtn = $('restartBtn');
+
+  var state = {
+    files: [],   // {uid, name, size, bytes, status, numPages, cover, result}
+    uidSeq: 0,
+    busy: false,
+    mode: 'basic'
+  };
+
+  var engineMod = null, enginePromise = null;
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function baseName(name) { return name.replace(/\.pdf$/i, ''); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------------- qpdf engine: lazy load (same as Unlock) ------- */
+
+  function setEngineStatus(text, isError) {
+    engineStatus.textContent = text;
+    engineStatus.classList.toggle('err', !!isError);
+  }
+
+  function ensureEngine() {
+    if (engineMod) return Promise.resolve(engineMod);
+    if (enginePromise) return enginePromise;
+    setEngineStatus('Preparing the protection engine… (one-time download)');
+    enginePromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = QPDF_JS;
+      s.async = true;
+      s.onload = function () {
+        var factory = window.Module;
+        if (typeof factory !== 'function') {
+          enginePromise = null;
+          setEngineStatus('The protection engine could not be loaded — check your connection, then press Protect PDF to try again.', true);
+          reject(new Error('qpdf factory missing'));
+          return;
+        }
+        factory({ locateFile: function (path) { return QPDF_BASE + path; } })
+          .then(function (mod) {
+            engineMod = mod;
+            setEngineStatus('Protection engine ready ✓ — it runs entirely on your device.');
+            resolve(mod);
+          })
+          .catch(function (err) {
+            enginePromise = null;
+            setEngineStatus('The protection engine could not be loaded — check your connection, then press Protect PDF to try again.', true);
+            reject(err);
+          });
+      };
+      s.onerror = function () {
+        enginePromise = null;
+        setEngineStatus('The protection engine could not be loaded — check your connection, then press Protect PDF to try again.', true);
+        reject(new Error('qpdf script failed to load'));
+      };
+      document.head.appendChild(s);
+    });
+    return enginePromise;
+  }
+
+  // One qpdf --encrypt run inside the wasm virtual file system.
+  // Returns {ok, code, bytes} — success judged by the EXIT CODE
+  // (this build ignores print/printErr overrides).
+  function runEncrypt(mod, bytes, args) {
+    try { mod.FS.unlink(ProtectCore.OUTPUT_PATH); } catch (e) {}
+    mod.FS.writeFile(ProtectCore.INPUT_PATH, bytes);
+    var code;
+    try {
+      var r = mod.callMain(args);
+      code = (typeof r === 'number') ? r : 0;
+    } catch (e) {
+      code = (e && typeof e.status === 'number') ? e.status : 3;
+    }
+    var out = null;
+    try {
+      var o = mod.FS.readFile(ProtectCore.OUTPUT_PATH);
+      if (o && o.length) out = o;
+    } catch (e) {}
+    try { mod.FS.unlink(ProtectCore.INPUT_PATH); } catch (e) {}
+    try { mod.FS.unlink(ProtectCore.OUTPUT_PATH); } catch (e) {}
+    return { ok: code === 0 && !!out, code: code, bytes: out };
+  }
+
+  /* ---------------- options: tabs, meters, validation -------------- */
+
+  function setMode(mode) {
+    state.mode = mode;
+    tabBasic.classList.toggle('on', mode === 'basic');
+    tabAdvanced.classList.toggle('on', mode === 'advanced');
+    panelBasic.style.display = mode === 'basic' ? '' : 'none';
+    panelAdvanced.style.display = mode === 'advanced' ? '' : 'none';
+    refreshChrome();
+  }
+  tabBasic.addEventListener('click', function () { setMode('basic'); });
+  tabAdvanced.addEventListener('click', function () { setMode('advanced'); });
+
+  function wireEye(btnId, input) {
+    $(btnId).addEventListener('click', function () {
+      input.type = (input.type === 'password') ? 'text' : 'password';
+    });
+  }
+  wireEye('pwdEye', pwd);
+  wireEye('pwd2Eye', pwd2);
+  wireEye('docPwEye', docPw);
+  wireEye('docPw2Eye', docPw2);
+  wireEye('ownerPwEye', ownerPw);
+  wireEye('ownerPw2Eye', ownerPw2);
+
+  var METER_COLORS = ['#e53935', '#e53935', '#ffad00', '#7cb342', '#02b502'];
+  var METER_WIDTHS = ['8%', '25%', '50%', '75%', '100%'];
+  function paintMeter(container, value) {
+    var s = ProtectCore.strength(value);
+    var fill = container.querySelector('.sfill');
+    fill.style.width = value ? METER_WIDTHS[s.score] : '0';
+    fill.style.background = METER_COLORS[s.score];
+    container.querySelectorAll('.schecks li').forEach(function (li) {
+      li.classList.toggle('ok', !!s[li.getAttribute('data-k')]);
+    });
+  }
+  [[pwd, meterBasic], [docPw, meterDoc], [ownerPw, meterOwner]].forEach(function (pair) {
+    pair[0].addEventListener('input', function () { paintMeter(pair[1], pair[0].value); });
+    paintMeter(pair[1], '');
+  });
+
+  function readPerms() {
+    return {
+      print: !permPrint.checked,
+      modify: !permModify.checked,
+      copy: !permCopy.checked,
+      annotate: !permAnnotate.checked,
+      fill: !permFill.checked,
+      accessibility: !permAccessibility.checked,
+      assemble: !permAssemble.checked
+    };
+  }
+  function anyPermRestricted() {
+    var p = readPerms();
+    return Object.keys(p).some(function (k) { return !p[k]; });
+  }
+
+  function validateInput() {
+    return {
+      mode: state.mode,
+      pw: pwd.value, pw2: pwd2.value,
+      docPw: docPw.value, docPw2: docPw2.value,
+      ownerPw: ownerPw.value, ownerPw2: ownerPw2.value,
+      restrictAccess: !!restrictAccess.checked,
+      anyPermRestricted: anyPermRestricted()
+    };
+  }
+
+  // Snapshot of the effective protection settings for one run.
+  function currentSettings() {
+    if (state.mode === 'basic') {
+      return { mode: 'basic', userPw: pwd.value, ownerPw: pwd.value, docPw: pwd.value, perms: null };
+    }
+    var doc = restrictAccess.checked ? docPw.value : '';
+    var own = ownerPw.value || doc;
+    return { mode: 'advanced', userPw: doc, ownerPw: own, docPw: doc, perms: readPerms() };
+  }
+
+  var ERROR_TEXT = {
+    'basic-password-required': 'Type a password for your PDFs in the Basic tab.',
+    'basic-passwords-differ': 'The two passwords in the Basic tab do not match.',
+    'doc-password-required': 'You ticked “Restrict access” — type the document password, or untick the box.',
+    'doc-passwords-differ': 'The two document passwords do not match.',
+    'owner-passwords-differ': 'The two permissions passwords do not match.',
+    'permissions-need-password': 'You restricted permissions — set a permissions password to guard them. Restrictions with nothing guarding them could be lifted by anyone, as if they were never set.',
+    'password-required': 'Set at least one password: tick “Restrict access” and set a document password, or set a permissions password.'
+  };
+
+  function refreshMatchWarnings() {
+    basicMatchWarn.classList.toggle('on', !!pwd2.value && pwd.value !== pwd2.value);
+    docMatchWarn.classList.toggle('on', !!docPw2.value && docPw.value !== docPw2.value);
+    ownerMatchWarn.classList.toggle('on', !!ownerPw2.value && ownerPw.value !== ownerPw2.value);
+  }
+
+  [pwd, pwd2, docPw, docPw2, ownerPw, ownerPw2].forEach(function (el) {
+    el.addEventListener('input', function () { refreshMatchWarnings(); refreshChrome(); });
+  });
+  [restrictAccess, permPrint, permModify, permCopy, permAnnotate, permFill,
+   permAccessibility, permAssemble].forEach(function (el) {
+    el.addEventListener('change', function () {
+      docPwWrap.classList.toggle('on', !!restrictAccess.checked);
+      refreshChrome();
+    });
+  });
+
+  /* ---------------- file handling + detection ---------------------- */
+
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+
+  function addFiles(fileListIn) {
+    var added = 0;
+    Array.prototype.forEach.call(fileListIn, function (file) {
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') return;
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, status: 'detecting', numPages: 0, cover: null, result: null
+      };
+      state.files.push(rec);
+      added++;
+      detectFile(rec, file);
+    });
+    if (!added) showError('Please choose PDF files — the files you dropped were not PDFs.');
+    else { showError(null); ensureEngine().catch(function () {}); }
+    renderFileList();
+    refreshChrome();
+  }
+
+  async function detectFile(rec, file) {
+    var pdfLibOk = false, pdfJsOk = false, needsPw = false;
+    try {
+      var buf = await file.arrayBuffer();
+      rec.bytes = new Uint8Array(buf);
+
+      // 1) pdf-lib opens only unencrypted PDFs.
+      try {
+        var ld = await PDFLib.PDFDocument.load(rec.bytes.slice(0));
+        pdfLibOk = true;
+        rec.numPages = ld.getPageCount();
+      } catch (e) { pdfLibOk = false; }
+
+      // 2) pdf.js: opens plain and restrictions-only files (cover +
+      //    page count); an open password makes it throw.
+      if (!pdfLibOk) {
+        try {
+          var doc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+          pdfJsOk = true;
+          rec.numPages = doc.numPages;
+          try {
+            var page = await doc.getPage(1);
+            var vp = page.getViewport({ scale: 1 });
+            var scale = Math.min(128 / vp.width, 164 / vp.height);
+            var viewport = page.getViewport({ scale: scale });
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.round(viewport.width);
+            canvas.height = Math.round(viewport.height);
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+            rec.cover = canvas.toDataURL('image/png');
+          } catch (e) { rec.cover = null; }
+          try { await doc.destroy(); } catch (e) {}
+        } catch (e) {
+          if (e && (e.name === 'PasswordException' || e.code === 1)) needsPw = true;
+        }
+      } else {
+        // plain file: still grab a cover with pdf.js
+        try {
+          var doc2 = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+          var page2 = await doc2.getPage(1);
+          var vp2 = page2.getViewport({ scale: 1 });
+          var scale2 = Math.min(128 / vp2.width, 164 / vp2.height);
+          var viewport2 = page2.getViewport({ scale: scale2 });
+          var canvas2 = document.createElement('canvas');
+          canvas2.width = Math.round(viewport2.width);
+          canvas2.height = Math.round(viewport2.height);
+          await page2.render({ canvasContext: canvas2.getContext('2d'), viewport: viewport2 }).promise;
+          rec.cover = canvas2.toDataURL('image/png');
+          try { await doc2.destroy(); } catch (e) {}
+        } catch (e) { rec.cover = null; }
+      }
+    } catch (e) {
+      // unreadable file object: falls through to 'damaged'
+    }
+    rec.status = ProtectCore.classify({
+      pdfLibOk: pdfLibOk, pdfJsNeedsPassword: needsPw, pdfJsOk: pdfJsOk
+    });
+    renderFileList();
+    refreshChrome();
+  }
+
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    renderFileList();
+    refreshChrome();
+    renderResults();
+  }
+
+  /* ---------------- file cards ------------------------------------- */
+
+  var CHIP_TEXT = {
+    detecting: 'Checking…',
+    plain: 'Ready to protect',
+    restricted: 'Has restrictions — they will be replaced',
+    locked: 'Already locked — unlock it first',
+    damaged: 'Damaged / can’t be read'
+  };
+  var NOTE_TEXT = {
+    restricted: 'This file already carries usage restrictions. Protecting it here replaces them with the settings on this page.',
+    locked: 'This file needs a password just to open, so it can’t be re-protected here. Remove its password with our Unlock PDF tool first, then bring it back.',
+    plain: '',
+    damaged: 'This file could not be read, so it will be skipped.'
+  };
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    state.files.forEach(function (f) {
+      var card = document.createElement('div');
+      card.className = 'filecard' + (f.status === 'damaged' ? ' bad' : '');
+
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (f.cover) {
+        var img = document.createElement('img');
+        img.src = f.cover; img.alt = '';
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('div');
+        ph.className = 'coverph';
+        if (f.status === 'locked') ph.innerHTML = '<span class="lockic">🔒</span>Locked';
+        else if (f.status === 'damaged') ph.textContent = 'Can’t be read';
+        else if (f.status === 'detecting') ph.textContent = 'Checking…';
+        else ph.textContent = 'PDF';
+        cover.appendChild(ph);
+      }
+      card.appendChild(cover);
+
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('div');
+      nm.className = 'fname'; nm.textContent = f.name;
+      info.appendChild(nm);
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = fmtSize(f.size) + (f.numPages ? ' · ' + f.numPages + (f.numPages === 1 ? ' page' : ' pages') : '');
+      info.appendChild(meta);
+
+      var chip = document.createElement('span');
+      if (f.result && f.result.ok) { chip.className = 'chip done'; chip.textContent = 'Protected ✓'; }
+      else if (f.result && !f.result.ok) { chip.className = 'chip failed'; chip.textContent = 'Protection failed'; }
+      else { chip.className = 'chip ' + f.status; chip.textContent = CHIP_TEXT[f.status] || f.status; }
+      info.appendChild(chip);
+
+      var noteTxt = NOTE_TEXT[f.status];
+      if (noteTxt && !(f.result && f.result.ok)) {
+        var nt = document.createElement('div');
+        nt.className = 'note'; nt.textContent = noteTxt;
+        info.appendChild(nt);
+      }
+      card.appendChild(info);
+
+      var rm = document.createElement('button');
+      rm.className = 'rm'; rm.type = 'button'; rm.textContent = '✕';
+      rm.title = 'Remove this file';
+      rm.addEventListener('click', function () { removeFile(f.uid); });
+      card.appendChild(rm);
+
+      fileList.appendChild(card);
+    });
+    fileTools.classList.toggle('on', state.files.length > 0);
+  }
+
+  sortBtn.addEventListener('click', function () {
+    state.files.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    renderFileList();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('nocovers');
+    coversBtn.classList.toggle('on', !hidden);
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+  });
+
+  /* ---------------- action bar / processing ------------------------ */
+
+  function eligibleFiles() {
+    return state.files.filter(function (f) {
+      return (f.status === 'plain' || f.status === 'restricted') && !(f.result && f.result.ok);
+    });
+  }
+  function refreshChrome() {
+    var has = state.files.length > 0;
+    actionBar.classList.toggle('on', has);
+    document.body.classList.toggle('bar-visible', has);
+    var todo = eligibleFiles();
+    var detecting = state.files.some(function (f) { return f.status === 'detecting'; });
+    var done = state.files.filter(function (f) { return f.result && f.result.ok; }).length;
+    barSummary.textContent = !has ? '' :
+      state.files.length + (state.files.length === 1 ? ' file' : ' files') +
+      (done ? ' · ' + done + ' protected' : '') +
+      (todo.length ? ' · ' + todo.length + ' to protect' : (detecting ? ' · checking…' : ' · nothing to protect'));
+    var errors = ProtectCore.validate(validateInput());
+    if (has && todo.length && errors.length && !detecting) {
+      validMsg.textContent = ERROR_TEXT[errors[0]] || errors[0];
+      validMsg.classList.add('on');
+    } else {
+      validMsg.classList.remove('on');
+    }
+    applyBtn.disabled = state.busy || detecting || todo.length === 0 || errors.length > 0;
+  }
+
+  // Bits checked against pdf.js getPermissions(). The accessibility
+  // bit (512) is deliberately absent: the AES-256 format keeps it set
+  // in every output (disclosed next to the checkboxes on the page).
+  var PERM_BITS = [
+    ['print', 4], ['modify', 8], ['copy', 16],
+    ['annotate', 32], ['fill', 256], ['assemble', 1024]
+  ];
+  function permsMatch(perms, want) {
+    if (!perms) return false; // an encrypted file must report permissions
+    for (var i = 0; i < PERM_BITS.length; i++) {
+      var has = perms.indexOf(PERM_BITS[i][1]) !== -1;
+      var allowed = want ? !!want[PERM_BITS[i][0]] : true;
+      if (has !== allowed) return false;
+    }
+    return true;
+  }
+
+  // Verify an encrypted output before it is offered: it must truly
+  // refuse pdf-lib, refuse pdf.js without the password (when one is
+  // set), open with the password, keep the page count, and carry
+  // exactly the chosen permission bits.
+  async function verifyProtected(bytes, settings, srcPages) {
+    try { await PDFLib.PDFDocument.load(bytes.slice(0)); return false; }
+    catch (e) { /* expected: the file is encrypted */ }
+
+    if (settings.docPw) {
+      var threw = false;
+      try {
+        var t = pdfjsLib.getDocument({ data: bytes.slice(0) });
+        await t.promise;
+        try { await t.destroy(); } catch (e) {}
+      } catch (e) {
+        threw = (e.name === 'PasswordException' || e.code === 1);
+      }
+      if (!threw) return false;
+    }
+
+    try {
+      var opts = { data: bytes.slice(0) };
+      if (settings.docPw) opts.password = settings.docPw;
+      var task = pdfjsLib.getDocument(opts);
+      var doc = await task.promise;
+      var pages = doc.numPages;
+      var perms = null;
+      try { perms = await doc.getPermissions(); } catch (e) {}
+      try { await task.destroy(); } catch (e) {}
+      if (srcPages && pages !== srcPages) return false;
+      return permsMatch(perms, settings.perms);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  applyBtn.addEventListener('click', async function () {
+    var targets = eligibleFiles();
+    if (!targets.length || state.busy) return;
+    if (ProtectCore.validate(validateInput()).length) return;
+    var settings = currentSettings();
+    var args = ProtectCore.buildArgs(settings);
+    state.busy = true;
+    refreshChrome();
+    showError(null);
+    processing.classList.add('on');
+    processingDetail.textContent = 'Preparing the protection engine…';
+    var mod;
+    try {
+      mod = await ensureEngine();
+    } catch (e) {
+      processing.classList.remove('on');
+      state.busy = false;
+      refreshChrome();
+      showError('The protection engine could not be loaded — check your connection and try again. Nothing was processed.');
+      return;
+    }
+    for (var i = 0; i < targets.length; i++) {
+      var f = targets[i];
+      processingDetail.textContent = 'Protecting ' + f.name + ' (' + (i + 1) + ' of ' + targets.length + ')…';
+      // Let the overlay paint before the synchronous wasm run.
+      await new Promise(function (r) { setTimeout(r, 30); });
+      var res = runEncrypt(mod, f.bytes, args);
+      if (!res.ok) {
+        f.result = { ok: false, reason: 'qpdf' };
+        continue;
+      }
+      var verified = await verifyProtected(res.bytes, settings, f.numPages);
+      if (!verified) {
+        f.result = { ok: false, reason: 'verify' };
+        continue;
+      }
+      f.result = {
+        ok: true,
+        blob: new Blob([res.bytes], { type: 'application/pdf' }),
+        outName: baseName(f.name) + '_protected.pdf',
+        size: res.bytes.length
+      };
+    }
+    processing.classList.remove('on');
+    state.busy = false;
+    renderFileList();
+    refreshChrome();
+    renderResults(true);
+  });
+
+  /* ---------------- results ---------------------------------------- */
+
+  function okResults() {
+    return state.files.filter(function (f) { return f.result && f.result.ok; });
+  }
+
+  function renderResults(scroll) {
+    var ok = okResults();
+    var failed = state.files.filter(function (f) { return f.result && !f.result.ok; });
+    var skipped = state.files.filter(function (f) {
+      return !f.result && (f.status === 'locked' || f.status === 'damaged');
+    });
+    var anyRun = ok.length > 0 || failed.length > 0;
+    success.classList.toggle('on', anyRun);
+    if (!anyRun) return;
+
+    successTitle.textContent = ok.length ? 'Your protected PDFs are ready!' : 'Nothing was protected this time';
+    successInfo.textContent = ok.length
+      ? ok.length + (ok.length === 1 ? ' file' : ' files') + ' encrypted with AES-256 — every copy verified before being offered. Save ' + (ok.length === 1 ? 'it' : 'them') + ' below.'
+      : 'See the notes below — fix what is flagged and press Protect PDF again.';
+
+    // De-duplicate output names for the ZIP.
+    var seen = {};
+    ok.forEach(function (f) {
+      var n = f.result.outName;
+      if (seen[n]) { var k = 2; while (seen[baseName(n) + ' (' + k + ').pdf']) k++; n = baseName(n) + ' (' + k + ').pdf'; f.result.zipName = n; }
+      else f.result.zipName = n;
+      seen[f.result.zipName] = true;
+    });
+
+    resultList.innerHTML = '';
+    ok.forEach(function (f) {
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div');
+      rn.className = 'rname'; rn.textContent = f.result.outName;
+      var rm2 = document.createElement('div');
+      rm2.className = 'rmeta'; rm2.textContent = fmtSize(f.result.size) + ' · AES-256 encrypted';
+      left.appendChild(rn); left.appendChild(rm2);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.textContent = 'Download';
+      a.href = URL.createObjectURL(f.result.blob);
+      a.setAttribute('download', f.result.outName);
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = ok.length > 1 ? 'block' : 'none';
+
+    if (skipped.length) {
+      skipNote.style.display = 'block';
+      skipNote.innerHTML = skipped.map(function (f) {
+        return '• ' + esc(f.name) + (f.status === 'locked'
+          ? ' — already locked with an open password. Remove it with Unlock PDF first, then protect it here.'
+          : ' — could not be read, so it was skipped.');
+      }).join('<br>');
+    } else skipNote.style.display = 'none';
+
+    if (failed.length) {
+      failNote.style.display = 'block';
+      failNote.innerHTML = failed.map(function (f) {
+        var why = {
+          qpdf: 'the protection engine could not process this file',
+          verify: 'the protected copy could not be verified, so it was not offered for download'
+        }[f.result.reason] || 'protection failed';
+        return '• ' + esc(f.name) + ' — ' + why + '.';
+      }).join('<br>') + '<br>The files stay in the list above: press <strong>Protect PDF</strong> again to retry only the failed files.';
+    } else failNote.style.display = 'none';
+
+    if (scroll) success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  zipBtn.addEventListener('click', async function () {
+    var ok = okResults();
+    if (ok.length < 2) return;
+    zipBtn.disabled = true;
+    try {
+      var zip = new JSZip();
+      ok.forEach(function (f) { zip.file(f.result.zipName || f.result.outName, f.result.blob); });
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.setAttribute('download', 'pdfbleu-protected.zip');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+    }
+  });
+
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  restartBtn.addEventListener('click', function () { location.reload(); });
+
+  renderFileList();
+  refreshChrome();
+  refreshMatchWarnings();
+})();
+</script>
+</body>
+  </html>
