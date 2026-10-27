@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair PDF — PdfBleu.com</title>
+<meta name="description" content="Repair damaged or unreadable PDF files for free, right in your browser: diagnose the damage, rebuild the file structure with qpdf, deep-rebuild with Ghostscript if needed — no upload, your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard .coverph .bigic{font-size:24px;display:block;margin-bottom:2px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+.filecard.warn{border-color:#ffcc80;background:#fffdf5}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .fnote{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .fnote.red{color:#b71c1c;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.detecting{background:#eceff9;color:#5c6bc0}
+.chip.healthy{background:#e8f5e9;color:#1b5e20}
+.chip.damaged{background:#fff8e1;color:#6d4c00;border:1px solid #ffcc80}
+.chip.notpdf{background:#fdecea;color:#b71c1c}
+.chip.locked{background:#e3f2fd;color:#0d47a1}
+.chip.done{background:#2e7d32;color:#fff}
+.chip.partial{background:#ef6c00;color:#fff}
+.chip.failed{background:#e53935;color:#fff}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar ol.rsteps{margin:0 0 4px 18px;font-size:14px;color:#444a6d}
+.sidebar ol.rsteps li{margin-bottom:7px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.footnote.err{color:#b71c1c;font-weight:600}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:6px}
+.resultitem{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a;margin-top:2px}
+.resultitem .rstatus{font-weight:700;font-size:13.5px;margin-top:2px}
+.resultitem .rstatus.ok{color:#1b5e20}
+.resultitem .rstatus.warn{color:#e65100}
+.resultitem .rstatus.bad{color:#b71c1c}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.success button.again{display:block;margin:10px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#8FBC5D"/><rect x="23" y="23" width="7" height="18" rx="3.5" fill="#fff" transform="rotate(-45 26.5 32)"/><circle cx="19" cy="19" r="8" fill="#fff"/><circle cx="24" cy="14" r="5.5" fill="#8FBC5D"/></svg></span>
+<h1>Repair PDF</h1>
+<p class="subtitle">A PDF that refuses to open is often only structurally broken — its content is still inside. We diagnose the damage, rebuild the file, and hand it back only if the result truly opens.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the diagnosis and both repair engines run entirely in your browser — especially reassuring for damaged files, which are so often the sensitive ones.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your damaged PDFs here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
+</div>
+<div class="filelist" id="fileList"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>Repair PDF</h2>
+<p>Every file is diagnosed the moment you add it, then rebuilt when you press <strong>Repair PDF</strong>. Here is what happens, in order:</p>
+<ol class="rsteps">
+<li><strong>Diagnose</strong> — two independent readers try to open the file, and its cross-reference table is checked, so you can see what is wrong before anything runs.</li>
+<li><strong>Rebuild the structure</strong> — the qpdf engine rewrites the file with a fresh, correct structure while keeping the content as it is.</li>
+<li><strong>Deep rebuild</strong> — only if the first pass cannot do it, the Ghostscript engine re-reads the document page by page and writes a brand-new file. This rewrites the internals more deeply.</li>
+<li><strong>Verify</strong> — the result is re-opened before you can download it. A copy that does not open is never offered to you.</li>
+</ol>
+<div class="optgroup">
+<p class="footnote" id="engineStatus">The repair engines download once, only when needed: qpdf (small) the first time you repair a file, and Ghostscript (about 16 MB) only if a file needs the deep rebuild. Everything runs on your device.</p>
+</div>
+<div class="honestnote">⚠️ <strong>Repair works when the structure is broken but the content survives.</strong> If the content itself is gone — for example the file was cut short in the middle of a page — recovery may be partial or impossible, and the tool will tell you plainly instead of handing you a broken file. Your original file is never modified.</div>
+<div class="freenote">Everything here is 100% free, with no limits: repair as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">🛠️</span>
+<h2 id="successTitle">Repair results</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all repaired (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<button class="again" id="restartBtn" type="button">Repair more files</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why repair with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔧</span><h3>Two repair engines</h3><p>First a structure rebuild that keeps your content untouched; if that is not enough, a deep rewrite that re-reads the document and writes it out fresh. Two very different second chances for your file.</p></div>
+<div class="step"><span class="fic">🩺</span><h3>Honest diagnosis first</h3><p>You see what is wrong before anything runs — healthy, damaged, password-protected, or not a PDF at all — and afterwards you get a plain verdict per file, including when a file could not be saved.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>Damaged files are often the sensitive ones — the only copy of a contract, a statement, a scan. Nothing is uploaded: the diagnosis, both engines and the verification all run on your own device.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to repair a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. You can repair several files in one go — each is handled independently.</p></div>
+<div class="step"><span class="num">2</span><h3>Read the diagnosis</h3><p>Every card shows what the diagnosis found: no damage, damaged, password-protected, or not actually a PDF — with guidance for the last two.</p></div>
+<div class="step"><span class="num">3</span><h3>Press Repair PDF</h3><p>The structure rebuild runs first; a file that still does not verify goes through the deep rebuild automatically. You do not have to choose anything.</p></div>
+<div class="step"><span class="num">4</span><h3>Download the survivors</h3><p>Every offered file has been re-opened and checked. Download the repaired copies one by one, or all together in a ZIP.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What kinds of PDF damage can be fixed?</h3><p>Most often, the file's <strong>structure</strong> is broken while the content survives: a damaged cross-reference table (the index that tells readers where everything is), a missing or broken trailer, wrong stream lengths, or junk bytes around the document. Those are exactly what the two rebuild passes fix. If the <strong>content itself</strong> is missing — the file was truncated, or part of it was overwritten — no tool can invent what is gone; recovery is then partial (the surviving pages) or impossible, and we say so.</p></div>
+<div class="qa"><h3>My file opens, but prints or displays wrong. Can repair help?</h3><p>Often, yes. A file can open in one reader and misbehave in another when its structure is subtly off — the rebuild rewrites the structure cleanly and frequently cures reader-specific glitches, missing pages in print, or “error” dialogs on open. It is not a promise: if the content data itself is wrong, a rebuild cannot fix that. Trying costs nothing — your original is never touched.</p></div>
+<div class="qa"><h3>The tool says my file is “not a PDF”. What does that mean?</h3><p>The file has a .pdf name but something else inside — very common after downloads that went wrong or files renamed by hand. The diagnosis names what was actually detected: a JPEG or PNG image (rename it, or convert it with JPG to PDF), a ZIP archive (often an Office document in disguise — unzip it, or use Word to PDF), or something unrecognizable. Renaming a file never changes what is inside it.</p></div>
+<div class="qa"><h3>Can it repair a password-protected PDF?</h3><p>No — a file that asks for an open password cannot even be read, so there is nothing to rebuild. Unlock it first with Unlock PDF (you will need the password; a forgotten password cannot be recovered or guessed, here or anywhere honest). Once unlocked, come back and repair the unlocked copy if it is also damaged.</p></div>
+<div class="qa"><h3>Will the repaired file look identical to the original?</h3><p>The structure rebuild keeps the content exactly as it is — same pages, text, images and quality. The deep rebuild (Ghostscript) rewrites the document's internals as it re-creates it: content is preserved, but some elements — certain fonts, layers or interactive features — can change subtly. That is why it is the second pass, used only when the first one cannot produce a file that opens.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Repairing your PDFs…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button" disabled>Repair PDF</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="repairCore">
+/* =====================================================================
+   PdfBleu Repair — pure, node-testable helpers (no DOM, no wasm here).
+
+   detectFormat(bytes) -> {pdf, headerOffset, format}
+     Scans for "%PDF-" starting within the first 1024 bytes (a start
+     position of 1023 still counts: readers honour the marker there).
+     If no header: sniffs magic bytes -> 'jpeg' | 'png' | 'zip' |
+     'gif' | 'unknown'.
+
+   checkXref(bytes) -> {present, ok, stream, checked, bad}
+     Structural sanity of the cross-reference: follows the LAST
+     "startxref" pointer (values are relative to the PDF header when
+     junk precedes it, per spec) and, for a classic xref table,
+     verifies that every in-use entry points at a "N G obj" header.
+     Xref-stream files report ok without entry validation.
+
+   friendlyWarning(line) -> friendly string | null
+     Maps one qpdf warning line to plain language. Ordered rules;
+     returns null when nothing meaningful maps (the caller then shows
+     the raw line, trimmed).
+
+   buildQpdfArgs() / buildGsArgs(): the exact engine argv arrays the
+   page runs between the fixed virtual paths.
+
+   decideStatus({diagnosis, passA, passB, verified}) -> one of:
+     'healthy'   diagnosis found no damage; the delivered file is the
+                 verified rebuilt (normalized) copy
+     'repaired'  damaged input; the qpdf structure pass produced a
+                 verified copy with every diagnosed page
+     'partial'   a verified copy exists but pages are missing, or
+                 only the deep (Ghostscript) rebuild could save it
+     'failed'    no pass produced a copy that verifies
+     'notpdf' / 'locked': passed through from the diagnosis
+   ===================================================================== */
+var RepairCore = (function () {
+  'use strict';
+
+  var QPDF_IN = '/in.pdf';
+  var QPDF_OUT = '/out.pdf';
+  var GS_IN = 'in.pdf';
+  var GS_OUT = 'out.pdf';
+
+  function detectFormat(bytes) {
+    var n = bytes ? bytes.length : 0;
+    var limit = Math.min(n, 1024);
+    var off = -1;
+    for (var i = 0; i < limit && i + 5 <= n; i++) {
+      if (bytes[i] === 0x25 && bytes[i + 1] === 0x50 && bytes[i + 2] === 0x44 &&
+          bytes[i + 3] === 0x46 && bytes[i + 4] === 0x2D) { off = i; break; }
+    }
+    if (off >= 0) return { pdf: true, headerOffset: off, format: 'pdf' };
+    var format = 'unknown';
+    if (n >= 3 && bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) format = 'jpeg';
+    else if (n >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47 &&
+             bytes[4] === 0x0D && bytes[5] === 0x0A && bytes[6] === 0x1A && bytes[7] === 0x0A) format = 'png';
+    else if (n >= 2 && bytes[0] === 0x50 && bytes[1] === 0x4B) format = 'zip';
+    else if (n >= 4 && bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) format = 'gif';
+    return { pdf: false, headerOffset: -1, format: format };
+  }
+
+  function strAt(bytes, off, len) {
+    var s = '';
+    var end = Math.min(bytes.length, off + len);
+    for (var i = off; i < end; i++) s += String.fromCharCode(bytes[i]);
+    return s;
+  }
+
+  function findLastSeq(bytes, seq) {
+    var last = -1;
+    outer: for (var i = 0; i + seq.length <= bytes.length; i++) {
+      for (var j = 0; j < seq.length; j++) {
+        if (bytes[i + j] !== seq.charCodeAt(j)) continue outer;
+      }
+      last = i;
+    }
+    return last;
+  }
+
+  function checkXref(bytes) {
+    var none = { present: false, ok: false, stream: false, checked: 0, bad: 0 };
+    if (!bytes || !bytes.length) return none;
+    var fmt = detectFormat(bytes);
+    var base = fmt.headerOffset > 0 ? fmt.headerOffset : 0;
+    var sx = findLastSeq(bytes, 'startxref');
+    if (sx < 0) return none;
+    var i = sx + 9;
+    while (i < bytes.length && ' \t\r\n'.indexOf(String.fromCharCode(bytes[i])) >= 0) i++;
+    var valStr = '';
+    while (i < bytes.length && bytes[i] >= 0x30 && bytes[i] <= 0x39) { valStr += String.fromCharCode(bytes[i]); i++; }
+    if (!valStr) return { present: true, ok: false, stream: false, checked: 0, bad: 0 };
+    var at = base + parseInt(valStr, 10);
+    if (strAt(bytes, at, 4) === 'xref') {
+      // Classic table: parse subsections from a bounded text window.
+      var win = strAt(bytes, at, 1048576);
+      var pos = 4;
+      var checked = 0, bad = 0, guard = 0;
+      while (guard++ < 200) {
+        // skip blank lines / whitespace between sections
+        while (pos < win.length && (win[pos] === '\n' || win[pos] === '\r' || win[pos] === ' ')) pos++;
+        if (win.substr(pos, 7) === 'trailer') break;
+        var m = /^(\d+) (\d+)[ \t]*\r?\n/.exec(win.slice(pos, pos + 40));
+        if (!m) return { present: true, ok: false, stream: false, checked: checked, bad: bad + 1 };
+        pos += m[0].length;
+        var count = parseInt(m[2], 10);
+        for (var e = 0; e < count; e++) {
+          var entry = win.substr(pos, 20);
+          var em = /^(\d{10}) (\d{5}) ([nf])/.exec(entry);
+          if (!em) return { present: true, ok: false, stream: false, checked: checked, bad: bad + 1 };
+          if (em[3] === 'n' && em[1] !== '0000000000') {
+            checked++;
+            var target = base + parseInt(em[1], 10);
+            if (!/^\d+ \d+ obj/.test(strAt(bytes, target, 24))) bad++;
+          }
+          pos += 20;
+        }
+      }
+      return { present: true, ok: bad === 0 && checked > 0, stream: false, checked: checked, bad: bad };
+    }
+    if (/^\d+ \d+ obj/.test(strAt(bytes, at, 32))) {
+      return { present: true, ok: true, stream: true, checked: 0, bad: 0 };
+    }
+    return { present: true, ok: false, stream: false, checked: 0, bad: 0 };
+  }
+
+  var WARNING_RULES = [
+    [/stream[^.]*length|length[^.]*stream/i, 'Corrected stream lengths'],
+    [/attempting to reconstruct|reconstruct[^.]*cross/i, 'Rebuilt the cross-reference table'],
+    [/invalid xref|xref[^.]*invalid|extraneous whitespace seen before xref/i, 'Repaired the cross-reference table'],
+    [/cross-reference|xref/i, 'Repaired the cross-reference table'],
+    [/reported number of objects|trailer/i, 'Rebuilt the file trailer'],
+    [/startxref/i, 'Fixed the cross-reference location pointer'],
+    [/object stream/i, 'Rebuilt the object streams'],
+    [/damaged|invalid|recover|reconstruct|incorrect|mismatch|has offset/i, 'Recovered damaged objects']
+  ];
+
+  function friendlyWarning(line) {
+    if (!line || typeof line !== 'string') return null;
+    if (/^file is damaged$/i.test(line.trim())) return null; // generic preamble, no information
+    for (var i = 0; i < WARNING_RULES.length; i++) {
+      if (WARNING_RULES[i][0].test(line)) return WARNING_RULES[i][1];
+    }
+    return null;
+  }
+
+  function buildQpdfArgs() {
+    return [QPDF_IN, QPDF_OUT];
+  }
+
+  function buildGsArgs() {
+    return ['-sDEVICE=pdfwrite', '-dBATCH', '-dNOPAUSE', '-dNOOUTERSAVE',
+            '-sOutputFile=' + GS_OUT, GS_IN];
+  }
+
+  function decideStatus(input) {
+    input = input || {};
+    var d = input.diagnosis;
+    if (d === 'notpdf') return 'notpdf';
+    if (d === 'locked') return 'locked';
+    var v = input.verified;
+    if (!v || !v.pages || v.pages < 1) return 'failed';
+    var full = !v.expectedPages || v.pages >= v.expectedPages;
+    var aOk = !!(input.passA && input.passA.ok);
+    var bOk = !!(input.passB && input.passB.ok);
+    if (d === 'healthy') return full ? 'healthy' : 'partial';
+    if (!full) return 'partial';
+    if (!aOk && bOk) return 'partial';
+    return 'repaired';
+  }
+
+  return {
+    detectFormat: detectFormat,
+    checkXref: checkXref,
+    friendlyWarning: friendlyWarning,
+    buildQpdfArgs: buildQpdfArgs,
+    buildGsArgs: buildGsArgs,
+    decideStatus: decideStatus,
+    QPDF_IN: QPDF_IN,
+    QPDF_OUT: QPDF_OUT,
+    GS_IN: GS_IN,
+    GS_OUT: GS_OUT
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var QPDF_BASE = 'https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@0.3.0/dist/';
+  var QPDF_JS = QPDF_BASE + 'qpdf.js';
+  var GS_BASE = 'https://cdn.jsdelivr.net/npm/@okathira/ghostpdl-wasm@1.1.0/dist/';
+  var GS_JS = GS_BASE + 'gs.js';
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      engineStatus = $('engineStatus'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+      resultList = $('resultList'), zipBtn = $('zipBtn'),
+      restartBtn = $('restartBtn');
+
+  var state = {
+    files: [],   // {uid, name, size, bytes, diagnosis, format, numPages, cover, restricted, result}
+    uidSeq: 0,
+    busy: false,
+    sortAsc: true
+  };
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function baseName(name) { return name.replace(/\.pdf$/i, ''); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function setEngineStatus(text, isError) {
+    engineStatus.textContent = text;
+    engineStatus.classList.toggle('err', !!isError);
+  }
+
+  /* ------------- qpdf engine: lazy load + stderr capture -------------
+     This qpdf build ignores the usual Module print/printErr options:
+     its glue binds console.error once, when the script is evaluated,
+     and routes the engine's stderr there. So the console is wrapped
+     BEFORE the engine script is injected; while a repair run is
+     executing (synchronously), the wrapper collects the engine's
+     lines instead of forwarding them. Everything else keeps logging
+     normally. If a future build changes this, exit code 3 still tells
+     us warnings happened and the result card falls back to a generic
+     sentence — it never invents specifics. */
+  var qpdfCapture = null; // array while a qpdf run is on the stack
+  var consoleWrapped = false;
+  function installConsoleCapture() {
+    if (consoleWrapped) return;
+    consoleWrapped = true;
+    var realError = console.error.bind(console);
+    console.error = function () {
+      if (qpdfCapture) {
+        qpdfCapture.push(Array.prototype.map.call(arguments, function (a) { return String(a); }).join(' '));
+        return;
+      }
+      realError.apply(null, arguments);
+    };
+  }
+
+  var qpdfMod = null, qpdfPromise = null;
+  function ensureQpdf() {
+    if (qpdfMod) return Promise.resolve(qpdfMod);
+    if (qpdfPromise) return qpdfPromise;
+    setEngineStatus('Preparing the repair engine (qpdf)… one-time download.');
+    installConsoleCapture();
+    qpdfPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = QPDF_JS;
+      s.async = true;
+      s.onload = function () {
+        var factory = window.Module;
+        if (typeof factory !== 'function') {
+          qpdfPromise = null;
+          setEngineStatus('The repair engine could not be loaded — check your connection, then press Repair PDF to try again.', true);
+          reject(new Error('qpdf factory missing'));
+          return;
+        }
+        factory({ locateFile: function (path) { return QPDF_BASE + path; } })
+          .then(function (mod) {
+            qpdfMod = mod;
+            setEngineStatus('Repair engine ready ✓ — qpdf runs entirely on your device. Ghostscript loads only if a file needs the deep rebuild.');
+            resolve(mod);
+          })
+          .catch(function (err) {
+            qpdfPromise = null;
+            setEngineStatus('The repair engine could not be loaded — check your connection, then press Repair PDF to try again.', true);
+            reject(err);
+          });
+      };
+      s.onerror = function () {
+        qpdfPromise = null;
+        setEngineStatus('The repair engine could not be loaded — check your connection, then press Repair PDF to try again.', true);
+        reject(new Error('qpdf script failed to load'));
+      };
+      document.head.appendChild(s);
+    });
+    return qpdfPromise;
+  }
+
+  // One structure-rebuild run. Exit 0 = clean, 3 = success WITH
+  // warnings (normal for repair), anything else / no output = failed.
+  function runQpdf(mod, bytes) {
+    try { mod.FS.unlink(RepairCore.QPDF_OUT); } catch (e) {}
+    mod.FS.writeFile(RepairCore.QPDF_IN, bytes);
+    var lines = [];
+    var code;
+    qpdfCapture = lines;
+    try {
+      var r = mod.callMain(RepairCore.buildQpdfArgs());
+      code = (typeof r === 'number') ? r : 0;
+    } catch (e) {
+      code = (e && typeof e.status === 'number') ? e.status : 2;
+    } finally {
+      qpdfCapture = null;
+    }
+    var out = null;
+    try {
+      var o = mod.FS.readFile(RepairCore.QPDF_OUT);
+      if (o && o.length) out = o;
+    } catch (e) {}
+    try { mod.FS.unlink(RepairCore.QPDF_IN); } catch (e) {}
+    try { mod.FS.unlink(RepairCore.QPDF_OUT); } catch (e) {}
+    var warnings = lines.filter(function (l) { return l.indexOf('WARNING:') === 0; })
+      .map(function (l) { return l.replace(/^WARNING:\s*/, '').trim(); });
+    return { code: code, bytes: out, warnings: warnings };
+  }
+
+  /* ------------- Ghostscript engine: lazy, deep pass only ------------- */
+  var gsMod = null, gsPromise = null;
+  function ensureGs() {
+    if (gsMod) return Promise.resolve(gsMod);
+    if (gsPromise) return gsPromise;
+    setEngineStatus('Downloading the deep-rebuild engine (Ghostscript, about 16 MB, one-time)…');
+    gsPromise = import(GS_JS).then(function (mod) {
+      var factory = mod && mod.default;
+      if (typeof factory !== 'function') throw new Error('engine factory missing');
+      return factory({
+        locateFile: function (path) { return GS_BASE + path; },
+        print: function () {},
+        printErr: function () {}
+      });
+    }).then(function (m) {
+      gsMod = m;
+      gsPromise = null;
+      setEngineStatus('Both repair engines ready ✓ — everything runs entirely on your device.');
+      return m;
+    }).catch(function (err) {
+      gsPromise = null;
+      setEngineStatus('The deep-rebuild engine could not be loaded — check your connection, then press Repair PDF to try again.', true);
+      throw err;
+    });
+    return gsPromise;
+  }
+
+  // One deep-rebuild run (pdfwrite rewrite). A WebAssembly trap retires
+  // the instance; the next file gets a freshly built one.
+  function runGs(mod, bytes) {
+    var FS = mod.FS;
+    try { FS.unlink(RepairCore.GS_OUT); } catch (e) {}
+    FS.writeFile(RepairCore.GS_IN, bytes);
+    var code = 0, trapped = false;
+    try {
+      var r = mod.callMain(RepairCore.buildGsArgs());
+      code = (typeof r === 'number') ? r : 0;
+    } catch (e) {
+      trapped = true;
+      code = (e && typeof e.status === 'number') ? e.status : -1;
+    }
+    var out = null;
+    if (!trapped) {
+      try {
+        var o = FS.readFile(RepairCore.GS_OUT);
+        if (o && o.length) out = o;
+      } catch (e) {}
+    }
+    try { FS.unlink(RepairCore.GS_IN); } catch (e) {}
+    try { FS.unlink(RepairCore.GS_OUT); } catch (e) {}
+    if (trapped) gsMod = null;
+    return { code: code, trapped: trapped, bytes: out };
+  }
+
+  /* ---------------- file handling + diagnosis ---------------- */
+
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+
+  function addFiles(fileListIn) {
+    var added = 0;
+    Array.prototype.forEach.call(fileListIn, function (file) {
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, diagnosis: 'detecting', format: null, headerOffset: -1,
+        numPages: 0, cover: null, restricted: false, result: null
+      };
+      state.files.push(rec);
+      added++;
+      diagnoseFile(rec, file);
+    });
+    if (!added) showError('No files were added.');
+    else showError(null);
+    renderFileList();
+    refreshChrome();
+  }
+
+  var NOTPDF_GUIDANCE = {
+    jpeg: 'This file is actually a JPEG image with a .pdf name. Rename it to .jpg to use it as a picture — or turn it into a real PDF with our JPG to PDF tool.',
+    png: 'This file is actually a PNG image with a .pdf name. Rename it to .png to use it as a picture — or turn it into a real PDF with our JPG to PDF tool.',
+    zip: 'This file is actually a ZIP archive — most likely an Office document (.docx, .xlsx or .pptx) or a bundle of files with a .pdf name. Unzip it first; a document inside can be converted with Word to PDF.',
+    gif: 'This file is actually a GIF image with a .pdf name. Rename it to .gif to use it as a picture — or turn it into a real PDF with our JPG to PDF tool.',
+    unknown: 'No PDF document could be found inside this file. It may be a completely different kind of file with a .pdf name, or damaged beyond recognition.'
+  };
+
+  async function diagnoseFile(rec, file) {
+    try {
+      var buf = await file.arrayBuffer();
+      rec.bytes = new Uint8Array(buf);
+    } catch (e) {
+      rec.diagnosis = 'damaged';
+      renderFileList(); refreshChrome();
+      return;
+    }
+
+    var fmt = RepairCore.detectFormat(rec.bytes);
+    rec.format = fmt.format;
+    rec.headerOffset = fmt.headerOffset;
+    if (fmt.format !== 'pdf') {
+      rec.diagnosis = 'notpdf';
+      renderFileList(); refreshChrome();
+      return;
+    }
+
+    // Reader 1: pdf-lib, strict. It refuses every encrypted file, so
+    // an "encrypted" error is information, not damage.
+    var libOk = false, encrypted = false;
+    try {
+      var ld = await PDFLib.PDFDocument.load(rec.bytes.slice(0));
+      libOk = true;
+      rec.numPages = ld.getPageCount();
+    } catch (e) {
+      if (/encrypt/i.test(String((e && e.message) || e))) encrypted = true;
+    }
+
+    // Reader 2: pdf.js — opens restrictions-only files on its own,
+    // asks for a password on open-password files, and its recovery
+    // mode reads files whose cross-reference is already broken.
+    var jsOk = false, needsPw = false;
+    try {
+      var doc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+      jsOk = true;
+      rec.numPages = doc.numPages;
+      try {
+        var page = await doc.getPage(1);
+        var vp = page.getViewport({ scale: 1 });
+        var scale = Math.min(128 / vp.width, 164 / vp.height);
+        var viewport = page.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+        rec.cover = canvas.toDataURL('image/png');
+      } catch (e) { rec.cover = null; }
+      try { await doc.destroy(); } catch (e) {}
+    } catch (e) {
+      if (e && (e.name === 'PasswordException' || e.code === 1)) needsPw = true;
+    }
+
+    if (needsPw) {
+      rec.diagnosis = 'locked';
+      renderFileList(); refreshChrome();
+      return;
+    }
+
+    var xref = RepairCore.checkXref(rec.bytes);
+    rec.xrefBad = !!(xref.present && !xref.ok);
+    rec.restricted = !!(encrypted && jsOk);
+    if ((libOk || rec.restricted) && jsOk && !rec.xrefBad) rec.diagnosis = 'healthy';
+    else rec.diagnosis = 'damaged';
+    renderFileList();
+    refreshChrome();
+  }
+
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    renderFileList();
+    refreshChrome();
+    renderResults();
+  }
+
+  /* ---------------- file cards ---------------- */
+
+  var CHIP_TEXT = {
+    detecting: 'Diagnosing…',
+    healthy: 'No damage found',
+    damaged: 'Damaged',
+    notpdf: 'Not a PDF',
+    locked: 'Password-protected'
+  };
+  var RESULT_CHIP = {
+    healthy: ['done', 'Checked — clean copy delivered'],
+    repaired: ['done', 'Repaired ✓'],
+    partial: ['partial', 'Partially recovered'],
+    failed: ['failed', 'Could not be repaired']
+  };
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    state.files.forEach(function (f) {
+      var card = document.createElement('div');
+      card.className = 'filecard' +
+        (f.diagnosis === 'notpdf' ? ' bad' : (f.diagnosis === 'damaged' || f.diagnosis === 'locked') ? ' warn' : '');
+
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (f.cover) {
+        var img = document.createElement('img');
+        img.src = f.cover; img.alt = '';
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('div');
+        ph.className = 'coverph';
+        if (f.diagnosis === 'notpdf') ph.innerHTML = '<span class="bigic">🚫</span>Not a PDF';
+        else if (f.diagnosis === 'locked') ph.innerHTML = '<span class="bigic">🔒</span>Locked';
+        else if (f.diagnosis === 'damaged') ph.innerHTML = '<span class="bigic">📄</span>No preview';
+        else if (f.diagnosis === 'detecting') ph.textContent = 'Checking…';
+        else ph.innerHTML = '<span class="bigic">📄</span>PDF';
+        cover.appendChild(ph);
+      }
+      card.appendChild(cover);
+
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('div');
+      nm.className = 'fname'; nm.textContent = f.name;
+      info.appendChild(nm);
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = fmtSize(f.size) +
+        (f.numPages ? ' · ' + f.numPages + (f.numPages === 1 ? ' page' : ' pages') :
+          (f.diagnosis !== 'detecting' && f.diagnosis !== 'notpdf' ? ' · ? pages' : ''));
+      info.appendChild(meta);
+
+      var chip = document.createElement('span');
+      if (f.result && RESULT_CHIP[f.result.status]) {
+        chip.className = 'chip ' + RESULT_CHIP[f.result.status][0];
+        chip.textContent = RESULT_CHIP[f.result.status][1];
+      } else {
+        chip.className = 'chip ' + f.diagnosis;
+        chip.textContent = CHIP_TEXT[f.diagnosis] || f.diagnosis;
+      }
+      info.appendChild(chip);
+
+      var note = document.createElement('div');
+      if (f.result) {
+        note.className = 'fnote';
+        note.textContent = f.result.headline;
+      } else if (f.diagnosis === 'damaged') {
+        note.className = 'fnote'; note.textContent = 'This file does not open cleanly. Press Repair PDF and both engines will try to rebuild it.';
+      } else if (f.diagnosis === 'notpdf') {
+        note.className = 'fnote red'; note.textContent = NOTPDF_GUIDANCE[f.format] || NOTPDF_GUIDANCE.unknown;
+      } else if (f.diagnosis === 'locked') {
+        note.className = 'fnote'; note.textContent = 'This file asks for an open password, so it cannot even be read. Unlock it first with Unlock PDF, then repair the unlocked copy.';
+      } else if (f.diagnosis === 'healthy') {
+        note.className = 'fnote'; note.textContent = 'This file opens fine. Repair will still hand you a clean, rebuilt copy of it.' + (f.restricted ? ' (It carries usage restrictions, which the copy keeps — Unlock PDF removes those.)' : '');
+      }
+      if (note.textContent) info.appendChild(note);
+      card.appendChild(info);
+
+      var rm = document.createElement('button');
+      rm.className = 'rm'; rm.type = 'button'; rm.textContent = '✕';
+      rm.title = 'Remove this file';
+      rm.addEventListener('click', function () { removeFile(f.uid); });
+      card.appendChild(rm);
+
+      fileList.appendChild(card);
+    });
+    fileTools.classList.toggle('on', state.files.length > 0);
+  }
+
+  sortBtn.addEventListener('click', function () {
+    state.sortAsc = !state.sortAsc;
+    state.files.sort(function (a, b) {
+      return state.sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    });
+    sortBtn.textContent = state.sortAsc ? 'Sort by name ↓' : 'Sort by name ↑';
+    renderFileList();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('nocovers');
+    coversBtn.classList.toggle('on', !hidden);
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+  });
+
+  /* ---------------- verification ---------------- */
+
+  // A copy counts as recovered only if BOTH readers open it again:
+  // pdf-lib (structure; encryption-tolerant because a restrictions-
+  // only original legitimately stays restricted) and pdf.js with at
+  // least one page.
+  async function verifyOutput(bytes, expectedPages) {
+    var libOk = false;
+    try {
+      await PDFLib.PDFDocument.load(bytes.slice(0), { ignoreEncryption: true });
+      libOk = true;
+    } catch (e) { libOk = false; }
+    if (!libOk) return null;
+    var jsPages = 0;
+    try {
+      var doc = await pdfjsLib.getDocument({ data: bytes.slice(0) }).promise;
+      jsPages = doc.numPages;
+      try { await doc.destroy(); } catch (e) {}
+    } catch (e) { jsPages = 0; }
+    if (jsPages < 1) return null;
+    return { pages: jsPages, expectedPages: expectedPages || 0 };
+  }
+
+  /* ---------------- repair flow ---------------- */
+
+  function actionableFiles() {
+    return state.files.filter(function (f) {
+      return (f.diagnosis === 'healthy' || f.diagnosis === 'damaged') &&
+             !(f.result && (f.result.status === 'healthy' || f.result.status === 'repaired' || f.result.status === 'partial'));
+    });
+  }
+
+  function refreshChrome() {
+    var has = state.files.length > 0;
+    actionBar.classList.toggle('on', has);
+    document.body.classList.toggle('bar-visible', has);
+    var detecting = state.files.some(function (f) { return f.diagnosis === 'detecting'; });
+    var todo = actionableFiles().length;
+    var done = state.files.filter(function (f) { return f.result && f.result.blob; }).length;
+    barSummary.textContent = !has ? '' :
+      state.files.length + (state.files.length === 1 ? ' file' : ' files') +
+      (done ? ' · ' + done + ' recovered' : '') +
+      (detecting ? ' · diagnosing…' : (todo ? ' · ' + todo + ' to repair' : ' · nothing to repair'));
+    applyBtn.disabled = state.busy || detecting || todo === 0;
+  }
+
+  function friendlyList(warningLines) {
+    var seen = {}, out = [];
+    (warningLines || []).forEach(function (line) {
+      var f = RepairCore.friendlyWarning(line) || line;
+      if (f && !seen[f]) { seen[f] = true; out.push(f); }
+    });
+    return out.slice(0, 4);
+  }
+
+  async function repairOne(f, idx, total) {
+    var passA = { ok: false, warnings: [] };
+    var passB = { ok: false };
+    var delivered = null, verified = null, usedPass = null, qWarnings = null, qCode = null;
+
+    processingDetail.textContent = 'Rebuilding the structure of ' + f.name + ' (' + idx + ' of ' + total + ')…';
+    await new Promise(function (r) { setTimeout(r, 30); });
+    var qmod = await ensureQpdf();
+    var ra = runQpdf(qmod, f.bytes);
+    qCode = ra.code;
+    if ((ra.code === 0 || ra.code === 3) && ra.bytes) {
+      qWarnings = ra.warnings;
+      verified = await verifyOutput(ra.bytes, f.numPages);
+      if (verified) { passA.ok = true; passA.warnings = ra.warnings; delivered = ra.bytes; usedPass = 'A'; }
+    }
+
+    if (!delivered) {
+      processingDetail.textContent = 'Deep-rebuilding ' + f.name + ' (' + idx + ' of ' + total + ') — this pass rewrites the document…';
+      await new Promise(function (r) { setTimeout(r, 30); });
+      var gmod = await ensureGs();
+      var rb = runGs(gmod, f.bytes);
+      if (rb.bytes) {
+        verified = await verifyOutput(rb.bytes, f.numPages);
+        if (verified) { passB.ok = true; delivered = rb.bytes; usedPass = 'B'; }
+      }
+    }
+
+    var status = RepairCore.decideStatus({
+      diagnosis: f.diagnosis, passA: passA, passB: passB, verified: verified
+    });
+
+    var headline = '', detail = '';
+    if (status === 'healthy') {
+      headline = 'No damage found.';
+      detail = 'Your file opened cleanly in every check. The download is a freshly rebuilt, normalized copy of it' +
+        (usedPass === 'B' ? ' (produced by the deep rebuild, because the standard rebuild did not produce a usable copy)' : '') +
+        ' — same ' + verified.pages + (verified.pages === 1 ? ' page' : ' pages') + ', verified to open.';
+    } else if (status === 'repaired') {
+      headline = 'Repaired.';
+      detail = 'The structure rebuild produced a clean copy with all ' + verified.pages + (verified.pages === 1 ? ' page' : ' pages') + ', verified to open.';
+      var fl = friendlyList(qWarnings);
+      if (fl.length) detail += ' Fixes applied: ' + fl.join('; ') + '.';
+      else if (qCode === 3) detail += ' The engine reported warnings while rebuilding, but their text is not exposed by this build.';
+    } else if (status === 'partial') {
+      headline = 'Partially recovered.';
+      if (verified && verified.expectedPages && verified.pages < verified.expectedPages) {
+        detail = 'Only ' + verified.pages + ' of the ' + verified.expectedPages + ' pages the diagnosis could read survived the rebuild. The copy is verified to open — check it before relying on it.';
+      } else {
+        detail = 'The structure rebuild could not save this file, so it was deep-rebuilt instead: content is preserved and the copy is verified to open (' + verified.pages + (verified.pages === 1 ? ' page' : ' pages') + '), but the deep rewrite can subtly change some elements — check it before relying on it.';
+      }
+      var fl2 = friendlyList(qWarnings);
+      if (fl2.length && usedPass === 'A') detail += ' Fixes applied: ' + fl2.join('; ') + '.';
+    } else {
+      headline = 'Could not be repaired.';
+      detail = 'Neither rebuild could produce a file that opens. The damage reaches into the content itself — part of the document data is missing or overwritten, and no tool can invent what is gone. If another copy of the file exists anywhere (email, backup, the sender), it is worth repairing that one instead.';
+    }
+
+    f.result = {
+      status: status,
+      headline: headline,
+      detail: detail,
+      blob: delivered ? new Blob([delivered], { type: 'application/pdf' }) : null,
+      outName: baseName(f.name) + '_repaired.pdf',
+      size: delivered ? delivered.length : 0,
+      pages: verified ? verified.pages : 0
+    };
+  }
+
+  applyBtn.addEventListener('click', async function () {
+    var targets = actionableFiles();
+    if (!targets.length || state.busy) return;
+    state.busy = true;
+    refreshChrome();
+    showError(null);
+    processing.classList.add('on');
+    processingDetail.textContent = 'Preparing the repair engines…';
+    try {
+      for (var i = 0; i < targets.length; i++) {
+        await repairOne(targets[i], i + 1, targets.length);
+        renderFileList();
+      }
+    } catch (e) {
+      showError('A repair engine could not be loaded or stopped unexpectedly — check your connection and press Repair PDF to try again. Any file already repaired keeps its result.');
+    }
+    processing.classList.remove('on');
+    state.busy = false;
+    renderFileList();
+    refreshChrome();
+    renderResults(true);
+  });
+
+  /* ---------------- results ---------------- */
+
+  function recoveredFiles() {
+    return state.files.filter(function (f) { return f.result && f.result.blob; });
+  }
+
+  var STATUS_LABEL = {
+    healthy: ['No damage found', 'ok'],
+    repaired: ['Repaired ✓', 'ok'],
+    partial: ['Partially recovered', 'warn'],
+    failed: ['Could not be repaired', 'bad']
+  };
+
+  function renderResults(scroll) {
+    var anyResult = state.files.some(function (f) { return f.result; });
+    if (!anyResult) { success.classList.remove('on'); return; }
+    success.classList.add('on');
+
+    var ok = recoveredFiles();
+    successTitle.textContent = ok.length ? 'Repair finished — ' + ok.length + (ok.length === 1 ? ' file' : ' files') + ' recovered' : 'Repair finished';
+    successInfo.textContent = ok.length
+      ? 'Every file below was re-opened and verified before being offered. Your originals were never modified.'
+      : 'No file could be recovered this time — the per-file notes below explain what was found.';
+
+    // De-duplicate output names for the ZIP.
+    var seen = {};
+    state.files.forEach(function (f) {
+      if (!f.result) return;
+      var n = f.result.outName;
+      if (seen[n] && f.result.blob) { var k = 2; while (seen[baseName(n) + ' (' + k + ').pdf']) k++; n = baseName(n) + ' (' + k + ').pdf'; }
+      f.result.zipName = n;
+      seen[n] = true;
+    });
+
+    resultList.innerHTML = '';
+    state.files.forEach(function (f) {
+      if (!f.result && f.diagnosis !== 'notpdf' && f.diagnosis !== 'locked') return;
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div');
+      rn.className = 'rname'; rn.textContent = f.name;
+      left.appendChild(rn);
+      var st = document.createElement('div');
+      if (f.result) {
+        var lab = STATUS_LABEL[f.result.status] || ['Done', 'ok'];
+        st.className = 'rstatus ' + lab[1];
+        st.textContent = lab[0];
+        left.appendChild(st);
+        var rm2 = document.createElement('div');
+        rm2.className = 'rmeta';
+        rm2.textContent = f.result.detail + (f.result.blob ? ' (' + fmtSize(f.result.size) + ')' : '');
+        left.appendChild(rm2);
+      } else if (f.diagnosis === 'notpdf') {
+        st.className = 'rstatus bad';
+        st.textContent = 'Not a PDF';
+        left.appendChild(st);
+        var rn2 = document.createElement('div');
+        rn2.className = 'rmeta'; rn2.textContent = NOTPDF_GUIDANCE[f.format] || NOTPDF_GUIDANCE.unknown;
+        left.appendChild(rn2);
+      } else {
+        st.className = 'rstatus warn';
+        st.textContent = 'Password-protected — not repaired';
+        left.appendChild(st);
+        var rn3 = document.createElement('div');
+        rn3.className = 'rmeta'; rn3.textContent = 'Unlock it first with Unlock PDF (you will need its password), then repair the unlocked copy here.';
+        left.appendChild(rn3);
+      }
+      item.appendChild(left);
+      if (f.result && f.result.blob) {
+        var a = document.createElement('a');
+        a.className = 'dl'; a.textContent = 'Download';
+        a.href = URL.createObjectURL(f.result.blob);
+        a.setAttribute('download', f.result.outName);
+        item.appendChild(a);
+      }
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = ok.length > 1 ? 'block' : 'none';
+    if (scroll) success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  zipBtn.addEventListener('click', async function () {
+    var ok = recoveredFiles();
+    if (ok.length < 2) return;
+    zipBtn.disabled = true;
+    try {
+      var zip = new JSZip();
+      ok.forEach(function (f) { zip.file(f.result.zipName || f.result.outName, f.result.blob); });
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.setAttribute('download', 'pdfbleu-repaired.zip');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+    }
+  });
+
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  restartBtn.addEventListener('click', function () { location.reload(); });
+
+  renderFileList();
+  refreshChrome();
+})();
+</script>
+</body>
+</html>
