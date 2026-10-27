@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compresser PDF — PdfBleu.com</title>
-<meta name="description" content="Compressez vos fichiers PDF en ligne : réduisez leur taille avec trois niveaux de compression, directement dans votre navigateur. Gratuit, sans inscription, et vos fichiers ne quittent jamais votre appareil.">
+<title>Compress PDF — PdfBleu.com</title>
+<meta name="description" content="Compress your PDF files online: reduce their size with three compression levels, right in your browser. Free, no sign-up, and your files never leave your device.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -110,15 +110,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#8FBC5D"/><rect x="11" y="11" width="9" height="9" rx="2" fill="#fff"/><rect x="28" y="11" width="9" height="9" rx="2" fill="#fff"/><rect x="11" y="28" width="9" height="9" rx="2" fill="#fff"/><rect x="28" y="28" width="9" height="9" rx="2" fill="#fff"/><polygon points="17.5,17.5 23,17.5 17.5,23" fill="#8FBC5D"/><polygon points="30.5,17.5 25,17.5 30.5,23" fill="#8FBC5D"/><polygon points="17.5,30.5 23,30.5 17.5,25" fill="#8FBC5D"/><polygon points="30.5,30.5 25,30.5 30.5,25" fill="#8FBC5D"/></svg></span>
-<h1>Compresser des fichiers PDF</h1>
-<p class="subtitle">Réduisez le poids de vos documents PDF tout en gardant une qualité adaptée à vos besoins, pour les envoyer facilement par e-mail ou les partager.</p>
+<h1>Compress PDF files</h1>
+<p class="subtitle">Reduce the weight of your PDF documents while keeping quality suited to your needs, so you can email or share them easily.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la compression se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: compression happens entirely in your browser, with no upload to any server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -127,12 +127,12 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Compression en cours…</p>
+<p>Compressing…</p>
 <p class="detail" id="processingDetail"></p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner des fichiers PDF</button>
-<p class="droptxt">ou déposez vos PDF ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
 <div class="cards" id="cards"></div>
@@ -140,66 +140,66 @@ footer a{color:#3F51B5;text-decoration:none}
 </div>
 </div>
 <aside class="sidebar">
-<h2>Niveau de compression</h2>
-<div class="levels" role="radiogroup" aria-label="Niveau de compression">
+<h2>Compression level</h2>
+<div class="levels" role="radiogroup" aria-label="Compression level">
 <label class="levelcard" data-level="extreme">
 <input type="radio" name="level" value="extreme">
-<span class="ltitle">Compression extrême</span>
-<span class="ldesc">Fichier le plus léger, qualité réduite : idéal pour un envoi rapide.</span>
+<span class="ltitle">Extreme compression</span>
+<span class="ldesc">Smallest file, reduced quality: ideal for a quick send.</span>
 <span class="ldpi">≈ 72 dpi</span>
 </label>
 <label class="levelcard sel" data-level="recommandee">
 <input type="radio" name="level" value="recommandee" checked>
-<span class="ltitle">Compression recommandée</span>
-<span class="ldesc">Bon équilibre entre qualité d'image et taille de fichier.</span>
+<span class="ltitle">Recommended compression</span>
+<span class="ldesc">Good balance between image quality and file size.</span>
 <span class="ldpi">≈ 110 dpi</span>
 </label>
 <label class="levelcard" data-level="faible">
 <input type="radio" name="level" value="faible">
-<span class="ltitle">Compression faible</span>
-<span class="ldesc">Qualité élevée, réduction plus modérée de la taille.</span>
+<span class="ltitle">Low compression</span>
+<span class="ldesc">High quality, more moderate size reduction.</span>
 <span class="ldpi">≈ 150 dpi</span>
 </label>
 </div>
-<button class="util" id="sortBtn" type="button">Trier par nom (A → Z)</button>
-<button class="util" id="coversBtn" type="button">Masquer les couvertures</button>
-<div class="imgnote">⚠️ Bon à savoir : pour réduire la taille, chaque page est convertie en image JPEG. Le texte du fichier obtenu n'est donc plus sélectionnable ni cherchable. Et si votre original est déjà plus léger que le résultat, nous conservons automatiquement le fichier d'origine.</div>
-<div class="freenote">Ici, tout est gratuit et sans limite : les trois niveaux sont offerts, sans abonnement ni inscription.</div>
+<button class="util" id="sortBtn" type="button">Sort by name (A → Z)</button>
+<button class="util" id="coversBtn" type="button">Hide covers</button>
+<div class="imgnote">⚠️ Good to know: to shrink the file, each page is converted to a JPEG image. The text in the resulting file is therefore no longer selectable or searchable. And if your original is already smaller than the result, we automatically keep the original file.</div>
+<div class="freenote">Everything here is free with no limits: all three levels are included, with no subscription and no sign-up.</div>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Vos fichiers compressés sont prêts !</h2>
+<h2>Your compressed files are ready!</h2>
 <p class="sub" id="successInfo"></p>
 <div class="resultlist" id="resultList"></div>
-<a class="zipdl" id="zipBtn" href="#" style="display:none">Tout télécharger (.zip)</a>
-<button class="again" id="restartBtn" type="button">Compresser d'autres fichiers</button>
+<a class="zipdl" id="zipBtn" href="#" style="display:none">Download all (.zip)</a>
+<button class="again" id="restartBtn" type="button">Compress other files</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment compresser un PDF</h2>
+<h2>How to compress a PDF</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez vos fichiers</h3><p>Cliquez sur le bouton de sélection ou déposez vos PDF dans la zone prévue. Vous pouvez en ajouter plusieurs à la fois.</p></div>
-<div class="step"><span class="num">2</span><h3>Choisissez le niveau</h3><p>Compression extrême pour un fichier très léger, recommandée pour un bon équilibre, ou faible pour préserver la qualité.</p></div>
-<div class="step"><span class="num">3</span><h3>Compressez et téléchargez</h3><p>Appuyez sur « Compresser PDF », comparez les tailles obtenues, puis téléchargez chaque fichier ou l'archive complète.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your files</h3><p>Click the select button or drop your PDFs into the area provided. You can add several at once.</p></div>
+<div class="step"><span class="num">2</span><h3>Choose the level</h3><p>Extreme compression for a very small file, recommended for a good balance, or low to preserve quality.</p></div>
+<div class="step"><span class="num">3</span><h3>Compress and download</h3><p>Press “Compress PDF”, compare the resulting sizes, then download each file or the full archive.</p></div>
 </div>
 <div class="seo">
-<p>Notre outil de compression PDF est entièrement gratuit et fonctionne sans inscription ni limite de nombre de fichiers. Contrairement aux services classiques, vos documents ne sont jamais envoyés sur un serveur : tout le traitement a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, factures et documents personnels.</p>
-<p>Un PDF trop lourd est souvent refusé par les boîtes e-mail ou les plateformes administratives. En réduisant le poids de vos rapports, devoirs ou pièces scannées, vous les rendez faciles à envoyer et à partager, tout en choisissant vous-même le compromis entre taille et qualité d'image.</p>
+<p>Our PDF compression tool is completely free and works with no sign-up and no file-count limit. Unlike typical services, your documents are never uploaded to a server: all processing happens on your phone or computer, which protects your contracts, invoices and personal documents.</p>
+<p>An oversized PDF is often rejected by email inboxes or administrative platforms. By reducing the weight of your reports, homework or scanned documents, you make them easy to send and share, while choosing the trade-off between size and image quality yourself.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="compressBtn" type="button">Compresser PDF</button>
+<button id="compressBtn" type="button">Compress PDF</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -217,9 +217,9 @@ footer a{color:#3F51B5;text-decoration:none}
     return LEVELS[key] || LEVELS.recommandee;
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
   function percentSaved(avant, apres) {
     if (!avant || avant <= 0) return 0;
@@ -229,10 +229,10 @@ footer a{color:#3F51B5;text-decoration:none}
     return apres >= avant;
   }
   function formatPercent(p) {
-    return p.toFixed(1).replace('.', ',');
+    return p.toFixed(1);
   }
   function compressedName(base) {
-    return base + '_compresse.pdf';
+    return base + '_compressed.pdf';
   }
   // === Fin fonctions pures ===
 
@@ -270,7 +270,7 @@ footer a{color:#3F51B5;text-decoration:none}
   function sortItemsByName(list, dir) {
     var sorted = list.slice();
     sorted.sort(function (a, b) {
-      var cmp = a.name.localeCompare(b.name, 'fr', { numeric: true, sensitivity: 'base' });
+      var cmp = a.name.localeCompare(b.name, 'en', { numeric: true, sensitivity: 'base' });
       return dir === 'desc' ? -cmp : cmp;
     });
     return sorted;
@@ -297,7 +297,7 @@ footer a{color:#3F51B5;text-decoration:none}
         if (typeof items[i].pages === 'number') pages += items[i].pages;
         size += items[i].file.size;
       }
-      barSummary.textContent = items.length + (items.length > 1 ? ' fichiers' : ' fichier') + ' • ' + pages + ' pages • ' + formatSize(size);
+      barSummary.textContent = items.length + (items.length > 1 ? ' files' : ' file') + ' • ' + pages + ' pages • ' + formatSize(size);
     }
     compressBtn.disabled = !allValid();
   }
@@ -316,7 +316,7 @@ footer a{color:#3F51B5;text-decoration:none}
       rm.type = 'button';
       rm.className = 'rm';
       rm.textContent = '✕';
-      rm.title = 'Retirer ce fichier';
+      rm.title = 'Remove this file';
       rm.addEventListener('click', function () {
         items = items.filter(function (x) { return x.id !== it.id; });
         render();
@@ -330,12 +330,12 @@ footer a{color:#3F51B5;text-decoration:none}
       if (it.thumb) {
         var img = document.createElement('img');
         img.src = it.thumb;
-        img.alt = 'Couverture de ' + it.name;
+        img.alt = 'Cover of ' + it.name;
         cover.appendChild(img);
       } else {
         var ph = document.createElement('span');
         ph.className = 'coverph' + (it.bad ? ' bad' : '');
-        ph.textContent = it.bad ? '⚠ Aperçu indisponible' : 'Chargement de l\'aperçu…';
+        ph.textContent = it.bad ? '⚠ Preview unavailable' : 'Loading preview…';
         cover.appendChild(ph);
       }
       card.appendChild(cover);
@@ -353,12 +353,12 @@ footer a{color:#3F51B5;text-decoration:none}
       if (it.bad === 'encrypted') {
         var w1 = document.createElement('div');
         w1.className = 'warn';
-        w1.textContent = 'Protégé par un mot de passe';
+        w1.textContent = 'Password-protected';
         card.appendChild(w1);
       } else if (it.bad === 'corrupt') {
         var w2 = document.createElement('div');
         w2.className = 'warn';
-        w2.textContent = 'Fichier illisible ou endommagé';
+        w2.textContent = 'Unreadable or damaged file';
         card.appendChild(w2);
       }
 
@@ -412,7 +412,7 @@ footer a{color:#3F51B5;text-decoration:none}
     Array.prototype.forEach.call(fileListIn, function (f) {
       var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
       if (!isPdf) {
-        showError('« ' + f.name + ' » n\'est pas un fichier PDF. Veuillez choisir uniquement des fichiers PDF.');
+        showError('"' + f.name + '" is not a PDF file. Please choose PDF files only.');
         return;
       }
       var it = { id: nextId++, file: f, name: f.name, base: f.name.replace(/\.pdf$/i, ''), pages: null, thumb: null, bad: null };
@@ -447,12 +447,12 @@ footer a{color:#3F51B5;text-decoration:none}
     if (!items.length) return;
     items = sortItemsByName(items, sortDir);
     sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-    sortBtn.textContent = sortDir === 'asc' ? 'Trier par nom (A → Z)' : 'Trier par nom (Z → A)';
+    sortBtn.textContent = sortDir === 'asc' ? 'Sort by name (A → Z)' : 'Sort by name (Z → A)';
     render();
   });
   coversBtn.addEventListener('click', function () {
     var hidden = document.body.classList.toggle('hide-covers');
-    coversBtn.textContent = hidden ? 'Afficher les couvertures' : 'Masquer les couvertures';
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
   });
 
   async function compressOne(it, cfg, fileIndex, fileCount) {
@@ -469,7 +469,7 @@ footer a{color:#3F51B5;text-decoration:none}
     var scale = cfg.dpi / 72;
     var out = await PDFLib.PDFDocument.create();
     for (var i = 1; i <= pdf.numPages; i++) {
-      processingDetail.textContent = 'Fichier ' + (fileIndex + 1) + '/' + fileCount + ' — page ' + i + '/' + pdf.numPages + ' : ' + it.name;
+      processingDetail.textContent = 'File ' + (fileIndex + 1) + '/' + fileCount + ' — page ' + i + '/' + pdf.numPages + ' : ' + it.name;
       var page = await pdf.getPage(i);
       var baseVp = page.getViewport({ scale: 1 });
       var viewport = page.getViewport({ scale: scale });
@@ -498,15 +498,15 @@ footer a{color:#3F51B5;text-decoration:none}
 
   compressBtn.addEventListener('click', async function () {
     showError('');
-    if (!items.length) { showError('Veuillez d\'abord choisir au moins un fichier PDF à compresser.'); return; }
+    if (!items.length) { showError('Please first choose at least one PDF file to compress.'); return; }
     var badEnc = null, badCor = null, i;
     for (i = 0; i < items.length; i++) {
       if (items[i].bad === 'encrypted' && !badEnc) badEnc = items[i];
       if (items[i].bad === 'corrupt' && !badCor) badCor = items[i];
     }
-    if (badEnc) { showError('« ' + badEnc.name + ' » est protégé par un mot de passe et ne peut pas être compressé. Retirez-le ou déverrouillez-le d\'abord.'); return; }
-    if (badCor) { showError('« ' + badCor.name + ' » semble endommagé ou illisible. Retirez-le puis réessayez.'); return; }
-    if (!window.pdfjsLib) { showError('Le moteur de compression n\'a pas pu se charger. Vérifiez votre connexion puis rechargez la page.'); return; }
+    if (badEnc) { showError('"' + badEnc.name + '" is password-protected and cannot be compressed. Remove it or unlock it first.'); return; }
+    if (badCor) { showError('"' + badCor.name + '" appears to be damaged or unreadable. Remove it and try again.'); return; }
+    if (!window.pdfjsLib) { showError('The compression engine could not load. Check your connection and reload the page.'); return; }
     var cfg = levelConfig(selectedLevelKey());
     compressBtn.disabled = true;
     processingDetail.textContent = '';
@@ -520,7 +520,7 @@ footer a{color:#3F51B5;text-decoration:none}
         if (usedNames[nm]) {
           var k = usedNames[nm] + 1;
           usedNames[nm] = k;
-          nm = items[i].base + '_compresse (' + k + ').pdf';
+          nm = items[i].base + '_compressed (' + k + ').pdf';
         } else {
           usedNames[nm] = 1;
         }
@@ -548,15 +548,15 @@ footer a{color:#3F51B5;text-decoration:none}
         rm2.appendChild(sizes);
         if (res.kept) {
           var note = document.createElement('span');
-          note.textContent = ' • Déjà optimisé — fichier d\'origine conservé';
+          note.textContent = ' • Already optimized — original file kept';
           rm2.appendChild(note);
         }
         info.appendChild(rn); info.appendChild(rm2);
         var badge = document.createElement('span');
         badge.className = 'badge' + (res.kept ? ' zero' : '');
-        badge.textContent = res.kept ? '0 %' : '−' + formatPercent(res.pct) + ' %';
+        badge.textContent = res.kept ? '0%' : '-' + formatPercent(res.pct) + '%';
         var a = document.createElement('a');
-        a.className = 'dl'; a.href = url; a.download = res.name; a.textContent = 'Télécharger';
+        a.className = 'dl'; a.href = url; a.download = res.name; a.textContent = 'Download';
         item.appendChild(info); item.appendChild(badge); item.appendChild(a);
         resultList.appendChild(item);
       });
@@ -566,12 +566,12 @@ footer a{color:#3F51B5;text-decoration:none}
         var zipBlob = await zip.generateAsync({ type: 'blob' });
         zipUrl = URL.createObjectURL(zipBlob);
         zipBtn.href = zipUrl;
-        zipBtn.setAttribute('download', 'pdfbleu-compression.zip');
+        zipBtn.setAttribute('download', 'pdfbleu-compressed.zip');
         zipBtn.style.display = '';
       } else {
         zipBtn.style.display = 'none';
       }
-      successInfo.textContent = results.length + (results.length > 1 ? ' fichiers traités' : ' fichier traité') + ' • ' + formatSize(totalAvant) + ' → ' + formatSize(totalApres) + ' au total.';
+      successInfo.textContent = results.length + (results.length > 1 ? ' files processed' : ' file processed') + ' • ' + formatSize(totalAvant) + ' → ' + formatSize(totalApres) + ' in total.';
       layout.style.display = 'none';
       success.classList.add('on');
       actionBar.classList.remove('on');
@@ -580,11 +580,11 @@ footer a{color:#3F51B5;text-decoration:none}
     } catch (err) {
       var msg = String(err && err.message || '');
       if (msg.indexOf('encrypted:') === 0) {
-        showError('« ' + msg.slice(10) + ' » est protégé par un mot de passe et ne peut pas être compressé. Retirez-le ou déverrouillez-le d\'abord.');
+        showError('"' + msg.slice(10) + '" is password-protected and cannot be compressed. Remove it or unlock it first.');
       } else if (msg.indexOf('corrupt:') === 0) {
-        showError('« ' + msg.slice(8) + ' » semble endommagé ou illisible. Retirez-le puis réessayez.');
+        showError('"' + msg.slice(8) + '" appears to be damaged or unreadable. Remove it and try again.');
       } else {
-        showError('Une erreur est survenue pendant la compression. Un des fichiers est peut-être protégé ou endommagé. Veuillez réessayer.');
+        showError('An error occurred during compression. One of the files may be protected or damaged. Please try again.');
       }
     } finally {
       processing.classList.remove('on');

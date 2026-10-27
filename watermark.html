@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Filigrane PDF — PdfBleu.com</title>
-<meta name="description" content="Ajoutez un filigrane texte (par exemple CONFIDENTIEL) sur toutes les pages d'un PDF, en diagonale ou en bas de page. Gratuit et 100% privé.">
+<title>Add a watermark — PdfBleu.com</title>
+<meta name="description" content="Add a text watermark (for example CONFIDENTIAL) to every page of a PDF, diagonally or at the bottom of the page. Free and 100% private.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -57,39 +57,39 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>Filigrane PDF</h1>
-<p class="intro">Apposez un texte semi-transparent sur toutes les pages de votre document : idéal pour marquer un brouillon ou un document confidentiel.</p>
-<div class="private-note">🔒 Votre fichier ne quitte jamais votre appareil : l'ajout du filigrane se fait entièrement dans votre navigateur.</div>
+<h1>Add a watermark</h1>
+<p class="intro">Stamp a semi-transparent text on every page of your document: ideal for marking a draft or a confidential document.</p>
+<div class="private-note">🔒 Your file never leaves your device: the watermark is added entirely in your browser.</div>
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 <div class="tool">
 <div class="drop" id="drop">
 <span class="icon">📄</span>
-<p>Glissez votre fichier PDF ici</p>
-<small>ou touchez le bouton ci-dessous pour le choisir</small>
+<p>Drop your PDF file here</p>
+<small>or tap the button below to select it</small>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Choisir un fichier PDF</button>
+<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
 <p class="fileinfo" id="fileInfo"></p>
-<label class="field" for="wmText">Texte du filigrane</label>
-<input type="text" id="wmText" placeholder="Exemple : CONFIDENTIEL" autocomplete="off" maxlength="60">
-<label class="field" for="opacity">Opacité : <span id="opacityVal">30 %</span></label>
+<label class="field" for="wmText">Watermark text</label>
+<input type="text" id="wmText" placeholder="Example: CONFIDENTIAL" autocomplete="off" maxlength="60">
+<label class="field" for="opacity">Opacity: <span id="opacityVal">30%</span></label>
 <input type="range" id="opacity" min="10" max="50" value="30" step="5">
 <label class="field">Position</label>
-<div class="choices" role="radiogroup" aria-label="Position du filigrane">
-<label><input type="radio" name="position" value="diagonal" checked>En diagonale, au centre</label>
-<label><input type="radio" name="position" value="bottom">En bas de chaque page</label>
+<div class="choices" role="radiogroup" aria-label="Watermark position">
+<label><input type="radio" name="position" value="diagonal" checked>Diagonal, in the center</label>
+<label><input type="radio" name="position" value="bottom">At the bottom of each page</label>
 </div>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<div class="status" id="status">Processing… please wait.</div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Ajouter le filigrane et télécharger</button>
+<button class="action" id="goBtn" type="button" disabled>Add the watermark and download</button>
 </div>
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 </main>
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -104,7 +104,7 @@ footer a{color:#3F51B5;text-decoration:none}
   var wmText = document.getElementById('wmText');
   var opacity = document.getElementById('opacity');
   var opacityVal = document.getElementById('opacityVal');
-  opacity.addEventListener('input', function () { opacityVal.textContent = opacity.value + ' %'; });
+  opacity.addEventListener('input', function () { opacityVal.textContent = opacity.value + '%'; });
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.style.display = msg ? 'block' : 'none';
@@ -123,45 +123,45 @@ footer a{color:#3F51B5;text-decoration:none}
     var parts = text.split(',');
     for (var i = 0; i < parts.length; i++) {
       var part = parts[i].trim();
-      if (!part) throw new Error('Plage de pages vide. Vérifiez le format, par exemple : 1-3,5');
+      if (!part) throw new Error('Empty page range. Check the format, for example: 1-3,5');
       var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
       var single = part.match(/^(\d+)$/);
       var start, end, n;
       if (m) {
         start = parseInt(m[1], 10); end = parseInt(m[2], 10);
-        if (start > end) throw new Error('Plage invalide « ' + part + ' » : le début doit être inférieur à la fin.');
+        if (start > end) throw new Error('Invalid range "' + part + '": the start must be less than the end.');
         for (n = start; n <= end; n++) {
-          if (n < 1 || n > total) throw new Error('La page ' + n + ' n\'existe pas : le document contient ' + total + ' page(s).');
+          if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
           if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
         }
       } else if (single) {
         n = parseInt(single[1], 10);
-        if (n < 1 || n > total) throw new Error('La page ' + n + ' n\'existe pas : le document contient ' + total + ' page(s).');
+        if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
         if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
       } else {
-        throw new Error('Format invalide « ' + part + ' ». Utilisez par exemple : 1-3,5');
+        throw new Error('Invalid format "' + part + '". Use for example: 1-3,5');
       }
     }
-    if (!indices.length) throw new Error('Veuillez indiquer au moins une page ' + verb + '.');
+    if (!indices.length) throw new Error('Please specify at least one page ' + verb + '.');
     return indices;
   }
 
   async function setFile(f) {
     showError('');
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('Ce fichier n\'est pas un PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
     try {
       var buf = await f.arrayBuffer();
       var doc = await PDFLib.PDFDocument.load(buf);
       pageCount = doc.getPageCount();
       file = f;
-      fileInfo.textContent = 'Fichier : ' + f.name + ' — ' + pageCount + ' page(s).';
+      fileInfo.textContent = 'File: ' + f.name + ' — ' + pageCount + ' page(s).';
       fileInfo.style.display = 'block';
       goBtn.disabled = false;
 
     } catch (err) {
       file = null; pageCount = 0; goBtn.disabled = true;
-      showError('Impossible de lire ce PDF. Il est peut-être protégé par un mot de passe ou endommagé.');
+      showError('Could not read this PDF. It may be password-protected or damaged.');
     }
   }
   document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
@@ -175,9 +175,9 @@ footer a{color:#3F51B5;text-decoration:none}
   });
   goBtn.addEventListener('click', async function () {
     showError('');
-    if (!file) { showError('Veuillez d\'abord choisir un fichier PDF.'); return; }
+    if (!file) { showError('Please select a PDF file first.'); return; }
     var text = wmText.value.trim();
-    if (!text) { showError('Veuillez saisir le texte du filigrane (par exemple : CONFIDENTIEL).'); return; }
+    if (!text) { showError('Please enter the watermark text (for example: CONFIDENTIAL).'); return; }
     var checked = document.querySelector('input[name="position"]:checked');
     var position = checked ? checked.value : 'diagonal';
     var op = parseInt(opacity.value, 10) / 100;
@@ -209,9 +209,9 @@ footer a{color:#3F51B5;text-decoration:none}
           });
         }
       });
-      downloadBytes(await doc.save(), 'pdfbleu-filigrane.pdf');
+      downloadBytes(await doc.save(), 'pdfbleu-watermark.pdf');
     } catch (err) {
-      showError('Une erreur est survenue pendant l\'ajout du filigrane. Veuillez réessayer.');
+      showError('An error occurred while adding the watermark. Please try again.');
     } finally { status.style.display = 'none'; goBtn.disabled = false; }
   });
 })();

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF en Excel — PdfBleu.com</title>
-<meta name="description" content="Convertissez un PDF en classeur Excel (.xlsx) modifiable, gratuitement et sans inscription. Les tableaux sont récupérés à partir des positions du texte, directement dans votre navigateur : aucun envoi sur un serveur.">
+<title>PDF to Excel — PdfBleu.com</title>
+<meta name="description" content="Convert a PDF into an editable Excel workbook (.xlsx), free and with no sign-up. Tables are recovered from the text positions, right in your browser: no upload to any server.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -104,15 +104,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#C2E5C3"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#5EA162"/><path d="M38 10 L32 16" stroke="#2E7237" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#2E7237"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">X</text></svg></span>
-<h1>PDF en Excel</h1>
-<p class="subtitle">Récupérez les tableaux de votre PDF dans un classeur Excel modifiable.</p>
+<h1>PDF to Excel</h1>
+<p class="subtitle">Recover the tables from your PDF into an editable Excel workbook.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: conversion happens entirely in your browser, with no upload to any server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -121,93 +121,93 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Conversion en cours…</p>
+<p>Converting…</p>
 <p class="pdetail" id="processingDetail"></p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
-<p class="droptxt">ou déposez votre PDF ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
 <div class="filecard" id="fileCard">
-<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l’aperçu…</span></div>
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Loading preview…</span></div>
 <div class="finfo">
 <div class="fname" id="fileName"></div>
 <div class="fmeta" id="fileMeta"></div>
 <div class="warn" id="fileWarn"></div>
 </div>
-<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
 </div>
 <div class="error" id="error"></div>
 </div>
 </div>
 <aside class="sidebar">
-<h2>PDF en Excel</h2>
-<p>Choisissez le mode de conversion :</p>
-<div class="levels" role="radiogroup" aria-label="Mode OCR">
+<h2>PDF to Excel</h2>
+<p>Choose the conversion mode:</p>
+<div class="levels" role="radiogroup" aria-label="OCR mode">
 <label class="levelcard sel" id="noOcrCard">
 <input type="radio" name="mode" value="noocr" checked>
-<span class="ltitle">Sans OCR</span>
-<span class="ldesc">Convertit les PDF avec texte sélectionnable en classeurs Excel modifiables.</span>
+<span class="ltitle">No OCR</span>
+<span class="ldesc">Converts PDFs with selectable text into editable Excel workbooks.</span>
 </label>
 <label class="levelcard disabled" id="ocrCard">
 <input type="radio" name="mode" value="ocr" disabled>
-<span class="ltitle">OCR<span class="soonbadge">Bientôt</span></span>
-<span class="ldesc">Pour les PDF numérisés dont le texte n’est pas sélectionnable.</span>
+<span class="ltitle">OCR<span class="soonbadge">Soon</span></span>
+<span class="ldesc">For scanned PDFs whose text is not selectable.</span>
 </label>
 </div>
-<p class="ocrnote" id="ocrNote" style="display:none">L’OCR arrive bientôt : il permettra de convertir aussi les documents scannés. Pour le moment, seuls les PDF dont le texte est sélectionnable peuvent être convertis.</p>
-<h3>Mise en page</h3>
-<p>Comment répartir les pages dans le classeur :</p>
-<div class="levels" role="radiogroup" aria-label="Mise en page">
+<p class="ocrnote" id="ocrNote" style="display:none">OCR is coming soon: it will also convert scanned documents. For now, only PDFs with selectable text can be converted.</p>
+<h3>Layout</h3>
+<p>How to spread the pages across the workbook:</p>
+<div class="levels" role="radiogroup" aria-label="Layout">
 <label class="levelcard sel" id="layoutMultiCard">
 <input type="radio" name="layout" value="multi" checked>
-<span class="ltitle">Feuilles multiples</span>
-<span class="ldesc">Une feuille de calcul par page du PDF.</span>
+<span class="ltitle">Multiple sheets</span>
+<span class="ldesc">One spreadsheet per PDF page.</span>
 </label>
 <label class="levelcard" id="layoutSingleCard">
 <input type="radio" name="layout" value="single">
-<span class="ltitle">Une seule feuille</span>
-<span class="ldesc">Toutes les pages regroupées dans une seule feuille.</span>
+<span class="ltitle">One sheet</span>
+<span class="ldesc">All pages combined into a single sheet.</span>
 </label>
 </div>
-<div class="warnnote">⚠ <strong>Détection automatique :</strong> les colonnes sont repérées automatiquement à partir de la position du texte sur la page. Les tableaux complexes, fusionnés ou mal alignés peuvent demander quelques ajustements manuels dans Excel. Les images et la mise en forme (couleurs, bordures, polices) ne sont pas conservées. Les pages numérisées, sans texte sélectionnable, nécessitent l’OCR (bientôt disponible).</div>
-<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+<div class="warnnote">⚠ <strong>Automatic detection:</strong> columns are detected automatically from the position of the text on the page. Complex, merged or poorly aligned tables may need a few manual adjustments in Excel. Images and formatting (colors, borders, fonts) are not preserved. Scanned pages, with no selectable text, require OCR (coming soon).</div>
+<div class="freenote">Everything here is free with no limits: no subscription, no reserved features, no sign-up.</div>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Votre classeur Excel est prêt !</h2>
+<h2>Your Excel workbook is ready!</h2>
 <p class="sub" id="successInfo"></p>
 <div class="resultlist" id="resultList"></div>
 <div class="scannote" id="scanNote" style="display:none"></div>
-<button class="again" id="restartBtn" type="button">Convertir un autre fichier</button>
+<button class="again" id="restartBtn" type="button">Convert another file</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment convertir un PDF en Excel</h2>
+<h2>How to convert a PDF to Excel</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez votre PDF</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier dans la zone prévue. Un seul document suffit.</p></div>
-<div class="step"><span class="num">2</span><h3>Choisissez la mise en page</h3><p>Une feuille par page, ou toutes les pages regroupées dans une seule feuille. Lancez ensuite la conversion.</p></div>
-<div class="step"><span class="num">3</span><h3>Téléchargez le .xlsx</h3><p>Appuyez sur « Convertir en Excel », puis ouvrez votre classeur dans Excel, LibreOffice Calc ou Google Sheets.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your PDF</h3><p>Click the select button or drop your file into the area provided. One document is all you need.</p></div>
+<div class="step"><span class="num">2</span><h3>Choose the layout</h3><p>One sheet per page, or all pages combined into a single sheet. Then start the conversion.</p></div>
+<div class="step"><span class="num">3</span><h3>Download the .xlsx</h3><p>Press “Convert to Excel”, then open your workbook in Excel, LibreOffice Calc or Google Sheets.</p></div>
 </div>
 <div class="seo">
-<p>Notre convertisseur PDF en Excel est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : l’extraction des tableaux a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos factures, relevés et documents comptables.</p>
-<p>La conversion convient aux PDF dont le texte est sélectionnable : factures, devis, relevés, inventaires ou rapports contenant des tableaux alignés. Les montants écrits au format français (par exemple 1 234,56 €) et les pourcentages sont reconnus comme de vrais nombres dans Excel, prêts pour vos calculs et vos formules. Les documents scannés, qui sont en réalité des images, nécessitent une reconnaissance de caractères (OCR) : cette fonction arrive bientôt.</p>
+<p>Our PDF to Excel converter is completely free and works with no sign-up. Unlike typical services, your document is never uploaded to a server: table extraction happens on your phone or computer, which protects your invoices, statements and accounting documents.</p>
+<p>The conversion suits PDFs with selectable text: invoices, quotes, statements, inventories or reports containing aligned tables. Amounts written in French format (for example 1 234,56 €) and percentages are recognized as real numbers in Excel, ready for your calculations and formulas. Scanned documents, which are really images, require character recognition (OCR): that feature is coming soon.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="convertBtn" type="button">Convertir en Excel</button>
+<button id="convertBtn" type="button">Convert to Excel</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -362,7 +362,7 @@ footer a{color:#3F51B5;text-decoration:none}
   // - si seule « , » est présente, c'est le séparateur décimal.
   function parseNumericCore(s) {
     if (s == null) return null;
-    var t = String(s).trim().replace(/[   ]/g, ' ');
+    var t = String(s).trim().replace(/[   ]/g, ' ');
     if (!t) return null;
     if (t.indexOf(' ') !== -1) {
       if (/^-?\d{1,3}( \d{3})+([.,]\d+)?$/.test(t) || /^-?\d{1,3}( \d{3})*$/.test(t)) {
@@ -435,8 +435,8 @@ footer a{color:#3F51B5;text-decoration:none}
 
   // Nom de feuille sûr pour Excel : caractères interdits retirés, 31 max.
   function sanitizeSheetName(name) {
-    var s = String(name || 'Feuille').replace(/[\\\/\?\*\[\]:]/g, ' ').trim();
-    if (!s) s = 'Feuille';
+    var s = String(name || 'Sheet').replace(/[\\\/\?\*\[\]:]/g, ' ').trim();
+    if (!s) s = 'Sheet';
     if (s.length > 31) s = s.slice(0, 31);
     return s;
   }
@@ -514,7 +514,7 @@ footer a{color:#3F51B5;text-decoration:none}
         rows.forEach(function (r) { allRows.push(r); });
       });
       var typedSingle = typeRows(allRows);
-      sheets.push({ name: sanitizeSheetName('Toutes les pages'), rows: typedSingle, colWidths: estimateColWidths(typedSingle) });
+      sheets.push({ name: sanitizeSheetName('All pages'), rows: typedSingle, colWidths: estimateColWidths(typedSingle) });
     } else {
       pages.forEach(function (pg, idx) {
         var xs = [];
@@ -636,7 +636,7 @@ footer a{color:#3F51B5;text-decoration:none}
       '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" ' +
       'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" ' +
       'xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-      '<dc:title>' + escapeXml(title || 'Classeur') + '</dc:title>' +
+      '<dc:title>' + escapeXml(title || 'Workbook') + '</dc:title>' +
       '<dc:creator>PdfBleu.com</dc:creator><cp:lastModifiedBy>PdfBleu.com</cp:lastModifiedBy>' +
       '<dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created>' +
       '<dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>';
@@ -735,9 +735,9 @@ footer a{color:#3F51B5;text-decoration:none}
     errorBox.style.display = msg ? 'block' : 'none';
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
   function updateBar() {
@@ -758,26 +758,26 @@ footer a{color:#3F51B5;text-decoration:none}
     if (current.thumb) {
       var img = document.createElement('img');
       img.src = current.thumb;
-      img.alt = 'Couverture de ' + current.name;
+      img.alt = 'Cover of ' + current.name;
       coverWrap.appendChild(img);
     } else {
       var ph = document.createElement('span');
       ph.className = 'coverph' + (current.bad ? ' bad' : '');
-      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l’aperçu…';
+      ph.textContent = current.bad ? '⚠ Preview unavailable' : 'Loading preview…';
       coverWrap.appendChild(ph);
     }
     fileNameEl.textContent = current.name;
     var total = current.pages || 0;
     fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
-    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
-    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Password-protected';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
     else fileWarnEl.textContent = '';
   }
 
   async function loadFile(f) {
     showError('');
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n’est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('"' + (f ? f.name : '') + '" is not a PDF file. Please choose a PDF file.'); return; }
     var base = f.name.replace(/\.pdf$/i, '');
     current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null };
     renderFileCard();
@@ -814,8 +814,8 @@ footer a{color:#3F51B5;text-decoration:none}
           else current.bad = 'corrupt';
         }
       }
-      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
-      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être converti.');
+      if (current.bad === 'encrypted') showError('"' + f.name + '" is password-protected and cannot be converted. Unlock it first.');
+      else if (current.bad === 'corrupt') showError('"' + f.name + '" appears to be damaged or unreadable and cannot be converted.');
     }
     renderFileCard();
     updateBar();
@@ -864,9 +864,9 @@ footer a{color:#3F51B5;text-decoration:none}
 
   convertBtn.addEventListener('click', async function () {
     showError('');
-    if (!current) { showError('Veuillez d’abord choisir un fichier PDF.'); return; }
-    if (current.bad === 'encrypted') { showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.'); return; }
-    if (current.bad === 'corrupt') { showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.'); return; }
+    if (!current) { showError('Please first choose a PDF file.'); return; }
+    if (current.bad === 'encrypted') { showError('"' + current.name + '" is password-protected and cannot be converted. Unlock it first.'); return; }
+    if (current.bad === 'corrupt') { showError('"' + current.name + '" appears to be damaged or unreadable. Choose another file.'); return; }
     convertBtn.disabled = true;
     processing.classList.add('on');
     processingDetail.textContent = '';
@@ -923,16 +923,16 @@ footer a{color:#3F51B5;text-decoration:none}
       var left = document.createElement('div');
       var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
       var rm2 = document.createElement('div'); rm2.className = 'rmeta';
-      rm2.textContent = formatSize(blob.size) + ' • ' + built.sheets.length + (built.sheets.length > 1 ? ' feuilles' : ' feuille') + ' • ' + built.totalRows + (built.totalRows > 1 ? ' lignes' : ' ligne');
+      rm2.textContent = formatSize(blob.size) + ' • ' + built.sheets.length + (built.sheets.length > 1 ? ' sheets' : ' sheet') + ' • ' + built.totalRows + (built.totalRows > 1 ? ' rows' : ' row');
       left.appendChild(rn); left.appendChild(rm2);
       var a = document.createElement('a');
-      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .xlsx';
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Download the .xlsx';
       item.appendChild(left); item.appendChild(a);
       resultList.appendChild(item);
-      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' → ' + built.sheets.length + (built.sheets.length > 1 ? ' feuilles' : ' feuille') + ', ' + built.totalRows + ' lignes).';
+      successInfo.textContent = 'Conversion complete from ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' → ' + built.sheets.length + (built.sheets.length > 1 ? ' sheets' : ' sheet') + ', ' + built.totalRows + ' rows).';
       if (built.blankCount > 0) {
         scanNote.style.display = 'block';
-        scanNote.textContent = '⚠ ' + built.blankCount + ' page(s) sans texte détecté — probablement numérisées, elles nécessitent l’OCR (bientôt disponible). Leur feuille est vide dans le classeur.';
+        scanNote.textContent = '⚠ ' + built.blankCount + ' page(s) with no text detected — probably scanned, they require OCR (coming soon). Their sheet is empty in the workbook.';
       } else {
         scanNote.style.display = 'none';
       }
@@ -942,10 +942,10 @@ footer a{color:#3F51B5;text-decoration:none}
       document.body.classList.remove('bar-visible');
       success.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
-      else if (err && err.message === 'scanned') showError('Ce PDF semble composé d’images numérisées : aucun texte sélectionnable n’a pu être extrait, la conversion en Excel est donc impossible sans OCR. L’OCR arrive bientôt (Bientôt). En attendant, essayez un PDF contenant du vrai texte (par exemple un document créé sur ordinateur).');
-      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
-      else showError('Une erreur est survenue pendant la conversion. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+      if (err && err.message === 'encrypted') showError('"' + current.name + '" is password-protected and cannot be converted. Unlock it first.');
+      else if (err && err.message === 'scanned') showError('This PDF appears to be made of scanned images: no selectable text could be extracted, so conversion to Excel is not possible without OCR. OCR is coming soon. In the meantime, try a PDF containing real text (for example a document created on a computer).');
+      else if (err && err.message === 'corrupt') showError('"' + current.name + '" appears to be damaged or unreadable. Choose another file and try again.');
+      else showError('An error occurred during conversion. The file may be protected or damaged. Please try again.');
     } finally {
       processing.classList.remove('on');
       convertBtn.disabled = false;

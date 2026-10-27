@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF en JPG — PdfBleu.com</title>
-<meta name="description" content="Convertissez chaque page de votre PDF en image JPG de qualité, directement dans votre navigateur. Gratuit et 100% privé.">
+<title>PDF to JPG — PdfBleu.com</title>
+<meta name="description" content="Convert each page of your PDF into a high-quality JPG image, right in your browser. Free and 100% private.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -58,32 +58,32 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>PDF en JPG</h1>
-<p class="intro">Transformez les pages de votre document PDF en images JPG nettes, prêtes à partager ou à insérer dans un autre document.</p>
-<div class="private-note">🔒 Votre fichier ne quitte jamais votre appareil : la conversion se fait entièrement dans votre navigateur.</div>
+<h1>PDF to JPG</h1>
+<p class="intro">Turn the pages of your PDF document into crisp JPG images, ready to share or insert into another document.</p>
+<div class="private-note">🔒 Your file never leaves your device: the conversion happens entirely in your browser.</div>
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 <div class="tool">
 <div class="drop" id="drop">
 <span class="icon">📄</span>
-<p>Glissez votre fichier PDF ici</p>
-<small>ou touchez le bouton ci-dessous pour le choisir</small>
+<p>Drop your PDF file here</p>
+<small>or tap the button below to select it</small>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Choisir un fichier PDF</button>
+<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
 <p class="fileinfo" id="fileInfo"></p>
-<p class="note">Chaque page de votre PDF sera convertie en une image JPG de bonne qualité (page-1.jpg, page-2.jpg, …) et téléchargée séparément. <strong>Bon à savoir :</strong> votre navigateur peut vous demander l'autorisation pour plusieurs téléchargements — acceptez-la pour recevoir toutes les pages.</p>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<p class="note">Each page of your PDF will be converted into a good-quality JPG image (page-1.jpg, page-2.jpg, …) and downloaded separately. <strong>Good to know:</strong> your browser may ask permission for multiple downloads — allow it so you receive every page.</p>
+<div class="status" id="status">Processing… please wait.</div>
 <div class="error" id="error"></div>
 <div class="result" id="result"></div>
-<button class="action" id="goBtn" type="button" disabled>Convertir et télécharger les images</button>
+<button class="action" id="goBtn" type="button" disabled>Convert and download the images</button>
 </div>
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 </main>
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -100,9 +100,9 @@ footer a{color:#3F51B5;text-decoration:none}
   function setFile(f) {
     showError(''); result.style.display = 'none';
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('Ce fichier n\'est pas un PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
     file = f;
-    fileInfo.textContent = 'Fichier : ' + f.name + '.';
+    fileInfo.textContent = 'File: ' + f.name + '.';
     fileInfo.style.display = 'block';
     goBtn.disabled = false;
   }
@@ -118,13 +118,13 @@ footer a{color:#3F51B5;text-decoration:none}
   function sleep(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
   goBtn.addEventListener('click', async function () {
     showError(''); result.style.display = 'none';
-    if (!file) { showError('Veuillez d\'abord choisir un fichier PDF.'); return; }
+    if (!file) { showError('Please select a PDF file first.'); return; }
     goBtn.disabled = true; status.style.display = 'block';
     try {
       var buf = await file.arrayBuffer();
       var pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
       for (var i = 1; i <= pdf.numPages; i++) {
-        status.textContent = 'Conversion en cours… page ' + i + ' sur ' + pdf.numPages + '.';
+        status.textContent = 'Converting… page ' + i + ' of ' + pdf.numPages + '.';
         var page = await pdf.getPage(i);
         var viewport = page.getViewport({ scale: 2 });
         var canvas = document.createElement('canvas');
@@ -142,13 +142,13 @@ footer a{color:#3F51B5;text-decoration:none}
         setTimeout(function (u) { URL.revokeObjectURL(u); }, 6000, url);
         await sleep(350);
       }
-      result.textContent = '✅ Terminé ! ' + pdf.numPages + ' image(s) JPG téléchargée(s). Si certaines pages manquent, autorisez les téléchargements multiples dans votre navigateur puis relancez la conversion.';
+      result.textContent = '✅ Done! ' + pdf.numPages + ' JPG image(s) downloaded. If some pages are missing, allow multiple downloads in your browser, then run the conversion again.';
       result.style.display = 'block';
     } catch (err) {
-      showError('Une erreur est survenue pendant la conversion. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+      showError('An error occurred during the conversion. The file may be protected or damaged. Please try again.');
     } finally {
       status.style.display = 'none';
-      status.textContent = 'Traitement en cours… veuillez patienter.';
+      status.textContent = 'Processing… please wait.';
       goBtn.disabled = false;
     }
   });

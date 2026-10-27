@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF en PowerPoint — PdfBleu.com</title>
-<meta name="description" content="Convertissez un PDF en présentation PowerPoint (.pptx) modifiable, gratuitement et sans inscription. Chaque page devient une diapositive dont le texte reste éditable, directement dans votre navigateur : aucun envoi sur un serveur.">
+<title>PDF to PowerPoint — PdfBleu.com</title>
+<meta name="description" content="Convert a PDF into an editable PowerPoint presentation (.pptx), free and with no sign-up. Each page becomes a slide whose text stays editable, right in your browser: no upload to any server.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -103,15 +103,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#F3D9CC"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#FF7651"/><path d="M38 10 L32 16" stroke="#D04526" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#D04526"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">P</text></svg></span>
-<h1>Convertir un PDF en PowerPoint</h1>
-<p class="subtitle">Chaque page de votre PDF devient une diapositive PowerPoint : le texte reste modifiable et garde sa place et sa taille, sans quitter votre appareil.</p>
+<h1>Convert PDF to PowerPoint</h1>
+<p class="subtitle">Each page of your PDF becomes a PowerPoint slide: the text stays editable and keeps its position and size, without leaving your device.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: conversion happens entirely in your browser, with no upload to any server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -120,79 +120,79 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Conversion en cours…</p>
+<p>Converting…</p>
 <p class="pdetail" id="processingDetail"></p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
-<p class="droptxt">ou déposez votre PDF ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
 <div class="filecard" id="fileCard">
-<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l’aperçu…</span></div>
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Loading preview…</span></div>
 <div class="finfo">
 <div class="fname" id="fileName"></div>
 <div class="fmeta" id="fileMeta"></div>
 <div class="warn" id="fileWarn"></div>
 </div>
-<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
 </div>
 <div class="error" id="error"></div>
 </div>
 </div>
 <aside class="sidebar">
-<h2>PDF en PowerPoint</h2>
-<p>Choisissez le mode de conversion :</p>
-<div class="levels" role="radiogroup" aria-label="Mode de conversion">
+<h2>PDF to PowerPoint</h2>
+<p>Choose the conversion mode:</p>
+<div class="levels" role="radiogroup" aria-label="Conversion mode">
 <label class="levelcard sel" id="noOcrCard">
 <input type="radio" name="mode" value="noocr" checked>
-<span class="ltitle">Sans OCR</span>
-<span class="ldesc">Convertit les PDF dont le texte est sélectionnable en présentations PowerPoint modifiables.</span>
+<span class="ltitle">No OCR</span>
+<span class="ldesc">Converts PDFs with selectable text into editable PowerPoint presentations.</span>
 </label>
 <label class="levelcard disabled" id="ocrCard">
 <input type="radio" name="mode" value="ocr" disabled>
-<span class="ltitle">OCR<span class="soonbadge">Bientôt</span></span>
-<span class="ldesc">Pour les PDF numérisés (texte non sélectionnable).</span>
+<span class="ltitle">OCR<span class="soonbadge">Soon</span></span>
+<span class="ldesc">For scanned PDFs (non-selectable text).</span>
 </label>
 </div>
-<p class="ocrnote" id="ocrNote" style="display:none">L’OCR arrive bientôt : il permettra de convertir aussi les documents scannés. Pour le moment, seuls les PDF dont le texte est sélectionnable peuvent être convertis.</p>
-<div class="warnnote">⚠ <strong>Conversion simplifiée :</strong> chaque page du PDF devient une diapositive et chaque ligne de texte devient une zone de texte modifiable, placée à sa position et à sa taille approximatives. Les images, les arrière-plans et les graphismes complexes ne sont pas reproduits. Une page numérisée (sans texte sélectionnable) donne une diapositive vide.</div>
-<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+<p class="ocrnote" id="ocrNote" style="display:none">OCR is coming soon: it will also convert scanned documents. For now, only PDFs with selectable text can be converted.</p>
+<div class="warnnote">⚠ <strong>Simplified conversion:</strong> each PDF page becomes a slide and each text line becomes an editable text box, placed at its approximate position and size. Images, backgrounds and complex graphics are not reproduced. A scanned page (with no selectable text) produces a blank slide.</div>
+<div class="freenote">Everything here is free with no limits: no subscription, no reserved features, no sign-up.</div>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Votre présentation PowerPoint est prête !</h2>
+<h2>Your PowerPoint presentation is ready!</h2>
 <p class="sub" id="successInfo"></p>
 <div class="resultlist" id="resultList"></div>
 <div class="scannote" id="scanNote" style="display:none"></div>
-<button class="again" id="restartBtn" type="button">Convertir un autre PDF</button>
+<button class="again" id="restartBtn" type="button">Convert another PDF</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment convertir un PDF en PowerPoint</h2>
+<h2>How to convert a PDF to PowerPoint</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez votre PDF</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier dans la zone prévue. Un seul document suffit.</p></div>
-<div class="step"><span class="num">2</span><h3>Lancez la conversion</h3><p>Chaque page devient une diapositive : le texte sélectionnable est placé dans des zones modifiables, à sa position et à sa taille d’origine.</p></div>
-<div class="step"><span class="num">3</span><h3>Téléchargez le .pptx</h3><p>Appuyez sur « Convertir en PowerPoint », puis ouvrez votre présentation dans PowerPoint, LibreOffice Impress ou Google Slides.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your PDF</h3><p>Click the select button or drop your file into the area provided. One document is all you need.</p></div>
+<div class="step"><span class="num">2</span><h3>Start the conversion</h3><p>Each page becomes a slide: the selectable text is placed in editable boxes, at its original position and size.</p></div>
+<div class="step"><span class="num">3</span><h3>Download the .pptx</h3><p>Press “Convert to PowerPoint”, then open your presentation in PowerPoint, LibreOffice Impress or Google Slides.</p></div>
 </div>
 <div class="seo">
-<p>Notre convertisseur PDF en PowerPoint est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : l’extraction du texte a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos présentations, rapports et documents confidentiels.</p>
-<p>La conversion convient aux PDF dont le texte est sélectionnable : présentations exportées, rapports, cours ou plaquettes. Chaque page donne une diapositive dont les dimensions correspondent à la première page du PDF, et chaque ligne de texte y figure dans sa propre zone éditable. Les documents scannés, qui sont en réalité des images, nécessitent une reconnaissance de caractères (OCR) : cette fonction arrive bientôt.</p>
+<p>Our PDF to PowerPoint converter is completely free and works with no sign-up. Unlike typical services, your document is never uploaded to a server: text extraction happens on your phone or computer, which protects your presentations, reports and confidential documents.</p>
+<p>The conversion suits PDFs with selectable text: exported presentations, reports, lessons or brochures. Each page yields a slide whose dimensions match the first page of the PDF, and each text line appears in its own editable box. Scanned documents, which are really images, require character recognition (OCR): that feature is coming soon.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="convertBtn" type="button">Convertir en PowerPoint</button>
+<button id="convertBtn" type="button">Convert to PowerPoint</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -363,7 +363,7 @@ footer a{color:#3F51B5;text-decoration:none}
     var extY = emu(Math.max(line.size * 1.35, 1) * sy);
     var runs = (line.runs || []).map(function (r) {
       var sz = Math.max(100, Math.round((r.size || line.size) * sy * 100));
-      var attrs = ' lang="fr-FR" dirty="0" sz="' + sz + '"';
+      var attrs = ' lang="en-US" dirty="0" sz="' + sz + '"';
       if (r.bold) attrs += ' b="1"';
       if (r.italic) attrs += ' i="1"';
       var space = /^\s|\s$/.test(r.str) ? ' xml:space="preserve"' : '';
@@ -376,7 +376,7 @@ footer a{color:#3F51B5;text-decoration:none}
       '<p:spPr><a:xfrm><a:off x="' + offX + '" y="' + offY + '"/><a:ext cx="' + extX + '" cy="' + extY + '"/></a:xfrm>' +
       '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>' +
       '<p:txBody><a:bodyPr wrap="none" rtlCol="0"/><a:lstStyle/>' +
-      '<a:p>' + runs + '<a:endParaRPr lang="fr-FR" dirty="0" sz="' + endSz + '"/></a:p></p:txBody></p:sp>';
+      '<a:p>' + runs + '<a:endParaRPr lang="en-US" dirty="0" sz="' + endSz + '"/></a:p></p:txBody></p:sp>';
   }
 
   var GRP_TREE_HEAD =
@@ -389,7 +389,7 @@ footer a{color:#3F51B5;text-decoration:none}
     var id = 2;
     (page.lines || []).forEach(function (line) {
       if (!line.text || !line.text.trim()) return;
-      shapes += lineShapeXml(line, page, slideWpt, slideHpt, id, 'Ligne ' + (id - 1));
+      shapes += lineShapeXml(line, page, slideWpt, slideHpt, id, 'Line ' + (id - 1));
       id++;
     });
     return XML_DECL +
@@ -438,7 +438,7 @@ footer a{color:#3F51B5;text-decoration:none}
       '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" ' +
       'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" ' +
       'xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">' +
-      '<dc:title>' + escapeXml(title || 'Présentation') + '</dc:title>' +
+      '<dc:title>' + escapeXml(title || 'Presentation') + '</dc:title>' +
       '<dc:creator>PdfBleu.com</dc:creator><cp:lastModifiedBy>PdfBleu.com</cp:lastModifiedBy>' +
       '<dcterms:created xsi:type="dcterms:W3CDTF">' + now + '</dcterms:created>' +
       '<dcterms:modified xsi:type="dcterms:W3CDTF">' + now + '</dcterms:modified></cp:coreProperties>';
@@ -448,7 +448,7 @@ footer a{color:#3F51B5;text-decoration:none}
     return XML_DECL +
       '<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" ' +
       'xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">' +
-      '<Application>PdfBleu.com</Application><PresentationFormat>Personnalisé</PresentationFormat>' +
+      '<Application>PdfBleu.com</Application><PresentationFormat>Custom</PresentationFormat>' +
       '<Slides>' + slideCount + '</Slides><Company>PdfBleu.com</Company><AppVersion>16.0000</AppVersion></Properties>';
   }
 
@@ -475,7 +475,7 @@ footer a{color:#3F51B5;text-decoration:none}
       '<p:sldIdLst>' + ids + '</p:sldIdLst>' +
       '<p:sldSz cx="' + cx + '" cy="' + cy + '" type="custom"/>' +
       '<p:notesSz cx="6858000" cy="9144000"/>' +
-      '<p:defaultTextStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr>' + lvlPprs(1800) + '</p:defaultTextStyle>' +
+      '<p:defaultTextStyle><a:defPPr><a:defRPr lang="en-US"/></a:defPPr>' + lvlPprs(1800) + '</p:defaultTextStyle>' +
       '</p:presentation>';
   }
 
@@ -497,7 +497,7 @@ footer a{color:#3F51B5;text-decoration:none}
       '<p:txStyles>' +
       '<p:titleStyle>' + lvlPprs(4400) + '</p:titleStyle>' +
       '<p:bodyStyle>' + lvlPprs(2400) + '</p:bodyStyle>' +
-      '<p:otherStyle><a:defPPr><a:defRPr lang="fr-FR"/></a:defPPr>' + lvlPprs(1800) + '</p:otherStyle>' +
+      '<p:otherStyle><a:defPPr><a:defRPr lang="en-US"/></a:defPPr>' + lvlPprs(1800) + '</p:otherStyle>' +
       '</p:txStyles></p:sldMaster>';
   }
 
@@ -511,7 +511,7 @@ footer a{color:#3F51B5;text-decoration:none}
   function buildSlideLayoutXml() {
     return XML_DECL +
       '<p:sldLayout xmlns:a="' + NS_A + '" xmlns:r="' + NS_R + '" xmlns:p="' + NS_P + '" type="blank" preserve="1">' +
-      '<p:cSld name="Vide"><p:spTree>' + GRP_TREE_HEAD + '</p:spTree></p:cSld>' +
+      '<p:cSld name="Blank"><p:spTree>' + GRP_TREE_HEAD + '</p:spTree></p:cSld>' +
       '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>';
   }
 
@@ -614,9 +614,9 @@ footer a{color:#3F51B5;text-decoration:none}
     errorBox.style.display = msg ? 'block' : 'none';
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
   function updateBar() {
@@ -637,26 +637,26 @@ footer a{color:#3F51B5;text-decoration:none}
     if (current.thumb) {
       var img = document.createElement('img');
       img.src = current.thumb;
-      img.alt = 'Couverture de ' + current.name;
+      img.alt = 'Cover of ' + current.name;
       coverWrap.appendChild(img);
     } else {
       var ph = document.createElement('span');
       ph.className = 'coverph' + (current.bad ? ' bad' : '');
-      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l’aperçu…';
+      ph.textContent = current.bad ? '⚠ Preview unavailable' : 'Loading preview…';
       coverWrap.appendChild(ph);
     }
     fileNameEl.textContent = current.name;
     var total = current.pages || 0;
     fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
-    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
-    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Password-protected';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
     else fileWarnEl.textContent = '';
   }
 
   async function loadFile(f) {
     showError('');
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n’est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('"' + (f ? f.name : '') + '" is not a PDF file. Please choose a PDF file.'); return; }
     var base = f.name.replace(/\.pdf$/i, '');
     current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null };
     renderFileCard();
@@ -693,8 +693,8 @@ footer a{color:#3F51B5;text-decoration:none}
           else current.bad = 'corrupt';
         }
       }
-      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
-      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être converti.');
+      if (current.bad === 'encrypted') showError('"' + f.name + '" is password-protected and cannot be converted. Unlock it first.');
+      else if (current.bad === 'corrupt') showError('"' + f.name + '" appears to be damaged or unreadable and cannot be converted.');
     }
     renderFileCard();
     updateBar();
@@ -724,9 +724,9 @@ footer a{color:#3F51B5;text-decoration:none}
 
   convertBtn.addEventListener('click', async function () {
     showError('');
-    if (!current) { showError('Veuillez d’abord choisir un fichier PDF.'); return; }
-    if (current.bad === 'encrypted') { showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.'); return; }
-    if (current.bad === 'corrupt') { showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.'); return; }
+    if (!current) { showError('Please first choose a PDF file.'); return; }
+    if (current.bad === 'encrypted') { showError('"' + current.name + '" is password-protected and cannot be converted. Unlock it first.'); return; }
+    if (current.bad === 'corrupt') { showError('"' + current.name + '" appears to be damaged or unreadable. Choose another file.'); return; }
     convertBtn.disabled = true;
     processing.classList.add('on');
     processingDetail.textContent = '';
@@ -790,16 +790,16 @@ footer a{color:#3F51B5;text-decoration:none}
       var left = document.createElement('div');
       var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
       var rm2 = document.createElement('div'); rm2.className = 'rmeta';
-      rm2.textContent = formatSize(blob.size) + ' • ' + pdf.numPages + (pdf.numPages > 1 ? ' diapositives' : ' diapositive') + ' • environ ' + words + ' mots de texte';
+      rm2.textContent = formatSize(blob.size) + ' • ' + pdf.numPages + (pdf.numPages > 1 ? ' slides' : ' slide') + ' • about ' + words + ' words of text';
       left.appendChild(rn); left.appendChild(rm2);
       var a = document.createElement('a');
-      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .pptx';
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Download the .pptx';
       item.appendChild(left); item.appendChild(a);
       resultList.appendChild(item);
-      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' → ' + pdf.numPages + (pdf.numPages > 1 ? ' diapositives' : ' diapositive') + ').';
+      successInfo.textContent = 'Conversion complete from ' + current.name + ' (' + pdf.numPages + (pdf.numPages > 1 ? ' pages' : ' page') + ' → ' + pdf.numPages + (pdf.numPages > 1 ? ' slides' : ' slide') + ').';
       if (blankPages > 0) {
         scanNote.style.display = 'block';
-        scanNote.textContent = '⚠ ' + blankPages + ' diapositive(s) sont vides : les pages correspondantes ne contenaient aucun texte sélectionnable (pages numérisées ou images). L’OCR qui permettra de les traiter arrive bientôt (Bientôt).';
+        scanNote.textContent = '⚠ ' + blankPages + ' slide(s) are blank: the matching pages contained no selectable text (scanned pages or images). OCR to handle them is coming soon.';
       } else {
         scanNote.style.display = 'none';
       }
@@ -809,10 +809,10 @@ footer a{color:#3F51B5;text-decoration:none}
       document.body.classList.remove('bar-visible');
       success.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être converti. Déverrouillez-le d’abord.');
-      else if (err && err.message === 'scanned') showError('Ce PDF semble composé d’images numérisées : aucun texte sélectionnable n’a pu être extrait, la conversion en PowerPoint est donc impossible sans OCR. L’OCR arrive bientôt (Bientôt). En attendant, essayez un PDF contenant du vrai texte (par exemple un document créé sur ordinateur).');
-      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
-      else showError('Une erreur est survenue pendant la conversion. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+      if (err && err.message === 'encrypted') showError('"' + current.name + '" is password-protected and cannot be converted. Unlock it first.');
+      else if (err && err.message === 'scanned') showError('This PDF appears to be made of scanned images: no selectable text could be extracted, so conversion to PowerPoint is not possible without OCR. OCR is coming soon. In the meantime, try a PDF containing real text (for example a document created on a computer).');
+      else if (err && err.message === 'corrupt') showError('"' + current.name + '" appears to be damaged or unreadable. Choose another file and try again.');
+      else showError('An error occurred during conversion. The file may be protected or damaged. Please try again.');
     } finally {
       processing.classList.remove('on');
       convertBtn.disabled = false;
@@ -835,4 +835,4 @@ footer a{color:#3F51B5;text-decoration:none}
 })();
 </script>
 </body>
-  </html>
+</html>

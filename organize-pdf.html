@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Organiser PDF — PdfBleu.com</title>
-<meta name="description" content="Réorganisez les pages d'un PDF : changez leur ordre et supprimez celles en trop, directement dans votre navigateur. Gratuit et 100% privé.">
+<title>Organize PDF — PdfBleu.com</title>
+<meta name="description" content="Reorganize the pages of a PDF: change their order and delete the ones you don't need, right in your browser. Free and 100% private.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -57,33 +57,33 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>Organiser PDF</h1>
-<p class="intro">Réordonnez les pages de votre document exactement comme vous le souhaitez, puis téléchargez le PDF réorganisé.</p>
-<div class="private-note">🔒 Votre fichier ne quitte jamais votre appareil : la réorganisation se fait entièrement dans votre navigateur.</div>
+<h1>Organize PDF</h1>
+<p class="intro">Reorder the pages of your document exactly the way you want, then download the reorganized PDF.</p>
+<div class="private-note">🔒 Your file never leaves your device: the reorganization happens entirely in your browser.</div>
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 <div class="tool">
 <div class="drop" id="drop">
 <span class="icon">📄</span>
-<p>Glissez votre fichier PDF ici</p>
-<small>ou touchez le bouton ci-dessous pour le choisir</small>
+<p>Drop your PDF file here</p>
+<small>or tap the button below to select it</small>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
-<button class="pick" id="pickBtn" type="button">Choisir un fichier PDF</button>
+<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
 <p class="fileinfo" id="fileInfo"></p>
-<p class="hint" style="margin-top:14px">Après le choix du fichier, chaque page apparaît ci-dessous avec son numéro d'origine. Déplacez les pages avec ◀ ▶, retirez celles que vous ne voulez plus, puis créez le nouveau PDF.</p>
+<p class="hint" style="margin-top:14px">After you select a file, each page appears below with its original number. Move pages with ◀ ▶, remove the ones you no longer want, then create the new PDF.</p>
 <div class="tiles" id="tiles"></div>
-<button class="secondary" id="resetBtn" type="button" disabled>Réinitialiser l'ordre</button>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<button class="secondary" id="resetBtn" type="button" disabled>Reset order</button>
+<div class="status" id="status">Processing… please wait.</div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Créer le PDF réorganisé</button>
+<button class="action" id="goBtn" type="button" disabled>Create the reorganized PDF</button>
 </div>
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 </main>
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -109,19 +109,19 @@ footer a{color:#3F51B5;text-decoration:none}
       name.textContent = 'Page ' + (pageIdx + 1);
       tile.appendChild(name);
       var left = document.createElement('button');
-      left.type = 'button'; left.textContent = '◀'; left.title = 'Déplacer vers la gauche';
+      left.type = 'button'; left.textContent = '◀'; left.title = 'Move left';
       left.disabled = pos === 0;
       left.addEventListener('click', function () {
         var t = order[pos - 1]; order[pos - 1] = order[pos]; order[pos] = t; renderTiles();
       });
       var right = document.createElement('button');
-      right.type = 'button'; right.textContent = '▶'; right.title = 'Déplacer vers la droite';
+      right.type = 'button'; right.textContent = '▶'; right.title = 'Move right';
       right.disabled = pos === order.length - 1;
       right.addEventListener('click', function () {
         var t = order[pos + 1]; order[pos + 1] = order[pos]; order[pos] = t; renderTiles();
       });
       var del = document.createElement('button');
-      del.type = 'button'; del.textContent = 'Supprimer'; del.className = 'del';
+      del.type = 'button'; del.textContent = 'Remove'; del.className = 'del';
       del.addEventListener('click', function () { order.splice(pos, 1); renderTiles(); });
       tile.appendChild(left); tile.appendChild(right); tile.appendChild(del);
       tiles.appendChild(tile);
@@ -130,7 +130,7 @@ footer a{color:#3F51B5;text-decoration:none}
   async function setFile(f) {
     showError('');
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('Ce fichier n\'est pas un PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
     try {
       var buf = await f.arrayBuffer();
       var doc = await PDFLib.PDFDocument.load(buf);
@@ -138,14 +138,14 @@ footer a{color:#3F51B5;text-decoration:none}
       file = f;
       order = [];
       for (var i = 0; i < pageCount; i++) order.push(i);
-      fileInfo.textContent = 'Fichier : ' + f.name + ' — ' + pageCount + ' page(s).';
+      fileInfo.textContent = 'File: ' + f.name + ' — ' + pageCount + ' page(s).';
       fileInfo.style.display = 'block';
       goBtn.disabled = false; resetBtn.disabled = false;
       renderTiles();
     } catch (err) {
       file = null; pageCount = 0; order = []; tiles.innerHTML = '';
       goBtn.disabled = true; resetBtn.disabled = true;
-      showError('Impossible de lire ce PDF. Il est peut-être protégé par un mot de passe ou endommagé.');
+      showError('Could not read this PDF. It may be password-protected or damaged.');
     }
   }
   resetBtn.addEventListener('click', function () {
@@ -166,8 +166,8 @@ footer a{color:#3F51B5;text-decoration:none}
   });
   goBtn.addEventListener('click', async function () {
     showError('');
-    if (!file) { showError('Veuillez d\'abord choisir un fichier PDF.'); return; }
-    if (!order.length) { showError('Il ne reste aucune page : le PDF obtenu serait vide. Réinitialisez l\'ordre ou rechargez le fichier pour recommencer.'); return; }
+    if (!file) { showError('Please select a PDF file first.'); return; }
+    if (!order.length) { showError('No pages left: the resulting PDF would be empty. Reset the order or reload the file to start over.'); return; }
     goBtn.disabled = true; status.style.display = 'block';
     try {
       var buf = await file.arrayBuffer();
@@ -179,11 +179,11 @@ footer a{color:#3F51B5;text-decoration:none}
       var blob = new Blob([bytes], { type: 'application/pdf' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
-      a.href = url; a.download = 'pdfbleu-organise.pdf';
+      a.href = url; a.download = 'pdfbleu-organized.pdf';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
     } catch (err) {
-      showError('Une erreur est survenue pendant la réorganisation. Veuillez réessayer.');
+      showError('An error occurred during the reorganization. Please try again.');
     } finally { status.style.display = 'none'; goBtn.disabled = false; }
   });
 })();

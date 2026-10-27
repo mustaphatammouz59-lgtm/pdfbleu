@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerPoint to PDF — PdfBleu.com</title>
+<meta name="description" content="Convert your PowerPoint (.pptx) presentations to PDF for free, with no sign-up, right in your browser: every slide becomes a PDF page, nothing is ever sent to a server.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#D04526;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(208,69,38,.35)}
+.doctile .dw{font-size:32px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#F3D9CC"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#FF7651"/><path d="M10 10 L16 16" stroke="#D04526" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#D04526"/><text x="30" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">P</text></svg></span>
+<h1>Convert PowerPoint to PDF</h1>
+<p class="subtitle">Convert your presentations (.pptx) to PDF, right in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the conversion happens entirely in your browser, nothing is ever sent to a server.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Converting…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PowerPoint file</button>
+<p class="droptxt">or drop your .pptx presentation here</p>
+</div>
+<input type="file" id="fileInput" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">P</span><span class="dext">PPTX</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>PowerPoint to PDF</h2>
+<p>Every slide of your presentation becomes a page of the PDF, at the exact size of your slides (16:9, 4:3 or any other format). Text stays selectable in the PDF produced.</p>
+<div class="warnnote">⚠ <strong>Rendering recreated:</strong> the presentation is read and rebuilt with standard fonts (Helvetica, Times). Theme or master backgrounds and decorations are only partially reproduced — only each slide's own background color is kept. Animations, transitions, videos, charts, SmartArt and complex effects are not reproduced; Arabic or right-to-left text, and some special characters, may be replaced. Only <strong>.pptx</strong> files are accepted: an old .ppt file must first be saved again in .pptx format.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convert another file</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to convert a PowerPoint presentation to PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choose your presentation</h3><p>Click the select button or drop your .pptx file into the area provided. One presentation is all it takes.</p></div>
+<div class="step"><span class="num">2</span><h3>Start the conversion</h3><p>Every slide is read and recreated as a PDF page: text, colored shapes, embedded images and simple tables, at the exact size of your presentation.</p></div>
+<div class="step"><span class="num">3</span><h3>Download the PDF</h3><p>Press “Convert to PDF”, then save your file: your slides become easy to share, send or print, even without PowerPoint.</p></div>
+</div>
+<div class="seo">
+<p>Our PowerPoint to PDF converter is completely free and works with no sign-up. Unlike classic services, your presentation is never sent to a server: reading the .pptx file and creating the PDF happen on your phone or computer, which protects your talks, lessons, business presentations and confidential documents.</p>
+<p>The converter reads the structure of every slide — titles, text boxes, bulleted lists, shapes, images and simple tables — then rebuilds the pages in PDF format with standard fonts, at the exact size of your slides. The result suits the vast majority of everyday presentations; advanced PowerPoint effects (animations, transitions, embedded charts, SmartArt) are, however, not reproduced, as noted above.</p>
+</div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convert to PDF</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="pptxEngine">
+/* =====================================================================
+   Moteur de conversion PowerPoint (.pptx) → PDF, 100 % local.
+   Le fichier .pptx est décompressé avec JSZip, son XML DrawingML est
+   relu (présentation, thème, masque, dispositions, diapositives), puis
+   chaque diapositive est recomposée en une page PDF avec pdf-lib :
+   le texte du PDF produit reste sélectionnable. Aucune donnée ne
+   quitte l'appareil.
+   Fonctions exposées : PptxToPdf.convertPptxToPdf(data, options)
+   et PptxToPdf.outputPdfName(nom).
+   ===================================================================== */
+var PptxToPdf = (function () {
+  'use strict';
+
+  var EMU_PT = 12700; // EMU par point typographique
+
+  // ---------- Utilitaires XML (agnostiques des préfixes) ----------
+  function xKids(el, name) {
+    var out = [];
+    if (!el || !el.childNodes) return out;
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var n = el.childNodes[i];
+      if (n.nodeType === 1 && n.localName === name) out.push(n);
+    }
+    return out;
+  }
+  function xFirst(el, name) { var k = xKids(el, name); return k.length ? k[0] : null; }
+  function xDesc(el, name) {
+    var out = [];
+    if (!el || !el.getElementsByTagName) return out;
+    var all = el.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) if (all[i].localName === name) out.push(all[i]);
+    return out;
+  }
+  function xAttr(el, name) {
+    if (!el || !el.getAttribute) return null;
+    var prefixes = ['a:', 'p:', 'r:', ''];
+    for (var i = 0; i < prefixes.length; i++) {
+      var v = el.getAttribute(prefixes[i] + name);
+      if (v != null) return v;
+    }
+    if (el.getAttributeNS) { try { var v2 = el.getAttributeNS('*', name); if (v2 != null) return v2; } catch (e) {} }
+    return null;
+  }
+  function firstEl(el) {
+    if (!el || !el.childNodes) return null;
+    for (var i = 0; i < el.childNodes.length; i++) if (el.childNodes[i].nodeType === 1) return el.childNodes[i];
+    return null;
+  }
+  function parseXml(str) { return new DOMParser().parseFromString(str, 'text/xml'); }
+  function numOr(v, d) { var n = parseFloat(v); return isFinite(n) ? n : d; }
+  function mergeDefined(dst, src) {
+    if (src) for (var k in src) if (src[k] !== undefined) dst[k] = src[k];
+    return dst;
+  }
+  function fail(code) { var e = new Error(code); e.code = code; return e; }
+
+  // ---------- État global d'une conversion ----------
+  var G = null;
+
+  // ---------- Couleurs ----------
+  function isHex6(v) { return typeof v === 'string' && /^[0-9A-Fa-f]{6}$/.test(v); }
+  function hexToHsl(hex) {
+    var r = parseInt(hex.slice(0, 2), 16) / 255, g = parseInt(hex.slice(2, 4), 16) / 255, b = parseInt(hex.slice(4, 6), 16) / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2, h = 0, s = 0;
+    if (max !== min) {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h /= 6;
+    }
+    return [h, s, l];
+  }
+  function hslToHex(h, s, l) {
+    function hue2rgb(p, q, t) {
+      if (t < 0) t += 1; if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    }
+    var r, g, b;
+    if (s === 0) { r = g = b = l; }
+    else {
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3); g = hue2rgb(p, q, h); b = hue2rgb(p, q, h - 1 / 3);
+    }
+    function c(v) { var n = Math.round(Math.max(0, Math.min(1, v)) * 255); var s2 = n.toString(16); return s2.length < 2 ? '0' + s2 : s2; }
+    return (c(r) + c(g) + c(b)).toUpperCase();
+  }
+  // Transformations de luminance DrawingML : lumMod / lumOff / tint / shade.
+  function applyClrMods(hex, node) {
+    var lumMod = null, lumOff = null;
+    if (node && node.childNodes) {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        var n = node.childNodes[i];
+        if (n.nodeType !== 1) continue;
+        var v = parseFloat(n.getAttribute('val'));
+        if (!isFinite(v)) continue;
+        if (n.localName === 'lumMod') lumMod = v / 100000;
+        else if (n.localName === 'lumOff') lumOff = v / 100000;
+        else if (n.localName === 'tint') { var t = v / 100000; lumMod = 1 - t; lumOff = t; }
+        else if (n.localName === 'shade') { lumMod = v / 100000; lumOff = 0; }
+      }
+    }
+    if (lumMod === null && lumOff === null) return hex;
+    var hsl = hexToHsl(hex);
+    var L = hsl[2] * (lumMod === null ? 1 : lumMod) + (lumOff === null ? 0 : lumOff);
+    L = Math.max(0, Math.min(1, L));
+    return hslToHex(hsl[0], hsl[1], L);
+  }
+  var SCHEME_ALIAS = { bg1: 'lt1', tx1: 'dk1', bg2: 'lt2', tx2: 'dk2' };
+  function colorFromNode(node) {
+    if (!node) return null;
+    var ln = node.localName;
+    if (ln === 'srgbClr') { var v = xAttr(node, 'val'); return isHex6(v) ? applyClrMods(v.toUpperCase(), node) : null; }
+    if (ln === 'sysClr') { var lc = xAttr(node, 'lastClr'); return isHex6(lc) ? applyClrMods(lc.toUpperCase(), node) : null; }
+    if (ln === 'schemeClr') {
+      var name = xAttr(node, 'val');
+      if (!name || !G.theme) return null;
+      var base = G.theme.map[name] || G.theme.map[SCHEME_ALIAS[name]];
+      return base ? applyClrMods(base, node) : null;
+    }
+    return null;
+  }
+  // undefined = non spécifié ; null = transparent (noFill) ; sinon hexadécimal.
+  function fillOf(container) {
+    if (!container) return undefined;
+    if (xFirst(container, 'noFill')) return null;
+    var sf = xFirst(container, 'solidFill');
+    if (sf) { var c = colorFromNode(firstEl(sf)); return c || '000000'; }
+    var gf = xFirst(container, 'gradFill');
+    if (gf) {
+      var stops = xDesc(gf, 'gs');
+      if (stops.length) { var c2 = colorFromNode(firstEl(stops[0])); if (c2) return c2; }
+      return undefined;
+    }
+    return undefined;
+  }
+  var _colorCache = {};
+  function hexColor(hex) {
+    if (!_colorCache[hex]) {
+      _colorCache[hex] = PDFLib.rgb(
+        parseInt(hex.slice(0, 2), 16) / 255,
+        parseInt(hex.slice(2, 4), 16) / 255,
+        parseInt(hex.slice(4, 6), 16) / 255);
+    }
+    return _colorCache[hex];
+  }
+
+  // ---------- Relations ----------
+  function parseRels(doc) {
+    var map = {};
+    if (!doc || !doc.getElementsByTagName) return map;
+    var all = doc.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.localName !== 'Relationship') continue;
+      var id = el.getAttribute('Id'), target = el.getAttribute('Target'), type = el.getAttribute('Type');
+      if (id && target) map[id] = { target: target, type: type || '' };
+    }
+    return map;
+  }
+  function resolvePath(baseDir, target) {
+    var t = String(target || '');
+    if (t.charAt(0) === '/') return t.slice(1);
+    var parts = (baseDir + t).split('/'), out = [];
+    parts.forEach(function (p) { if (p === '..') out.pop(); else if (p !== '.' && p !== '') out.push(p); });
+    return out.join('/');
+  }
+  function relsPathFor(partPath) {
+    var dir = partPath.slice(0, partPath.lastIndexOf('/') + 1);
+    return dir + '_rels/' + partPath.split('/').pop() + '.rels';
+  }
+
+  // ---------- Thème ----------
+  function parseTheme(themeDoc) {
+    var map = {
+      dk1: '000000', lt1: 'FFFFFF', dk2: '1F497D', lt2: 'EEECE1',
+      accent1: '4472C4', accent2: 'ED7D31', accent3: 'A5A5A5', accent4: 'FFC000',
+      accent5: '5B9BD5', accent6: '70AD47', hlink: '0563C1', folHlink: '954F72'
+    };
+    var major = null, minor = null;
+    if (themeDoc && themeDoc.documentElement) {
+      var scheme = xDesc(themeDoc, 'clrScheme')[0];
+      if (scheme) {
+        for (var i = 0; i < scheme.childNodes.length; i++) {
+          var n = scheme.childNodes[i];
+          if (n.nodeType !== 1) continue;
+          var c = colorFromNode(firstEl(n));
+          if (c) map[n.localName] = c;
+        }
+      }
+      var mj = xDesc(themeDoc, 'majorFont')[0];
+      if (mj) { var l = xFirst(mj, 'latin'); if (l) major = l.getAttribute('typeface'); }
+      var mn = xDesc(themeDoc, 'minorFont')[0];
+      if (mn) { var l2 = xFirst(mn, 'latin'); if (l2) minor = l2.getAttribute('typeface'); }
+    }
+    return { map: map, majorFont: major, minorFont: minor };
+  }
+
+  // ---------- Polices ----------
+  function fontFamilyOf(name) {
+    var n = String(name || '').toLowerCase();
+    if (/times|georgia|garamond|book/.test(n)) return 'times';
+    if (/courier|consolas|mono/.test(n)) return 'courier';
+    return 'helvetica';
+  }
+  var STD_FONTS = {
+    helvetica: { r: 'Helvetica', b: 'HelveticaBold', i: 'HelveticaOblique', bi: 'HelveticaBoldOblique' },
+    times: { r: 'TimesRoman', b: 'TimesRomanBold', i: 'TimesRomanItalic', bi: 'TimesRomanBoldItalic' },
+    courier: { r: 'Courier', b: 'CourierBold', i: 'CourierOblique', bi: 'CourierBoldOblique' }
+  };
+  function stdFontKey(fmt) {
+    var fam = STD_FONTS[fmt.family] || STD_FONTS.helvetica;
+    if (fmt.bold && fmt.italic) return fam.bi;
+    if (fmt.bold) return fam.b;
+    if (fmt.italic) return fam.i;
+    return fam.r;
+  }
+  // Les polices standard de pdf-lib ne couvrent que WinAnsi : tout caractère
+  // hors de ce jeu est remplacé par « ? » et compté.
+  function sanitize(font, text) {
+    try { font.encodeText(text); return text; } catch (e) { /* repli caractère par caractère */ }
+    if (!font.__badSet) font.__badSet = {};
+    var out = '';
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (font.__badSet[ch]) { out += '?'; G.replaced++; continue; }
+      try { font.encodeText(ch); out += ch; }
+      catch (e2) { font.__badSet[ch] = true; out += '?'; G.replaced++; }
+    }
+    return out;
+  }
+
+  // ---------- Propriétés de texte (rPr / defRPr / niveaux) ----------
+  function parseRPrEl(el) {
+    var o = {};
+    if (!el) return o;
+    var sz = el.getAttribute('sz');
+    if (sz) { var s = parseFloat(sz); if (isFinite(s) && s > 0) o.size = s / 100; }
+    var b = el.getAttribute('b');
+    if (b === '1') o.bold = true; else if (b === '0') o.bold = false;
+    var it = el.getAttribute('i');
+    if (it === '1') o.italic = true; else if (it === '0') o.italic = false;
+    var u = el.getAttribute('u');
+    if (u) o.underline = (u !== 'none');
+    var latin = xFirst(el, 'latin');
+    if (latin) { var tf = latin.getAttribute('typeface'); if (tf) o.font = tf; }
+    var f = fillOf(el);
+    if (f !== undefined && f !== null) o.color = f;
+    var bl = el.getAttribute('baseline');
+    if (bl) { var bv = parseInt(bl, 10); if (isFinite(bv) && bv !== 0) o.baseline = bv; }
+    return o;
+  }
+  // Fonctionne pour a:lvlNpPr comme pour a:pPr (même structure).
+  function parseLvlPr(el) {
+    var o = {};
+    if (!el) return o;
+    var algn = el.getAttribute('algn'); if (algn) o.align = algn;
+    var marL = el.getAttribute('marL'); if (marL != null && marL !== '') o.marL = parseFloat(marL) / EMU_PT;
+    var ind = el.getAttribute('indent'); if (ind != null && ind !== '') o.indent = parseFloat(ind) / EMU_PT;
+    var ln = xFirst(el, 'lnSpc');
+    if (ln) {
+      var pc = xFirst(ln, 'spcPct'); if (pc) o.lnSpc = parseFloat(pc.getAttribute('val')) / 100000;
+      var pt = xFirst(ln, 'spcPts'); if (pt) o.lnSpcPts = parseFloat(pt.getAttribute('val')) / 100;
+    }
+    var sb = xFirst(el, 'spcBef');
+    if (sb) {
+      var p1 = xFirst(sb, 'spcPts'); if (p1) o.spcBef = parseFloat(p1.getAttribute('val')) / 100;
+      var p2 = xFirst(sb, 'spcPct'); if (p2) o.spcBefPct = parseFloat(p2.getAttribute('val')) / 100000;
+    }
+    var sa = xFirst(el, 'spcAft');
+    if (sa) {
+      var p3 = xFirst(sa, 'spcPts'); if (p3) o.spcAft = parseFloat(p3.getAttribute('val')) / 100;
+      var p4 = xFirst(sa, 'spcPct'); if (p4) o.spcAftPct = parseFloat(p4.getAttribute('val')) / 100000;
+    }
+    var bu = null;
+    if (xFirst(el, 'buNone')) bu = { type: 'none' };
+    else {
+      var bc = xFirst(el, 'buChar');
+      if (bc) bu = { type: 'char', char: bc.getAttribute('char') || '•' };
+      else {
+        var ba = xFirst(el, 'buAutoNum');
+        if (ba) bu = { type: 'auto', fmt: ba.getAttribute('type') || 'arabicPeriod' };
+      }
+    }
+    if (bu) {
+      var buClr = xFirst(el, 'buClr');
+      if (buClr) { var bc2 = colorFromNode(firstEl(buClr)); if (bc2) bu.color = bc2; }
+      var buSz = xFirst(el, 'buSzPct');
+      if (buSz) bu.szPct = parseFloat(buSz.getAttribute('val')) / 100000;
+      var buF = xFirst(el, 'buFont');
+      if (buF) bu.font = buF.getAttribute('typeface');
+      o.bullet = bu;
+    }
+    var def = xFirst(el, 'defRPr');
+    if (def) o.defRPr = parseRPrEl(def);
+    return o;
+  }
+  function parseLvlArr(container) {
+    var arr = [];
+    if (!container) return arr;
+    var host = xFirst(container, 'lstStyle') || container;
+    for (var i = 1; i <= 9; i++) {
+      var lp = xFirst(host, 'lvl' + i + 'pPr');
+      if (lp) arr[i - 1] = parseLvlPr(lp);
+    }
+    return arr;
+  }
+  function mergeLvlStyle(dst, src) {
+    if (!src) return dst;
+    for (var k in src) {
+      if (src[k] === undefined) continue;
+      if (k === 'defRPr') dst.defRPr = mergeDefined(mergeDefined({}, dst.defRPr || {}), src.defRPr);
+      else dst[k] = src[k];
+    }
+    return dst;
+  }
+  // Dans une même source, un niveau hérite des niveaux précédents.
+  function effectiveLvl(arr, lvl) {
+    var out = { defRPr: {} };
+    if (!arr) return out;
+    for (var i = 0; i <= lvl && i < arr.length; i++) if (arr[i]) mergeLvlStyle(out, arr[i]);
+    return out;
+  }
+  function toRoman(n) {
+    if (n <= 0 || n > 3999) return String(n);
+    var table = [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+    var s = '';
+    table.forEach(function (p) { while (n >= p[0]) { s += p[1]; n -= p[0]; } });
+    return s;
+  }
+  function formatAutoNum(type, n) {
+    function letters(v, up) {
+      var s = '';
+      while (v > 0) { v--; s = String.fromCharCode((up ? 65 : 97) + (v % 26)) + s; v = Math.floor(v / 26); }
+      return s || (up ? 'A' : 'a');
+    }
+    switch (type) {
+      case 'arabicParenR': return n + ')';
+      case 'arabicParenBoth': return '(' + n + ')';
+      case 'arabicPlain': return '' + n;
+      case 'alphaUcPeriod': return letters(n, true) + '.';
+      case 'alphaLcPeriod': return letters(n, false) + '.';
+      case 'alphaUcParenR': return letters(n, true) + ')';
+      case 'alphaLcParenR': return letters(n, false) + ')';
+      case 'romanUcPeriod': return toRoman(n) + '.';
+      case 'romanLcPeriod': return toRoman(n).toLowerCase() + '.';
+      default: return n + '.';
+    }
+  }
+
+  // ---------- Géométrie ----------
+  function parseXfrmEl(xf) {
+    if (!xf) return null;
+    var off = xFirst(xf, 'off'), ext = xFirst(xf, 'ext');
+    var o = { x: 0, y: 0, w: 0, h: 0, rot: 0, flipH: false, flipV: false };
+    if (off) { o.x = numOr(off.getAttribute('x'), 0) / EMU_PT; o.y = numOr(off.getAttribute('y'), 0) / EMU_PT; }
+    if (ext) { o.w = numOr(ext.getAttribute('cx'), 0) / EMU_PT; o.h = numOr(ext.getAttribute('cy'), 0) / EMU_PT; }
+    var r = parseFloat(xf.getAttribute('rot'));
+    if (isFinite(r)) o.rot = r / 60000;
+    o.flipH = xf.getAttribute('flipH') === '1';
+    o.flipV = xf.getAttribute('flipV') === '1';
+    return o;
+  }
+  var ID_T = { ox: 0, oy: 0, cx: 0, cy: 0, sx: 1, sy: 1 };
+  function applyX(T, x) { return T.ox + (x - T.cx) * T.sx; }
+  function applyY(T, y) { return T.oy + (y - T.cy) * T.sy; }
+
+  // ---------- Emplacements (placeholders) ----------
+  function phInfoOf(sp) {
+    var nv = xFirst(sp, 'nvSpPr'); if (!nv) return null;
+    var nvPr = xFirst(nv, 'nvPr'); if (!nvPr) return null;
+    var ph = xFirst(nvPr, 'ph'); if (!ph) return null;
+    var idx = ph.getAttribute('idx');
+    return { type: ph.getAttribute('type') || 'body', idx: (idx == null ? '0' : idx) };
+  }
+  function picPhOf(pic) {
+    var nv = xFirst(pic, 'nvPicPr'); if (!nv) return null;
+    var nvPr = xFirst(nv, 'nvPr'); if (!nvPr) return null;
+    return xFirst(nvPr, 'ph');
+  }
+  function phKind(type) {
+    if (type === 'title' || type === 'ctrTitle') return 'title';
+    if (type === 'body' || type === 'subTitle') return 'body';
+    return 'other';
+  }
+
+  // ---------- Modèle de texte ----------
+  function buildTextModel(txBody, ctxo) {
+    var bodyPr = xFirst(txBody, 'bodyPr');
+    var model = { insets: { l: 7.2, r: 7.2, t: 3.6, b: 3.6 }, anchor: 't', wrapNone: false, fontScale: 1, lnRed: 0, paras: [], _cacheW: null, _cache: null };
+    if (bodyPr) {
+      var li = bodyPr.getAttribute('lIns'); if (li != null) model.insets.l = numOr(li, 91440) / EMU_PT;
+      var ri = bodyPr.getAttribute('rIns'); if (ri != null) model.insets.r = numOr(ri, 91440) / EMU_PT;
+      var ti = bodyPr.getAttribute('tIns'); if (ti != null) model.insets.t = numOr(ti, 45720) / EMU_PT;
+      var bi = bodyPr.getAttribute('bIns'); if (bi != null) model.insets.b = numOr(bi, 45720) / EMU_PT;
+      var an = bodyPr.getAttribute('anchor'); if (an) model.anchor = an;
+      if (bodyPr.getAttribute('wrap') === 'none') model.wrapNone = true;
+      var na = xFirst(bodyPr, 'normAutofit');
+      if (na) {
+        model.fontScale = numOr(na.getAttribute('fontScale'), 100000) / 100000;
+        model.lnRed = numOr(na.getAttribute('lnSpcReduction'), 0) / 100000;
+      }
+    }
+    var ownArr = parseLvlArr(txBody);
+    var kind = ctxo.kind || 'other';
+    var scale = ctxo.sizeScale || 1;
+    var fscale = model.fontScale * scale;
+    xKids(txBody, 'p').forEach(function (p) {
+      var pPr = xFirst(p, 'pPr');
+      var lvl = pPr ? (parseInt(pPr.getAttribute('lvl') || '0', 10) || 0) : 0;
+      if (lvl < 0) lvl = 0; if (lvl > 8) lvl = 8;
+      var st = { defRPr: {} };
+      mergeLvlStyle(st, effectiveLvl(G.master[kind], lvl));
+      if (ctxo.masterPhArr) mergeLvlStyle(st, effectiveLvl(ctxo.masterPhArr, lvl));
+      if (ctxo.layoutArr) mergeLvlStyle(st, effectiveLvl(ctxo.layoutArr, lvl));
+      mergeLvlStyle(st, effectiveLvl(ownArr, lvl));
+      if (pPr) mergeLvlStyle(st, parseLvlPr(pPr));
+      var baseRaw = mergeDefined({}, st.defRPr || {});
+      if (pPr && !xFirst(pPr, 'defRPr')) {
+        var epr = xFirst(p, 'endParaRPr');
+        if (epr) mergeDefined(baseRaw, parseRPrEl(epr));
+      }
+      if (baseRaw.size === undefined) baseRaw.size = (kind === 'title' ? 40 : kind === 'body' ? 24 : 18);
+      if (baseRaw.color === undefined || baseRaw.color === null) baseRaw.color = (G.theme && G.theme.map.dk1) || '000000';
+      if (!baseRaw.font) baseRaw.font = ((kind === 'title' ? G.theme.majorFont : G.theme.minorFont) || 'Calibri');
+      var baseFmt = mergeDefined({}, baseRaw);
+      baseFmt.family = fontFamilyOf(baseFmt.font);
+      baseFmt.size = baseRaw.size * fscale;
+      var segs = [];
+      for (var i = 0; i < p.childNodes.length; i++) {
+        var n = p.childNodes[i];
+        if (n.nodeType !== 1) continue;
+        if (n.localName === 'r' || n.localName === 'fld') {
+          var tEl = xFirst(n, 't');
+          var txt = tEl ? (tEl.textContent || '') : '';
+          if (!txt) continue;
+          var fmt = mergeDefined(mergeDefined({}, baseRaw), parseRPrEl(xFirst(n, 'rPr')));
+          fmt.family = fontFamilyOf(fmt.font || baseRaw.font);
+          fmt.size = (fmt.size || baseRaw.size) * fscale;
+          if (fmt.baseline) fmt.size *= 0.65;
+          segs.push({ type: 'run', text: txt, fmt: fmt });
+        } else if (n.localName === 'br') {
+          segs.push({ type: 'br' });
+        }
+      }
+      var spcBef = st.spcBef != null ? st.spcBef : (st.spcBefPct != null ? st.spcBefPct * baseRaw.size : 0);
+      var spcAft = st.spcAft != null ? st.spcAft : (st.spcAftPct != null ? st.spcAftPct * baseRaw.size : 0);
+      model.paras.push({
+        lvl: lvl,
+        align: (st.align === 'ctr' || st.align === 'r' || st.align === 'just') ? st.align : 'l',
+        marL: (st.marL !== undefined ? st.marL : (lvl * 18 + (st.bullet ? 18 : 0))) * scale,
+        indent: (st.indent !== undefined ? st.indent : (st.bullet ? -18 : 0)) * scale,
+        lnSpc: st.lnSpc, lnSpcPts: st.lnSpcPts != null ? st.lnSpcPts * scale : undefined,
+        spcBef: spcBef * scale, spcAft: spcAft * scale,
+        bullet: st.bullet || null,
+        baseFmt: baseFmt,
+        segs: segs,
+        _toks: null
+      });
+    });
+    return model;
+  }
+  function tokenizePara(para) {
+    if (para._toks) return para._toks;
+    var toks = [];
+    para.segs.forEach(function (seg) {
+      if (seg.type === 'br') { toks.push({ t: 'br' }); return; }
+      var font = G.fonts[stdFontKey(seg.fmt)];
+      var clean = sanitize(font, seg.text);
+      clean.split(/(\s+)/).forEach(function (p) {
+        if (p === '') return;
+        toks.push({ t: /^\s+$/.test(p) ? 's' : 'w', text: p, fmt: seg.fmt, font: font, w: font.widthOfTextAtSize(p, seg.fmt.size) });
+      });
+    });
+    para._toks = toks;
+    return toks;
+  }
+  function lineHeight(para, maxSize, model) {
+    if (para.lnSpcPts) return para.lnSpcPts;
+    var f = (para.lnSpc || 1) * (1 - (model ? model.lnRed : 0));
+    return maxSize * 1.2 * f;
+  }
+  function packPara(para, toks, firstW, restW) {
+    var lines = [], cur = [], curW = 0, curMax = 0;
+    function lim() { return lines.length === 0 ? firstW : restW; }
+    function flush() {
+      while (cur.length && cur[cur.length - 1].t === 's') { curW -= cur[cur.length - 1].w; cur.pop(); }
+      lines.push({ toks: cur, w: curW, maxSize: curMax || para.baseFmt.size });
+      cur = []; curW = 0; curMax = 0;
+    }
+    function add(tk) { cur.push(tk); curW += tk.w; if (tk.fmt && tk.fmt.size > curMax) curMax = tk.fmt.size; }
+    var i = 0, guard = 0;
+    while (i < toks.length && guard++ < 100000) {
+      var tk = toks[i];
+      if (tk.t === 'br') { flush(); i++; continue; }
+      if (tk.t === 's') {
+        if (!cur.length) { i++; continue; }
+        if (curW + tk.w <= lim()) add(tk); else flush();
+        i++; continue;
+      }
+      if (curW + tk.w <= lim()) { add(tk); i++; continue; }
+      if (!cur.length) {
+        var lim2 = lim(), fit = 0, acc = 0;
+        while (fit < tk.text.length) {
+          var cw = tk.font.widthOfTextAtSize(tk.text.charAt(fit), tk.fmt.size);
+          if (acc + cw > lim2 && fit > 0) break;
+          acc += cw; fit++;
+        }
+        if (fit === 0) fit = 1;
+        add({ t: 'w', text: tk.text.slice(0, fit), fmt: tk.fmt, font: tk.font, w: acc });
+        if (fit < tk.text.length) toks[i] = { t: 'w', text: tk.text.slice(fit), fmt: tk.fmt, font: tk.font, w: tk.font.widthOfTextAtSize(tk.text.slice(fit), tk.fmt.size) };
+        else i++;
+        flush();
+        continue;
+      }
+      flush();
+    }
+    if (cur.length || !lines.length) flush();
+    return lines;
+  }
+  function layoutText(model, rectW) {
+    if (model._cache && model._cacheW === rectW) return model._cache;
+    var laid = { paras: [], totalH: 0 };
+    var baseW = model.wrapNone ? Infinity : Math.max(10, rectW - model.insets.l - model.insets.r);
+    model.paras.forEach(function (para) {
+      var toks = tokenizePara(para);
+      var firstW = baseW === Infinity ? Infinity : Math.max(10, baseW - para.marL - para.indent);
+      var restW = baseW === Infinity ? Infinity : Math.max(10, baseW - para.marL);
+      var lines = packPara(para, toks, firstW, restW);
+      var h = para.spcBef + para.spcAft;
+      lines.forEach(function (L) { h += lineHeight(para, L.maxSize, model); });
+      laid.paras.push({ para: para, lines: lines, h: h });
+      laid.totalH += h;
+    });
+    model._cacheW = rectW;
+    model._cache = laid;
+    return laid;
+  }
+  function bulletText(para, counters) {
+    var b = para.bullet;
+    if (!b) return null;
+    if (b.type === 'none') return null;
+    if (b.type === 'char') {
+      var ch = b.char || '•';
+      if (ch.length === 1) {
+        var cp = ch.charCodeAt(0);
+        if ((cp >= 0xF000 && cp <= 0xF0FF) || cp === 0xA7) return '•';
+      }
+      return ch;
+    }
+    if (b.type === 'auto') {
+      Object.keys(counters).forEach(function (k) { if (parseInt(k, 10) > para.lvl) delete counters[k]; });
+      counters[para.lvl] = (counters[para.lvl] == null ? 0 : counters[para.lvl]) + 1;
+      return formatAutoNum(b.fmt, counters[para.lvl]);
+    }
+    return null;
+  }
+  function drawTextModel(page, model, laid, rect) {
+    var availH = rect.h - model.insets.t - model.insets.b;
+    var offY = 0;
+    if (model.anchor === 'ctr') offY = Math.max(0, (availH - laid.totalH) / 2);
+    else if (model.anchor === 'b') offY = Math.max(0, availH - laid.totalH);
+    var curY = rect.y + model.insets.t + offY;
+    var counters = {};
+    laid.paras.forEach(function (lp) {
+      var para = lp.para;
+      curY += para.spcBef;
+      var blockX = rect.x + model.insets.l + para.marL;
+      lp.lines.forEach(function (line, li) {
+        var lh = lineHeight(para, line.maxSize, model);
+        var first = (li === 0);
+        var areaX = blockX + (first ? para.indent : 0);
+        var areaW = rect.w - model.insets.l - model.insets.r - para.marL - (first ? para.indent : 0);
+        var off = 0;
+        if (para.align === 'ctr') off = Math.max(0, (areaW - line.w) / 2);
+        else if (para.align === 'r') off = Math.max(0, areaW - line.w);
+        var baseline = G.pageH - (curY + line.maxSize * 0.85);
+        if (first && para.bullet && line.toks.length) {
+          var bt = bulletText(para, counters);
+          if (bt) {
+            var bFmt = para.baseFmt;
+            var bSize = bFmt.size * (para.bullet.szPct || 1);
+            var bFont = G.fonts[stdFontKey({ family: fontFamilyOf(para.bullet.font || bFmt.font || ''), bold: false, italic: false })];
+            var bTxt = sanitize(bFont, bt);
+            if (bTxt.indexOf('?') >= 0 && bt !== '?') bTxt = sanitize(bFont, '•');
+            page.drawText(bTxt, { x: areaX, y: baseline, size: bSize, font: bFont, color: hexColor(para.bullet.color || bFmt.color) });
+          }
+        }
+        var cx = areaX + off;
+        line.toks.forEach(function (tk) {
+          if (tk.t === 'w') {
+            var col = hexColor(tk.fmt.color || '000000');
+            page.drawText(tk.text, { x: cx, y: baseline, size: tk.fmt.size, font: tk.font, color: col });
+            if (tk.fmt.underline) {
+              var uy = baseline - Math.max(1, tk.fmt.size * 0.12);
+              page.drawLine({ start: { x: cx, y: uy }, end: { x: cx + tk.w, y: uy }, thickness: Math.max(0.6, tk.fmt.size * 0.06), color: col });
+            }
+            cx += tk.w;
+          } else if (tk.t === 's') {
+            cx += tk.w;
+          }
+        });
+        curY += lh;
+      });
+      curY += para.spcAft;
+    });
+  }
+
+  // ---------- Remplissage et contour d'une forme ----------
+  function shapePaint(sp, spPr) {
+    var fill, line = null;
+    if (spPr) {
+      var f = fillOf(spPr);
+      if (f !== undefined) fill = f;
+      var ln = xFirst(spPr, 'ln');
+      if (ln && !xFirst(ln, 'noFill')) {
+        var lc = fillOf(ln);
+        line = {
+          color: (lc === undefined || lc === null) ? ((G.theme && G.theme.map.dk1) || '000000') : lc,
+          w: numOr(ln.getAttribute('w'), 9525) / EMU_PT
+        };
+      }
+    }
+    if (sp && (fill === undefined || line === null)) {
+      var styleEl = xFirst(sp, 'style');
+      if (styleEl) {
+        if (fill === undefined) {
+          var fr = xFirst(styleEl, 'fillRef');
+          if (fr) {
+            if (fr.getAttribute('idx') === '0') fill = null;
+            else { var fc = colorFromNode(firstEl(fr)); if (fc) fill = fc; }
+          }
+        }
+        if (line === null) {
+          var lr = xFirst(styleEl, 'lnRef');
+          if (lr && lr.getAttribute('idx') !== '0') {
+            var lc2 = colorFromNode(firstEl(lr));
+            if (lc2) line = { color: lc2, w: 0.75 };
+          }
+        }
+      }
+    }
+    if (fill === undefined) fill = null;
+    return { fill: fill, line: line };
+  }
+  function fmtNum(n) { return Math.round(n * 100) / 100; }
+  function drawGeometry(spPr, rect, paint) {
+    var page = G.page;
+    var geom = spPr ? (xFirst(spPr, 'prstGeom') || xFirst(spPr, 'custGeom')) : null;
+    var prst = (geom && geom.localName === 'prstGeom') ? (geom.getAttribute('prst') || 'rect') : 'rect';
+    var opts = {};
+    if (paint.fill) opts.color = hexColor(paint.fill);
+    if (paint.line) { opts.borderColor = hexColor(paint.line.color); opts.borderWidth = paint.line.w; }
+    if (!paint.fill && !paint.line) return;
+    var x = rect.x, yT = rect.y, w = rect.w, h = rect.h;
+    if (prst === 'ellipse') {
+      page.drawEllipse(Object.assign({ x: x + w / 2, y: G.pageH - (yT + h / 2), xScale: w / 2, yScale: h / 2 }, opts));
+      return;
+    }
+    if (prst === 'roundRect') {
+      var adj = 0.16667;
+      var av = geom ? xFirst(geom, 'avLst') : null;
+      if (av) {
+        var gds = xKids(av, 'gd');
+        for (var i = 0; i < gds.length; i++) {
+          if (gds[i].getAttribute('name') === 'adj') {
+            var m = /^val\s+(\d+)$/.exec(gds[i].getAttribute('fmla') || '');
+            if (m) adj = parseInt(m[1], 10) / 100000;
+          }
+        }
+      }
+      var r = Math.max(0, Math.min(adj * Math.min(w, h), w / 2, h / 2));
+      var path = 'M ' + fmtNum(x + r) + ' ' + fmtNum(yT) +
+        ' L ' + fmtNum(x + w - r) + ' ' + fmtNum(yT) +
+        ' A ' + fmtNum(r) + ' ' + fmtNum(r) + ' 0 0 1 ' + fmtNum(x + w) + ' ' + fmtNum(yT + r) +
+        ' L ' + fmtNum(x + w) + ' ' + fmtNum(yT + h - r) +
+        ' A ' + fmtNum(r) + ' ' + fmtNum(r) + ' 0 0 1 ' + fmtNum(x + w - r) + ' ' + fmtNum(yT + h) +
+        ' L ' + fmtNum(x + r) + ' ' + fmtNum(yT + h) +
+        ' A ' + fmtNum(r) + ' ' + fmtNum(r) + ' 0 0 1 ' + fmtNum(x) + ' ' + fmtNum(yT + h - r) +
+        ' L ' + fmtNum(x) + ' ' + fmtNum(yT + r) +
+        ' A ' + fmtNum(r) + ' ' + fmtNum(r) + ' 0 0 1 ' + fmtNum(x + r) + ' ' + fmtNum(yT) + ' Z';
+      page.drawSvgPath(path, Object.assign({ x: 0, y: G.pageH }, opts));
+      return;
+    }
+    if (prst === 'triangle' || prst === 'rtTriangle') {
+      var pts;
+      if (prst === 'triangle') pts = [[x + w / 2, yT], [x + w, yT + h], [x, yT + h]];
+      else pts = [[x, yT], [x + w, yT + h], [x, yT + h]];
+      var p2 = 'M ' + fmtNum(pts[0][0]) + ' ' + fmtNum(pts[0][1]) + ' L ' + fmtNum(pts[1][0]) + ' ' + fmtNum(pts[1][1]) + ' L ' + fmtNum(pts[2][0]) + ' ' + fmtNum(pts[2][1]) + ' Z';
+      page.drawSvgPath(p2, Object.assign({ x: 0, y: G.pageH }, opts));
+      return;
+    }
+    if (prst === 'line') {
+      if (paint.line || paint.fill) {
+        var col = paint.line ? paint.line.color : paint.fill;
+        var lw = paint.line ? paint.line.w : 1;
+        var p1 = { x: x, y: yT }, p2e = { x: x + w, y: yT + h };
+        if (rect.flipH) { var tx = p1.x; p1.x = p2e.x; p2e.x = tx; }
+        if (rect.flipV) { var ty = p1.y; p1.y = p2e.y; p2e.y = ty; }
+        page.drawLine({ start: { x: p1.x, y: G.pageH - p1.y }, end: { x: p2e.x, y: G.pageH - p2e.y }, thickness: lw, color: hexColor(col) });
+      }
+      return;
+    }
+    // rect et tout autre préréglage : rectangle (repli raisonnable)
+    page.drawRectangle(Object.assign({ x: x, y: G.pageH - (yT + h), width: w, height: h }, opts));
+  }
+  // Rotation visuelle horaire (PowerPoint) autour du centre, via l'état graphique.
+  function withRotation(page, cxPdf, cyPdf, rotDeg, fn) {
+    if (!rotDeg || Math.abs(rotDeg) < 0.01) { fn(); return; }
+    var a = -rotDeg * Math.PI / 180, cos = Math.cos(a), sin = Math.sin(a);
+    var e = cxPdf - cos * cxPdf + sin * cyPdf;
+    var f = cyPdf - sin * cxPdf - cos * cyPdf;
+    page.pushOperators(
+      PDFLib.pushGraphicsState(),
+      PDFLib.concatTransformationMatrix(cos, sin, -sin, cos, e, f));
+    try { fn(); } finally { page.pushOperators(PDFLib.popGraphicsState()); }
+  }
+
+  // ---------- Médias ----------
+  async function embedImageByPath(path) {
+    if (G.mediaCache[path] !== undefined) return G.mediaCache[path];
+    var img = null;
+    var ext = (path.split('.').pop() || '').toLowerCase();
+    if (ext === 'png' || ext === 'jpg' || ext === 'jpeg') {
+      var file = G.zip.file(path);
+      if (file) {
+        var bytes = await file.async('uint8array');
+        try { img = ext === 'png' ? await G.pdf.embedPng(bytes) : await G.pdf.embedJpg(bytes); }
+        catch (e1) {
+          try { img = ext === 'png' ? await G.pdf.embedJpg(bytes) : await G.pdf.embedPng(bytes); }
+          catch (e2) { img = null; }
+        }
+      }
+    }
+    G.mediaCache[path] = img;
+    return img;
+  }
+  async function embedMediaFor(docEl, rels, baseDir) {
+    var media = {};
+    var blips = xDesc(docEl, 'blip');
+    for (var i = 0; i < blips.length; i++) {
+      var rid = xAttr(blips[i], 'embed');
+      if (!rid || media[rid] !== undefined) continue;
+      var rel = rels[rid];
+      if (!rel) { media[rid] = null; continue; }
+      media[rid] = await embedImageByPath(resolvePath(baseDir, rel.target));
+    }
+    return media;
+  }
+
+  // ---------- Fond de diapositive ----------
+  function bgOf(docEl) {
+    if (!docEl) return null;
+    var cSld = xDesc(docEl, 'cSld')[0];
+    if (!cSld) return null;
+    var bg = xFirst(cSld, 'bg');
+    if (!bg) return null;
+    var bgPr = xFirst(bg, 'bgPr');
+    if (!bgPr) return null;
+    var f = fillOf(bgPr);
+    return f === undefined ? null : f;
+  }
+
+  // ---------- Rendu des formes ----------
+  function renderSp(sp, T, partCtx, opts) {
+    var ph = phInfoOf(sp);
+    if (opts.layoutDecor && ph) return; // les emplacements du layout ne se dessinent pas
+    var spPr = xFirst(sp, 'spPr');
+    var xf = spPr ? parseXfrmEl(xFirst(spPr, 'xfrm')) : null;
+    var layPh = (ph && partCtx.phLookup) ? partCtx.phLookup(ph) : null;
+    var mPh = ph ? (G.masterPh[ph.type + '#' + ph.idx] || G.masterPh[ph.type] || null) : null;
+    if (!xf && layPh && layPh.xfrm) xf = layPh.xfrm;
+    if (!xf && mPh && mPh.xfrm) xf = mPh.xfrm;
+    if (!xf) {
+      if (xFirst(sp, 'txBody')) G.stats.skipped++;
+      return;
+    }
+    var rect = { x: applyX(T, xf.x), y: applyY(T, xf.y), w: xf.w * T.sx, h: xf.h * T.sy, flipH: xf.flipH, flipV: xf.flipV };
+    var drawAll = function () {
+      var paint = shapePaint(sp, spPr);
+      drawGeometry(spPr, rect, paint);
+      var txBody = xFirst(sp, 'txBody');
+      if (txBody) {
+        var kind = ph ? phKind(ph.type) : 'other';
+        var model = buildTextModel(txBody, { kind: kind, layoutArr: layPh ? layPh.arr : null, masterPhArr: mPh ? mPh.arr : null, sizeScale: T.sy });
+        var laid = layoutText(model, rect.w);
+        drawTextModel(G.page, model, laid, rect);
+      }
+    };
+    if (xf.rot) withRotation(G.page, rect.x + rect.w / 2, G.pageH - (rect.y + rect.h / 2), xf.rot, drawAll);
+    else drawAll();
+  }
+  function renderPic(pic, T, partCtx, opts) {
+    if (opts.layoutDecor && picPhOf(pic)) return;
+    var blip = xDesc(pic, 'blip')[0];
+    var rid = blip ? xAttr(blip, 'embed') : null;
+    var img = rid ? partCtx.media[rid] : null;
+    var spPr = xFirst(pic, 'spPr');
+    var xf = spPr ? parseXfrmEl(xFirst(spPr, 'xfrm')) : null;
+    if (!img || !xf) { G.stats.skipped++; return; }
+    var rect = { x: applyX(T, xf.x), y: applyY(T, xf.y), w: xf.w * T.sx, h: xf.h * T.sy };
+    var draw = function () {
+      G.page.drawImage(img, { x: rect.x, y: G.pageH - rect.y - rect.h, width: rect.w, height: rect.h });
+      var ln = spPr ? xFirst(spPr, 'ln') : null;
+      if (ln && !xFirst(ln, 'noFill')) {
+        var lc = fillOf(ln);
+        if (lc) G.page.drawRectangle({ x: rect.x, y: G.pageH - rect.y - rect.h, width: rect.w, height: rect.h, borderColor: hexColor(lc), borderWidth: numOr(ln.getAttribute('w'), 9525) / EMU_PT });
+      }
+    };
+    if (xf.rot) withRotation(G.page, rect.x + rect.w / 2, G.pageH - (rect.y + rect.h / 2), xf.rot, draw);
+    else draw();
+  }
+  function renderCxn(cxn, T) {
+    var spPr = xFirst(cxn, 'spPr');
+    var xf = spPr ? parseXfrmEl(xFirst(spPr, 'xfrm')) : null;
+    if (!xf) { G.stats.skipped++; return; }
+    var ln = spPr ? xFirst(spPr, 'ln') : null;
+    var col = null, wdt = 1;
+    if (ln && !xFirst(ln, 'noFill')) {
+      var c = fillOf(ln);
+      if (c) col = c;
+      wdt = numOr(ln.getAttribute('w'), 12700) / EMU_PT;
+    }
+    if (!col) col = (G.theme && G.theme.map.dk1) || '000000';
+    var x1 = applyX(T, xf.x), y1 = applyY(T, xf.y), x2 = applyX(T, xf.x + xf.w), y2 = applyY(T, xf.y + xf.h);
+    if (xf.flipH) { var t = x1; x1 = x2; x2 = t; }
+    if (xf.flipV) { var t2 = y1; y1 = y2; y2 = t2; }
+    G.page.drawLine({ start: { x: x1, y: G.pageH - y1 }, end: { x: x2, y: G.pageH - y2 }, thickness: wdt, color: hexColor(col) });
+  }
+  function renderGrp(grp, T, partCtx, opts) {
+    var pr = xFirst(grp, 'grpSpPr');
+    var xf = pr ? xFirst(pr, 'xfrm') : null;
+    var T2 = T;
+    if (xf) {
+      var off = xFirst(xf, 'off'), ext = xFirst(xf, 'ext'), cho = xFirst(xf, 'chOff'), che = xFirst(xf, 'chExt');
+      var L = {
+        ox: off ? numOr(off.getAttribute('x'), 0) / EMU_PT : 0,
+        oy: off ? numOr(off.getAttribute('y'), 0) / EMU_PT : 0,
+        cx: cho ? numOr(cho.getAttribute('x'), 0) / EMU_PT : 0,
+        cy: cho ? numOr(cho.getAttribute('y'), 0) / EMU_PT : 0,
+        sx: (ext && che && parseFloat(che.getAttribute('cx')) > 0) ? parseFloat(ext.getAttribute('cx')) / parseFloat(che.getAttribute('cx')) : 1,
+        sy: (ext && che && parseFloat(che.getAttribute('cy')) > 0) ? parseFloat(ext.getAttribute('cy')) / parseFloat(che.getAttribute('cy')) : 1
+      };
+      T2 = {
+        ox: T.ox + (L.ox - T.cx) * T.sx, oy: T.oy + (L.oy - T.cy) * T.sy,
+        cx: L.cx, cy: L.cy, sx: T.sx * L.sx, sy: T.sy * L.sy
+      };
+    }
+    for (var i = 0; i < grp.childNodes.length; i++) {
+      var n = grp.childNodes[i];
+      if (n.nodeType !== 1 || n.localName === 'grpSpPr') continue;
+      try { renderNode(n, T2, partCtx, opts); } catch (e) { G.stats.skipped++; }
+    }
+  }
+  function renderTable(frame, T, partCtx) {
+    var xf = parseXfrmEl(xFirst(frame, 'xfrm'));
+    var graphic = xFirst(frame, 'graphic');
+    var gdata = graphic ? xFirst(graphic, 'graphicData') : null;
+    var uri = gdata ? (gdata.getAttribute('uri') || '') : '';
+    if (!gdata || /chart|diagram/.test(uri)) { G.stats.skipped++; return; }
+    var tbl = xFirst(gdata, 'tbl');
+    if (!tbl || !xf) { G.stats.skipped++; return; }
+    var rect = { x: applyX(T, xf.x), y: applyY(T, xf.y), w: xf.w * T.sx, h: xf.h * T.sy };
+    var gridEl = xFirst(tbl, 'tblGrid');
+    var cols = [];
+    if (gridEl) xKids(gridEl, 'gridCol').forEach(function (gc) { cols.push(numOr(gc.getAttribute('w'), 0) / EMU_PT); });
+    if (!cols.length) { G.stats.skipped++; return; }
+    var sum = 0; cols.forEach(function (c) { sum += c; });
+    if (sum > 0) { var scf = rect.w / sum; cols = cols.map(function (c) { return c * scf; }); }
+    var rows = [];
+    xKids(tbl, 'tr').forEach(function (tr) {
+      var cells = [];
+      xKids(tr, 'tc').forEach(function (tc) {
+        var tcPr = xFirst(tc, 'tcPr');
+        var cell = {
+          span: parseInt(tc.getAttribute('gridSpan') || '1', 10) || 1,
+          rspan: parseInt(tc.getAttribute('rowSpan') || '1', 10) || 1,
+          hMerge: tc.getAttribute('hMerge') === '1',
+          vMerge: tc.getAttribute('vMerge') === '1',
+          mar: { l: 7.2, r: 7.2, t: 3.6, b: 3.6 },
+          anchor: 't', fill: null, txBody: xFirst(tc, 'txBody'),
+          colX: 0, w: 0, model: null, laid: null, contentH: 0
+        };
+        if (tcPr) {
+          var mL = tcPr.getAttribute('marL'); if (mL != null) cell.mar.l = numOr(mL, 91440) / EMU_PT;
+          var mR = tcPr.getAttribute('marR'); if (mR != null) cell.mar.r = numOr(mR, 91440) / EMU_PT;
+          var mT = tcPr.getAttribute('marT'); if (mT != null) cell.mar.t = numOr(mT, 45720) / EMU_PT;
+          var mB = tcPr.getAttribute('marB'); if (mB != null) cell.mar.b = numOr(mB, 45720) / EMU_PT;
+          var an2 = tcPr.getAttribute('anchor'); if (an2) cell.anchor = an2;
+          var f2 = fillOf(tcPr); if (f2 !== undefined) cell.fill = f2;
+        }
+        cells.push(cell);
+      });
+      rows.push({ hMin: numOr(tr.getAttribute('h'), 0) / EMU_PT, cells: cells, h: 0 });
+    });
+    rows.forEach(function (row) {
+      var ci = 0, acc = 0;
+      row.cells.forEach(function (cell) {
+        var w = 0;
+        for (var s = 0; s < cell.span; s++) w += cols[ci + s] || 0;
+        cell.colX = acc; cell.w = w;
+        ci += cell.span; acc += w;
+        if (cell.txBody && !cell.hMerge && !cell.vMerge) {
+          cell.model = buildTextModel(cell.txBody, { kind: 'other', layoutArr: null, sizeScale: T.sy });
+          cell.model.insets = { l: cell.mar.l, r: cell.mar.r, t: cell.mar.t, b: cell.mar.b };
+          cell.model.anchor = cell.anchor;
+          cell.laid = layoutText(cell.model, cell.w);
+          cell.contentH = cell.laid.totalH;
+        }
+      });
+      var h = row.hMin;
+      row.cells.forEach(function (cell) { if (cell.rspan === 1) h = Math.max(h, cell.contentH + cell.mar.t + cell.mar.b); });
+      row.h = h;
+    });
+    // Remplissages des cellules
+    var yy = rect.y;
+    rows.forEach(function (row, ri) {
+      row.cells.forEach(function (cell) {
+        if (!cell.hMerge && !cell.vMerge && cell.fill) {
+          var hh = 0;
+          for (var s2 = 0; s2 < cell.rspan; s2++) hh += rows[ri + s2] ? rows[ri + s2].h : 0;
+          G.page.drawRectangle({ x: rect.x + cell.colX, y: G.pageH - (yy + hh), width: cell.w, height: hh, color: hexColor(cell.fill) });
+        }
+      });
+      yy += row.h;
+    });
+    // Grille
+    var totalH = 0; rows.forEach(function (r) { totalH += r.h; });
+    var gridCol = hexColor('D9D9D9');
+    var ly = rect.y;
+    for (var gi = 0; gi <= rows.length; gi++) {
+      var curLy = gi === rows.length ? rect.y + totalH : ly;
+      G.page.drawLine({ start: { x: rect.x, y: G.pageH - curLy }, end: { x: rect.x + rect.w, y: G.pageH - curLy }, thickness: 0.5, color: gridCol });
+      if (gi < rows.length) ly += rows[gi].h;
+    }
+    var lx = rect.x;
+    for (var gj = 0; gj <= cols.length; gj++) {
+      var curLx = gj === cols.length ? rect.x + rect.w : lx;
+      G.page.drawLine({ start: { x: curLx, y: G.pageH - rect.y }, end: { x: curLx, y: G.pageH - (rect.y + totalH) }, thickness: 0.5, color: gridCol });
+      if (gj < cols.length) lx += cols[gj];
+    }
+    // Textes des cellules
+    var y2 = rect.y;
+    rows.forEach(function (row, ri) {
+      row.cells.forEach(function (cell) {
+        if (cell.model) {
+          var hh2 = 0;
+          for (var s3 = 0; s3 < cell.rspan; s3++) hh2 += rows[ri + s3] ? rows[ri + s3].h : 0;
+          drawTextModel(G.page, cell.model, cell.laid, { x: rect.x + cell.colX, y: y2, w: cell.w, h: hh2 });
+        }
+      });
+      y2 += row.h;
+    });
+  }
+  function renderNode(n, T, partCtx, opts) {
+    switch (n.localName) {
+      case 'sp': renderSp(n, T, partCtx, opts); break;
+      case 'pic': renderPic(n, T, partCtx, opts); break;
+      case 'graphicFrame': renderTable(n, T, partCtx); break;
+      case 'grpSp': renderGrp(n, T, partCtx, opts); break;
+      case 'cxnSp': renderCxn(n, T, partCtx); break;
+      case 'AlternateContent': {
+        var ch = firstEl(n);
+        if (ch) {
+          for (var j = 0; j < ch.childNodes.length; j++) {
+            var inner = ch.childNodes[j];
+            if (inner.nodeType === 1) { try { renderNode(inner, T, partCtx, opts); } catch (e) { G.stats.skipped++; } }
+          }
+        }
+        break;
+      }
+      default: break; // éléments inconnus : ignorés
+    }
+  }
+  function renderTree(treeEl, T, partCtx, opts) {
+    if (!treeEl) return;
+    for (var i = 0; i < treeEl.childNodes.length; i++) {
+      var n = treeEl.childNodes[i];
+      if (n.nodeType !== 1) continue;
+      try { renderNode(n, T, partCtx, opts); } catch (e) { G.stats.skipped++; }
+    }
+  }
+
+  // ---------- Dispositions (layouts) ----------
+  async function loadLayout(path) {
+    if (G.layouts[path]) return G.layouts[path];
+    var baseDir = path.slice(0, path.lastIndexOf('/') + 1);
+    var L = { doc: null, rels: {}, baseDir: baseDir, bg: null, ph: {}, media: {}, tree: null };
+    G.layouts[path] = L;
+    var f = G.zip.file(path);
+    if (!f) return L;
+    L.doc = parseXml(await f.async('string'));
+    var rf = G.zip.file(relsPathFor(path));
+    if (rf) L.rels = parseRels(parseXml(await rf.async('string')));
+    L.bg = bgOf(L.doc);
+    var tree = xDesc(L.doc, 'spTree')[0];
+    L.tree = tree || null;
+    if (tree) {
+      for (var i = 0; i < tree.childNodes.length; i++) {
+        var n = tree.childNodes[i];
+        if (n.nodeType !== 1 || n.localName !== 'sp') continue;
+        var ph = phInfoOf(n);
+        if (!ph) continue;
+        var tb = xFirst(n, 'txBody');
+        var spPr = xFirst(n, 'spPr');
+        var entry = { arr: tb ? parseLvlArr(tb) : [], xfrm: spPr ? parseXfrmEl(xFirst(spPr, 'xfrm')) : null };
+        var key = ph.type + '#' + ph.idx;
+        if (!L.ph[key]) L.ph[key] = entry;
+        if (!L.ph[ph.type]) L.ph[ph.type] = entry;
+      }
+    }
+    L.media = await embedMediaFor(L.doc, L.rels, L.baseDir);
+    return L;
+  }
+  function layoutPhLookup(L, ph) {
+    if (!L || !ph) return null;
+    return L.ph[ph.type + '#' + ph.idx] || L.ph[ph.type] || null;
+  }
+
+  // ---------- Conversion complète ----------
+  function outputPdfName(fileName) {
+    var base = String(fileName || 'presentation').replace(/\.[^.]+$/, '');
+    if (!base) base = 'presentation';
+    return base + '.pdf';
+  }
+
+  async function convertPptxToPdf(data, opts) {
+    opts = opts || {};
+    var bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
+    // Signature OLE héritée = ancien .ppt binaire, non pris en charge.
+    if (bytes.length >= 8 && bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0) {
+      throw fail('legacy-ppt');
+    }
+    if (opts.onProgress) opts.onProgress('parse');
+    var zip;
+    try { zip = await JSZip.loadAsync(bytes); }
+    catch (e) { throw fail('corrupt'); }
+    var presFile = zip.file('ppt/presentation.xml');
+    if (!presFile) throw fail('corrupt');
+    G = {
+      zip: zip, theme: { map: {}, majorFont: null, minorFont: null },
+      master: { title: [], body: [], other: [], bg: null },
+      masterPh: {},
+      layouts: {}, stats: { skipped: 0 }, fonts: {}, replaced: 0,
+      mediaCache: {}, pdf: null, page: null, pageH: 540, slideW: 960, slideH: 540
+    };
+    var presDoc = parseXml(await presFile.async('string'));
+    if (!presDoc || !presDoc.documentElement || presDoc.documentElement.localName !== 'presentation') throw fail('corrupt');
+    var presRels = {};
+    var prf = zip.file('ppt/_rels/presentation.xml.rels');
+    if (prf) presRels = parseRels(parseXml(await prf.async('string')));
+    // Taille des diapositives
+    var sldSz = xDesc(presDoc, 'sldSz')[0];
+    if (sldSz) {
+      var cxv = parseFloat(sldSz.getAttribute('cx')), cyv = parseFloat(sldSz.getAttribute('cy'));
+      if (isFinite(cxv) && cxv > 0) G.slideW = cxv / EMU_PT;
+      if (isFinite(cyv) && cyv > 0) G.slideH = cyv / EMU_PT;
+    }
+    G.pageH = G.slideH;
+    // Ordre des diapositives
+    var slidePaths = [], seenPaths = {};
+    var sldIdLst = xDesc(presDoc, 'sldIdLst')[0];
+    if (sldIdLst) {
+      xKids(sldIdLst, 'sldId').forEach(function (sid) {
+        var rel = presRels[xAttr(sid, 'id')];
+        if (rel) {
+          var p = resolvePath('ppt/', rel.target);
+          if (!seenPaths[p]) { seenPaths[p] = 1; slidePaths.push(p); }
+        }
+      });
+    }
+    if (!slidePaths.length) throw fail('empty');
+    // Masque et thème
+    var masterPath = null;
+    Object.keys(presRels).forEach(function (id) {
+      if (!masterPath && /slideMaster/.test(presRels[id].type)) masterPath = resolvePath('ppt/', presRels[id].target);
+    });
+    var masterRels = {};
+    if (masterPath && zip.file(masterPath)) {
+      var mrf = zip.file(relsPathFor(masterPath));
+      if (mrf) masterRels = parseRels(parseXml(await mrf.async('string')));
+      var masterDoc = parseXml(await zip.file(masterPath).async('string'));
+      G.master.bg = bgOf(masterDoc);
+      var txs = xFirst(masterDoc.documentElement, 'txStyles');
+      if (txs) {
+        G.master.title = parseLvlArr(xFirst(txs, 'titleStyle'));
+        G.master.body = parseLvlArr(xFirst(txs, 'bodyStyle'));
+        G.master.other = parseLvlArr(xFirst(txs, 'otherStyle'));
+      }
+      // Emplacements du masque : dernier niveau d'héritage (position + styles)
+      var mTree = xDesc(masterDoc, 'spTree')[0];
+      if (mTree) {
+        for (var mi = 0; mi < mTree.childNodes.length; mi++) {
+          var mn = mTree.childNodes[mi];
+          if (mn.nodeType !== 1 || mn.localName !== 'sp') continue;
+          var mph = phInfoOf(mn);
+          if (!mph) continue;
+          var mtb = xFirst(mn, 'txBody');
+          var mspPr = xFirst(mn, 'spPr');
+          var mEntry = { arr: mtb ? parseLvlArr(mtb) : [], xfrm: mspPr ? parseXfrmEl(xFirst(mspPr, 'xfrm')) : null };
+          if (!G.masterPh[mph.type + '#' + mph.idx]) G.masterPh[mph.type + '#' + mph.idx] = mEntry;
+          if (!G.masterPh[mph.type]) G.masterPh[mph.type] = mEntry;
+        }
+      }
+      var themePath = null;
+      Object.keys(masterRels).forEach(function (id) {
+        if (!themePath && /\/theme$/.test(masterRels[id].type)) themePath = resolvePath(masterPath.slice(0, masterPath.lastIndexOf('/') + 1), masterRels[id].target);
+      });
+      if (!themePath && zip.file('ppt/theme/theme1.xml')) themePath = 'ppt/theme/theme1.xml';
+      if (themePath && zip.file(themePath)) G.theme = parseTheme(parseXml(await zip.file(themePath).async('string')));
+    }
+    // Document PDF et polices standard (12 variantes, intégrées une fois)
+    G.pdf = await PDFLib.PDFDocument.create();
+    var famKeys = Object.keys(STD_FONTS);
+    for (var fi = 0; fi < famKeys.length; fi++) {
+      var fam = STD_FONTS[famKeys[fi]];
+      var variants = [fam.r, fam.b, fam.i, fam.bi];
+      for (var vi = 0; vi < variants.length; vi++) {
+        G.fonts[variants[vi]] = await G.pdf.embedFont(PDFLib.StandardFonts[variants[vi]]);
+      }
+    }
+    // Préchargement des diapositives et de leurs dispositions
+    var slides = [];
+    for (var si = 0; si < slidePaths.length; si++) {
+      var sp = slidePaths[si];
+      var sfile = zip.file(sp);
+      if (!sfile) throw fail('corrupt');
+      var sdoc = parseXml(await sfile.async('string'));
+      var srels = {};
+      var srf = zip.file(relsPathFor(sp));
+      if (srf) srels = parseRels(parseXml(await srf.async('string')));
+      var layout = null;
+      var layoutIds = Object.keys(srels);
+      for (var li2 = 0; li2 < layoutIds.length; li2++) {
+        if (/slideLayout/.test(srels[layoutIds[li2]].type)) { layout = await loadLayout(resolvePath(sp.slice(0, sp.lastIndexOf('/') + 1), srels[layoutIds[li2]].target)); break; }
+      }
+      var smedia = await embedMediaFor(sdoc, srels, sp.slice(0, sp.lastIndexOf('/') + 1));
+      slides.push({ doc: sdoc, rels: srels, baseDir: sp.slice(0, sp.lastIndexOf('/') + 1), media: smedia, layout: layout });
+    }
+    if (opts.onProgress) opts.onProgress('layout');
+    // Rendu, une page PDF par diapositive
+    slides.forEach(function (slide) {
+      var page = G.pdf.addPage([G.slideW, G.slideH]);
+      G.page = page;
+      G.pageH = G.slideH;
+      var bg = bgOf(slide.doc);
+      if (bg === null || bg === undefined) bg = slide.layout ? slide.layout.bg : null;
+      if (bg === null || bg === undefined) bg = G.master.bg;
+      page.drawRectangle({ x: 0, y: 0, width: G.slideW, height: G.slideH, color: hexColor(bg || 'FFFFFF') });
+      if (slide.layout && slide.layout.tree) {
+        var layCtx = {
+          rels: slide.layout.rels, baseDir: slide.layout.baseDir, media: slide.layout.media,
+          phLookup: null
+        };
+        renderTree(slide.layout.tree, ID_T, layCtx, { layoutDecor: true });
+      }
+      var ctx = {
+        rels: slide.rels, baseDir: slide.baseDir, media: slide.media,
+        phLookup: function (ph) { return layoutPhLookup(slide.layout, ph); }
+      };
+      renderTree(xDesc(slide.doc, 'spTree')[0], ID_T, ctx, {});
+    });
+    var outBytes = await G.pdf.save({ useObjectStreams: false });
+    return { bytes: outBytes, pageCount: slidePaths.length, replaced: G.replaced, skipped: G.stats.skipped };
+  }
+
+  return { convertPptxToPdf: convertPptxToPdf, outputPdfName: outputPdfName };
+})();
+</script>
+<script>
+(function () {
+  var MSG_LEGACY = 'Old .ppt files are not supported: open the presentation in PowerPoint or LibreOffice, save it in .pptx format, then try again.';
+  var MSG_CORRUPT = 'This file appears to be corrupt or unreadable.';
+  var MSG_EMPTY = 'This presentation contains no slides.';
+
+  var current = null; // {file, name, base, buf, bad}
+  var resultUrl = null;
+  var resultName = '';
+
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function updateBar() {
+    var show = !!current && !success.classList.contains('on');
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) barSummary.textContent = current.name + ' • PowerPoint presentation';
+    convertBtn.disabled = !(current && !current.bad);
+  }
+
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    fileNameEl.textContent = current.name;
+    fileMetaEl.textContent = 'PowerPoint presentation (.pptx) • ' + formatSize(current.file.size);
+    if (current.bad === 'legacy') fileWarnEl.textContent = 'Old .ppt format not supported';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
+    else fileWarnEl.textContent = '';
+  }
+
+  async function loadFile(f) {
+    showError('');
+    var name = f ? f.name : '';
+    if (/\.pptx$/i.test(name)) {
+      current = { file: f, name: name, base: name.replace(/\.pptx$/i, ''), buf: null, bad: null };
+      renderFileCard();
+      updateBar();
+      try {
+        var buf = await f.arrayBuffer();
+        current.buf = buf;
+        var u8 = new Uint8Array(buf);
+        if (u8.length >= 8 && u8[0] === 0xD0 && u8[1] === 0xCF && u8[2] === 0x11 && u8[3] === 0xE0) {
+          current.bad = 'legacy';
+          showError(MSG_LEGACY);
+        } else {
+          var zip = await JSZip.loadAsync(u8);
+          if (!zip.file('ppt/presentation.xml')) {
+            current.bad = 'corrupt';
+            showError(MSG_CORRUPT);
+          }
+        }
+      } catch (e) {
+        current.bad = 'corrupt';
+        showError(MSG_CORRUPT);
+      }
+    } else if (/\.ppt$/i.test(name)) {
+      current = null;
+      showError(MSG_LEGACY);
+    } else {
+      current = null;
+      showError('"' + name + '" is not a PowerPoint .pptx presentation. Please choose a .pptx file.');
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    updateBar();
+  });
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Please choose a .pptx file first.'); return; }
+    if (current.bad === 'legacy') { showError(MSG_LEGACY); return; }
+    if (current.bad === 'corrupt') { showError(MSG_CORRUPT + ' Please choose another file.'); return; }
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = 'Reading the presentation…';
+    try {
+      var buf = current.buf || await current.file.arrayBuffer();
+      var res = await PptxToPdf.convertPptxToPdf(buf, {
+        fileName: current.name,
+        onProgress: function (stage) {
+          processingDetail.textContent = stage === 'layout' ? 'Creating the PDF…' : 'Reading the presentation…';
+        }
+      });
+      var blob = new Blob([res.bytes], { type: 'application/pdf' });
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultName = PptxToPdf.outputPdfName(current.name);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
+      var rm = document.createElement('div'); rm.className = 'rmeta';
+      rm.textContent = formatSize(blob.size) + ' • ' + res.pageCount + (res.pageCount > 1 ? ' slides' : ' slide');
+      left.appendChild(rn); left.appendChild(rm);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Download the .pdf';
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+      successInfo.textContent = 'Conversion complete from ' + current.name + ' (' + res.pageCount + (res.pageCount > 1 ? ' slides' : ' slide') + ').';
+      var notes = [];
+      if (res.replaced > 0) notes.push(res.replaced + ' character(s) not supported by the built-in fonts were replaced (Arabic documents or special symbols).');
+      if (res.skipped > 0) notes.push(res.skipped + ' element(s) were not reproduced (charts, SmartArt, videos, effects or unsupported image formats: GIF, BMP, TIFF…).');
+      if (notes.length) {
+        scanNote.style.display = 'block';
+        scanNote.textContent = '⚠ ' + notes.join(' ');
+      } else {
+        scanNote.style.display = 'none';
+      }
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      var code = err && err.code;
+      if (code === 'legacy-ppt') showError(MSG_LEGACY);
+      else if (code === 'corrupt') showError(MSG_CORRUPT);
+      else if (code === 'empty') showError(MSG_EMPTY);
+      else if (code === 'not-pptx') showError('This file is not a PowerPoint .pptx presentation…');
+      else showError('An error occurred during the conversion. Please try again with another presentation.');
+    } finally {
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+    }
+  });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    resultName = '';
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+</html>

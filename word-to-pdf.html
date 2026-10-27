@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Word en PDF — PdfBleu.com</title>
-<meta name="description" content="Convertissez vos documents Word (.docx) en PDF gratuitement et sans inscription, directement dans votre navigateur : mise en page recréée sur votre appareil, aucun envoi sur un serveur.">
+<title>Word to PDF — PdfBleu.com</title>
+<meta name="description" content="Convert your Word (.docx) documents to PDF for free, with no sign-up, right in your browser: the layout is recreated on your device, nothing is ever sent to a server.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -93,15 +93,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#DCE5FA"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#5F83C6"/><path d="M10 10 L16 16" stroke="#295795" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#295795"/><text x="30" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">W</text></svg></span>
-<h1>Convertir Word en PDF</h1>
-<p class="subtitle">Transformez vos documents Word (.docx) en PDF, directement dans votre navigateur.</p>
+<h1>Convert Word to PDF</h1>
+<p class="subtitle">Convert your Word (.docx) documents to PDF, right in your browser.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: the conversion happens entirely in your browser, nothing is ever sent to a server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -110,12 +110,12 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Conversion en cours…</p>
+<p>Converting…</p>
 <p class="pdetail" id="processingDetail"></p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier Word</button>
-<p class="droptxt">ou déposez votre document .docx ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a Word file</button>
+<p class="droptxt">or drop your .docx document here</p>
 </div>
 <input type="file" id="fileInput" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
 <div class="filecard" id="fileCard">
@@ -125,57 +125,57 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="fmeta" id="fileMeta"></div>
 <div class="warn" id="fileWarn"></div>
 </div>
-<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
 </div>
 <div class="error" id="error"></div>
 </div>
 </div>
 <aside class="sidebar">
-<h2>Word en PDF</h2>
-<label class="flabel" for="pageSizeSel">Format de page</label>
+<h2>Word to PDF</h2>
+<label class="flabel" for="pageSizeSel">Page size</label>
 <select class="pagesel" id="pageSizeSel">
-<option value="auto" selected>Automatique (selon le document)</option>
+<option value="auto" selected>Automatic (from the document)</option>
 <option value="a4">A4</option>
-<option value="letter">Lettre (US)</option>
+<option value="letter">Letter (US)</option>
 </select>
-<p>En mode automatique, la taille des pages et les marges sont celles définies dans votre document Word.</p>
-<div class="warnnote">⚠ <strong>Mise en page recréée :</strong> le document est relu et recomposé avec des polices standard (Helvetica, Times). Les documents simples — lettres, rapports, CV, devoirs — sont bien reproduits ; les documents complexes (zones de texte, images flottantes, tableaux élaborés, polices spéciales, en-têtes et pieds de page, langues s’écrivant de droite à gauche comme l’arabe) peuvent différer de l’original affiché dans Word. Seuls les fichiers <strong>.docx</strong> sont acceptés : un ancien fichier .doc doit d’abord être réenregistré au format .docx.</div>
-<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+<p>In automatic mode, the page size and margins are the ones defined in your Word document.</p>
+<div class="warnnote">⚠ <strong>Layout recreated:</strong> the document is read and rebuilt with standard fonts (Helvetica, Times). Simple documents — letters, reports, resumes, homework — are reproduced well; complex documents (text boxes, floating images, elaborate tables, special fonts, headers and footers, right-to-left languages such as Arabic) may differ from the original shown in Word. Only <strong>.docx</strong> files are accepted: an old .doc file must first be saved again in .docx format.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Votre PDF est prêt !</h2>
+<h2>Your PDF is ready!</h2>
 <p class="sub" id="successInfo"></p>
 <div class="resultlist" id="resultList"></div>
 <div class="scannote" id="scanNote" style="display:none"></div>
-<button class="again" id="restartBtn" type="button">Convertir un autre fichier</button>
+<button class="again" id="restartBtn" type="button">Convert another file</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment convertir un Word en PDF</h2>
+<h2>How to convert a Word document to PDF</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez votre document</h3><p>Cliquez sur le bouton de sélection ou déposez votre fichier .docx dans la zone prévue. Un seul document suffit.</p></div>
-<div class="step"><span class="num">2</span><h3>Lancez la conversion</h3><p>Le document est relu et sa mise en page est recréée page par page : titres, paragraphes, listes, tableaux et images intégrées.</p></div>
-<div class="step"><span class="num">3</span><h3>Téléchargez le PDF</h3><p>Appuyez sur « Convertir en PDF », puis enregistrez votre fichier : le texte y reste sélectionnable, prêt à partager ou à imprimer.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your document</h3><p>Click the select button or drop your .docx file into the area provided. One document is all it takes.</p></div>
+<div class="step"><span class="num">2</span><h3>Start the conversion</h3><p>The document is read and its layout is recreated page by page: headings, paragraphs, lists, tables and embedded images.</p></div>
+<div class="step"><span class="num">3</span><h3>Download the PDF</h3><p>Press “Convert to PDF”, then save your file: the text stays selectable, ready to share or print.</p></div>
 </div>
 <div class="seo">
-<p>Notre convertisseur Word en PDF est entièrement gratuit et fonctionne sans inscription. Contrairement aux services classiques, votre document n’est jamais envoyé sur un serveur : la lecture du fichier .docx et la création du PDF ont lieu sur votre téléphone ou votre ordinateur, ce qui protège vos lettres, CV, rapports et documents confidentiels.</p>
-<p>Le convertisseur relit la structure de votre document — styles de titres, paragraphes alignés ou centrés, listes à puces et numérotées, tableaux simples et images intégrées au texte — puis recompose les pages au format PDF avec des polices standard. Le résultat convient à la grande majorité des documents du quotidien ; les mises en page très élaborées créées dans Word peuvent toutefois présenter des différences, comme indiqué ci-dessus.</p>
+<p>Our Word to PDF converter is completely free and works with no sign-up. Unlike classic services, your document is never sent to a server: reading the .docx file and creating the PDF happen on your phone or computer, which protects your letters, resumes, reports and confidential documents.</p>
+<p>The converter reads the structure of your document — heading styles, aligned or centered paragraphs, bulleted and numbered lists, simple tables and images embedded in the text — then rebuilds the pages in PDF format with standard fonts. The result suits the vast majority of everyday documents; highly elaborate layouts created in Word may, however, show differences, as noted above.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="convertBtn" type="button">Convertir en PDF</button>
+<button id="convertBtn" type="button">Convert to PDF</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script id="wordEngine">
 /* =====================================================================
@@ -1097,8 +1097,8 @@ var WordToPdf = (function () {
 </script>
 <script>
 (function () {
-  var MSG_LEGACY = 'Les anciens fichiers .doc ne sont pas pris en charge : ouvrez le document dans Word ou LibreOffice et enregistrez-le au format .docx, puis réessayez.';
-  var MSG_CORRUPT = 'Ce fichier semble corrompu ou illisible.';
+  var MSG_LEGACY = 'Old .doc files are not supported: open the document in Word or LibreOffice, save it in .docx format, then try again.';
+  var MSG_CORRUPT = 'This file appears to be corrupt or unreadable.';
 
   var current = null; // {file, name, base, buf, bad}
   var resultUrl = null;
@@ -1131,16 +1131,16 @@ var WordToPdf = (function () {
     errorBox.style.display = msg ? 'block' : 'none';
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
   function updateBar() {
     var show = !!current && !success.classList.contains('on');
     actionBar.classList.toggle('on', show);
     document.body.classList.toggle('bar-visible', show);
-    if (show) barSummary.textContent = current.name + ' • Document Word';
+    if (show) barSummary.textContent = current.name + ' • Word document';
     convertBtn.disabled = !(current && !current.bad);
   }
 
@@ -1148,9 +1148,9 @@ var WordToPdf = (function () {
     if (!current) { fileCard.classList.remove('on'); return; }
     fileCard.classList.add('on');
     fileNameEl.textContent = current.name;
-    fileMetaEl.textContent = 'Document Word (.docx) • ' + formatSize(current.file.size);
-    if (current.bad === 'legacy') fileWarnEl.textContent = 'Ancien format .doc non pris en charge';
-    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    fileMetaEl.textContent = 'Word document (.docx) • ' + formatSize(current.file.size);
+    if (current.bad === 'legacy') fileWarnEl.textContent = 'Old .doc format not supported';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
     else fileWarnEl.textContent = '';
   }
 
@@ -1184,7 +1184,7 @@ var WordToPdf = (function () {
       showError(MSG_LEGACY);
     } else {
       current = null;
-      showError('« ' + name + ' » n’est pas un document Word .docx. Veuillez choisir un fichier .docx.');
+      showError('"' + name + '" is not a Word .docx document. Please choose a .docx file.');
     }
     renderFileCard();
     updateBar();
@@ -1209,19 +1209,19 @@ var WordToPdf = (function () {
 
   convertBtn.addEventListener('click', async function () {
     showError('');
-    if (!current) { showError('Veuillez d’abord choisir un fichier .docx.'); return; }
+    if (!current) { showError('Please choose a .docx file first.'); return; }
     if (current.bad === 'legacy') { showError(MSG_LEGACY); return; }
-    if (current.bad === 'corrupt') { showError(MSG_CORRUPT + ' Choisissez un autre fichier.'); return; }
+    if (current.bad === 'corrupt') { showError(MSG_CORRUPT + ' Please choose another file.'); return; }
     convertBtn.disabled = true;
     processing.classList.add('on');
-    processingDetail.textContent = 'Lecture du document…';
+    processingDetail.textContent = 'Reading the document…';
     try {
       var buf = current.buf || await current.file.arrayBuffer();
       var res = await WordToPdf.convertDocxToPdf(buf, {
         pageSize: pageSizeSel.value,
         fileName: current.name,
         onProgress: function (stage) {
-          processingDetail.textContent = stage === 'layout' ? 'Mise en page et création du PDF…' : 'Lecture du document…';
+          processingDetail.textContent = stage === 'layout' ? 'Laying out and creating the PDF…' : 'Reading the document…';
         }
       });
       var blob = new Blob([res.bytes], { type: 'application/pdf' });
@@ -1237,13 +1237,13 @@ var WordToPdf = (function () {
       rm.textContent = formatSize(blob.size) + ' • ' + res.pageCount + (res.pageCount > 1 ? ' pages' : ' page');
       left.appendChild(rn); left.appendChild(rm);
       var a = document.createElement('a');
-      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Télécharger le .pdf';
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Download the .pdf';
       item.appendChild(left); item.appendChild(a);
       resultList.appendChild(item);
-      successInfo.textContent = 'Conversion terminée à partir de ' + current.name + ' (' + res.pageCount + (res.pageCount > 1 ? ' pages' : ' page') + ').';
+      successInfo.textContent = 'Conversion complete from ' + current.name + ' (' + res.pageCount + (res.pageCount > 1 ? ' pages' : ' page') + ').';
       var notes = [];
-      if (res.replaced > 0) notes.push(res.replaced + ' caractère(s) non pris en charge par les polices intégrées ont été remplacés (documents en arabe ou symboles spéciaux).');
-      if (res.skipped > 0) notes.push(res.skipped + ' élément(s) n’ont pas pu être reproduits (images flottantes ou formats d’image non pris en charge : GIF, BMP, TIFF…).');
+      if (res.replaced > 0) notes.push(res.replaced + ' character(s) not supported by the built-in fonts were replaced (Arabic documents or special symbols).');
+      if (res.skipped > 0) notes.push(res.skipped + ' element(s) were not reproduced (floating images or unsupported image formats: GIF, BMP, TIFF…).');
       if (notes.length) {
         scanNote.style.display = 'block';
         scanNote.textContent = '⚠ ' + notes.join(' ');
@@ -1259,9 +1259,9 @@ var WordToPdf = (function () {
       var code = err && err.code;
       if (code === 'legacy-doc') showError(MSG_LEGACY);
       else if (code === 'corrupt') showError(MSG_CORRUPT);
-      else if (code === 'empty') showError('Ce document semble vide : aucun texte ni image n’a été trouvé, il n’y a donc rien à convertir en PDF.');
-      else if (code === 'not-docx') showError('Ce fichier n’est pas un document Word .docx…');
-      else showError('Une erreur est survenue pendant la conversion. Veuillez réessayer avec un autre document.');
+      else if (code === 'empty') showError('This document looks empty: no text or image was found, so there is nothing to convert to PDF.');
+      else if (code === 'not-docx') showError('This file is not a Word .docx document…');
+      else showError('An error occurred during the conversion. Please try again with another document.');
     } finally {
       processing.classList.remove('on');
       convertBtn.disabled = false;
@@ -1284,4 +1284,4 @@ var WordToPdf = (function () {
 })();
 </script>
 </body>
-  </html>
+</html>

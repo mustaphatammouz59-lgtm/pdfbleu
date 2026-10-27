@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diviser PDF — PdfBleu.com</title>
-<meta name="description" content="Divisez un fichier PDF par plages de pages ou extrayez chaque page en fichiers séparés. Gratuit, sans inscription et 100 % privé : tout se fait dans votre navigateur, sans envoi sur un serveur.">
+<title>Split PDF — PdfBleu.com</title>
+<meta name="description" content="Split a PDF file by page ranges or extract each page into separate files. Free, no sign-up and 100% private: everything happens in your browser, with no upload to a server.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -121,15 +121,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="29" height="29" rx="6" fill="#EE6C4D"/><rect x="16" y="16" width="29" height="29" rx="6" fill="#EE6C4D"/><path d="M18 18 L11 11" stroke="#fff" stroke-width="3" fill="none"/><polygon points="9.5,16.5 9.5,8.5 17.5,8.5" fill="#fff"/><path d="M30 30 L37 37" stroke="#fff" stroke-width="3" fill="none"/><polygon points="38.5,31.5 38.5,39.5 30.5,39.5" fill="#fff"/></svg></span>
-<h1>Diviser un fichier PDF</h1>
-<p class="subtitle">Séparez une page ou tout un ensemble de pages pour créer des fichiers PDF indépendants, en quelques secondes.</p>
+<h1>Split a PDF file</h1>
+<p class="subtitle">Separate one page or a whole set of pages to create independent PDF files, in a few seconds.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la division se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: splitting happens entirely in your browser, with no upload to a server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -138,105 +138,105 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Division en cours…</p>
+<p>Splitting…</p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner un fichier PDF</button>
-<p class="droptxt">ou déposez votre PDF ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
 <div class="filecard" id="fileCard">
-<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Chargement de l'aperçu…</span></div>
+<div class="coverwrap" id="coverWrap"><span class="coverph" id="coverPh">Loading preview…</span></div>
 <div class="finfo">
 <div class="fname" id="fileName"></div>
 <div class="fmeta" id="fileMeta"></div>
 <div class="warn" id="fileWarn"></div>
 </div>
-<button class="rm" id="removeFileBtn" type="button" title="Retirer ce fichier">✕</button>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
 </div>
 <div class="pagestrip" id="pageStrip">
-<h3>Pages du document</h3>
-<p>Touchez une page pour la sélectionner ou la désélectionner. La sélection se reporte dans le champ ci-contre.</p>
+<h3>Document pages</h3>
+<p>Tap a page to select or deselect it. The selection is reflected in the field on the side.</p>
 <div class="thumbs" id="thumbs"></div>
 </div>
 <div class="error" id="error"></div>
 </div>
 </div>
 <aside class="sidebar">
-<h2>Diviser PDF</h2>
+<h2>Split PDF</h2>
 <div class="tabs" role="tablist">
-<button type="button" id="tabRangeBtn" class="active">Plages</button>
-<button type="button" id="tabExtractBtn">Extraction</button>
+<button type="button" id="tabRangeBtn" class="active">Ranges</button>
+<button type="button" id="tabExtractBtn">Extract</button>
 </div>
 
 <div class="panel on" id="panelRange">
 <div class="subtoggle">
-<button type="button" id="rangeCustomBtn" class="active">Personnalisées</button>
-<button type="button" id="rangeFixedBtn">Fixes</button>
+<button type="button" id="rangeCustomBtn" class="active">Custom</button>
+<button type="button" id="rangeFixedBtn">Fixed</button>
 </div>
 <div id="rangeCustomBox">
 <div id="rangesList"></div>
-<button class="addrange" id="addRangeBtn" type="button">+ Ajouter une plage</button>
-<label class="checkline"><input type="checkbox" id="mergeRangesChk"> <span>Fusionner toutes les plages en un seul fichier PDF</span></label>
+<button class="addrange" id="addRangeBtn" type="button">+ Add a range</button>
+<label class="checkline"><input type="checkbox" id="mergeRangesChk"> <span>Merge all ranges into a single PDF file</span></label>
 </div>
 <div id="rangeFixedBox" style="display:none">
-<label class="fieldlabel" for="fixedN">Diviser par plages de N pages</label>
+<label class="fieldlabel" for="fixedN">Split into ranges of N pages</label>
 <input type="number" class="num" id="fixedN" min="1" value="2">
-<p class="hint">Chaque fichier créé contiendra au maximum ce nombre de pages.</p>
-<div class="info" id="fixedInfo">Ajoutez un fichier PDF pour voir le résultat.</div>
+<p class="hint">Each file created will contain at most this number of pages.</p>
+<div class="info" id="fixedInfo">Add a PDF file to see the result.</div>
 </div>
 </div>
 
 <div class="panel" id="panelExtract">
 <div class="subtoggle">
-<button type="button" id="extractAllBtn" class="active">Extraire toutes les pages</button>
-<button type="button" id="extractSelectBtn">Sélectionner des pages</button>
+<button type="button" id="extractAllBtn" class="active">Extract all pages</button>
+<button type="button" id="extractSelectBtn">Select pages</button>
 </div>
 <div id="extractSelectBox" style="display:none">
-<label class="fieldlabel" for="extractPagesInput">Pages à extraire</label>
-<input type="text" class="txt" id="extractPagesInput" placeholder="Exemple : 1,5-8" autocomplete="off">
-<p class="hint">Utilisez des virgules et des tirets. Exemple : <strong>1,5-8</strong>. Vous pouvez aussi toucher les pages dans l'aperçu.</p>
-<label class="checkline"><input type="checkbox" id="mergeExtractChk"> <span>Fusionner les pages extraites en un seul fichier PDF</span></label>
+<label class="fieldlabel" for="extractPagesInput">Pages to extract</label>
+<input type="text" class="txt" id="extractPagesInput" placeholder="Example: 1,5-8" autocomplete="off">
+<p class="hint">Use commas and hyphens. Example: <strong>1,5-8</strong>. You can also tap the pages in the preview.</p>
+<label class="checkline"><input type="checkbox" id="mergeExtractChk"> <span>Merge the extracted pages into a single PDF file</span></label>
 </div>
-<div class="info" id="extractInfo">Ajoutez un fichier PDF pour voir le résultat.</div>
+<div class="info" id="extractInfo">Add a PDF file to see the result.</div>
 </div>
 
-<div class="freenote">Ici, tout est gratuit et sans limite : aucun abonnement, aucune fonction réservée, aucune inscription.</div>
+<div class="freenote">Here, everything is free with no limits: no subscription, no reserved features, no sign-up.</div>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Vos fichiers sont prêts !</h2>
+<h2>Your files are ready!</h2>
 <p class="sub" id="successInfo"></p>
 <div class="resultlist" id="resultList"></div>
-<a class="zipdl" id="zipBtn" href="#" style="display:none">Tout télécharger (.zip)</a>
-<button class="again" id="restartBtn" type="button">Diviser un autre PDF</button>
+<a class="zipdl" id="zipBtn" href="#" style="display:none">Download all (.zip)</a>
+<button class="again" id="restartBtn" type="button">Split another PDF</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment diviser un PDF</h2>
+<h2>How to split a PDF</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez votre fichier</h3><p>Cliquez sur le bouton de sélection ou déposez votre PDF dans la zone prévue. Un seul fichier suffit.</p></div>
-<div class="step"><span class="num">2</span><h3>Choisissez vos pages</h3><p>Définissez des plages personnalisées ou fixes, ou bien extrayez chaque page dans un fichier séparé.</p></div>
-<div class="step"><span class="num">3</span><h3>Divisez et téléchargez</h3><p>Appuyez sur « Diviser PDF », puis téléchargez chaque fichier ou l'archive complète en un seul clic.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your file</h3><p>Click the select button or drop your PDF into the drop zone. One file is enough.</p></div>
+<div class="step"><span class="num">2</span><h3>Choose your pages</h3><p>Set custom or fixed ranges, or extract each page into a separate file.</p></div>
+<div class="step"><span class="num">3</span><h3>Split and download</h3><p>Press "Split PDF", then download each file or the full archive in a single click.</p></div>
 </div>
 <div class="seo">
-<p>Notre outil de division PDF est entièrement gratuit et fonctionne sans inscription ni limite. Contrairement aux services classiques, votre document n'est jamais envoyé sur un serveur : tout le traitement a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, factures et documents personnels.</p>
-<p>Vous pouvez séparer les chapitres d'un rapport, isoler une facture dans un relevé, extraire les pages d'un devoir ou partager uniquement les pages utiles d'un long document, sans rien installer.</p>
+<p>Our PDF splitter is completely free and works with no sign-up and no limits. Unlike typical services, your document is never uploaded to a server: all processing happens on your phone or computer, which protects your contracts, invoices and personal documents.</p>
+<p>You can separate the chapters of a report, isolate an invoice in a statement, extract the pages of an assignment or share only the useful pages of a long document, without installing anything.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="splitBtn" type="button">Diviser PDF</button>
+<button id="splitBtn" type="button">Split PDF</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -247,46 +247,46 @@ footer a{color:#3F51B5;text-decoration:none}
   // === Fonctions de planification (pures) ===
   function parsePageSelection(text, total) {
     if (!text || !String(text).trim()) {
-      throw new Error('Veuillez indiquer au moins une page à extraire.');
+      throw new Error('Please enter at least one page to extract.');
     }
     var seen = {};
     var indices = [];
     var parts = String(text).split(',');
     for (var i = 0; i < parts.length; i++) {
       var part = parts[i].trim();
-      if (!part) throw new Error('Sélection de pages invalide : un élément est vide. Utilisez par exemple : 1,5-8');
+      if (!part) throw new Error('Invalid page selection: an item is empty. Use for example: 1,5-8');
       var m = part.match(/^(\d+)\s*-\s*(\d+)$/);
       var single = part.match(/^(\d+)$/);
       var n;
       if (m) {
         var start = parseInt(m[1], 10);
         var end = parseInt(m[2], 10);
-        if (start > end) throw new Error('Plage invalide « ' + part + ' » : la première page doit être inférieure ou égale à la dernière.');
+        if (start > end) throw new Error('Invalid range "' + part + '": the first page must be less than or equal to the last.');
         for (n = start; n <= end; n++) {
-          if (n < 1 || n > total) throw new Error('La page ' + n + ' n\u2019existe pas : le document contient ' + total + ' page(s).');
+          if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
           if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
         }
       } else if (single) {
         n = parseInt(single[1], 10);
-        if (n < 1 || n > total) throw new Error('La page ' + n + ' n\u2019existe pas : le document contient ' + total + ' page(s).');
+        if (n < 1 || n > total) throw new Error('Page ' + n + ' does not exist: the document contains ' + total + ' page(s).');
         if (!seen[n]) { seen[n] = true; indices.push(n - 1); }
       } else {
-        throw new Error('Format invalide « ' + part + ' ». Utilisez par exemple : 1,5-8');
+        throw new Error('Invalid format "' + part + '". Use for example: 1,5-8');
       }
     }
-    if (!indices.length) throw new Error('Veuillez indiquer au moins une page à extraire.');
+    if (!indices.length) throw new Error('Please enter at least one page to extract.');
     indices.sort(function (a, b) { return a - b; });
     return indices;
   }
   function validateRangeValues(from, to, total) {
     if (!Number.isInteger(from) || !Number.isInteger(to)) {
-      throw new Error('Veuillez saisir des numéros de pages valides dans chaque plage.');
+      throw new Error('Please enter valid page numbers in each range.');
     }
     if (from < 1 || to < 1 || from > total || to > total) {
-      throw new Error('Plage ' + from + ' - ' + to + ' hors limites : le document contient ' + total + ' page(s), de 1 à ' + total + '.');
+      throw new Error('Range ' + from + ' - ' + to + ' out of bounds: the document contains ' + total + ' page(s), from 1 to ' + total + '.');
     }
     if (from > to) {
-      throw new Error('Plage invalide ' + from + ' - ' + to + ' : la page de début doit être inférieure ou égale à la page de fin.');
+      throw new Error('Invalid range ' + from + ' - ' + to + ': the start page must be less than or equal to the end page.');
     }
   }
   function rangeIndices(from, to) {
@@ -295,7 +295,7 @@ footer a{color:#3F51B5;text-decoration:none}
     return out;
   }
   function planCustomRanges(ranges, total, merge) {
-    if (!ranges || !ranges.length) throw new Error('Veuillez ajouter au moins une plage de pages.');
+    if (!ranges || !ranges.length) throw new Error('Please add at least one page range.');
     var i;
     for (i = 0; i < ranges.length; i++) validateRangeValues(ranges[i].from, ranges[i].to, total);
     if (merge) {
@@ -306,8 +306,8 @@ footer a{color:#3F51B5;text-decoration:none}
     return ranges.map(function (r) { return rangeIndices(r.from, r.to); });
   }
   function planFixedRanges(total, n) {
-    if (!Number.isInteger(n) || n < 1) throw new Error('Le nombre de pages par fichier doit être un entier au moins égal à 1.');
-    if (n > total) throw new Error('Le nombre de pages par fichier (' + n + ') dépasse le nombre de pages du document (' + total + ').');
+    if (!Number.isInteger(n) || n < 1) throw new Error('The number of pages per file must be a whole number of at least 1.');
+    if (n > total) throw new Error('The number of pages per file (' + n + ') exceeds the number of pages in the document (' + total + ').');
     var outputs = [];
     for (var start = 1; start <= total; start += n) {
       outputs.push(rangeIndices(start, Math.min(total, start + n - 1)));
@@ -320,12 +320,12 @@ footer a{color:#3F51B5;text-decoration:none}
     return outputs;
   }
   function planExtractSelection(indices, merge) {
-    if (!indices || !indices.length) throw new Error('Veuillez sélectionner au moins une page à extraire.');
+    if (!indices || !indices.length) throw new Error('Please select at least one page to extract.');
     if (merge) return [indices.slice()];
     return indices.map(function (idx) { return [idx]; });
   }
   function outputNameFor(base, indices, isMergedSingle) {
-    if (isMergedSingle) return 'pdfbleu-division.pdf';
+    if (isMergedSingle) return 'pdfbleu-split.pdf';
     if (indices.length === 1) return base + '_page_' + (indices[0] + 1) + '.pdf';
     return base + '_pages_' + (indices[0] + 1) + '-' + (indices[indices.length - 1] + 1) + '.pdf';
   }
@@ -333,7 +333,7 @@ footer a{color:#3F51B5;text-decoration:none}
     if (indices.length === 1) return 'Page ' + (indices[0] + 1);
     var contiguous = true;
     for (var i = 1; i < indices.length; i++) if (indices[i] !== indices[i - 1] + 1) contiguous = false;
-    if (contiguous) return 'Pages ' + (indices[0] + 1) + ' à ' + (indices[indices.length - 1] + 1);
+    if (contiguous) return 'Pages ' + (indices[0] + 1) + ' to ' + (indices[indices.length - 1] + 1);
     return 'Pages ' + indices.map(function (x) { return x + 1; }).join(', ');
   }
   // === Fin fonctions pures ===
@@ -392,9 +392,9 @@ footer a{color:#3F51B5;text-decoration:none}
     errorBox.style.display = msg ? 'block' : 'none';
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
   function totalPages() { return current && typeof current.pages === 'number' ? current.pages : 0; }
 
@@ -415,10 +415,10 @@ footer a{color:#3F51B5;text-decoration:none}
   }
   function getPlan() {
     var total = totalPages();
-    if (!current) throw new Error('Veuillez d\u2019abord choisir un fichier PDF.');
-    if (current.bad === 'encrypted') throw new Error('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
-    if (current.bad === 'corrupt') throw new Error('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier.');
-    if (!total) throw new Error('Le fichier est encore en cours de lecture, veuillez patienter.');
+    if (!current) throw new Error('Please choose a PDF file first.');
+    if (current.bad === 'encrypted') throw new Error('"' + current.name + '" is password-protected and cannot be split. Unlock it first.');
+    if (current.bad === 'corrupt') throw new Error('"' + current.name + '" appears to be damaged or unreadable. Choose another file.');
+    if (!total) throw new Error('The file is still being read, please wait.');
     if (mode === 'range') {
       if (rangeSub === 'custom') return planCustomRanges(collectRanges(), total, mergeRangesChk.checked);
       var n = fixedNInput.value === '' ? NaN : parseInt(fixedNInput.value, 10);
@@ -434,26 +434,26 @@ footer a{color:#3F51B5;text-decoration:none}
 
   function updateFixedInfo() {
     var total = totalPages();
-    if (!current || !total) { fixedInfo.textContent = 'Ajoutez un fichier PDF pour voir le résultat.'; return; }
+    if (!current || !total) { fixedInfo.textContent = 'Add a PDF file to see the result.'; return; }
     var n = fixedNInput.value === '' ? NaN : parseInt(fixedNInput.value, 10);
-    if (!Number.isInteger(n) || n < 1) { fixedInfo.textContent = 'Veuillez saisir un nombre de pages au moins égal à 1.'; return; }
-    if (n > total) { fixedInfo.textContent = 'Ce nombre dépasse le total du document (' + total + ' pages).'; return; }
+    if (!Number.isInteger(n) || n < 1) { fixedInfo.textContent = 'Please enter a number of pages of at least 1.'; return; }
+    if (n > total) { fixedInfo.textContent = 'This number exceeds the document total (' + total + ' pages).'; return; }
     var count = Math.ceil(total / n);
-    fixedInfo.textContent = 'Ce PDF de ' + total + ' pages sera divisé en fichiers de ' + n + ' page(s) maximum. ' + count + ' fichier(s) PDF seront créés.';
+    fixedInfo.textContent = 'This ' + total + '-page PDF will be split into files of at most ' + n + ' page(s). ' + count + ' PDF file(s) will be created.';
   }
   function updateExtractInfo() {
     var total = totalPages();
-    if (!current || !total) { extractInfo.textContent = 'Ajoutez un fichier PDF pour voir le résultat.'; return; }
+    if (!current || !total) { extractInfo.textContent = 'Add a PDF file to see the result.'; return; }
     if (extractSub === 'all') {
-      extractInfo.textContent = 'Chaque page deviendra un fichier séparé. ' + total + ' fichier(s) PDF seront créés.';
+      extractInfo.textContent = 'Each page will become a separate file. ' + total + ' PDF file(s) will be created.';
       return;
     }
     try {
       var indices = parsePageSelection(extractPagesInput.value, total);
-      if (mergeExtractChk.checked) extractInfo.textContent = indices.length + ' page(s) sélectionnée(s) seront réunies en 1 seul fichier PDF.';
-      else extractInfo.textContent = indices.length + ' page(s) sélectionnée(s). ' + indices.length + ' fichier(s) PDF seront créés.';
+      if (mergeExtractChk.checked) extractInfo.textContent = indices.length + ' selected page(s) will be combined into 1 single PDF file.';
+      else extractInfo.textContent = indices.length + ' page(s) selected. ' + indices.length + ' PDF file(s) will be created.';
     } catch (e) {
-      extractInfo.textContent = 'Sélectionnez des pages pour voir combien de fichiers seront créés.';
+      extractInfo.textContent = 'Select pages to see how many files will be created.';
     }
   }
   function updateStripVisibility() {
@@ -467,7 +467,7 @@ footer a{color:#3F51B5;text-decoration:none}
     document.body.classList.toggle('bar-visible', show);
     if (show) {
       var total = totalPages();
-      barSummary.textContent = current.name + ' • ' + total + (total > 1 ? ' pages' : ' page') + (plan ? ' • ' + plan.length + ' fichier(s) à créer' : '');
+      barSummary.textContent = current.name + ' • ' + total + (total > 1 ? ' pages' : ' page') + (plan ? ' • ' + plan.length + ' file(s) to create' : '');
     }
     splitBtn.disabled = !plan;
     updateFixedInfo();
@@ -479,17 +479,17 @@ footer a{color:#3F51B5;text-decoration:none}
     var row = document.createElement('div');
     row.className = 'range-row';
     var f1 = document.createElement('div'); f1.className = 'fld';
-    var l1 = document.createElement('label'); l1.textContent = 'De la page';
+    var l1 = document.createElement('label'); l1.textContent = 'From page';
     var i1 = document.createElement('input'); i1.type = 'number'; i1.className = 'rfrom'; i1.min = '1'; i1.value = fromVal;
     i1.addEventListener('input', updateBar);
     f1.appendChild(l1); f1.appendChild(i1);
     var f2 = document.createElement('div'); f2.className = 'fld';
-    var l2 = document.createElement('label'); l2.textContent = 'À';
+    var l2 = document.createElement('label'); l2.textContent = 'To';
     var i2 = document.createElement('input'); i2.type = 'number'; i2.className = 'rto'; i2.min = '1'; i2.value = toVal;
     i2.addEventListener('input', updateBar);
     f2.appendChild(l2); f2.appendChild(i2);
     var rm = document.createElement('button');
-    rm.type = 'button'; rm.className = 'rmr'; rm.textContent = '✕'; rm.title = 'Retirer cette plage';
+    rm.type = 'button'; rm.className = 'rmr'; rm.textContent = '✕'; rm.title = 'Remove this range';
     rm.addEventListener('click', function () {
       row.remove();
       refreshRangeRemoveButtons();
@@ -511,19 +511,19 @@ footer a{color:#3F51B5;text-decoration:none}
     if (current.thumb) {
       var img = document.createElement('img');
       img.src = current.thumb;
-      img.alt = 'Couverture de ' + current.name;
+      img.alt = 'Cover of ' + current.name;
       coverWrap.appendChild(img);
     } else {
       var ph = document.createElement('span');
       ph.className = 'coverph' + (current.bad ? ' bad' : '');
-      ph.textContent = current.bad ? '⚠ Aperçu indisponible' : 'Chargement de l\u2019aperçu…';
+      ph.textContent = current.bad ? '⚠ Preview unavailable' : 'Loading preview…';
       coverWrap.appendChild(ph);
     }
     fileNameEl.textContent = current.name;
     var total = totalPages();
     fileMetaEl.textContent = (total ? total + (total > 1 ? ' pages' : ' page') : '… pages') + ' • ' + formatSize(current.file.size);
-    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Protégé par un mot de passe';
-    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Fichier illisible ou endommagé';
+    if (current.bad === 'encrypted') fileWarnEl.textContent = 'Password protected';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
     else fileWarnEl.textContent = '';
   }
   function renderThumbs() {
@@ -565,7 +565,7 @@ footer a{color:#3F51B5;text-decoration:none}
   async function loadFile(f) {
     showError('');
     var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
-    if (!isPdf) { showError('« ' + (f ? f.name : '') + ' » n\u2019est pas un fichier PDF. Veuillez choisir un fichier PDF.'); return; }
+    if (!isPdf) { showError('"' + (f ? f.name : '') + '" is not a PDF file. Please choose a PDF file.'); return; }
     var base = f.name.replace(/\.pdf$/i, '');
     current = { file: f, name: f.name, base: base, pages: null, thumb: null, bad: null, pageThumbs: [] };
     renderFileCard();
@@ -619,8 +619,8 @@ footer a{color:#3F51B5;text-decoration:none}
           else current.bad = 'corrupt';
         }
       }
-      if (current.bad === 'encrypted') showError('« ' + f.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
-      else if (current.bad === 'corrupt') showError('« ' + f.name + ' » semble endommagé ou illisible et ne peut pas être divisé.');
+      if (current.bad === 'encrypted') showError('"' + f.name + '" is password-protected and cannot be split. Unlock it first.');
+      else if (current.bad === 'corrupt') showError('"' + f.name + '" appears to be damaged or unreadable and cannot be split.');
     }
     // Valeurs par défaut des plages pour ce document
     if (current.pages && rangesList.querySelectorAll('.range-row').length === 1) {
@@ -701,7 +701,7 @@ footer a{color:#3F51B5;text-decoration:none}
 
   splitBtn.addEventListener('click', async function () {
     showError('');
-    if (!current) { showError('Veuillez d\u2019abord choisir un fichier PDF.'); return; }
+    if (!current) { showError('Please choose a PDF file first.'); return; }
     var plan;
     try { plan = getPlan(); } catch (e) { showError(e.message); return; }
     splitBtn.disabled = true;
@@ -743,7 +743,7 @@ footer a{color:#3F51B5;text-decoration:none}
         rm2.textContent = describeIndices(res.indices) + ' • ' + res.indices.length + (res.indices.length > 1 ? ' pages' : ' page') + ' • ' + formatSize(res.bytes.length);
         left.appendChild(rn); left.appendChild(rm2);
         var a = document.createElement('a');
-        a.className = 'dl'; a.href = url; a.download = res.name; a.textContent = 'Télécharger';
+        a.className = 'dl'; a.href = url; a.download = res.name; a.textContent = 'Download';
         item.appendChild(left); item.appendChild(a);
         resultList.appendChild(item);
       });
@@ -753,21 +753,21 @@ footer a{color:#3F51B5;text-decoration:none}
         var zipBlob = await zip.generateAsync({ type: 'blob' });
         zipUrl = URL.createObjectURL(zipBlob);
         zipBtn.href = zipUrl;
-        zipBtn.setAttribute('download', 'pdfbleu-division.zip');
+        zipBtn.setAttribute('download', 'pdfbleu-split.zip');
         zipBtn.style.display = '';
       } else {
         zipBtn.style.display = 'none';
       }
-      successInfo.textContent = results.length + (results.length > 1 ? ' fichiers créés à partir de ' : ' fichier créé à partir de ') + current.name + ' (' + totalPages() + ' pages).';
+      successInfo.textContent = results.length + (results.length > 1 ? ' files created from ' : ' file created from ') + current.name + ' (' + totalPages() + ' pages).';
       layout.style.display = 'none';
       success.classList.add('on');
       actionBar.classList.remove('on');
       document.body.classList.remove('bar-visible');
       success.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      if (err && err.message === 'encrypted') showError('« ' + current.name + ' » est protégé par un mot de passe et ne peut pas être divisé. Déverrouillez-le d\u2019abord.');
-      else if (err && err.message === 'corrupt') showError('« ' + current.name + ' » semble endommagé ou illisible. Choisissez un autre fichier puis réessayez.');
-      else showError('Une erreur est survenue pendant la division. Le fichier est peut-être protégé ou endommagé. Veuillez réessayer.');
+      if (err && err.message === 'encrypted') showError('"' + current.name + '" is password-protected and cannot be split. Unlock it first.');
+      else if (err && err.message === 'corrupt') showError('"' + current.name + '" appears to be damaged or unreadable. Choose another file and try again.');
+      else showError('An error occurred while splitting. The file may be protected or damaged. Please try again.');
     } finally {
       processing.classList.remove('on');
       splitBtn.disabled = false;
@@ -793,4 +793,4 @@ footer a{color:#3F51B5;text-decoration:none}
 })();
 </script>
 </body>
-  </html>
+</html>

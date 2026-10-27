@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fusionner PDF — PdfBleu.com</title>
-<meta name="description" content="Fusionnez plusieurs fichiers PDF en un seul document, dans l'ordre que vous voulez. Gratuit, sans inscription, et sans envoi sur un serveur : tout se fait dans votre navigateur.">
+<title>Merge PDF — PdfBleu.com</title>
+<meta name="description" content="Merge several PDF files into a single document, in the order you want. Free, no sign-up, and no upload to a server: everything happens in your browser.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -92,15 +92,15 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
 <div class="tool-head">
 <span class="tic"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><rect x="3" y="3" width="29" height="29" rx="6" fill="#EE6C4D"/><rect x="16" y="16" width="29" height="29" rx="6" fill="#EE6C4D"/><path d="M10 10 L19 19" stroke="#fff" stroke-width="3" fill="none"/><polygon points="12,19.5 20,19.5 20,11.5" fill="#fff"/><path d="M38 38 L29 29" stroke="#fff" stroke-width="3" fill="none"/><polygon points="36,28.5 28,28.5 28,36.5" fill="#fff"/></svg></span>
-<h1>Fusionner des fichiers PDF</h1>
-<p class="subtitle">Assemblez plusieurs documents PDF en un seul fichier, exactement dans l'ordre que vous choisissez. Simple, rapide et sans inscription.</p>
+<h1>Merge PDF files</h1>
+<p class="subtitle">Combine several PDF documents into a single file, in exactly the order you choose. Simple, fast and no sign-up.</p>
 </div>
-<div class="private-note">🔒 Vos fichiers ne quittent jamais votre appareil : la fusion se fait entièrement dans votre navigateur, sans aucun envoi sur un serveur.</div>
+<div class="private-note">🔒 Your files never leave your device: merging happens entirely in your browser, with no upload to a server.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
@@ -109,11 +109,11 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="tool" id="toolCard">
 <div class="processing" id="processing">
 <div class="spinner"></div>
-<p>Fusion en cours…</p>
+<p>Merging…</p>
 </div>
 <div class="drop" id="drop">
-<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Sélectionner des fichiers PDF</button>
-<p class="droptxt">ou déposez vos PDF ici</p>
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDF files here</p>
 </div>
 <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
 <div class="cards" id="cards"></div>
@@ -121,45 +121,45 @@ footer a{color:#3F51B5;text-decoration:none}
 </div>
 </div>
 <aside class="sidebar">
-<h2>Fusionner PDF</h2>
-<p>Pour modifier l'ordre de vos fichiers, faites glisser les cartes sur ordinateur, ou utilisez les flèches ◀ ▶ de chaque carte sur téléphone.</p>
-<p>Pour ajouter d'autres fichiers, cliquez à nouveau sur « Sélectionner des fichiers PDF » : vous pouvez enchaîner plusieurs ajouts.</p>
-<button class="util" id="sortBtn" type="button">Trier par nom (A → Z)</button>
-<button class="util" id="coversBtn" type="button">Masquer les couvertures</button>
+<h2>Merge PDF</h2>
+<p>To change the order of your files, drag the cards on a computer, or use the ◀ ▶ arrows on each card on a phone.</p>
+<p>To add more files, click "Select PDF files" again: you can add files as many times as you like.</p>
+<button class="util" id="sortBtn" type="button">Sort by name (A → Z)</button>
+<button class="util" id="coversBtn" type="button">Hide covers</button>
 </aside>
 </div>
 
 <div class="success" id="success">
 <span class="big">✅</span>
-<h2>Votre PDF fusionné est prêt !</h2>
+<h2>Your merged PDF is ready!</h2>
 <p id="successInfo"></p>
-<a class="dl" id="downloadBtn" href="#" download="pdfbleu-fusion.pdf">Télécharger le PDF fusionné</a>
-<button class="again" id="restartBtn" type="button">Recommencer</button>
+<a class="dl" id="downloadBtn" href="#" download="pdfbleu-merged.pdf">Download the merged PDF</a>
+<button class="again" id="restartBtn" type="button">Start over</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 
 <div class="howto">
-<h2>Comment fusionner des PDF</h2>
+<h2>How to merge PDFs</h2>
 <div class="steps">
-<div class="step"><span class="num">1</span><h3>Choisissez vos fichiers</h3><p>Cliquez sur le bouton de sélection ou déposez vos PDF dans la zone prévue. Ajoutez autant de fichiers que nécessaire.</p></div>
-<div class="step"><span class="num">2</span><h3>Rangez-les dans l'ordre</h3><p>Déplacez les cartes par glisser-déposer ou avec les flèches : le premier fichier de la liste ouvrira le document final.</p></div>
-<div class="step"><span class="num">3</span><h3>Fusionnez et téléchargez</h3><p>Appuyez sur « Fusionner PDF », puis téléchargez votre document unique. C'est fini, rien d'autre à installer.</p></div>
+<div class="step"><span class="num">1</span><h3>Choose your files</h3><p>Click the select button or drop your PDFs into the drop zone. Add as many files as you need.</p></div>
+<div class="step"><span class="num">2</span><h3>Put them in order</h3><p>Move the cards by drag and drop or with the arrows: the first file in the list will open the final document.</p></div>
+<div class="step"><span class="num">3</span><h3>Merge and download</h3><p>Press "Merge PDF", then download your single document. That is it, nothing else to install.</p></div>
 </div>
 <div class="seo">
-<p>Notre outil de fusion PDF est entièrement gratuit et fonctionne sans inscription ni limite de fichiers raisonnable. Contrairement aux services classiques, vos documents ne sont jamais envoyés sur un serveur : tout le traitement a lieu sur votre téléphone ou votre ordinateur, ce qui protège vos contrats, factures et documents personnels.</p>
-<p>Vous pouvez réunir des rapports, des devoirs, des pièces justificatives ou des pages scannées en un seul PDF propre, prêt à être partagé par e-mail ou déposé sur une plateforme administrative.</p>
+<p>Our PDF merger is completely free and works with no sign-up and no reasonable file limit. Unlike typical services, your documents are never uploaded to a server: all processing happens on your phone or computer, which protects your contracts, invoices and personal documents.</p>
+<p>You can combine reports, assignments, supporting documents or scanned pages into one clean PDF, ready to share by email or upload to an official platform.</p>
 </div>
 </div>
 </main>
 
 <div class="actionbar" id="actionBar">
 <span class="summary" id="barSummary"></span>
-<button id="mergeBtn" type="button">Fusionner PDF</button>
+<button id="mergeBtn" type="button">Merge PDF</button>
 </div>
 
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -194,14 +194,14 @@ footer a{color:#3F51B5;text-decoration:none}
     errorBox.style.display = msg ? 'block' : 'none';
   }
   function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' o';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1).replace('.', ',') + ' Ko';
-    return (bytes / (1024 * 1024)).toFixed(2).replace('.', ',') + ' Mo';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
   function sortItemsByName(list, dir) {
     var sorted = list.slice();
     sorted.sort(function (a, b) {
-      var cmp = a.name.localeCompare(b.name, 'fr', { numeric: true, sensitivity: 'base' });
+      var cmp = a.name.localeCompare(b.name, 'en', { numeric: true, sensitivity: 'base' });
       return dir === 'desc' ? -cmp : cmp;
     });
     return sorted;
@@ -219,7 +219,7 @@ footer a{color:#3F51B5;text-decoration:none}
     document.body.classList.toggle('bar-visible', show);
     if (show) {
       var t = totalPages();
-      barSummary.textContent = items.length + ' fichiers • ' + t.total + (t.known ? '' : '+') + ' pages au total';
+      barSummary.textContent = items.length + ' file(s) • ' + t.total + (t.known ? '' : '+') + ' pages in total';
     }
   }
   function findItem(id) {
@@ -239,12 +239,12 @@ footer a{color:#3F51B5;text-decoration:none}
       var handle = document.createElement('span');
       handle.className = 'handle';
       handle.textContent = '⠿';
-      handle.title = 'Glisser pour déplacer';
+      handle.title = 'Drag to move';
       var rm = document.createElement('button');
       rm.type = 'button';
       rm.className = 'rm';
       rm.textContent = '✕';
-      rm.title = 'Retirer ce fichier';
+      rm.title = 'Remove this file';
       rm.addEventListener('click', function () {
         items = items.filter(function (x) { return x.id !== it.id; });
         render();
@@ -258,12 +258,12 @@ footer a{color:#3F51B5;text-decoration:none}
       if (it.thumb) {
         var img = document.createElement('img');
         img.src = it.thumb;
-        img.alt = 'Couverture de ' + it.name;
+        img.alt = 'Cover of ' + it.name;
         cover.appendChild(img);
       } else {
         var ph = document.createElement('span');
         ph.className = 'coverph' + (it.bad ? ' bad' : '');
-        ph.textContent = it.bad ? '⚠ Aperçu indisponible' : 'Chargement de l\'aperçu…';
+        ph.textContent = it.bad ? '⚠ Preview unavailable' : 'Loading preview…';
         cover.appendChild(ph);
       }
       card.appendChild(cover);
@@ -281,12 +281,12 @@ footer a{color:#3F51B5;text-decoration:none}
       if (it.bad === 'encrypted') {
         var w1 = document.createElement('div');
         w1.className = 'warn';
-        w1.textContent = 'Protégé par un mot de passe';
+        w1.textContent = 'Password protected';
         card.appendChild(w1);
       } else if (it.bad === 'corrupt') {
         var w2 = document.createElement('div');
         w2.className = 'warn';
-        w2.textContent = 'Fichier illisible ou endommagé';
+        w2.textContent = 'Unreadable or damaged file';
         card.appendChild(w2);
       }
 
@@ -295,13 +295,13 @@ footer a{color:#3F51B5;text-decoration:none}
       var left = document.createElement('button');
       left.type = 'button';
       left.textContent = '◀';
-      left.title = 'Déplacer vers la gauche';
+      left.title = 'Move left';
       left.disabled = idx === 0;
       left.addEventListener('click', function () { moveItem(it.id, -1); });
       var right = document.createElement('button');
       right.type = 'button';
       right.textContent = '▶';
-      right.title = 'Déplacer vers la droite';
+      right.title = 'Move right';
       right.disabled = idx === items.length - 1;
       right.addEventListener('click', function () { moveItem(it.id, 1); });
       moves.appendChild(left);
@@ -399,7 +399,7 @@ footer a{color:#3F51B5;text-decoration:none}
     Array.prototype.forEach.call(fileListIn, function (f) {
       var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
       if (!isPdf) {
-        showError('« ' + f.name + ' » n\'est pas un fichier PDF. Veuillez choisir uniquement des fichiers PDF.');
+        showError('"' + f.name + '" is not a PDF file. Please choose PDF files only.');
         return;
       }
       var it = { id: nextId++, file: f, name: f.name, pages: null, thumb: null, bad: null };
@@ -425,25 +425,25 @@ footer a{color:#3F51B5;text-decoration:none}
     if (!items.length) return;
     items = sortItemsByName(items, sortDir);
     sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-    sortBtn.textContent = sortDir === 'asc' ? 'Trier par nom (A → Z)' : 'Trier par nom (Z → A)';
+    sortBtn.textContent = sortDir === 'asc' ? 'Sort by name (A → Z)' : 'Sort by name (Z → A)';
     render();
   });
   coversBtn.addEventListener('click', function () {
     var hidden = document.body.classList.toggle('hide-covers');
-    coversBtn.textContent = hidden ? 'Afficher les couvertures' : 'Masquer les couvertures';
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
   });
 
   mergeBtn.addEventListener('click', async function () {
     showError('');
-    if (items.length === 1) { showError('Ajoutez au moins un deuxième fichier PDF pour lancer la fusion.'); return; }
-    if (items.length < 2) { showError('Veuillez ajouter au moins deux fichiers PDF à fusionner.'); return; }
+    if (items.length === 1) { showError('Add at least one more PDF file to start merging.'); return; }
+    if (items.length < 2) { showError('Please add at least two PDF files to merge.'); return; }
     var badEnc = null, badCor = null, i;
     for (i = 0; i < items.length; i++) {
       if (items[i].bad === 'encrypted' && !badEnc) badEnc = items[i];
       if (items[i].bad === 'corrupt' && !badCor) badCor = items[i];
     }
-    if (badEnc) { showError('« ' + badEnc.name + ' » est protégé par un mot de passe et ne peut pas être fusionné. Retirez-le ou déverrouillez-le d\'abord.'); return; }
-    if (badCor) { showError('« ' + badCor.name + ' » semble endommagé ou illisible. Retirez-le puis réessayez.'); return; }
+    if (badEnc) { showError('"' + badEnc.name + '" is password-protected and cannot be merged. Remove it or unlock it first.'); return; }
+    if (badCor) { showError('"' + badCor.name + '" appears to be damaged or unreadable. Remove it and try again.'); return; }
     mergeBtn.disabled = true;
     processing.classList.add('on');
     try {
@@ -468,7 +468,7 @@ footer a{color:#3F51B5;text-decoration:none}
       resultUrl = URL.createObjectURL(blob);
       downloadBtn.href = resultUrl;
       var t = totalPages();
-      successInfo.textContent = 'Fichier : pdfbleu-fusion.pdf • ' + merged.getPageCount() + ' pages • ' + formatSize(bytes.length);
+      successInfo.textContent = 'File: pdfbleu-merged.pdf • ' + merged.getPageCount() + ' pages • ' + formatSize(bytes.length);
       layout.style.display = 'none';
       success.classList.add('on');
       actionBar.classList.remove('on');
@@ -477,11 +477,11 @@ footer a{color:#3F51B5;text-decoration:none}
     } catch (err) {
       var msg = String(err && err.message || '');
       if (msg.indexOf('encrypted:') === 0) {
-        showError('« ' + msg.slice(10) + ' » est protégé par un mot de passe et ne peut pas être fusionné. Retirez-le ou déverrouillez-le d\'abord.');
+        showError('"' + msg.slice(10) + '" is password-protected and cannot be merged. Remove it or unlock it first.');
       } else if (msg.indexOf('corrupt:') === 0) {
-        showError('« ' + msg.slice(8) + ' » semble endommagé ou illisible. Retirez-le puis réessayez.');
+        showError('"' + msg.slice(8) + '" appears to be damaged or unreadable. Remove it and try again.');
       } else {
-        showError('Une erreur est survenue pendant la fusion. Un des fichiers est peut-être protégé ou endommagé. Veuillez réessayer.');
+        showError('An error occurred while merging. One of the files may be protected or damaged. Please try again.');
       }
     } finally {
       processing.classList.remove('on');
@@ -502,4 +502,4 @@ footer a{color:#3F51B5;text-decoration:none}
 })();
 </script>
 </body>
-  </html>
+</html>

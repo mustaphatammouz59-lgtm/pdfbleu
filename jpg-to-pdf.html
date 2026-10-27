@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JPG en PDF — PdfBleu.com</title>
-<meta name="description" content="Convertissez vos images JPG et PNG en un document PDF, une page A4 par image. Gratuit et 100% privé : tout se fait dans votre navigateur.">
+<title>JPG to PDF — PdfBleu.com</title>
+<meta name="description" content="Convert your JPG and PNG images into a PDF document, one A4 page per image. Free and 100% private: everything happens in your browser.">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -42,33 +42,33 @@ footer a{color:#3F51B5;text-decoration:none}
 <body>
 <header>
 <a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
-<a class="home" href="index.html">Accueil</a>
+<a class="home" href="index.html">Home</a>
 </header>
 <main>
-<h1>JPG en PDF</h1>
-<p class="intro">Transformez vos images JPG et PNG en un seul document PDF. Chaque image devient une page A4, centrée avec des marges, dans l'ordre de la liste.</p>
-<div class="private-note">🔒 Vos images ne quittent jamais votre appareil : la conversion se fait entièrement dans votre navigateur.</div>
+<h1>JPG to PDF</h1>
+<p class="intro">Turn your JPG and PNG images into a single PDF document. Each image becomes an A4 page, centered with margins, in the order of the list.</p>
+<div class="private-note">🔒 Your images never leave your device: the conversion happens entirely in your browser.</div>
 
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 
 <div class="tool">
 <div class="drop" id="drop">
 <span class="icon">🖼️</span>
-<p>Glissez vos images JPG ou PNG ici</p>
-<small>ou touchez le bouton ci-dessous pour les choisir</small>
+<p>Drop your JPG or PNG images here</p>
+<small>or tap the button below to select them</small>
 </div>
 <input type="file" id="fileInput" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple hidden>
-<button class="pick" id="pickBtn" type="button">Choisir des images</button>
+<button class="pick" id="pickBtn" type="button">Select images</button>
 <ul class="files" id="fileList"></ul>
-<div class="status" id="status">Traitement en cours… veuillez patienter.</div>
+<div class="status" id="status">Processing… please wait.</div>
 <div class="error" id="error"></div>
-<button class="action" id="goBtn" type="button" disabled>Convertir et télécharger</button>
+<button class="action" id="goBtn" type="button" disabled>Convert and download</button>
 </div>
 
-<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluide</small></div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
 </main>
 <footer>
-<p>© 2026 PdfBleu.com — <a href="privacy.html">Confidentialité</a> · <a href="index.html">Tous les outils</a></p>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
 </footer>
 <script>
 (function () {
@@ -95,7 +95,7 @@ footer a{color:#3F51B5;text-decoration:none}
       name.textContent = (i + 1) + '. ' + f.name;
       var rm = document.createElement('button');
       rm.type = 'button';
-      rm.textContent = 'Retirer';
+      rm.textContent = 'Remove';
       rm.addEventListener('click', function () {
         files.splice(i, 1);
         render();
@@ -111,7 +111,7 @@ footer a{color:#3F51B5;text-decoration:none}
     var added = 0;
     Array.prototype.forEach.call(fileListIn, function (f) {
       if (!isImage(f)) {
-        showError('« ' + f.name + ' » n\'est pas une image JPG ou PNG. Veuillez choisir uniquement des images JPG ou PNG.');
+        showError('"' + f.name + '" is not a JPG or PNG image. Please select only JPG or PNG images.');
         return;
       }
       files.push(f);
@@ -133,7 +133,7 @@ footer a{color:#3F51B5;text-decoration:none}
 
   goBtn.addEventListener('click', async function () {
     showError('');
-    if (!files.length) { showError('Veuillez ajouter au moins une image.'); return; }
+    if (!files.length) { showError('Please add at least one image.'); return; }
     goBtn.disabled = true;
     status.style.display = 'block';
     try {
@@ -172,7 +172,7 @@ footer a{color:#3F51B5;text-decoration:none}
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
     } catch (err) {
-      showError('Une erreur est survenue pendant la conversion. Une des images est peut-être dans un format non pris en charge. Veuillez réessayer avec des images JPG ou PNG.');
+      showError('An error occurred during the conversion. One of the images may be in an unsupported format. Please try again with JPG or PNG images.');
     } finally {
       status.style.display = 'none';
       goBtn.disabled = files.length < 1;
