@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel to PDF — PdfBleu.com</title>
+<meta name="description" content="Convert your Excel (.xlsx) spreadsheets to PDF for free, with no sign-up, right in your browser: every sheet becomes clean, printable PDF pages and nothing is ever sent to a server.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#217346;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(33,115,70,.35)}
+.doctile .dw{font-size:32px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar label.flabel{display:block;font-weight:700;color:#1a237e;font-size:15px;margin:12px 0 6px}
+.pagesel{width:100%;padding:11px 12px;border:1.5px solid #c5cae9;border-radius:10px;font-size:15px;background:#fff;color:#21243d;margin-bottom:6px;cursor:pointer}
+.pagesel:focus{outline:none;border-color:#3F51B5}
+.check{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:#21243d;margin:12px 0;cursor:pointer;line-height:1.45}
+.check input{margin-top:3px;width:17px;height:17px;accent-color:#3F51B5;flex-shrink:0}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#C2E5C3"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#5EA162"/><path d="M10 10 L16 16" stroke="#2E7237" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#2E7237"/><text x="30" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">X</text></svg></span>
+<h1>Convert Excel to PDF</h1>
+<p class="subtitle">Make your Excel spreadsheets (.xlsx) easy to read and print by converting them to PDF.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the conversion happens entirely in your browser, nothing is ever sent to a server.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Converting…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select an Excel file</button>
+<p class="droptxt">or drop your .xlsx spreadsheet here</p>
+</div>
+<input type="file" id="fileInput" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">X</span><span class="dext">XLSX</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Excel to PDF</h2>
+<p>Turn each sheet of your workbook into clean, print-ready PDF pages. Pick the page setup that suits your table, then press Convert.</p>
+<label class="flabel" for="optPageSize">Page size</label>
+<select class="pagesel" id="optPageSize">
+<option value="A4" selected>A4</option>
+<option value="Letter">Letter</option>
+<option value="Legal">Legal</option>
+</select>
+<label class="flabel" for="optOrientation">Orientation</label>
+<select class="pagesel" id="optOrientation">
+<option value="auto" selected>Auto — use each sheet's settings</option>
+<option value="portrait">Portrait</option>
+<option value="landscape">Landscape</option>
+</select>
+<label class="check"><input type="checkbox" id="optFit" checked><span>Fit sheet to page width — scale the table down so all columns fit on one page wide. When this is off, wide sheets continue on extra pages side by side.</span></label>
+<label class="check"><input type="checkbox" id="optGrid"><span>Print gridlines</span></label>
+<div class="warnnote">⚠ <strong>Print-style redraw:</strong> your workbook is read and redrawn as a print-style table right here in your browser. Cell text, number formats, bold and colors, fill colors, borders and merged cells are kept for most everyday spreadsheets. Charts, images and drawings, pivot tables, macros and complex conditional formatting are not reproduced. Formulas are printed with the values Excel last saved — they are not recalculated. Arabic and right-to-left text, and some special characters, may be replaced by “?”. Only <strong>.xlsx</strong> is accepted: an old .xls file must first be saved as .xlsx.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convert another file</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to convert an Excel spreadsheet to PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choose your spreadsheet</h3><p>Click the select button or drop your .xlsx file into the area provided. One workbook is all it takes.</p></div>
+<div class="step"><span class="num">2</span><h3>Set the page options</h3><p>Choose the page size and orientation, and decide whether each sheet should be fitted to the page width or spread across extra pages.</p></div>
+<div class="step"><span class="num">3</span><h3>Download the PDF</h3><p>Press “Convert to PDF”, then save your file: every sheet becomes clean PDF pages, ready to share or print.</p></div>
+</div>
+<div class="seo">
+<p>Our Excel to PDF converter is completely free and works with no sign-up. Unlike classic services, your spreadsheet is never sent to a server: reading the .xlsx file and creating the PDF happen on your phone or computer, which protects your budgets, invoices, price lists and confidential figures.</p>
+<p>The converter reads every sheet of your workbook — cell values and formulas as last saved by Excel, number formats such as percentages, currencies and dates, bold text, fill colors, borders and merged cells — then redraws the tables as printable PDF pages with selectable text. You control the page size, the orientation and whether wide tables are fitted to a single page width.</p>
+</div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="convertBtn" type="button">Convert to PDF</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="xlsxEngine">
+/* =====================================================================
+   Excel (.xlsx) -> PDF conversion engine, 100% local.
+   The workbook is unzipped with JSZip, its XML parts are read
+   (workbook, shared strings, styles, worksheets), then each sheet is
+   redrawn as a print-style table with pdf-lib: the text of the PDF
+   produced stays selectable. No data ever leaves the device.
+   Exposed: XlsxToPdf.convertXlsxToPdf(data, options) and
+   XlsxToPdf.outputPdfName(name).
+   ===================================================================== */
+var XlsxToPdf = (function () {
+  'use strict';
+
+  var MSG_LEGACY = 'This file is in the old .xls format. Open it in Excel (or a free spreadsheet app) and save it as .xlsx, then try again.';
+  var MSG_CORRUPT = 'This file could not be read. It may be damaged or it is not a real .xlsx workbook.';
+  var MSG_EMPTY = 'This workbook does not seem to contain any data to convert. If it is a scanned document or an image, this tool cannot read it.';
+
+  function fail(code, msg) { var e = new Error(msg); e.code = code; return e; }
+
+  // ---------- Generic XML helpers (prefix-agnostic, localName based) ----------
+  function xKids(el, name) {
+    var out = [];
+    if (!el || !el.childNodes) return out;
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var n = el.childNodes[i];
+      if (n.nodeType === 1 && (!name || n.localName === name)) out.push(n);
+    }
+    return out;
+  }
+  function xFirst(el, name) { var k = xKids(el, name); return k.length ? k[0] : null; }
+  function xDesc(el, name) {
+    var out = [];
+    if (!el || !el.getElementsByTagName) return out;
+    var all = el.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) if (all[i].localName === name) out.push(all[i]);
+    return out;
+  }
+  function xAttr(el, name) {
+    if (!el || !el.getAttribute) return null;
+    var v = el.getAttribute(name);
+    if (v != null) return v;
+    var prefs = ['r:', 'a:', ''];
+    for (var i = 0; i < prefs.length; i++) { v = el.getAttribute(prefs[i] + name); if (v != null) return v; }
+    if (el.getAttributeNS) { try { var v2 = el.getAttributeNS('*', name); if (v2 != null) return v2; } catch (e) {} }
+    return null;
+  }
+  function parseXml(str) { return new DOMParser().parseFromString(str, 'text/xml'); }
+  function textOf(el) { return el ? (el.textContent || '') : ''; }
+  function numOr(v, d) { var n = parseFloat(v); return isFinite(n) ? n : d; }
+
+  function colLettersToIndex(letters) {
+    var n = 0;
+    for (var i = 0; i < letters.length; i++) n = n * 26 + (letters.charCodeAt(i) - 64);
+    return n; // 1-based
+  }
+  function parseRef(ref) {
+    var m = /^([A-Z]+)([0-9]+)$/i.exec(String(ref || '').trim());
+    if (!m) return null;
+    return { col: colLettersToIndex(m[1].toUpperCase()), row: parseInt(m[2], 10) };
+  }
+  function cellKey(col, row) { return col + ',' + row; }
+
+  // ARGB (AARRGGBB) or RRGGBB -> 'RRGGBB' uppercase, or null.
+  function argbToHex(v) {
+    if (!v || typeof v !== 'string') return null;
+    var s = v.trim();
+    if (/^[0-9A-Fa-f]{8}$/.test(s)) s = s.slice(2);
+    if (/^[0-9A-Fa-f]{6}$/.test(s)) return s.toUpperCase();
+    return null;
+  }
+  function colorHexOf(container) {
+    if (!container) return null;
+    var c = xFirst(container, 'color');
+    if (!c) return null;
+    return argbToHex(c.getAttribute('rgb'));
+  }
+
+  // ---------- Number formats ----------
+  var BUILTIN_FMT = {
+    0: 'General', 1: '0', 2: '0.00', 3: '#,##0', 4: '#,##0.00',
+    9: '0%', 10: '0.00%', 11: '0.00E+00', 12: '# ?/?', 13: '# ??/??',
+    14: 'mm-dd-yy', 15: 'd-mmm-yy', 16: 'd-mmm', 17: 'mmm-yy',
+    18: 'h:mm AM/PM', 19: 'h:mm:ss AM/PM', 20: 'h:mm', 21: 'h:mm:ss',
+    22: 'm/d/yy h:mm', 37: '#,##0 ;(#,##0)', 38: '#,##0 ;[Red](#,##0)',
+    39: '#,##0.00;(#,##0.00)', 40: '#,##0.00;[Red](#,##0.00)',
+    44: '_("$"* #,##0.00_);_("$"* \\(#,##0.00\\);_("$"* "-"??_);_(@_)',
+    45: 'mm:ss', 46: '[h]:mm:ss', 47: 'mmss.0', 49: '@'
+  };
+  var DATE_BUILTIN_IDS = { 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1, 45: 1, 46: 1, 47: 1 };
+  function stripFmtNoise(code) {
+    var s = String(code || '');
+    s = s.replace(/"[^"]*"/g, '');
+    s = s.replace(/\[[^\]]*\]/g, '');
+    s = s.replace(/\\./g, '');
+    s = s.replace(/_./g, '');
+    return s;
+  }
+  function isDateFormat(code, numFmtId) {
+    if (DATE_BUILTIN_IDS[numFmtId]) return true;
+    if (!code || code === 'General' || code === '@') return false;
+    var s = stripFmtNoise(code).toLowerCase();
+    if (/yyyy|yy/.test(s)) return true;
+    if (/mmm/.test(s)) return true;
+    if (/h\s*:\s*mm/.test(s) || /mm\s*:\s*ss/.test(s)) return true;
+    if (/am\/pm/.test(s)) return true;
+    if (/\bd\b/.test(s) && /\bm\b/.test(s)) return true;
+    return false;
+  }
+  var MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function formatDateValue(serial, code) {
+    var ms = Math.round((serial - 25569) * 86400000);
+    var dt = new Date(ms);
+    if (!isFinite(dt.getTime())) return String(serial);
+    var year = dt.getUTCFullYear(), month = dt.getUTCMonth(), day = dt.getUTCDate();
+    var hrs = dt.getUTCHours(), mins = dt.getUTCMinutes(), secs = dt.getUTCSeconds();
+    var fmt = String(code || 'm/d/yyyy').split(';')[0];
+    // Tokenise the format, longest tokens first, keeping quoted literals.
+    var out = '', i = 0;
+    function isHContext() { return /h/i.test(out) || /h/i.test(fmt.slice(Math.max(0, i - 4), i)); }
+    while (i < fmt.length) {
+      var ch = fmt.charAt(i);
+      if (ch === '"') { var j = fmt.indexOf('"', i + 1); if (j < 0) j = fmt.length; out += fmt.slice(i + 1, j); i = j + 1; continue; }
+      if (ch === '\\') { out += fmt.charAt(i + 1); i += 2; continue; }
+      var rest = fmt.slice(i).toLowerCase();
+      if (rest.indexOf('mmmm') === 0) { out += MONTHS_FULL[month]; i += 4; continue; }
+      if (rest.indexOf('mmm') === 0) { out += MONTHS_SHORT[month]; i += 3; continue; }
+      if (rest.indexOf('yyyy') === 0) { out += String(year); i += 4; continue; }
+      if (rest.indexOf('yy') === 0) { out += pad2(year % 100); i += 2; continue; }
+      if (rest.indexOf('am/pm') === 0) { out += (hrs < 12 ? 'AM' : 'PM'); i += 5; continue; }
+      if (rest.indexOf('mm') === 0) {
+        // "mm" right after an hour token means minutes.
+        var prev = out.replace(/[^a-z0-9]/gi, '');
+        var minutes = /h$|hh$/.test(fmt.slice(0, i).toLowerCase().replace(/[^a-z]/g, '').slice(-2)) || fmt.slice(0, i).indexOf(':') >= 0 && i > 0 && fmt.charAt(i - 1) === ':';
+        out += pad2(minutes || fmt.charAt(i - 1) === ':' ? mins : month + 1);
+        i += 2; continue;
+      }
+      if (ch === 'm' || ch === 'M') {
+        var afterColon = fmt.charAt(i - 1) === ':';
+        out += String(afterColon ? mins : month + 1); i++; continue;
+      }
+      if (rest.indexOf('dd') === 0) { out += pad2(day); i += 2; continue; }
+      if (ch === 'd' || ch === 'D') { out += String(day); i++; continue; }
+      if (rest.indexOf('hh') === 0) {
+        var h12 = /am\/pm/i.test(fmt) ? ((hrs % 12) || 12) : hrs;
+        out += pad2(h12); i += 2; continue;
+      }
+      if (ch === 'h' || ch === 'H') {
+        var hh = /am\/pm/i.test(fmt) ? ((hrs % 12) || 12) : hrs;
+        out += String(hh); i++; continue;
+      }
+      if (rest.indexOf('ss') === 0) { out += pad2(secs); i += 2; continue; }
+      if (ch === '[' || ch === ']') { // [h] style elapsed tokens: skip bracket, keep letter handling simple
+        var close = fmt.indexOf(']', i); i = (close < 0 ? i + 1 : close + 1); continue;
+      }
+      out += ch; i++;
+    }
+    out = out.replace(/\s+/g, ' ').trim();
+    return out || (pad2(month + 1) + '/' + pad2(day) + '/' + year);
+  }
+  function decimalsInFormat(code) {
+    var s = stripFmtNoise(String(code || '').split(';')[0]);
+    var dot = s.indexOf('.');
+    if (dot < 0) return 0;
+    var n = 0;
+    for (var i = dot + 1; i < s.length; i++) { var c = s.charAt(i); if (c === '0' || c === '#' || c === '?') n++; else break; }
+    return n;
+  }
+  function generalNumber(v) {
+    if (!isFinite(v)) return String(v);
+    if (Math.abs(v - Math.round(v)) < 1e-10 && Math.abs(v) < 1e15) return String(Math.round(v));
+    var s = String(Number(v.toFixed(10)));
+    return s;
+  }
+  function formatNumber(v, code, numFmtId) {
+    if (typeof v !== 'number' || !isFinite(v)) return String(v);
+    if (!code || code === 'General') return generalNumber(v);
+    if (isDateFormat(code, numFmtId)) return formatDateValue(v, code === 'mm-dd-yy' ? 'm/d/yyyy' : code);
+    var firstSection = String(code).split(';')[0];
+    var clean = stripFmtNoise(firstSection);
+    var negParen = /\(/.test(firstSection) && /\)/.test(firstSection) && v < 0;
+    var abs = Math.abs(v);
+    var body;
+    if (/%/.test(clean)) {
+      body = (abs * 100).toFixed(decimalsInFormat(code)) + '%';
+    } else if (/e\+/i.test(clean)) {
+      body = abs.toExponential(2);
+    } else if (/#,##0/.test(clean)) {
+      var dec = decimalsInFormat(code);
+      body = abs.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    } else if (/^0(\.0+)?$/.test(clean.trim())) {
+      body = abs.toFixed(decimalsInFormat(code));
+    } else if (clean.indexOf('?/?') >= 0) {
+      body = generalNumber(abs);
+    } else if (clean.trim() === '@') {
+      body = generalNumber(abs);
+    } else {
+      body = generalNumber(abs);
+    }
+    // Currency symbol present in the format is kept as a prefix.
+    var cur = null;
+    var cm = /[\$\u20AC\u00A3]/.exec(String(code));
+    if (cm) cur = cm[0];
+    var prefix = cur ? cur : '';
+    var outStr = prefix + body;
+    if (negParen) return '(' + outStr + ')';
+    if (v < 0) return '-' + outStr;
+    return outStr;
+  }
+
+  // ---------- Styles ----------
+  function parseStyles(doc) {
+    var styles = { numFmts: {}, fonts: [], fills: [], borders: [], xfs: [] };
+    if (!doc || !doc.documentElement) return styles;
+    var numFmtsEl = xDesc(doc, 'numFmts')[0];
+    if (numFmtsEl) xKids(numFmtsEl, 'numFmt').forEach(function (nf) {
+      var id = parseInt(nf.getAttribute('numFmtId'), 10);
+      var code = nf.getAttribute('formatCode');
+      if (isFinite(id) && code) styles.numFmts[id] = code;
+    });
+    var fontsEl = xDesc(doc, 'fonts')[0];
+    if (fontsEl) xKids(fontsEl, 'font').forEach(function (f) {
+      var sz = xFirst(f, 'sz');
+      var nm = xFirst(f, 'name');
+      var colEl = xFirst(f, 'color');
+      styles.fonts.push({
+        bold: !!xFirst(f, 'b'),
+        italic: !!xFirst(f, 'i'),
+        underline: !!xFirst(f, 'u'),
+        size: sz ? numOr(sz.getAttribute('val'), 11) : 11,
+        name: nm ? (nm.getAttribute('val') || '') : '',
+        color: colEl ? argbToHex(colEl.getAttribute('rgb')) : null
+      });
+    });
+    var fillsEl = xDesc(doc, 'fills')[0];
+    if (fillsEl) xKids(fillsEl, 'fill').forEach(function (fl) {
+      var pf = xFirst(fl, 'patternFill');
+      var hex = null;
+      if (pf) {
+        var pt = pf.getAttribute('patternType');
+        if (pt === 'solid') {
+          var fg = xFirst(pf, 'fgColor');
+          if (fg) hex = argbToHex(fg.getAttribute('rgb'));
+        }
+      }
+      styles.fills.push(hex);
+    });
+    var bordersEl = xDesc(doc, 'borders')[0];
+    if (bordersEl) xKids(bordersEl, 'border').forEach(function (b) {
+      function side(name) {
+        var s = xFirst(b, name);
+        if (!s) return null;
+        var st = s.getAttribute('style');
+        if (!st || st === 'none') return null;
+        var colEl = xFirst(s, 'color');
+        return { style: st, color: colEl ? argbToHex(colEl.getAttribute('rgb')) : null };
+      }
+      styles.borders.push({ left: side('left'), right: side('right'), top: side('top'), bottom: side('bottom') });
+    });
+    var xfsEl = xDesc(doc, 'cellXfs')[0];
+    if (xfsEl) xKids(xfsEl, 'xf').forEach(function (xf) {
+      var al = xFirst(xf, 'alignment');
+      styles.xfs.push({
+        numFmtId: parseInt(xf.getAttribute('numFmtId') || '0', 10) || 0,
+        fontId: parseInt(xf.getAttribute('fontId') || '0', 10) || 0,
+        fillId: parseInt(xf.getAttribute('fillId') || '0', 10) || 0,
+        borderId: parseInt(xf.getAttribute('borderId') || '0', 10) || 0,
+        alignment: al ? {
+          horizontal: al.getAttribute('horizontal') || null,
+          vertical: al.getAttribute('vertical') || null,
+          wrapText: al.getAttribute('wrapText') === '1' || al.getAttribute('wrapText') === 'true'
+        } : null
+      });
+    });
+    if (!styles.fonts.length) styles.fonts.push({ bold: false, italic: false, underline: false, size: 11, name: 'Calibri', color: null });
+    if (!styles.xfs.length) styles.xfs.push({ numFmtId: 0, fontId: 0, fillId: 0, borderId: 0, alignment: null });
+    return styles;
+  }
+  function formatCodeFor(styles, xf) {
+    if (!xf) return 'General';
+    if (styles.numFmts[xf.numFmtId] != null) return styles.numFmts[xf.numFmtId];
+    return BUILTIN_FMT[xf.numFmtId] || 'General';
+  }
+
+  // ---------- Workbook / rels ----------
+  function parseRels(doc) {
+    var map = {};
+    if (!doc || !doc.getElementsByTagName) return map;
+    var all = doc.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el.localName !== 'Relationship') continue;
+      var id = el.getAttribute('Id'), target = el.getAttribute('Target');
+      if (id && target) map[id] = target;
+    }
+    return map;
+  }
+  function resolveSheetPath(target) {
+    var t = String(target || '');
+    if (t.charAt(0) === '/') return t.slice(1);
+    if (t.indexOf('xl/') === 0) return t;
+    // Resolve relative to xl/
+    var parts = ('xl/' + t).split('/'), out = [];
+    parts.forEach(function (p) { if (p === '..') out.pop(); else if (p !== '.' && p !== '') out.push(p); });
+    return out.join('/');
+  }
+
+  // ---------- Sheet parsing ----------
+  function parseSheet(doc, sharedStrings, styles, stats) {
+    var sheet = {
+      name: '', pageSetup: null, cols: {}, defaultColWidth: 8.43,
+      merges: {}, covered: {}, cells: {}, maxCol: 0, maxRow: 0,
+      rowInfo: {}, hiddenCols: {}, hiddenRows: {}, hasData: false
+    };
+    if (!doc || !doc.documentElement) return sheet;
+    var root = doc.documentElement;
+    var fmtPr = xDesc(root, 'sheetFormatPr')[0];
+    if (fmtPr) {
+      sheet.defaultColWidth = numOr(fmtPr.getAttribute('defaultColWidth'), numOr(fmtPr.getAttribute('baseColWidth'), 8.43));
+    }
+    var ps = xDesc(root, 'pageSetup')[0];
+    if (ps) {
+      sheet.pageSetup = {
+        paperSize: parseInt(ps.getAttribute('paperSize') || '0', 10) || 0,
+        orientation: ps.getAttribute('orientation') || null,
+        fitToWidth: parseInt(ps.getAttribute('fitToWidth') || '0', 10) || 0
+      };
+    }
+    var colsEl = xDesc(root, 'cols')[0];
+    if (colsEl) xKids(colsEl, 'col').forEach(function (c) {
+      var min = parseInt(c.getAttribute('min') || '0', 10);
+      var max = parseInt(c.getAttribute('max') || '0', 10);
+      var w = numOr(c.getAttribute('width'), sheet.defaultColWidth);
+      var hidden = c.getAttribute('hidden') === '1' || c.getAttribute('hidden') === 'true';
+      if (!isFinite(min) || !min) return;
+      if (!isFinite(max) || !max) max = min;
+      for (var ci = min; ci <= max; ci++) {
+        sheet.cols[ci] = w;
+        if (hidden) sheet.hiddenCols[ci] = true;
+      }
+    });
+    var mergesEl = xDesc(root, 'mergeCells')[0];
+    if (mergesEl) xKids(mergesEl, 'mergeCell').forEach(function (mc) {
+      var ref = mc.getAttribute('ref') || '';
+      var parts = ref.split(':');
+      var a = parseRef(parts[0]);
+      var b = parts[1] ? parseRef(parts[1]) : a;
+      if (!a || !b) return;
+      var c1 = Math.min(a.col, b.col), c2 = Math.max(a.col, b.col);
+      var r1 = Math.min(a.row, b.row), r2 = Math.max(a.row, b.row);
+      sheet.merges[cellKey(c1, r1)] = { colSpan: c2 - c1 + 1, rowSpan: r2 - r1 + 1 };
+      for (var cc = c1; cc <= c2; cc++) for (var rr = r1; rr <= r2; rr++) {
+        if (cc !== c1 || rr !== r1) sheet.covered[cellKey(cc, rr)] = true;
+      }
+      if (c2 > sheet.maxCol) sheet.maxCol = c2;
+      if (r2 > sheet.maxRow) sheet.maxRow = r2;
+    });
+    var dataEl = xDesc(root, 'sheetData')[0];
+    if (dataEl) xKids(dataEl, 'row').forEach(function (rowEl) {
+      var rIdx = parseInt(rowEl.getAttribute('r') || '0', 10);
+      var cellsInRow = xKids(rowEl, 'c');
+      if (!isFinite(rIdx) || !rIdx) {
+        // Fall back: next row after the current max.
+        rIdx = sheet.maxRow + 1;
+      }
+      var hidden = rowEl.getAttribute('hidden') === '1' || rowEl.getAttribute('hidden') === 'true';
+      if (hidden) sheet.hiddenRows[rIdx] = true;
+      var ht = rowEl.getAttribute('ht');
+      sheet.rowInfo[rIdx] = { height: (ht != null && rowEl.getAttribute('customHeight') !== '0') ? numOr(ht, 15) : null, hidden: hidden };
+      if (rIdx > sheet.maxRow) sheet.maxRow = rIdx;
+      cellsInRow.forEach(function (cEl, ci) {
+        var ref = parseRef(cEl.getAttribute('r') || '');
+        var col = ref ? ref.col : (ci + 1);
+        var row = ref ? ref.row : rIdx;
+        var t = cEl.getAttribute('t') || 'n';
+        var sIdx = parseInt(cEl.getAttribute('s') || '0', 10);
+        if (!isFinite(sIdx)) sIdx = 0;
+        var xf = styles.xfs[sIdx] || styles.xfs[0];
+        var vEl = xFirst(cEl, 'v');
+        var isEl = xFirst(cEl, 'is');
+        var fEl = xFirst(cEl, 'f');
+        if (fEl) stats.formulas++;
+        var raw = null, isNumber = false, isBool = false;
+        if (t === 's') {
+          var si = vEl ? parseInt(textOf(vEl), 10) : NaN;
+          raw = (isFinite(si) && sharedStrings[si] != null) ? sharedStrings[si] : '';
+        } else if (t === 'inlineStr') {
+          if (isEl) {
+            var ts = xDesc(isEl, 't');
+            raw = ts.map(function (n) { return textOf(n); }).join('');
+          } else raw = '';
+        } else if (t === 'str' || t === 'e') {
+          raw = vEl ? textOf(vEl) : '';
+        } else if (t === 'b') {
+          var bv = vEl ? textOf(vEl) : '0';
+          raw = (bv === '1' || bv.toLowerCase() === 'true') ? 'TRUE' : 'FALSE';
+          isBool = true;
+        } else {
+          if (vEl && textOf(vEl) !== '') {
+            var nv = parseFloat(textOf(vEl));
+            if (isFinite(nv)) { raw = nv; isNumber = true; } else raw = textOf(vEl);
+          } else if (isEl) {
+            var ts2 = xDesc(isEl, 't');
+            raw = ts2.map(function (n) { return textOf(n); }).join('');
+          } else if (fEl && vEl) {
+            raw = textOf(vEl);
+          } else {
+            raw = null;
+          }
+        }
+        var cell = {
+          col: col, row: row, raw: raw, type: t, isNumber: isNumber, isBool: isBool,
+          xf: xf, styleIndex: sIdx, hasFormula: !!fEl
+        };
+        sheet.cells[cellKey(col, row)] = cell;
+        if (col > sheet.maxCol) sheet.maxCol = col;
+        if (row > sheet.maxRow) sheet.maxRow = row;
+        if (raw !== null && raw !== '') sheet.hasData = true;
+      });
+    });
+    return sheet;
+  }
+
+  function displayTextFor(cell, styles) {
+    if (cell.raw === null || cell.raw === undefined) return '';
+    if (typeof cell.raw === 'number') return formatNumber(cell.raw, formatCodeFor(styles, cell.xf), cell.xf ? cell.xf.numFmtId : 0);
+    return String(cell.raw);
+  }
+
+  // ---------- Fonts / colours / sanitising ----------
+  var PAGE_SIZES = { A4: [595.28, 841.89], Letter: [612, 792], Legal: [612, 1008] };
+  var PAPER_TO_NAME = { 1: 'Letter', 5: 'Legal', 9: 'A4' };
+  var STD = {
+    helvetica: { r: 'Helvetica', b: 'HelveticaBold', i: 'HelveticaOblique', bi: 'HelveticaBoldOblique' },
+    times: { r: 'TimesRoman', b: 'TimesRomanBold', i: 'TimesRomanItalic', bi: 'TimesRomanBoldItalic' },
+    courier: { r: 'Courier', b: 'CourierBold', i: 'CourierOblique', bi: 'CourierBoldOblique' }
+  };
+  function familyOf(name) {
+    var n = String(name || '').toLowerCase();
+    if (/times|georgia|garamond|book/.test(n)) return 'times';
+    if (/courier|consolas|mono/.test(n)) return 'courier';
+    return 'helvetica';
+  }
+  function fontKeyFor(fontStyle) {
+    var fam = STD[familyOf(fontStyle ? fontStyle.name : '')] || STD.helvetica;
+    if (fontStyle && fontStyle.bold && fontStyle.italic) return fam.bi;
+    if (fontStyle && fontStyle.bold) return fam.b;
+    if (fontStyle && fontStyle.italic) return fam.i;
+    return fam.r;
+  }
+
+  var G = null; // {fonts:{}, nonLatin:0, colorCache:{}}
+  function hexColor(hex) {
+    if (!G.colorCache[hex]) {
+      G.colorCache[hex] = PDFLib.rgb(parseInt(hex.slice(0, 2), 16) / 255, parseInt(hex.slice(2, 4), 16) / 255, parseInt(hex.slice(4, 6), 16) / 255);
+    }
+    return G.colorCache[hex];
+  }
+  function sanitize(font, text) {
+    var s = String(text == null ? '' : text);
+    try { font.encodeText(s); return s; } catch (e) {}
+    if (!font.__badSet) font.__badSet = {};
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i);
+      // Surrogate pair: test as a pair; it will not encode in WinAnsi.
+      if (font.__badSet[ch]) { out += '?'; G.nonLatin++; continue; }
+      try { font.encodeText(ch); out += ch; }
+      catch (e2) { font.__badSet[ch] = true; out += '?'; G.nonLatin++; }
+    }
+    return out;
+  }
+  function wrapText(font, text, size, maxW) {
+    if (maxW <= 0) return [text];
+    var words = String(text).split(/\s+/).filter(function (w) { return w !== ''; });
+    if (!words.length) return [''];
+    var lines = [], cur = '';
+    words.forEach(function (w) {
+      var trial = cur ? cur + ' ' + w : w;
+      if (font.widthOfTextAtSize(trial, size) <= maxW || !cur) {
+        // A single word longer than the line is hard-split.
+        if (!cur && font.widthOfTextAtSize(w, size) > maxW) {
+          var rest = w;
+          while (font.widthOfTextAtSize(rest, size) > maxW && rest.length > 1) {
+            var fit = rest.length;
+            while (fit > 1 && font.widthOfTextAtSize(rest.slice(0, fit), size) > maxW) fit--;
+            lines.push(rest.slice(0, fit));
+            rest = rest.slice(fit);
+          }
+          cur = rest;
+        } else cur = trial;
+      } else { lines.push(cur); cur = w; }
+    });
+    if (cur || !lines.length) lines.push(cur);
+    return lines;
+  }
+  function truncateToFit(font, text, size, maxW) {
+    if (font.widthOfTextAtSize(text, size) <= maxW) return text;
+    var t = text;
+    while (t.length && font.widthOfTextAtSize(t, size) > maxW) t = t.slice(0, -1);
+    // Add an ellipsis only if a reasonable prefix remains.
+    if (text.length - t.length >= 1 && t.length >= 4) {
+      var p = t;
+      while (p.length && font.widthOfTextAtSize(p + '\u2026', size) > maxW) p = p.slice(0, -1);
+      if (p.length >= 3) return p + '\u2026';
+    }
+    return t;
+  }
+
+  function outputPdfName(fileName) {
+    var base = String(fileName || 'workbook').replace(/\.[^.]+$/, '');
+    if (!base) base = 'workbook';
+    return base + '.pdf';
+  }
+
+  // ---------- Main conversion ----------
+  async function convertXlsxToPdf(data, options) {
+    options = options || {};
+    var pageSizeOpt = options.pageSize || 'A4';
+    var orientationOpt = options.orientation || 'auto';
+    var fitToWidth = options.fitToWidth !== false;
+    var gridlines = !!options.gridlines;
+    var onProgress = typeof options.onProgress === 'function' ? options.onProgress : null;
+
+    var bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
+    if (bytes.length >= 8 && bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0 && bytes[4] === 0xA1 && bytes[5] === 0xB1 && bytes[6] === 0x1A && bytes[7] === 0xE1) {
+      throw fail('LEGACY', MSG_LEGACY);
+    }
+    var zip;
+    try { zip = await JSZip.loadAsync(bytes); }
+    catch (e) { throw fail('CORRUPT', MSG_CORRUPT); }
+
+    var wbFile = zip.file('xl/workbook.xml');
+    if (!wbFile) throw fail('CORRUPT', MSG_CORRUPT);
+    var wbDoc;
+    try { wbDoc = parseXml(await wbFile.async('string')); } catch (e2) { throw fail('CORRUPT', MSG_CORRUPT); }
+    if (!wbDoc || !wbDoc.documentElement) throw fail('CORRUPT', MSG_CORRUPT);
+    var rels = {};
+    var relsFile = zip.file('xl/_rels/workbook.xml.rels');
+    if (relsFile) { try { rels = parseRels(parseXml(await relsFile.async('string'))); } catch (e3) {} }
+    var sheetEls = xDesc(wbDoc, 'sheet');
+    if (!sheetEls.length) throw fail('CORRUPT', MSG_CORRUPT);
+    var sheetDefs = sheetEls.map(function (sh) {
+      var rid = xAttr(sh, 'id');
+      return { name: sh.getAttribute('name') || 'Sheet', rid: rid, target: rid ? rels[rid] : null };
+    });
+
+    // Shared strings
+    var sharedStrings = [];
+    var ssFile = zip.file('xl/sharedStrings.xml');
+    if (ssFile) {
+      try {
+        var ssDoc = parseXml(await ssFile.async('string'));
+        xDesc(ssDoc, 'si').forEach(function (si) {
+          var ts = xDesc(si, 't');
+          sharedStrings.push(ts.map(function (n) { return textOf(n); }).join(''));
+        });
+      } catch (e4) {}
+    }
+    // Styles
+    var styles = { numFmts: {}, fonts: [], fills: [], borders: [], xfs: [] };
+    var stFile = zip.file('xl/styles.xml');
+    if (stFile) { try { styles = parseStyles(parseXml(await stFile.async('string'))); } catch (e5) {} }
+    if (!styles.fonts.length) styles = parseStyles(null);
+
+    var stats = { pages: 0, sheets: sheetDefs.length, sheetNames: [], emptySheets: 0, formulas: 0, nonLatin: 0 };
+    var sheets = [];
+    for (var si2 = 0; si2 < sheetDefs.length; si2++) {
+      var def = sheetDefs[si2];
+      stats.sheetNames.push(def.name);
+      if (onProgress) onProgress('Reading sheet ' + (si2 + 1) + ' of ' + sheetDefs.length + ' \u2014 ' + def.name);
+      var path = def.target ? resolveSheetPath(def.target) : null;
+      var sfile = path ? zip.file(path) : null;
+      if (!sfile) {
+        // Fall back to the conventional name.
+        sfile = zip.file('xl/worksheets/sheet' + (si2 + 1) + '.xml');
+      }
+      if (!sfile) throw fail('CORRUPT', MSG_CORRUPT);
+      var sdoc;
+      try { sdoc = parseXml(await sfile.async('string')); } catch (e6) { throw fail('CORRUPT', MSG_CORRUPT); }
+      var parsed = parseSheet(sdoc, sharedStrings, styles, stats);
+      parsed.name = def.name;
+      sheets.push(parsed);
+    }
+    var anyData = sheets.some(function (s) { return s.hasData; });
+    if (!anyData) throw fail('EMPTY', MSG_EMPTY);
+
+    // PDF document and fonts
+    G = { fonts: {}, nonLatin: 0, colorCache: {} };
+    var pdf = await PDFLib.PDFDocument.create();
+    var fontKeys = {};
+    Object.keys(STD).forEach(function (fam) {
+      ['r', 'b', 'i', 'bi'].forEach(function (v) { fontKeys[STD[fam][v]] = true; });
+    });
+    var fkList = Object.keys(fontKeys);
+    for (var fi = 0; fi < fkList.length; fi++) {
+      G.fonts[fkList[fi]] = await pdf.embedFont(PDFLib.StandardFonts[fkList[fi]]);
+    }
+    var headerFont = G.fonts['HelveticaBold'];
+    var MARGIN = 36;
+
+    sheets.forEach(function (sheet) {
+      // --- Page geometry for this sheet ---
+      // In Auto mode the sheet's own paperSize (when it is Letter/Legal/A4)
+      // wins over the option, and its orientation is used; otherwise the
+      // caller's page size / orientation choices apply.
+      var sizeName = pageSizeOpt;
+      var orient = orientationOpt;
+      if (orientationOpt === 'auto') {
+        if (sheet.pageSetup) {
+          if (PAPER_TO_NAME[sheet.pageSetup.paperSize]) sizeName = PAPER_TO_NAME[sheet.pageSetup.paperSize];
+          orient = sheet.pageSetup.orientation === 'landscape' ? 'landscape' : 'portrait';
+        } else orient = 'portrait';
+      }
+      var dims = PAGE_SIZES[sizeName] || PAGE_SIZES.A4;
+      var pageW = dims[0], pageH = dims[1];
+      if (orient === 'landscape') { var tmp = pageW; pageW = pageH; pageH = tmp; }
+      var usableW = pageW - MARGIN * 2;
+      var usableH = pageH - MARGIN * 2;
+      var multiSheet = sheets.length > 1;
+      var headerReserve = multiSheet ? 22 : 0;
+
+      if (!sheet.hasData) {
+        stats.emptySheets++;
+        var bp = pdf.addPage([pageW, pageH]);
+        stats.pages++;
+        if (multiSheet) {
+          var hn = sanitize(headerFont, sheet.name);
+          bp.drawText(hn, { x: MARGIN, y: pageH - MARGIN - 12, size: 12, font: headerFont, color: hexColor('1A237E') });
+        }
+        return;
+      }
+
+      // --- Visible columns / rows in the used range ---
+      var visCols = [];
+      for (var c = 1; c <= sheet.maxCol; c++) if (!sheet.hiddenCols[c]) visCols.push(c);
+      var visRows = [];
+      for (var r = 1; r <= sheet.maxRow; r++) if (!sheet.hiddenRows[r]) visRows.push(r);
+      if (!visCols.length || !visRows.length) {
+        stats.emptySheets++;
+        pdf.addPage([pageW, pageH]); stats.pages++;
+        return;
+      }
+      // Column widths in points: Excel width units * 7 + 5, capped at usable width.
+      var colW = {};
+      var totalW = 0;
+      visCols.forEach(function (cc) {
+        var wUnits = sheet.cols[cc] != null ? sheet.cols[cc] : sheet.defaultColWidth;
+        var pt = wUnits * 7 + 5;
+        if (pt > usableW) pt = usableW;
+        if (pt < 12) pt = 12;
+        colW[cc] = pt; totalW += pt;
+      });
+      var scale = 1;
+      if (fitToWidth && totalW > usableW) scale = usableW / totalW;
+      var effColW = {};
+      visCols.forEach(function (cc) { effColW[cc] = colW[cc] * scale; });
+      // Row base heights
+      var rowH = {};
+      visRows.forEach(function (rr) {
+        var info = sheet.rowInfo[rr];
+        var h = (info && info.height != null) ? info.height : 15;
+        rowH[rr] = h * scale;
+      });
+      // Prepare display cells (sanitised text, fonts, wrapped lines)
+      function fontFor(cell) {
+        var fs = (cell.xf && styles.fonts[cell.xf.fontId]) || styles.fonts[0];
+        return fs;
+      }
+      function pdfFontFor(cell) { return G.fonts[fontKeyFor(fontFor(cell))]; }
+      function effFontSize(cell) { return (fontFor(cell).size || 11) * scale; }
+      function mergedWidth(cell) {
+        var mg = sheet.merges[cellKey(cell.col, cell.row)];
+        if (!mg) return effColW[cell.col] || 0;
+        var w = 0;
+        for (var cc2 = cell.col; cc2 < cell.col + mg.colSpan; cc2++) if (effColW[cc2] != null) w += effColW[cc2];
+        return w || (effColW[cell.col] || 0);
+      }
+      function mergedHeight(cell) {
+        var mg = sheet.merges[cellKey(cell.col, cell.row)];
+        if (!mg) return rowH[cell.row] || 15 * scale;
+        var h = 0;
+        for (var rr2 = cell.row; rr2 < cell.row + mg.rowSpan; rr2++) if (rowH[rr2] != null) h += rowH[rr2];
+        return h || (rowH[cell.row] || 15 * scale);
+      }
+      var prep = {}; // key -> {cell, text, font, size, lines, wrap}
+      Object.keys(sheet.cells).forEach(function (key) {
+        var cell = sheet.cells[key];
+        if (sheet.covered[key]) return;
+        if (sheet.hiddenCols[cell.col] || sheet.hiddenRows[cell.row]) return;
+        var display = displayTextFor(cell, styles);
+        var font = pdfFontFor(cell);
+        var size = effFontSize(cell);
+        var clean = sanitize(font, display);
+        var wrap = !!(cell.xf && cell.xf.alignment && cell.xf.alignment.wrapText);
+        var lines = null;
+        if (wrap && clean) {
+          lines = wrapText(font, clean, size, Math.max(10, mergedWidth(cell) - 6));
+          var needed = lines.length * size * 1.25 + 4;
+          var mg = sheet.merges[key];
+          if (!mg || mg.rowSpan <= 1) {
+            if (needed > (rowH[cell.row] || 0)) rowH[cell.row] = needed;
+          }
+        }
+        prep[key] = { cell: cell, text: clean, font: font, size: size, lines: lines, wrap: wrap };
+      });
+
+      // --- Horizontal chunks ---
+      var chunks = [];
+      if (fitToWidth) chunks = [visCols.slice()];
+      else {
+        var curChunk = [], curW = 0;
+        visCols.forEach(function (cc) {
+          var w = effColW[cc];
+          if (curChunk.length && curW + w > usableW) { chunks.push(curChunk); curChunk = []; curW = 0; }
+          curChunk.push(cc); curW += w;
+        });
+        if (curChunk.length) chunks.push(curChunk);
+      }
+
+      var firstPageOfSheet = true;
+      chunks.forEach(function (chunkCols) {
+        // --- Vertical pagination within this chunk ---
+        var segments = [], curSeg = [], curH = 0;
+        visRows.forEach(function (rr) {
+          var limit = usableH - (firstPageOfSheet && segments.length === 0 ? headerReserve : 0);
+          var rh = rowH[rr] || 15 * scale;
+          if (curSeg.length && curH + rh > limit) { segments.push(curSeg); curSeg = []; curH = 0; }
+          curSeg.push(rr); curH += rh;
+        });
+        if (curSeg.length || !segments.length) segments.push(curSeg);
+
+        segments.forEach(function (segRows) {
+          var page = pdf.addPage([pageW, pageH]);
+          stats.pages++;
+          var isFirst = firstPageOfSheet;
+          firstPageOfSheet = false;
+          var yTop = MARGIN;
+          if (isFirst && multiSheet) {
+            var hname = sanitize(headerFont, sheet.name);
+            page.drawText(hname, { x: MARGIN, y: pageH - yTop - 12, size: 12, font: headerFont, color: hexColor('1A237E') });
+            yTop += headerReserve;
+          }
+          // X positions for this chunk
+          var colX = {}, cx = MARGIN;
+          chunkCols.forEach(function (cc) { colX[cc] = cx; cx += effColW[cc]; });
+          var rowY = {}, ry = yTop;
+          segRows.forEach(function (rr) { rowY[rr] = ry; ry += rowH[rr]; });
+          var segRowSet = {};
+          segRows.forEach(function (rr) { segRowSet[rr] = true; });
+
+          function rectFor(cell, baseW, baseH) {
+            return { x: colX[cell.col], y: rowY[cell.row], w: baseW, h: baseH };
+          }
+          // Fills + gridlines for every position in the segment range
+          segRows.forEach(function (rr) {
+            chunkCols.forEach(function (cc) {
+              var key = cellKey(cc, rr);
+              if (sheet.covered[key]) return;
+              var cell = sheet.cells[key];
+              var x = colX[cc], y = rowY[rr], w = effColW[cc], h = rowH[rr];
+              if (cell && sheet.merges[key]) { w = mergedWidth(cell); h = mergedHeight(cell); }
+              if (cell && cell.xf) {
+                var fillHex = styles.fills[cell.xf.fillId];
+                if (fillHex && fillHex !== 'FFFFFF') {
+                  page.drawRectangle({ x: x, y: pageH - y - h, width: w, height: h, color: hexColor(fillHex) });
+                }
+              }
+              // Gridlines: only for cells without any explicit border.
+              if (gridlines) {
+                var hasBorder = false;
+                if (cell && cell.xf) {
+                  var bd = styles.borders[cell.xf.borderId];
+                  if (bd && (bd.left || bd.right || bd.top || bd.bottom)) hasBorder = true;
+                }
+                if (!hasBorder) {
+                  page.drawRectangle({ x: x, y: pageH - y - h, width: w, height: h, borderColor: hexColor('D9D9D9'), borderWidth: 0.5 });
+                }
+              }
+            });
+          });
+          // Explicit borders
+          segRows.forEach(function (rr) {
+            chunkCols.forEach(function (cc) {
+              var key = cellKey(cc, rr);
+              if (sheet.covered[key]) return;
+              var cell = sheet.cells[key];
+              if (!cell || !cell.xf) return;
+              var bd = styles.borders[cell.xf.borderId];
+              if (!bd) return;
+              var x = colX[cc], y = rowY[rr], w = effColW[cc], h = rowH[rr];
+              if (sheet.merges[key]) { w = mergedWidth(cell); h = mergedHeight(cell); }
+              function drawSide(side, x1, y1, x2, y2) {
+                if (!side) return;
+                var colr = side.color ? hexColor(side.color) : PDFLib.rgb(0.35, 0.35, 0.35);
+                page.drawLine({ start: { x: x1, y: y1 }, end: { x: x2, y: y2 }, thickness: 0.6, color: colr });
+              }
+              var topPdf = pageH - y, botPdf = pageH - y - h;
+              drawSide(bd.top, x, topPdf, x + w, topPdf);
+              drawSide(bd.bottom, x, botPdf, x + w, botPdf);
+              drawSide(bd.left, x, botPdf, x, topPdf);
+              drawSide(bd.right, x + w, botPdf, x + w, topPdf);
+            });
+          });
+          // Text
+          segRows.forEach(function (rr) {
+            chunkCols.forEach(function (cc) {
+              var key = cellKey(cc, rr);
+              var p = prep[key];
+              if (!p || !p.text) return;
+              var cell = p.cell;
+              var w = mergedWidth(cell), h = mergedHeight(cell);
+              var x = colX[cc], y = rowY[rr];
+              var font = p.font, size = p.size;
+              var availW = Math.max(4, w - 6);
+              var fs = fontFor(cell);
+              var colHex = (fs && fs.color) ? fs.color : '000000';
+              var color = hexColor(colHex);
+              var align = cell.xf && cell.xf.alignment && cell.xf.alignment.horizontal;
+              var lines;
+              if (p.wrap && p.lines) lines = p.lines;
+              else lines = [truncateToFit(font, p.text, size, availW)];
+              var lineH = size * 1.25;
+              var blockH = lines.length * lineH;
+              var blockTop = y + Math.max(0, (h - blockH) / 2);
+              lines.forEach(function (line, li) {
+                if (!line) return;
+                var tw = font.widthOfTextAtSize(line, size);
+                var tx = x + 3;
+                var a = align;
+                if (!a) a = cell.isNumber ? 'right' : (cell.isBool || cell.type === 'e' ? 'center' : 'left');
+                if (a === 'center' || a === 'centre') tx = x + Math.max(0, (w - tw) / 2);
+                else if (a === 'right') tx = x + w - 3 - tw;
+                var lineTop = blockTop + li * lineH;
+                var baseline = pageH - lineTop - size * 0.85 - (lineH - size) / 2;
+                page.drawText(line, { x: tx, y: baseline, size: size, font: font, color: color });
+                if (fs && fs.underline) {
+                  page.drawLine({ start: { x: tx, y: baseline - Math.max(1, size * 0.12) }, end: { x: tx + tw, y: baseline - Math.max(1, size * 0.12) }, thickness: Math.max(0.6, size * 0.06), color: color });
+                }
+              });
+            });
+          });
+        });
+      });
+    });
+
+    stats.nonLatin = G.nonLatin;
+    stats.formulas = stats.formulas;
+    var pdfBytes = await pdf.save({ useObjectStreams: false });
+    return { pdfBytes: pdfBytes, stats: stats };
+  }
+
+  return { convertXlsxToPdf: convertXlsxToPdf, outputPdfName: outputPdfName };
+})();
+</script>
+<script>
+(function () {
+  var MSG_LEGACY = 'This file is in the old .xls format. Open it in Excel (or a free spreadsheet app) and save it as .xlsx, then try again.';
+  var MSG_CORRUPT = 'This file could not be read. It may be damaged or it is not a real .xlsx workbook.';
+  var MSG_EMPTY = 'This workbook does not seem to contain any data to convert. If it is a scanned document or an image, this tool cannot read it.';
+
+  var current = null;
+  var resultUrl = null;
+  var resultName = '';
+
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var fileCard = document.getElementById('fileCard');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var fileWarnEl = document.getElementById('fileWarn');
+  var removeFileBtn = document.getElementById('removeFileBtn');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var convertBtn = document.getElementById('convertBtn');
+  var optPageSize = document.getElementById('optPageSize');
+  var optOrientation = document.getElementById('optOrientation');
+  var optFit = document.getElementById('optFit');
+  var optGrid = document.getElementById('optGrid');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  function updateBar() {
+    var show = !!current && !success.classList.contains('on');
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    if (show) barSummary.textContent = current.name + ' \u2022 ' + formatSize(current.file.size);
+    convertBtn.disabled = !(current && !current.bad);
+  }
+  function renderFileCard() {
+    if (!current) { fileCard.classList.remove('on'); return; }
+    fileCard.classList.add('on');
+    fileNameEl.textContent = current.name;
+    fileMetaEl.textContent = 'Excel workbook (.xlsx) \u2022 ' + formatSize(current.file.size);
+    if (current.bad === 'legacy') fileWarnEl.textContent = 'Old .xls format not supported';
+    else if (current.bad === 'corrupt') fileWarnEl.textContent = 'Unreadable or damaged file';
+    else fileWarnEl.textContent = '';
+  }
+  async function loadFile(f) {
+    showError('');
+    var name = f ? f.name : '';
+    if (/\.xlsx$/i.test(name)) {
+      current = { file: f, name: name, base: name.replace(/\.xlsx$/i, ''), buf: null, bad: null };
+      renderFileCard();
+      updateBar();
+      try {
+        var buf = await f.arrayBuffer();
+        current.buf = buf;
+        var u8 = new Uint8Array(buf);
+        if (u8.length >= 8 && u8[0] === 0xD0 && u8[1] === 0xCF && u8[2] === 0x11 && u8[3] === 0xE0 && u8[4] === 0xA1 && u8[5] === 0xB1 && u8[6] === 0x1A && u8[7] === 0xE1) {
+          current.bad = 'legacy';
+          showError(MSG_LEGACY);
+        } else {
+          var zip = await JSZip.loadAsync(u8);
+          if (!zip.file('xl/workbook.xml')) {
+            current.bad = 'corrupt';
+            showError(MSG_CORRUPT);
+          }
+        }
+      } catch (e) {
+        current.bad = 'corrupt';
+        showError(MSG_CORRUPT);
+      }
+    } else if (/\.xls$/i.test(name)) {
+      current = null;
+      showError(MSG_LEGACY);
+    } else {
+      current = null;
+      showError('"' + name + '" is not an Excel .xlsx workbook. Please choose a .xlsx file.');
+    }
+    renderFileCard();
+    updateBar();
+  }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) loadFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  removeFileBtn.addEventListener('click', function () {
+    current = null;
+    showError('');
+    renderFileCard();
+    updateBar();
+  });
+
+  convertBtn.addEventListener('click', async function () {
+    showError('');
+    if (!current) { showError('Please choose a .xlsx file first.'); return; }
+    if (current.bad === 'legacy') { showError(MSG_LEGACY); return; }
+    if (current.bad === 'corrupt') { showError(MSG_CORRUPT + ' Please choose another file.'); return; }
+    convertBtn.disabled = true;
+    processing.classList.add('on');
+    processingDetail.textContent = 'Reading the workbook\u2026';
+    try {
+      var buf = current.buf || await current.file.arrayBuffer();
+      var res = await XlsxToPdf.convertXlsxToPdf(buf, {
+        pageSize: optPageSize.value,
+        orientation: optOrientation.value,
+        fitToWidth: !!optFit.checked,
+        gridlines: !!optGrid.checked,
+        onProgress: function (detail) { processingDetail.textContent = detail || 'Converting\u2026'; }
+      });
+      var st = res.stats || {};
+      var blob = new Blob([res.pdfBytes], { type: 'application/pdf' });
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+      resultUrl = URL.createObjectURL(blob);
+      resultName = XlsxToPdf.outputPdfName(current.name);
+      resultList.innerHTML = '';
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = resultName;
+      var rm = document.createElement('div'); rm.className = 'rmeta';
+      rm.textContent = (st.pages || 0) + (st.pages === 1 ? ' page' : ' pages') + ' \u2022 ' + formatSize(blob.size);
+      left.appendChild(rn); left.appendChild(rm);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = resultUrl; a.download = resultName; a.textContent = 'Download the .pdf';
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+      successInfo.textContent = (st.sheets || 0) + (st.sheets === 1 ? ' sheet' : ' sheets') + ' converted into ' + (st.pages || 0) + (st.pages === 1 ? ' PDF page.' : ' PDF pages.');
+      var notes = [];
+      if (st.formulas > 0) notes.push(st.formulas + ' formula cell(s) were printed with the values last saved by Excel \u2014 formulas are not recalculated.');
+      if (st.nonLatin > 0) notes.push(st.nonLatin + ' character(s) could not be represented and were replaced by \'?\' (for example Arabic or right-to-left text).');
+      if (st.emptySheets > 0) notes.push(st.emptySheets + ' empty sheet(s) produced a blank page.');
+      if (notes.length) {
+        scanNote.style.display = 'block';
+        scanNote.textContent = '\u26A0 ' + notes.join(' ');
+      } else {
+        scanNote.style.display = 'none';
+      }
+      layout.style.display = 'none';
+      success.classList.add('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      var code = err && err.code;
+      if (code === 'LEGACY') showError(MSG_LEGACY);
+      else if (code === 'CORRUPT') showError(MSG_CORRUPT);
+      else if (code === 'EMPTY') showError(MSG_EMPTY);
+      else if (err && err.message && (err.message === MSG_LEGACY || err.message === MSG_CORRUPT || err.message === MSG_EMPTY)) showError(err.message);
+      else showError('An error occurred during the conversion. Please try again with another workbook.');
+    } finally {
+      processing.classList.remove('on');
+      convertBtn.disabled = false;
+      updateBar();
+    }
+  });
+
+  restartBtn.addEventListener('click', function () {
+    current = null;
+    if (resultUrl) { URL.revokeObjectURL(resultUrl); resultUrl = null; }
+    resultName = '';
+    showError('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderFileCard();
+    updateBar();
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+  </html>
