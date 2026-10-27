@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Forms — Fill &amp; Create Fillable Forms Online Free | PdfBleu.com</title>
+<meta name="description" content="Fill in a PDF form that already has fields, or turn a plain PDF into a fillable form with text fields, checkboxes, radio buttons, dropdowns and list boxes. Free, no sign-up, and your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#AB6993;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(171,105,147,.35)}
+.doctile .dw{font-size:30px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .warn a{color:#b71c1c}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#AB6993;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+/* ---------- Crop editor ---------- */
+.editor-layout{display:none;flex-direction:column;gap:18px}
+.editor-layout.on{display:flex}
+@media(min-width:920px){.editor-layout{flex-direction:row;align-items:flex-start}.editor-main{flex:1;min-width:0}.editor-side{width:330px;flex-shrink:0}}
+.editor-side{display:flex;flex-direction:column;gap:18px}
+.card-panel{background:#fff;border-radius:14px;padding:16px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.card-panel h2{font-size:17px;color:#1a237e;margin-bottom:8px}
+.hint{font-size:13.5px;color:#666c8a}
+.toolbar{position:sticky;top:8px;z-index:30;background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;box-shadow:0 2px 8px rgba(63,81,181,.12);margin-bottom:14px;align-items:center}
+.tbtn{border:1.5px solid #dfe3f7;background:#f9faff;color:#333a5e;border-radius:9px;padding:8px 12px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;min-height:38px;justify-content:center;font-family:inherit}
+.tbtn:disabled{opacity:.45;cursor:not-allowed}
+.tsep{width:1px;align-self:stretch;background:#e0e4f5;margin:2px 2px}
+.pagenav{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#333a5e}
+.pagenav input{width:52px;border:1.5px solid #c5cae9;border-radius:8px;padding:7px 6px;font-size:14px;font-family:inherit;text-align:center;color:#21243d}
+.zoomwrap{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#444a6d}
+.zoomwrap select{border:1.5px solid #c5cae9;border-radius:8px;padding:7px 6px;font-size:14px;font-family:inherit;background:#fff;color:#21243d}
+.stage{background:#848aa3;border-radius:12px;max-height:78vh;overflow:auto;display:flex;padding:16px}
+.stage-center{margin:auto}
+.pagelabel{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.pagewrap{position:relative;background:#fff;box-shadow:0 3px 14px rgba(10,12,30,.4);line-height:0}
+.pagewrap canvas{display:block}
+.poverlay{position:absolute;inset:0;line-height:1.4;touch-action:none;overflow:hidden;cursor:crosshair}
+.dim{position:absolute;background:rgba(23,25,43,.55);pointer-events:none}
+.croprect{position:absolute;border:2px solid #3F51B5;box-sizing:border-box;pointer-events:none}
+.cmove{position:absolute;inset:0;background:rgba(63,81,181,.07);cursor:move;pointer-events:auto}
+.handle{position:absolute;width:15px;height:15px;background:#fff;border:2px solid #3F51B5;border-radius:3px;transform:translate(-50%,-50%);pointer-events:auto;z-index:5;touch-action:none}
+.handle[data-h="nw"],.handle[data-h="se"]{cursor:nwse-resize}
+.handle[data-h="ne"],.handle[data-h="sw"]{cursor:nesw-resize}
+.handle[data-h="n"],.handle[data-h="s"]{cursor:ns-resize}
+.handle[data-h="e"],.handle[data-h="w"]{cursor:ew-resize}
+.radio-list .radio{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:14.5px;color:#333a5e}
+.radio-list input{width:18px;height:18px;accent-color:#3F51B5}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:6px}
+.fields .fld label{display:block;font-size:12.5px;font-weight:700;color:#444a6d;margin-bottom:3px}
+.fields .fld input{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 9px;font-size:14px;font-family:inherit;color:#21243d}
+.fields .fld input:disabled{background:#f0f1f8;color:#9aa0b8}
+.sizeline{font-size:13.5px;color:#333a5e;background:#f9faff;border:1.5px solid #e0e4f5;border-radius:8px;padding:9px 11px;margin-top:11px}
+.sizeline strong{color:#1a237e}
+.panelbtn{width:100%;border:1.5px solid #e53935;background:#fff;color:#c62828;border-radius:20px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+.panelbtn:disabled{opacity:.45;cursor:not-allowed}
+.resetlink{display:inline-block;margin-top:11px;color:#3F51B5;font-size:13.5px;font-weight:700;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-decoration:underline}
+.crophint{display:none;margin-top:11px;font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 11px}
+.crophint.on{display:block}
+.side-note{font-size:13.5px;color:#444a6d}
+.side-note a{color:#3F51B5;font-weight:600}
+
+/* ---- editor layout (from the Sign PDF shell) ---- */
+.editor-layout{display:none;flex-direction:column;gap:18px}
+.editor-layout.on{display:flex}
+@media(min-width:920px){.editor-layout{flex-direction:row;align-items:flex-start}.editor-main{flex:1;min-width:0}.editor-side{width:330px;flex-shrink:0}}
+.editor-side{display:flex;flex-direction:column;gap:18px}
+.pageblock{margin-bottom:24px}
+.pageblock:last-child{margin-bottom:4px}
+.pagelabel{font-size:13px;font-weight:700;color:#666c8a;margin-bottom:6px}
+.pagewrap{position:relative;margin:0 auto;background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.20);line-height:0;width:fit-content;max-width:100%}
+.pagewrap canvas{display:block}
+.overlay{position:absolute;inset:0;line-height:1.4;touch-action:none;overflow:hidden}
+.card-panel{background:#fff;border-radius:14px;padding:16px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.card-panel h2{font-size:17px;color:#1a237e;margin-bottom:8px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:12px}
+.prop-row{margin-bottom:11px}
+.prop-row label{display:block;font-size:13px;font-weight:600;color:#444a6d;margin-bottom:4px}
+.prop-row select,.prop-row input[type=text],.prop-row textarea{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:7px 9px;font-size:14px;font-family:inherit;background:#fff;color:#21243d}
+.prop-row textarea{resize:vertical;min-height:64px}
+.mini-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.mini-btns button{flex:1;border:1.5px solid #3F51B5;color:#3F51B5;background:#fff;border-radius:20px;padding:8px 6px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit}
+.mini-btns button.danger{border-color:#e53935;color:#e53935}
+.assetbtn{border:1.5px solid #3F51B5;color:#3F51B5;background:#fff;border-radius:16px;padding:5px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.group-label{font-size:12.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#888fb0;margin:14px 0 8px}
+.group-label:first-of-type{margin-top:6px}
+.fieldbtn{display:flex;align-items:center;gap:10px;width:100%;border:1.5px solid #dfe3f7;background:#f9faff;border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer;font-family:inherit;text-align:left;margin-bottom:8px}
+.fieldbtn:hover{border-color:#3F51B5}
+.fieldbtn.armed{border-color:#3F51B5;background:#e8eaf6;box-shadow:0 0 0 2px rgba(63,81,181,.25)}
+.fieldbtn .fic{font-size:16px;width:22px;text-align:center;flex-shrink:0;font-weight:800;color:#AB6993}
+/* ---- mode switch ---- */
+.modeswitch{display:flex;background:#eceef9;border-radius:12px;padding:4px;gap:4px}
+.modeswitch button{flex:1;border:0;background:transparent;border-radius:9px;padding:9px 6px;font-size:14.5px;font-weight:700;color:#5a6080;cursor:pointer;font-family:inherit}
+.modeswitch button.active{background:#3F51B5;color:#fff;box-shadow:0 2px 6px rgba(63,81,181,.35)}
+/* ---- fill controls on pages ---- */
+.fctl{position:absolute;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;color:#1a237e;background:rgba(232,234,246,.92);border:1.5px solid rgba(63,81,181,.65);border-radius:3px;margin:0;padding:0 4px;z-index:4}
+.fctl:focus{outline:2px solid #3F51B5;outline-offset:0;background:#fff;z-index:8}
+.fctl[disabled]{background:rgba(238,238,242,.85);border-color:#b9bdd6;color:#777d99;cursor:not-allowed}
+.fctl.missing{border-color:#d32f2f;background:#fdecea;outline:2px solid rgba(211,47,47,.45)}
+input.fctl[type=checkbox],input.fctl[type=radio]{accent-color:#3F51B5;background:none;border:0;padding:0;cursor:pointer}
+textarea.fctl{resize:none;padding:2px 4px}
+select.fctl{padding:0 2px}
+/* ---- edit-mode field elements ---- */
+.cfld{position:absolute;box-sizing:border-box;border:1.5px dashed #AB6993;background:rgba(171,105,147,.10);border-radius:3px;cursor:grab;z-index:5;touch-action:none}
+.cfld.sel{border:2px solid #3F51B5;background:rgba(63,81,181,.10);z-index:7}
+.cfld .clab{position:absolute;left:2px;top:1px;font-size:10.5px;font-weight:700;color:#7c4a68;background:rgba(255,255,255,.85);padding:0 4px;border-radius:3px;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis;pointer-events:none;line-height:1.5}
+.cfld.sel .clab{color:#1a237e}
+.cfld .handle{display:none;position:absolute;right:-10px;bottom:-10px;width:20px;height:20px;background:#3F51B5;border:2px solid #fff;border-radius:50%;cursor:nwse-resize;z-index:8;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.cfld.sel .handle{display:block}
+.xfld{position:absolute;box-sizing:border-box;border:1.5px dashed rgba(120,124,150,.75);background:rgba(160,164,190,.10);border-radius:3px;z-index:3;pointer-events:none}
+.xfld .xlab{position:absolute;left:2px;top:1px;font-size:10.5px;font-weight:600;color:#6a6e88;background:rgba(255,255,255,.85);padding:0 4px;border-radius:3px;white-space:nowrap;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis;line-height:1.5}
+.dragrect{position:absolute;border:2px dashed #3F51B5;background:rgba(63,81,181,.12);z-index:9;pointer-events:none;box-sizing:border-box}
+/* ---- sidebar field lists ---- */
+.fgroup{font-size:12.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#888fb0;margin:14px 0 6px}
+.fgroup:first-child{margin-top:2px}
+.fitem{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1.5px solid #e3e6f7;background:#fbfcff;border-radius:9px;padding:8px 10px;font-size:13.5px;font-weight:600;color:#333a5e;cursor:pointer;font-family:inherit;margin-bottom:6px}
+.fitem:hover{border-color:#3F51B5}
+.fitem .ftype{font-size:11px;font-weight:800;color:#fff;background:#AB6993;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.fitem .fname2{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem .ftag{font-size:11px;font-weight:700;color:#8a6d00;background:#fff3c4;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.fitem .ftag.ro{color:#55596e;background:#e4e6ef}
+.fitem.missing{border-color:#d32f2f;background:#fdecea}
+.fitem .fdel{border:0;background:none;color:#d32f2f;font-size:15px;font-weight:800;cursor:pointer;padding:0 2px;font-family:inherit}
+.fitem.static{cursor:default;opacity:.75}
+.fitem.static:hover{border-color:#e3e6f7}
+.fitem.sel{border-color:#3F51B5;background:#e8eaf6}
+.panelnote{font-size:13px;color:#555a75;margin-top:8px}
+.signnote2{font-size:13px;color:#555a75;background:#f4f5fc;border:1px dashed #c5cae9;border-radius:8px;padding:9px 11px;margin-top:10px}
+.noforms{border:1.5px dashed #c5cae9;border-radius:10px;padding:14px;background:#fbfcff}
+.noforms p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.checkrow{display:flex;align-items:flex-start;gap:9px;font-size:14px;font-weight:600;color:#333a5e;cursor:pointer;margin:12px 0 4px}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;margin-top:1px;flex-shrink:0}
+.checkrow small{display:block;font-weight:500;color:#666c8a;font-size:12.5px;margin-top:2px}
+.inline-error{display:none;color:#b71c1c;font-size:14px;font-weight:600;margin-top:10px}
+.inline-error.on{display:block}
+.optrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.optrow input{flex:1;border:1.5px solid #c5cae9;border-radius:8px;padding:6px 8px;font-size:13.5px;font-family:inherit}
+.optrow button{border:0;background:none;color:#d32f2f;font-weight:800;font-size:15px;cursor:pointer;font-family:inherit}
+.resultlist .rline{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #eceefc;font-size:14px}
+.resultlist .rline:last-child{border-bottom:0}
+.resultlist .rline b{color:#1a237e;text-align:right}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><rect x="13" y="8" width="22" height="32" rx="2" fill="#fff"/><rect x="17" y="13" width="6" height="6" fill="none" stroke="#AB6993" stroke-width="1.8"/><path d="M18.5 16 l2 2 3 -3.5" stroke="#AB6993" stroke-width="1.6" fill="none"/><path d="M17 27 H31 M17 33 H27" stroke="#AB6993" stroke-width="2" fill="none"/></svg></span>
+<h1>PDF Forms</h1>
+<p class="subtitle">Fill in a form that already has fields, or turn a plain PDF into a fillable form — right on the page.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: reading the form, filling it in and building your new file all happen entirely in your browser.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">▤</span><span class="dext">PDF</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Fill it, or build it</h2>
+<p>Open any PDF. If it already contains form fields, <strong>Fill Form</strong> puts an answer box right on top of every field so you can type your answers in place. If it is a plain document, switch to <strong>Edit Form</strong> and draw your own text fields, checkboxes, radio buttons, dropdowns and list boxes onto the pages — the result is a real fillable PDF, not a picture of one.</p>
+<div class="warnnote">⚠ <strong>Honest note:</strong> your answers are written into the form fields themselves, so the file stays a working form unless you choose to flatten it. What this tool does not do: detect blank spaces automatically, or fill signature fields — for a signature, use <a href="sign-pdf.html">Sign PDF</a>.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="editor-layout" id="editorLayout">
+<div class="editor-main">
+<div class="tool" id="editorCard">
+<div class="toolbar" id="toolbar">
+<span class="toolhint" id="toolbarHint">Type your answers into the fields on the pages.</span>
+<span class="tsep"></span>
+<button class="tbtn" id="zoomOut" type="button" title="Zoom out">−</button>
+<span class="zoomlbl" id="zoomLabel">100%</span>
+<button class="tbtn" id="zoomIn" type="button" title="Zoom in">+</button>
+</div>
+<div id="pagesEl"></div>
+<div class="error" id="editorError"></div>
+</div>
+</div>
+<div class="editor-side">
+<div class="card-panel">
+<div class="modeswitch" role="tablist">
+<button id="modeFillBtn" type="button" class="active">Fill Form</button>
+<button id="modeEditBtn" type="button">Edit Form</button>
+</div>
+<p class="panelnote" id="modeHint">Fill in the fields this document already has.</p>
+</div>
+
+<div class="card-panel" id="fillPanel">
+<h2>Fields in this document</h2>
+<div class="noforms" id="fillNoForms" style="display:none">
+<p><strong>This file doesn't contain fillable fields.</strong></p>
+<p>Some documents only look like forms — the lines and boxes are printed on the page, but there are no real fields to type into.</p>
+<button class="assetbtn" id="addFieldsBtn" type="button">Add fields manually</button>
+<p class="panelnote">Switch to Edit Form and draw the fields yourself. Automatic detection of blank spaces is not offered — we would rather be honest than guess where your answers belong.</p>
+<p class="panelnote" id="xfaNote" style="display:none">This file looks like an <strong>XFA form</strong> (used by some government agencies). XFA fields can't be read by this tool — see the FAQ below.</p>
+</div>
+<div id="fillFieldsWrap">
+<div id="fillFieldList"></div>
+<label class="checkrow"><input type="checkbox" id="fillFlatten"><span>Flatten the finished form<small>Bake the answers into the pages so they can't be edited afterwards.</small></span></label>
+<div class="inline-error" id="fillError"></div>
+</div>
+</div>
+
+<div class="card-panel" id="editPanel" style="display:none">
+<h2>Add a field</h2>
+<p class="panelnote" style="margin-top:0">Pick a type, then drag a rectangle on a page — or just click a page to drop a standard-size field.</p>
+<button class="fieldbtn" id="palText" type="button"><span class="fic">T</span>Text field</button>
+<button class="fieldbtn" id="palCheckbox" type="button"><span class="fic">☑</span>Checkbox</button>
+<button class="fieldbtn" id="palRadio" type="button"><span class="fic">◉</span>Radio button</button>
+<button class="fieldbtn" id="palDropdown" type="button"><span class="fic">▾</span>Dropdown</button>
+<button class="fieldbtn" id="palList" type="button"><span class="fic">☰</span>List box</button>
+<div class="signnote2">For a signature, use <a href="sign-pdf.html">Sign PDF</a> after creating the form.</div>
+<div id="editExistingWrap" style="display:none">
+<div class="group-label">Already in this document</div>
+<p class="panelnote" style="margin-top:0">These fields came with the file — existing fields are kept as they are. You can fill them in Fill Form mode.</p>
+<div id="editExistingList"></div>
+</div>
+<div class="inline-error" id="editError"></div>
+</div>
+
+<div class="card-panel" id="propsPanel" style="display:none">
+<h2>Field properties</h2>
+<p class="panelnote" id="propsEmpty" style="margin-top:0">Select a field you added to change its name, options and defaults — or to duplicate or delete it.</p>
+<div id="propsBody"></div>
+</div>
+
+<div class="card-panel" id="createdPanel" style="display:none">
+<h2>Fields you added</h2>
+<div id="editFieldList"></div>
+</div>
+</div>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2 id="successTitle">Your form is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<p class="scannote" id="successNote" style="display:none"></p>
+<a class="dlbtn" id="downloadLink" href="#" download>Download PDF</a>
+<button class="again" id="restartBtn" type="button">Work on another document</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why use PdfBleu Forms</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>Forms often hold your most personal details — names, addresses, tax numbers. Here, nothing is uploaded: the document is read, filled and rebuilt entirely in your browser.</p></div>
+<div class="step"><span class="fic">✎</span><h3>Real fields, real answers</h3><p>Your answers are stored in the PDF's form fields, exactly like a dedicated form filler would save them — so the receiving office can read, copy and process them, unless you flatten the file.</p></div>
+<div class="step"><span class="fic">🧩</span><h3>Build forms from plain PDFs</h3><p>Turn any plain document into a fillable form: text fields, checkboxes, radio groups, dropdowns and list boxes, with required flags, read-only fields and default answers.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How it works</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Open your PDF</h3><p>Click the select button or drop your PDF into the area provided. Its pages open right here — nothing is uploaded.</p></div>
+<div class="step"><span class="num">2</span><h3>Fill, or add fields</h3><p>In Fill Form mode, type into the boxes on the pages. In Edit Form mode, pick a field type and draw it onto the page.</p></div>
+<div class="step"><span class="num">3</span><h3>Set the details</h3><p>Name your fields, add dropdown options, mark fields required or read-only, and set default answers where they help.</p></div>
+<div class="step"><span class="num">4</span><h3>Save and download</h3><p>Save the filled form — still editable, or flattened into the pages — or save your new fillable form, ready to send.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is the difference between saving and flattening?</h3><p>A normal save writes your answers into the form fields: anyone opening the file can still change them, and the answers can be copied or imported like data. Flattening bakes the answers into the pages themselves and removes the fields — the file looks the same, but nothing can be edited or extracted as form data anymore. Flatten when the form is final; keep it unflattened when the other side still needs to work with your answers.</p></div>
+<div class="qa"><h3>My document has no fields. What can I do?</h3><p>Many "forms" are just printed lines and boxes with no real fields behind them. Switch to Edit Form mode and draw the fields yourself — it takes a minute, and the result is a genuinely fillable PDF. Automatic detection of blank spaces is not offered on purpose: guessing where answers belong would put fields in the wrong places.</p></div>
+<div class="qa"><h3>How do I sign the form?</h3><p>Signature fields can't be filled here. Save your form first, then open it in <a href="sign-pdf.html">Sign PDF</a> and place your signature on it. PdfBleu signatures are visual — drawn onto the page — not certified digital signatures.</p></div>
+<div class="qa"><h3>Why does a government form show no fields?</h3><p>Some official forms are built with XFA, a different form technology that lives inside the PDF alongside the pages. This tool reads standard PDF (AcroForm) fields; XFA fields can't be read or written here, so an XFA form shows an empty field list. Such forms usually need the issuing agency's own software or Adobe Acrobat.</p></div>
+<div class="qa"><h3>Can I answer in Arabic or other non-Latin scripts?</h3><p>Yes. Your answer is always saved exactly as typed. When a form's built-in font can't draw the characters, PdfBleu embeds a font that can, or flags the file so the reader renders the answers itself — your text is never replaced with question marks.</p></div>
+<div class="qa"><h3>How do radio buttons work in Edit Form mode?</h3><p>Radio buttons that share a group name form one question with several choices — the person filling the form can pick only one. Place a radio button, then use "Add another button" in its properties to add more choices to the same group, and give each button its own option value.</p></div>
+</div>
+</main>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+<p>Your files never leave your device.</p>
+</footer>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p id="processingTitle">Working…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<span class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="saveFillBtn" type="button" disabled>Save filled form</button>
+<button id="saveEditBtn" type="button" disabled style="display:none">Save form</button>
+</span>
+</div>
+
+<script>
+/* =====================================================================
+   FormsCore — pure logic for PDF Forms (no DOM, no pdf-lib).
+   Geometry lifted from the Crop PDF page's proven module: pdf.js
+   scale-1 viewport transforms BAKE IN the view-box (CropBox/MediaBox)
+   offset; relativeTransform() un-bakes it before inverting and adding
+   the offset back, which roundtrips exactly at all 4 rotations.
+   ===================================================================== */
+'use strict';
+var FormsCore = (function () {
+  /* ---------------- geometry ---------------- */
+  function applyPoint(t, x, y) { return { x: t[0] * x + t[2] * y + t[4], y: t[1] * x + t[3] * y + t[5] }; }
+  function invert(t) {
+    var det = t[0] * t[3] - t[1] * t[2];
+    if (!det) return null;
+    return [t[3] / det, -t[1] / det, -t[2] / det, t[0] / det,
+      (t[2] * t[5] - t[3] * t[4]) / det, (t[1] * t[4] - t[0] * t[5]) / det];
+  }
+  function multiply(a, b) {
+    return [
+      a[0] * b[0] + a[2] * b[1], a[1] * b[0] + a[3] * b[1],
+      a[0] * b[2] + a[2] * b[3], a[1] * b[2] + a[3] * b[3],
+      a[0] * b[4] + a[2] * b[5] + a[4], a[1] * b[4] + a[3] * b[5] + a[5]
+    ];
+  }
+  function relativeTransform(viewTransform, viewOffset) {
+    var ux = viewOffset ? viewOffset.x : 0, uy = viewOffset ? viewOffset.y : 0;
+    var back = [1, 0, 0, 1, -ux, -uy];
+    return multiply(invert(back), viewTransform);
+  }
+  function rectFromPoints(p, q) {
+    return {
+      x: Math.min(p.x, q.x), y: Math.min(p.y, q.y),
+      w: Math.abs(p.x - q.x), h: Math.abs(p.y - q.y)
+    };
+  }
+  function rectDisplayedToUser(relT, rd, offset) {
+    var inv = invert(relT);
+    if (!inv) return rd || null;
+    var ox = offset ? offset.x : 0, oy = offset ? offset.y : 0;
+    var a = applyPoint(inv, rd.x, rd.y), b = applyPoint(inv, rd.x + rd.w, rd.y + rd.h);
+    var r = rectFromPoints(a, b);
+    return { x: r.x + ox, y: r.y + oy, w: r.w, h: r.h };
+  }
+  function rectUserToDisplayed(relT, ru, offset) {
+    var ox = offset ? offset.x : 0, oy = offset ? offset.y : 0;
+    var rel = { x: ru.x - ox, y: ru.y - oy, w: ru.w, h: ru.h };
+    var a = applyPoint(relT, rel.x, rel.y), b = applyPoint(relT, rel.x + rel.w, rel.y + rel.h);
+    return rectFromPoints(a, b);
+  }
+  function clampRect(r, w, h) {
+    var x = Math.max(0, Math.min(r.x, w)), y = Math.max(0, Math.min(r.y, h));
+    var x2 = Math.max(0, Math.min(r.x + r.w, w)), y2 = Math.max(0, Math.min(r.y + r.h, h));
+    return { x: Math.min(x, x2), y: Math.min(y, y2), w: Math.abs(x2 - x), h: Math.abs(y2 - y) };
+  }
+  function moveRect(r, dx, dy, curW, curH, w, h) {
+    var x = r.x + dx, y = r.y + dy;
+    x = Math.max(0, Math.min(x, Math.max(0, w - curW)));
+    y = Math.max(0, Math.min(y, Math.max(0, h - curH)));
+    return { x: x, y: y, w: curW, h: curH };
+  }
+  function resizeRect(r, dx, dy, w, h, minW, minH) {
+    var nw = Math.max(minW, Math.min(r.w + dx, w - r.x));
+    var nh = Math.max(minH, Math.min(r.h + dy, h - r.y));
+    return { x: r.x, y: r.y, w: nw, h: nh };
+  }
+  function round2(v) { return Math.round(v * 100) / 100; }
+  function clampNum(v, lo, hi) { v = Number(v); if (!isFinite(v)) v = lo; return Math.min(hi, Math.max(lo, v)); }
+
+  /* ---------------- field model ---------------- */
+  var TYPE_LABELS = {
+    text: 'Text', checkbox: 'Checkbox', radio: 'Radio Button', dropdown: 'Drop-Down',
+    optionlist: 'List', signature: 'Signature', button: 'Button', unknown: 'Field'
+  };
+  var FILLABLE = { text: 1, checkbox: 1, radio: 1, dropdown: 1, optionlist: 1 };
+  var NAME_PREFIX = { text: 'text', checkbox: 'checkbox', radio: 'radio', dropdown: 'dropdown', optionlist: 'list' };
+  var DEFAULT_SIZE = {
+    text: { w: 220, h: 24 }, checkbox: { w: 16, h: 16 }, radio: { w: 16, h: 16 },
+    dropdown: { w: 190, h: 24 }, optionlist: { w: 190, h: 76 }
+  };
+  var MIN_SIZE = {
+    text: { w: 40, h: 14 }, checkbox: { w: 10, h: 10 }, radio: { w: 10, h: 10 },
+    dropdown: { w: 40, h: 14 }, optionlist: { w: 40, h: 20 }
+  };
+  var CTOR_TYPES = {
+    PDFTextField: 'text', PDFCheckBox: 'checkbox', PDFRadioGroup: 'radio',
+    PDFDropdown: 'dropdown', PDFOptionList: 'optionlist', PDFSignature: 'signature', PDFButton: 'button'
+  };
+  function ctorToType(ctor) { return CTOR_TYPES[ctor] || 'unknown'; }
+
+  /* Radio widget on-state → option string. pdf-lib names the on-states
+     by Opt INDEX ("0","1",…); other makers use the export value itself.
+     Exact match wins; an integer string is treated as an index. */
+  function resolveRadioOption(buttonValue, options) {
+    if (buttonValue == null || buttonValue === '' || buttonValue === 'Off') return null;
+    options = options || [];
+    for (var i = 0; i < options.length; i++) if (options[i] === buttonValue) return buttonValue;
+    if (/^\d+$/.test(String(buttonValue))) {
+      var idx = parseInt(buttonValue, 10);
+      if (idx >= 0 && idx < options.length) return options[idx];
+    }
+    return String(buttonValue);
+  }
+
+  /* Normalize raw descriptors (built by FormsEngine from pdf-lib, or by
+     tests from stubs) into the canonical field model.
+     Raw: {name, ctor|type, value, options, flags{required,readOnly,multiline,multiSelect},
+           widgets:[{page, rect{x,y,w,h} (user space), buttonValue}]} */
+  function normalizeValue(type, value) {
+    if (type === 'text') return value == null ? '' : String(value);
+    if (type === 'checkbox') return !!value;
+    if (type === 'radio') return value == null || value === '' ? null : String(value);
+    if (type === 'dropdown') {
+      if (Array.isArray(value)) return value.length ? String(value[0]) : '';
+      return value == null ? '' : String(value);
+    }
+    if (type === 'optionlist') {
+      if (Array.isArray(value)) return value.map(String);
+      return value == null || value === '' ? [] : [String(value)];
+    }
+    return value == null ? null : value;
+  }
+  function normalizeInventory(rawFields) {
+    var out = [];
+    (rawFields || []).forEach(function (raw) {
+      var type = raw.type || ctorToType(raw.ctor);
+      var flagsIn = raw.flags || {};
+      var widgets = (raw.widgets || []).map(function (w) {
+        return {
+          page: w.page | 0,
+          rect: w.rect || null,
+          option: type === 'radio' ? resolveRadioOption(w.buttonValue, raw.options || []) : null
+        };
+      });
+      out.push({
+        name: String(raw.name),
+        type: type,
+        value: normalizeValue(type, raw.value),
+        options: (raw.options || []).map(String),
+        flags: {
+          required: !!flagsIn.required, readOnly: !!flagsIn.readOnly,
+          multiline: !!flagsIn.multiline, multiSelect: !!flagsIn.multiSelect
+        },
+        widgets: widgets,
+        pages: widgets.map(function (w) { return w.page; })
+      });
+    });
+    return out;
+  }
+
+  /* ---------------- names ---------------- */
+  function uniqueFieldName(prefix, taken) {
+    var set = {};
+    (taken || []).forEach(function (n) { set[n] = 1; });
+    var n = 1;
+    while (set[prefix + n]) n++;
+    return prefix + n;
+  }
+  function ensureUnique(name, taken) {
+    var set = {};
+    (taken || []).forEach(function (n) { set[n] = 1; });
+    if (!set[name]) return name;
+    var n = 2;
+    while (set[name + n]) n++;
+    return name + n;
+  }
+  function nextRadioOption(existingOptions) {
+    var set = {};
+    (existingOptions || []).forEach(function (o) { set[o] = 1; });
+    var n = 1;
+    while (set['option' + n]) n++;
+    return 'option' + n;
+  }
+
+  /* ---------------- values: diff + validation ---------------- */
+  function cloneValue(v) { return Array.isArray(v) ? v.slice() : v; }
+  function valuesEqual(a, b) {
+    if (Array.isArray(a) || Array.isArray(b)) {
+      if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+      var sa = a.slice().sort(), sb = b.slice().sort();
+      for (var i = 0; i < sa.length; i++) if (sa[i] !== sb[i]) return false;
+      return true;
+    }
+    return a === b;
+  }
+  function effectiveValue(field, valuesByName) {
+    if (valuesByName && Object.prototype.hasOwnProperty.call(valuesByName, field.name)) {
+      return normalizeValue(field.type, cloneValue(valuesByName[field.name]));
+    }
+    return field.value;
+  }
+  function diffValues(fields, valuesByName) {
+    var changed = [];
+    (fields || []).forEach(function (f) {
+      if (!FILLABLE[f.type]) return;
+      var to = effectiveValue(f, valuesByName);
+      if (!valuesEqual(f.value, to)) changed.push({ name: f.name, type: f.type, from: cloneValue(f.value), to: cloneValue(to) });
+    });
+    return changed;
+  }
+  function isEmptyValue(type, v) {
+    if (type === 'text' || type === 'dropdown') return v == null || String(v).trim() === '';
+    if (type === 'checkbox') return !v;
+    if (type === 'radio') return v == null || v === '';
+    if (type === 'optionlist') return !v || (Array.isArray(v) && v.length === 0);
+    return v == null || v === '';
+  }
+  function validateRequired(fields, valuesByName) {
+    var missing = [];
+    (fields || []).forEach(function (f) {
+      if (!FILLABLE[f.type] || !f.flags.required) return;
+      if (isEmptyValue(f.type, effectiveValue(f, valuesByName))) missing.push(f.name);
+    });
+    return missing;
+  }
+  function validateSelections(fields, valuesByName) {
+    var problems = [];
+    (fields || []).forEach(function (f) {
+      if (!FILLABLE[f.type]) return;
+      var v = effectiveValue(f, valuesByName);
+      if (f.type === 'radio' || f.type === 'dropdown') {
+        if (v !== null && v !== '' && f.options.indexOf(v) === -1) {
+          problems.push({ name: f.name, problem: '"' + v + '" is not one of the field\'s options' });
+        }
+      }
+      if (f.type === 'optionlist') {
+        (v || []).forEach(function (sel) {
+          if (f.options.indexOf(sel) === -1) problems.push({ name: f.name, problem: '"' + sel + '" is not one of the field\'s options' });
+        });
+      }
+    });
+    return problems;
+  }
+
+  /* ---------------- text classification for appearances ----------------
+     winansi → Helvetica; dejavu → DejaVu Sans covers it; amiri → Arabic
+     script present (Amiri, like the OCR page); viewer → no bundled font
+     covers it, the file must ask viewers to render (NeedAppearances). */
+  var WINANSI_EXTRA = { 8364: 1, 8226: 1, 8211: 1, 8212: 1, 8216: 1, 8217: 1, 8220: 1, 8221: 1, 8230: 1, 8482: 1, 8249: 1, 8250: 1, 338: 1, 339: 1, 352: 1, 353: 1, 376: 1, 381: 1, 382: 1, 402: 1, 710: 1, 732: 1, 8224: 1, 8225: 1, 8240: 1, 8260: 1, 8222: 1 };
+  function isArabicCp(cp) {
+    return (cp >= 0x0600 && cp <= 0x06FF) || (cp >= 0x0750 && cp <= 0x077F) ||
+      (cp >= 0x08A0 && cp <= 0x08FF) || (cp >= 0xFB50 && cp <= 0xFDFF) || (cp >= 0xFE70 && cp <= 0xFEFF);
+  }
+  function isDejavuCp(cp) {
+    return (cp >= 0x0100 && cp <= 0x024F) || (cp >= 0x0250 && cp <= 0x02FF) ||
+      (cp >= 0x0300 && cp <= 0x036F) || (cp >= 0x0370 && cp <= 0x03FF) ||
+      (cp >= 0x0400 && cp <= 0x052F) || (cp >= 0x0530 && cp <= 0x058F) ||
+      (cp >= 0x0590 && cp <= 0x05FF) || (cp >= 0x10A0 && cp <= 0x10FF) ||
+      (cp >= 0x1E00 && cp <= 0x1EFF) || (cp >= 0x1F00 && cp <= 0x1FFF) ||
+      (cp >= 0x2000 && cp <= 0x206F) || (cp >= 0x2070 && cp <= 0x209F) ||
+      (cp >= 0x20A0 && cp <= 0x20BF) || (cp >= 0x2100 && cp <= 0x214F) ||
+      (cp >= 0x2190 && cp <= 0x21FF) || (cp >= 0x2200 && cp <= 0x22FF) ||
+      (cp >= 0x2300 && cp <= 0x23FF) || (cp >= 0x2500 && cp <= 0x257F) ||
+      (cp >= 0x25A0 && cp <= 0x25FF) || (cp >= 0x2600 && cp <= 0x26FF) ||
+      (cp >= 0xFB00 && cp <= 0xFB4F);
+  }
+  function classifyText(text) {
+    var hasArabic = false, hasDejavu = false;
+    var s = String(text == null ? '' : text);
+    for (var i = 0; i < s.length; i++) {
+      var cp = s.codePointAt(i);
+      if (cp > 0xFFFF) i++;
+      if (cp === 0x0A || cp === 0x0D || cp === 0x09) continue;
+      if ((cp >= 32 && cp <= 126) || (cp >= 160 && cp <= 255) || WINANSI_EXTRA[cp]) continue;
+      if (isArabicCp(cp)) { hasArabic = true; continue; }
+      if (isDejavuCp(cp)) { hasDejavu = true; continue; }
+      return 'viewer';
+    }
+    if (hasArabic) return hasDejavu ? 'viewer' : 'amiri';
+    if (hasDejavu) return 'dejavu';
+    return 'winansi';
+  }
+  function classifyValues(texts) {
+    var worst = 'winansi';
+    (texts || []).forEach(function (t) {
+      var c = classifyText(t);
+      if (c === 'viewer') worst = 'viewer';
+      else if (c === 'amiri' && worst !== 'viewer') worst = 'amiri';
+      else if (c === 'dejavu' && worst === 'winansi') worst = 'dejavu';
+    });
+    return worst;
+  }
+
+  function sanitizeBase(name) {
+    var base = String(name || 'document').replace(/\.pdf$/i, '');
+    base = base.replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '-');
+    return base || 'document';
+  }
+  function outputName(fileName, suffix) { return sanitizeBase(fileName) + suffix; }
+
+  return {
+    applyPoint: applyPoint, invert: invert, multiply: multiply,
+    relativeTransform: relativeTransform, rectDisplayedToUser: rectDisplayedToUser,
+    rectUserToDisplayed: rectUserToDisplayed, clampRect: clampRect, moveRect: moveRect,
+    resizeRect: resizeRect, round2: round2, clampNum: clampNum,
+    TYPE_LABELS: TYPE_LABELS, FILLABLE: FILLABLE, NAME_PREFIX: NAME_PREFIX,
+    DEFAULT_SIZE: DEFAULT_SIZE, MIN_SIZE: MIN_SIZE, ctorToType: ctorToType,
+    resolveRadioOption: resolveRadioOption, normalizeValue: normalizeValue,
+    normalizeInventory: normalizeInventory, uniqueFieldName: uniqueFieldName,
+    ensureUnique: ensureUnique, nextRadioOption: nextRadioOption,
+    cloneValue: cloneValue, valuesEqual: valuesEqual, effectiveValue: effectiveValue,
+    diffValues: diffValues, isEmptyValue: isEmptyValue, validateRequired: validateRequired,
+    validateSelections: validateSelections, classifyText: classifyText,
+    classifyValues: classifyValues, sanitizeBase: sanitizeBase, outputName: outputName
+  };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = FormsCore;
+</script>
+
+<script>
+/* =====================================================================
+   FormsEngine — pdf-lib operations for PDF Forms.
+   Takes the PDFLib implementation as a parameter (like the sibling
+   engines) so it runs identically in the browser and in node tests.
+   ext = { fontkit, getFont(kind) -> Promise<font bytes> } supplies the
+   DejaVu Sans / Amiri fonts used when an answer can't be drawn with
+   the standard WinAnsi font. IMPORTANT pdf-lib facts (probe-proven):
+   doc.save() and form.flatten() re-run appearance updates with the
+   default Helvetica font unless told not to — and that THROWS on
+   non-WinAnsi text. So appearances are managed field by field here,
+   and both calls pass { updateFieldAppearances: false }.
+   ===================================================================== */
+'use strict';
+var FormsEngine = (function () {
+  function typeOfField(field, L) {
+    try {
+      if (L.PDFTextField && field instanceof L.PDFTextField) return 'text';
+      if (L.PDFCheckBox && field instanceof L.PDFCheckBox) return 'checkbox';
+      if (L.PDFRadioGroup && field instanceof L.PDFRadioGroup) return 'radio';
+      if (L.PDFDropdown && field instanceof L.PDFDropdown) return 'dropdown';
+      if (L.PDFOptionList && field instanceof L.PDFOptionList) return 'optionlist';
+      if (L.PDFSignature && field instanceof L.PDFSignature) return 'signature';
+      if (L.PDFButton && field instanceof L.PDFButton) return 'button';
+    } catch (e) { /* fall through to method sniffing */ }
+    if (typeof field.getText === 'function') return 'text';
+    if (typeof field.isChecked === 'function') return 'checkbox';
+    if (typeof field.addOptionToPage === 'function') return 'radio';
+    if (typeof field.getSelected === 'function' && typeof field.isMultiselect === 'function') return 'optionlist';
+    if (typeof field.getSelected === 'function') return 'dropdown';
+    return 'unknown';
+  }
+
+  function widgetPageIndex(widget, pages, L, doc) {
+    var i, j;
+    try {
+      var pRef = widget.dict.get(L.PDFName.of('P'));
+      if (pRef) {
+        var s = String(pRef);
+        for (i = 0; i < pages.length; i++) if (String(pages[i].ref) === s) return i;
+      }
+    } catch (e) { /* try the Annots scan */ }
+    try {
+      for (i = 0; i < pages.length; i++) {
+        var annots = pages[i].node.Annots();
+        if (!annots) continue;
+        for (j = 0; j < annots.size(); j++) {
+          if (doc.context.lookup(annots.get(j)) === widget.dict) return i;
+        }
+      }
+    } catch (e) { /* give up */ }
+    return -1;
+  }
+
+  function extractRaw(doc, L) {
+    var form = doc.getForm();
+    var pages = doc.getPages();
+    var fields = form.getFields().map(function (field) {
+      var type = typeOfField(field, L);
+      var options = [];
+      if (type === 'radio' || type === 'dropdown' || type === 'optionlist') {
+        try { options = field.getOptions().map(String); } catch (e) { options = []; }
+      }
+      var value = null;
+      try {
+        if (type === 'text') value = field.getText();
+        else if (type === 'checkbox') value = field.isChecked();
+        else if (type === 'radio') value = field.getSelected();
+        else if (type === 'dropdown' || type === 'optionlist') value = field.getSelected();
+      } catch (e) { value = null; }
+      var flags = { required: false, readOnly: false, multiline: false, multiSelect: false };
+      try { flags.required = field.isRequired(); } catch (e) {}
+      try { flags.readOnly = field.isReadOnly(); } catch (e) {}
+      if (type === 'text') { try { flags.multiline = field.isMultiline(); } catch (e) {} }
+      if (type === 'optionlist') { try { flags.multiSelect = field.isMultiselect(); } catch (e) {} }
+      var widgets = [];
+      try {
+        field.acroField.getWidgets().forEach(function (w) {
+          var rect = null, bv = null;
+          try { var r = w.getRectangle(); rect = { x: r.x, y: r.y, w: r.width, h: r.height }; } catch (e) {}
+          try { var on = w.getOnValue(); if (on) bv = String(on).replace(/^\//, ''); } catch (e) {}
+          widgets.push({ page: widgetPageIndex(w, pages, L, doc), rect: rect, buttonValue: bv });
+        });
+      } catch (e) { /* field without widgets */ }
+      return { name: field.getName(), type: type, value: value, options: options, flags: flags, widgets: widgets };
+    });
+    return { fields: fields, pageCount: pages.length };
+  }
+
+  async function getInventory(bytes, L) {
+    var doc = await L.PDFDocument.load(bytes);
+    return extractRaw(doc, L);
+  }
+
+  /* Embed (once per call) the font an appearance kind needs.
+     Returns null when the font can't be provided — the caller then
+     falls back to NeedAppearances instead of failing the save. */
+  async function makeFontEmbedder(doc, L, ext) {
+    var cache = {};
+    var helvetica = null;
+    return async function embed(kind) {
+      if (kind === 'winansi') {
+        if (!helvetica) helvetica = await doc.embedFont(L.StandardFonts.Helvetica);
+        return helvetica;
+      }
+      if (cache[kind]) return cache[kind];
+      if (!ext || typeof ext.getFont !== 'function' || !ext.fontkit) { cache[kind] = null; return null; }
+      try {
+        doc.registerFontkit(ext.fontkit);
+        var fontBytes = await ext.getFont(kind);
+        if (!fontBytes) { cache[kind] = null; return null; }
+        cache[kind] = await doc.embedFont(fontBytes, { subset: true });
+      } catch (e) { cache[kind] = null; }
+      return cache[kind];
+    };
+  }
+
+  function valueTextFor(type, v) {
+    if (type === 'text' || type === 'dropdown') return v == null ? '' : String(v);
+    if (type === 'optionlist') return (v || []).join('\n');
+    return '';
+  }
+
+  async function refreshAppearances(doc, L, ext, items) {
+    /* items: [{field, name, type, text}] — returns appearance report */
+    var embed = await makeFontEmbedder(doc, L, ext);
+    var needAppearances = false, viewerFields = [], usedFont = false;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var kind = (it.type === 'text' || it.type === 'dropdown' || it.type === 'optionlist')
+        ? FormsCore.classifyText(it.text) : 'winansi';
+      if (kind === 'viewer') { needAppearances = true; viewerFields.push(it.name); continue; }
+      try {
+        var font = await embed(kind);
+        if (!font) throw new Error('font unavailable');
+        it.field.updateAppearances(font);
+        if (kind !== 'winansi') usedFont = true;
+      } catch (e) {
+        needAppearances = true;
+        if (viewerFields.indexOf(it.name) === -1) viewerFields.push(it.name);
+      }
+    }
+    if (needAppearances) {
+      try {
+        var form = doc.getForm();
+        form.acroForm.dict.set(L.PDFName.of('NeedAppearances'), L.PDFBool.True);
+      } catch (e) { /* best effort */ }
+    }
+    return { needAppearances: needAppearances, viewerFields: viewerFields, usedEmbeddedFont: usedFont };
+  }
+
+  function ensureFlattenable(doc, L, form) {
+    var blanked = 0;
+    form.getFields().forEach(function (field) {
+      var widgets = [];
+      try { widgets = field.acroField.getWidgets(); } catch (e) { widgets = []; }
+      widgets.forEach(function (w) {
+        var has = false;
+        try {
+          var ap = w.dict.get(L.PDFName.of('AP'));
+          var apDict = ap ? doc.context.lookup(ap) : null;
+          has = !!(apDict && apDict.get(L.PDFName.of('N')));
+        } catch (e) { has = false; }
+        if (has) return;
+        try {
+          var r = w.getRectangle();
+          var stream = doc.context.flateStream('', {
+            Type: 'XObject', Subtype: 'Form',
+            BBox: [0, 0, Math.max(1, r.width), Math.max(1, r.height)],
+            Resources: {}
+          });
+          w.setNormalAppearance(doc.context.register(stream));
+          blanked++;
+        } catch (e) { /* leave it — flatten will surface real problems */ }
+      });
+    });
+    return blanked;
+  }
+
+  async function applyValues(bytes, valuesByName, opts, L, ext) {
+    opts = opts || {};
+    var doc = await L.PDFDocument.load(bytes);
+    var form = doc.getForm();
+    var raw = extractRaw(doc, L);
+    var fields = FormsCore.normalizeInventory(raw.fields);
+    var problems = FormsCore.validateSelections(fields, valuesByName || {});
+    if (problems.length) {
+      throw new Error('Invalid value for field "' + problems[0].name + '": ' + problems[0].problem);
+    }
+    var missing = FormsCore.validateRequired(fields, valuesByName || {});
+    if (missing.length) {
+      throw new Error('Required field(s) still empty: ' + missing.join(', '));
+    }
+    var changed = FormsCore.diffValues(fields, valuesByName || {});
+    var byName = {}, normByName = {};
+    form.getFields().forEach(function (f) { byName[f.getName()] = f; });
+    fields.forEach(function (f) { normByName[f.name] = f; });
+    var applied = [], skippedReadOnly = [], appearanceItems = [];
+    changed.forEach(function (ch) {
+      var field = byName[ch.name];
+      if (!field) return;
+      if (normByName[ch.name].flags.readOnly) { skippedReadOnly.push(ch.name); return; }
+      var v = ch.to;
+      if (ch.type === 'text') field.setText(v == null ? '' : String(v));
+      else if (ch.type === 'checkbox') { if (v) field.check(); else field.uncheck(); }
+      else if (ch.type === 'radio') {
+        if (v == null || v === '') {
+          try {
+            field.acroField.removeValue();
+            field.acroField.getWidgets().forEach(function (w) { w.setAppearanceState(L.PDFName.of('Off')); });
+          } catch (e) { /* leave as is */ }
+        } else field.select(String(v));
+      } else if (ch.type === 'dropdown') {
+        if (v === '' || v == null) field.clear(); else field.select(String(v));
+      } else if (ch.type === 'optionlist') {
+        var arr = (v || []).map(String);
+        if (!arr.length) field.clear(); else field.select(arr);
+      }
+      applied.push(ch.name);
+      appearanceItems.push({ field: field, name: ch.name, type: ch.type, text: valueTextFor(ch.type, v) });
+    });
+    var appearance = await refreshAppearances(doc, L, ext, appearanceItems);
+    var flattenedViewerFields = [];
+    var blankedAppearances = 0;
+    if (opts.flatten) {
+      if (appearance.viewerFields.length) flattenedViewerFields = appearance.viewerFields.slice();
+      /* pdf-lib's flatten() throws "Unexpected N type" on any widget
+         that has no appearance stream — unsigned signature placeholders
+         and never-rendered fields have none. Give those widgets an
+         empty appearance first: there is nothing visible to bake. */
+      blankedAppearances = ensureFlattenable(doc, L, form);
+      form.flatten({ updateFieldAppearances: false });
+    }
+    var out = await doc.save({ updateFieldAppearances: false });
+    return {
+      bytes: out, changed: applied.length, changedNames: applied,
+      skippedReadOnly: skippedReadOnly,
+      needAppearances: appearance.needAppearances,
+      viewerFields: appearance.viewerFields,
+      usedEmbeddedFont: appearance.usedEmbeddedFont,
+      flattenedViewerFields: flattenedViewerFields,
+      blankedAppearances: blankedAppearances,
+      flattened: !!opts.flatten
+    };
+  }
+
+  async function createFields(bytes, specs, L, ext) {
+    var doc = await L.PDFDocument.load(bytes);
+    var form = doc.getForm();
+    var pages = doc.getPages();
+    var taken = form.getFields().map(function (f) { return f.getName(); });
+    var created = [], appearanceItems = [];
+    var style = {
+      borderWidth: 1,
+      textColor: L.rgb(0.10, 0.11, 0.25),
+      backgroundColor: L.rgb(1, 1, 1),
+      borderColor: L.rgb(0.55, 0.58, 0.78)
+    };
+    function userRect(widget) {
+      var relT = FormsCore.relativeTransform(widget.transform, widget.offset);
+      return FormsCore.rectDisplayedToUser(relT, widget.rect, widget.offset);
+    }
+    function pageOpts(widget) {
+      var u = userRect(widget);
+      var o = { x: u.x, y: u.y, width: Math.max(1, u.w), height: Math.max(1, u.h) };
+      for (var k in style) o[k] = style[k];
+      return o;
+    }
+    (specs || []).forEach(function (spec) {
+      var name = FormsCore.ensureUnique(String(spec.name || 'field'), taken);
+      taken.push(name);
+      var flags = spec.flags || {};
+      var field = null;
+      if (spec.type === 'text') {
+        field = form.createTextField(name);
+        if (flags.multiline) field.enableMultiline();
+        spec.widgets.forEach(function (w) { field.addToPage(pages[w.page], pageOpts(w)); });
+        if (spec.fontSize) { try { field.setFontSize(spec.fontSize); } catch (e) {} }
+        if (typeof spec.defaultValue === 'string' && spec.defaultValue !== '') field.setText(spec.defaultValue);
+      } else if (spec.type === 'checkbox') {
+        field = form.createCheckBox(name);
+        spec.widgets.forEach(function (w) { field.addToPage(pages[w.page], pageOpts(w)); });
+        if (spec.defaultValue === true) field.check();
+      } else if (spec.type === 'radio') {
+        field = form.createRadioGroup(name);
+        spec.widgets.forEach(function (w) { field.addOptionToPage(String(w.option), pages[w.page], pageOpts(w)); });
+        if (spec.defaultValue) { try { field.select(String(spec.defaultValue)); } catch (e) {} }
+      } else if (spec.type === 'dropdown') {
+        field = form.createDropdown(name);
+        field.addOptions((spec.options || []).map(String));
+        spec.widgets.forEach(function (w) { field.addToPage(pages[w.page], pageOpts(w)); });
+        if (spec.defaultValue) { try { field.select(String(spec.defaultValue)); } catch (e) {} }
+      } else if (spec.type === 'optionlist') {
+        field = form.createOptionList(name);
+        field.addOptions((spec.options || []).map(String));
+        if (flags.multiSelect) field.enableMultiselect();
+        spec.widgets.forEach(function (w) { field.addToPage(pages[w.page], pageOpts(w)); });
+        var defs = (spec.defaultValue || []).map(String).filter(function (d) { return (spec.options || []).indexOf(d) !== -1; });
+        if (defs.length) { try { field.select(defs); } catch (e) {} }
+      }
+      if (!field) return;
+      if (flags.required) { try { field.enableRequired(); } catch (e) {} }
+      if (flags.readOnly) { try { field.enableReadOnly(); } catch (e) {} }
+      created.push({ name: name, type: spec.type });
+      var dv = spec.type === 'optionlist' ? (spec.defaultValue || []) : spec.defaultValue;
+      appearanceItems.push({ field: field, name: name, type: spec.type, text: valueTextFor(spec.type, dv) });
+    });
+    var appearance = await refreshAppearances(doc, L, ext, appearanceItems);
+    var out = await doc.save({ updateFieldAppearances: false });
+    return {
+      bytes: out, created: created,
+      needAppearances: appearance.needAppearances,
+      viewerFields: appearance.viewerFields,
+      usedEmbeddedFont: appearance.usedEmbeddedFont
+    };
+  }
+
+  return { getInventory: getInventory, applyValues: applyValues, createFields: createFields, extractRaw: extractRaw };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = FormsEngine;
+</script>
+
+<script>
+/* =====================================================================
+   PDF Forms — DOM wiring.
+   Field values/flags come from pdf-lib (FormsEngine); widget positions
+   come from pdf.js annotations (user-space rects, converted to
+   displayed space with the Crop-proven transform mapping).
+   ===================================================================== */
+(function () {
+  'use strict';
+  var PDFLib = window.PDFLib;
+  var pdfjsLib = window.pdfjsLib;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var FONT_URLS = {
+    dejavu: 'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf',
+    amiri: 'https://cdn.jsdelivr.net/npm/@expo-google-fonts/amiri@0.2.3/Amiri_400Regular.ttf'
+  };
+  var fontCache = {};
+  function fetchFont(kind) {
+    if (!fontCache[kind]) {
+      fontCache[kind] = fetch(FONT_URLS[kind]).then(function (r) {
+        if (!r.ok) throw new Error('font fetch failed');
+        return r.arrayBuffer();
+      });
+    }
+    return fontCache[kind];
+  }
+  var ENGINE_EXT = { fontkit: window.fontkit, getFont: fetchFont };
+  var ERR_ENC = 'ENC', ERR_CORRUPT = 'CORRUPT';
+
+  function $(id) { return document.getElementById(id); }
+  var layout = $('layout'), editorLayout = $('editorLayout'), dropEl = $('drop'), pickBtn = $('pickBtn'),
+    fileInput = $('fileInput'), fileCard = $('fileCard'), fileNameEl = $('fileName'), fileMeta = $('fileMeta'),
+    fileWarn = $('fileWarn'), errorEl = $('error'), editorError = $('editorError'), pagesEl = $('pagesEl'),
+    zoomOutBtn = $('zoomOut'), zoomInBtn = $('zoomIn'), zoomLabel = $('zoomLabel'), toolbarHint = $('toolbarHint'),
+    modeFillBtn = $('modeFillBtn'), modeEditBtn = $('modeEditBtn'), modeHint = $('modeHint'),
+    fillPanel = $('fillPanel'), editPanel = $('editPanel'), fillNoForms = $('fillNoForms'), xfaNote = $('xfaNote'),
+    fillFieldsWrap = $('fillFieldsWrap'), fillFieldList = $('fillFieldList'), fillFlatten = $('fillFlatten'),
+    fillError = $('fillError'), addFieldsBtn = $('addFieldsBtn'),
+    editExistingWrap = $('editExistingWrap'), editExistingList = $('editExistingList'), editError = $('editError'),
+    propsPanel = $('propsPanel'), propsEmpty = $('propsEmpty'), propsBody = $('propsBody'),
+    createdPanel = $('createdPanel'), editFieldList = $('editFieldList'),
+    barSummary = $('barSummary'), startOverBtn = $('startOverBtn'), saveFillBtn = $('saveFillBtn'), saveEditBtn = $('saveEditBtn'),
+    successEl = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+    resultList = $('resultList'), successNote = $('successNote'), downloadLink = $('downloadLink'),
+    processing = $('processing'), processingTitle = $('processingTitle'), processingDetail = $('processingDetail'),
+    actionBar = $('actionBar');
+  var palBtns = { text: $('palText'), checkbox: $('palCheckbox'), radio: $('palRadio'), dropdown: $('palDropdown'), optionlist: $('palList') };
+
+  var S = {
+    fileName: '', bytes: null, pdfDoc: null, pageCount: 0, pages: [],
+    fields: [], values: {}, initial: {}, missing: [],
+    mode: 'fill', created: [], selId: null, armed: null,
+    zoom: 1, editorOpen: false, gesture: null, idSeq: 1
+  };
+  var fillEls = {}; /* field name -> [control elements] */
+
+  function fmtSize(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function showProcessing(t, d) { processingTitle.textContent = t; processingDetail.textContent = d || ''; processing.classList.add('on'); }
+  function hideProcessing() { processing.classList.remove('on'); }
+  function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('on'); }
+  function hideError() { errorEl.textContent = ''; errorEl.classList.remove('on'); }
+  function showEditorError(msg) { editorError.textContent = msg; editorError.classList.add('on'); }
+  function hideEditorError() { editorError.textContent = ''; editorError.classList.remove('on'); }
+  function showFillError(msg) { fillError.textContent = msg; fillError.classList.add('on'); }
+  function hideFillError() { fillError.textContent = ''; fillError.classList.remove('on'); }
+  function showEditError(msg) { editError.textContent = msg; editError.classList.add('on'); }
+  function hideEditError() { editError.textContent = ''; editError.classList.remove('on'); }
+
+  /* ---------------- file loading ---------------- */
+  pickBtn.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () { if (fileInput.files[0]) handleFile(fileInput.files[0]); fileInput.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    dropEl.addEventListener(ev, function (e) { e.preventDefault(); dropEl.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    dropEl.addEventListener(ev, function (e) { e.preventDefault(); dropEl.classList.remove('over'); });
+  });
+  dropEl.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  $('removeFileBtn').addEventListener('click', function () { location.reload(); });
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  $('restartBtn').addEventListener('click', function () { location.reload(); });
+
+  async function handleFile(file) {
+    hideError();
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') { showError('Please choose a PDF file.'); return; }
+    S.fileName = file.name;
+    fileCard.classList.add('on');
+    fileNameEl.textContent = file.name;
+    fileMeta.textContent = fmtSize(file.size);
+    fileWarn.textContent = '';
+    showProcessing('Opening your PDF…', file.name);
+    try {
+      var buf = await file.arrayBuffer();
+      var head = new Uint8Array(buf.slice(0, 5)), sig = '';
+      for (var i = 0; i < head.length; i++) sig += String.fromCharCode(head[i]);
+      if (sig !== '%PDF-') throw new Error(ERR_CORRUPT);
+      try {
+        await PDFLib.PDFDocument.load(buf.slice(0));
+      } catch (le) {
+        if (le && /encrypt/i.test(String(le.message || le))) throw new Error(ERR_ENC);
+        throw new Error(ERR_CORRUPT);
+      }
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+      } catch (pe) {
+        if (pe && (pe.name === 'PasswordException' || /password/i.test(String(pe.message || '')))) throw new Error(ERR_ENC);
+        throw new Error(ERR_CORRUPT);
+      }
+      S.bytes = buf;
+      S.pdfDoc = pdf;
+      S.pageCount = pdf.numPages;
+      await buildInventory();
+      S.editorOpen = true;
+      layout.style.display = 'none';
+      editorLayout.classList.add('on');
+      hideProcessing();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      await buildPages();
+      switchMode('fill');
+      updateBar();
+    } catch (err) {
+      hideProcessing();
+      S.editorOpen = false;
+      if (err && err.message === ERR_ENC) {
+        fileWarn.textContent = 'This PDF is password-protected. PdfBleu can\'t open protected files — unlock it first (for example with our Unlock PDF tool), then open the unlocked copy here.';
+      } else {
+        showError('Sorry — this file could not be read. It may be damaged. Our Repair PDF tool may be able to fix it.');
+        fileCard.classList.remove('on');
+      }
+    }
+  }
+
+  /* Inventory: values/flags from pdf-lib; widget positions from pdf.js
+     annotations (user-space rects), falling back to pdf-lib widgets. */
+  async function buildInventory() {
+    var inv = await FormsEngine.getInventory(S.bytes.slice(0), PDFLib);
+    var fields = FormsCore.normalizeInventory(inv.fields);
+    var annoByName = {};
+    var p, pageObj, anns;
+    for (p = 0; p < S.pageCount; p++) {
+      pageObj = await S.pdfDoc.getPage(p + 1);
+      anns = [];
+      try { anns = await pageObj.getAnnotations(); } catch (e) { anns = []; }
+      anns.forEach(function (a) {
+        if (!a || a.subtype !== 'Widget' || !a.fieldName || !a.rect) return;
+        var r = a.rect;
+        var rectUser = { x: Math.min(r[0], r[2]), y: Math.min(r[1], r[3]), w: Math.abs(r[2] - r[0]), h: Math.abs(r[3] - r[1]) };
+        (annoByName[a.fieldName] = annoByName[a.fieldName] || []).push({
+          page: p, rectUser: rectUser, buttonValue: a.buttonValue != null ? String(a.buttonValue) : null, hidden: !!a.hidden
+        });
+      });
+    }
+    fields.forEach(function (f) {
+      var annsFor = annoByName[f.name];
+      if (annsFor && annsFor.length) {
+        f.widgets = annsFor.map(function (a) {
+          return {
+            page: a.page, rectUser: a.rectUser, hidden: a.hidden,
+            option: f.type === 'radio' ? FormsCore.resolveRadioOption(a.buttonValue, f.options) : null
+          };
+        });
+      } else {
+        f.widgets = f.widgets.map(function (w) {
+          return { page: w.page, rectUser: w.rect, hidden: false, option: w.option };
+        }).filter(function (w) { return w.page >= 0 && w.rectUser; });
+      }
+      f.pages = f.widgets.map(function (w) { return w.page; });
+    });
+    S.fields = fields;
+    S.values = {}; S.initial = {};
+    fields.forEach(function (f) {
+      if (FormsCore.FILLABLE[f.type]) {
+        S.values[f.name] = FormsCore.cloneValue(f.value);
+        S.initial[f.name] = FormsCore.cloneValue(f.value);
+      }
+    });
+    /* XFA hint: pdf.js sees field objects but pdf-lib found no fields */
+    var isXfa = false;
+    if (!fields.length) {
+      try {
+        var fo = await S.pdfDoc.getFieldObjects();
+        isXfa = !!(fo && Object.keys(fo).length);
+      } catch (e) { isXfa = false; }
+    }
+    fillNoForms.style.display = fields.length ? 'none' : 'block';
+    xfaNote.style.display = isXfa ? 'block' : 'none';
+    fillFieldsWrap.style.display = fields.length ? 'block' : 'none';
+    buildFillList();
+    buildExistingList();
+  }
+
+  /* ---------------- pages ---------------- */
+  async function buildPages() {
+    pagesEl.innerHTML = '';
+    S.pages = [];
+    var geoDoc = await PDFLib.PDFDocument.load(S.bytes.slice(0));
+    var geoPages = geoDoc.getPages();
+    for (var i = 1; i <= S.pageCount; i++) {
+      var pageObj = await S.pdfDoc.getPage(i);
+      var vp = pageObj.getViewport({ scale: 1 });
+      var cb = geoPages[i - 1].getCropBox();
+      var offset = { x: cb.x, y: cb.y };
+      var block = document.createElement('div');
+      block.className = 'pageblock';
+      var lab = document.createElement('div');
+      lab.className = 'pagelabel';
+      lab.textContent = 'Page ' + i;
+      var wrap = document.createElement('div');
+      wrap.className = 'pagewrap';
+      var canvas = document.createElement('canvas');
+      var overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.setAttribute('data-page', String(i - 1));
+      wrap.appendChild(canvas);
+      wrap.appendChild(overlay);
+      block.appendChild(lab);
+      block.appendChild(wrap);
+      pagesEl.appendChild(block);
+      (function (idx, ov) {
+        ov.addEventListener('pointerdown', function (e) { onOverlayDown(e, idx); });
+      })(i - 1, overlay);
+      S.pages.push({
+        pageObj: pageObj, viewW: vp.width, viewH: vp.height,
+        transform: vp.transform.slice(), offset: offset,
+        scale: 1, canvas: canvas, overlay: overlay, wrap: wrap
+      });
+    }
+    await renderPages();
+  }
+  var renderToken = 0;
+  async function renderPages() {
+    if (!S.editorOpen || !S.pages.length) return;
+    var token = ++renderToken;
+    var containerW = pagesEl.clientWidth || 700;
+    var cssW = Math.min(containerW, 760) * S.zoom;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    for (var i = 0; i < S.pages.length; i++) {
+      var pg = S.pages[i];
+      var scale = cssW / pg.viewW;
+      pg.scale = scale;
+      var viewport = pg.pageObj.getViewport({ scale: scale * dpr });
+      pg.canvas.width = Math.floor(viewport.width);
+      pg.canvas.height = Math.floor(viewport.height);
+      pg.canvas.style.width = (pg.viewW * scale) + 'px';
+      pg.canvas.style.height = (pg.viewH * scale) + 'px';
+      pg.wrap.style.width = (pg.viewW * scale) + 'px';
+      pg.wrap.style.height = (pg.viewH * scale) + 'px';
+      try {
+        await pg.pageObj.render({ canvasContext: pg.canvas.getContext('2d'), viewport: viewport }).promise;
+      } catch (err) { /* stale render after a newer zoom */ }
+      if (token !== renderToken) return;
+    }
+    layoutOverlays();
+  }
+  zoomInBtn.addEventListener('click', function () { setZoom(S.zoom + 0.25); });
+  zoomOutBtn.addEventListener('click', function () { setZoom(S.zoom - 0.25); });
+  function setZoom(z) {
+    S.zoom = FormsCore.clampNum(z, 0.5, 2);
+    zoomLabel.textContent = Math.round(S.zoom * 100) + '%';
+    renderPages();
+  }
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (!S.editorOpen) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderPages, 250);
+  });
+
+  function pagePoint(e, pg) {
+    var r = pg.wrap.getBoundingClientRect();
+    return { x: (e.clientX - r.left) / pg.scale, y: (e.clientY - r.top) / pg.scale };
+  }
+  function displayedRect(pg, rectUser) {
+    return FormsCore.rectUserToDisplayed(FormsCore.relativeTransform(pg.transform, pg.offset), rectUser, pg.offset);
+  }
+  function placeEl(el, disp, scale) {
+    el.style.left = (disp.x * scale) + 'px';
+    el.style.top = (disp.y * scale) + 'px';
+    el.style.width = Math.max(2, disp.w * scale) + 'px';
+    el.style.height = Math.max(2, disp.h * scale) + 'px';
+  }
+
+  function layoutOverlays() {
+    S.pages.forEach(function (pg) { pg.overlay.innerHTML = ''; });
+    fillEls = {};
+    if (!S.editorOpen) return;
+    if (S.mode === 'fill') buildFillOverlays();
+    else buildEditOverlays();
+  }
+
+  /* ---------------- Fill mode: controls on the pages ---------------- */
+  function buildFillOverlays() {
+    S.fields.forEach(function (f) {
+      fillEls[f.name] = fillEls[f.name] || [];
+      f.widgets.forEach(function (w) {
+        if (w.hidden || w.page < 0) return;
+        var pg = S.pages[w.page];
+        if (!pg || !w.rectUser) return;
+        var disp = displayedRect(pg, w.rectUser);
+        var ctl = makeFillControl(f, w);
+        if (!ctl) return;
+        placeEl(ctl, disp, pg.scale);
+        if (f.type === 'text' || f.type === 'dropdown' || f.type === 'optionlist') {
+          ctl.style.fontSize = Math.max(9, Math.min(16, disp.h * pg.scale * 0.5)) + 'px';
+        }
+        pg.overlay.appendChild(ctl);
+        fillEls[f.name].push(ctl);
+      });
+    });
+  }
+  function makeFillControl(f, w) {
+    var el = null, i;
+    var ro = f.flags.readOnly;
+    if (f.type === 'text') {
+      el = document.createElement(f.flags.multiline ? 'textarea' : 'input');
+      if (!f.flags.multiline) el.type = 'text';
+      el.value = S.values[f.name] || '';
+      el.addEventListener('input', function () { setFillValue(f.name, el.value, el); });
+    } else if (f.type === 'checkbox') {
+      el = document.createElement('input');
+      el.type = 'checkbox';
+      el.checked = !!S.values[f.name];
+      el.addEventListener('change', function () { setFillValue(f.name, el.checked, el); });
+    } else if (f.type === 'radio') {
+      el = document.createElement('input');
+      el.type = 'radio';
+      el.name = 'fill-radio-' + f.name.replace(/[^\w]+/g, '_');
+      if (w.option != null) el.setAttribute('data-option', w.option);
+      el.checked = S.values[f.name] != null && w.option != null && S.values[f.name] === w.option;
+      if (w.option == null) el.disabled = true;
+      el.addEventListener('change', function () { if (el.checked) setFillValue(f.name, w.option, el); });
+    } else if (f.type === 'dropdown') {
+      el = document.createElement('select');
+      var emptyOpt = document.createElement('option');
+      emptyOpt.value = ''; emptyOpt.textContent = '';
+      el.appendChild(emptyOpt);
+      f.options.forEach(function (o) {
+        var op = document.createElement('option');
+        op.value = o; op.textContent = o;
+        el.appendChild(op);
+      });
+      el.value = S.values[f.name] || '';
+      el.addEventListener('change', function () { setFillValue(f.name, el.value, el); });
+    } else if (f.type === 'optionlist') {
+      el = document.createElement('select');
+      if (f.flags.multiSelect) el.multiple = true;
+      el.size = Math.max(2, Math.min(f.options.length || 2, 6));
+      f.options.forEach(function (o) {
+        var op = document.createElement('option');
+        op.value = o; op.textContent = o;
+        el.appendChild(op);
+      });
+      syncListSelection(el, f);
+      el.addEventListener('change', function () {
+        var sel = [];
+        for (i = 0; i < el.options.length; i++) if (el.options[i].selected) sel.push(el.options[i].value);
+        setFillValue(f.name, f.flags.multiSelect ? sel : sel.slice(0, 1), el);
+      });
+    } else {
+      return null; /* signature / button / unknown: listed, not fillable */
+    }
+    el.className = 'fctl';
+    el.setAttribute('data-field', f.name);
+    if (ro) el.disabled = true;
+    if (S.missing.indexOf(f.name) !== -1) el.classList.add('missing');
+    return el;
+  }
+  function syncListSelection(el, f) {
+    var vals = S.values[f.name] || [];
+    for (var i = 0; i < el.options.length; i++) {
+      el.options[i].selected = vals.indexOf(el.options[i].value) !== -1;
+    }
+  }
+  function syncFillControls(name, source) {
+    var f = null;
+    S.fields.forEach(function (x) { if (x.name === name) f = x; });
+    (fillEls[name] || []).forEach(function (el) {
+      if (el === source) return;
+      if (!f) return;
+      if (f.type === 'text') el.value = S.values[name] || '';
+      else if (f.type === 'checkbox') el.checked = !!S.values[name];
+      else if (f.type === 'radio') { /* native group sync handles it; re-check by option */
+        var wOpt = el.getAttribute('data-option');
+        if (wOpt != null) el.checked = S.values[name] === wOpt;
+      } else if (f.type === 'dropdown') el.value = S.values[name] || '';
+      else if (f.type === 'optionlist') syncListSelection(el, f);
+    });
+  }
+  function setFillValue(name, value, source) {
+    S.values[name] = FormsCore.cloneValue(value);
+    if (S.missing.indexOf(name) !== -1) {
+      S.missing = S.missing.filter(function (n) { return n !== name; });
+      document.querySelectorAll('.missing[data-field="' + (window.CSS && CSS.escape ? CSS.escape(name) : name) + '"]').forEach(function (el) { el.classList.remove('missing'); });
+      document.querySelectorAll('.fitem.missing').forEach(function (el) {
+        if (el.getAttribute('data-field') === name) el.classList.remove('missing');
+      });
+      if (!S.missing.length) hideFillError();
+    }
+    syncFillControls(name, source);
+    updateBar();
+  }
+
+  /* ---------------- Fill mode: sidebar list ---------------- */
+  function buildFillList() {
+    fillFieldList.innerHTML = '';
+    var byPage = {};
+    S.fields.forEach(function (f) {
+      var seen = {};
+      f.widgets.forEach(function (w) { if (w.page >= 0) seen[w.page] = 1; });
+      Object.keys(seen).forEach(function (p) { (byPage[p] = byPage[p] || []).push(f); });
+      if (!f.widgets.length) (byPage[0] = byPage[0] || []).push(f);
+    });
+    Object.keys(byPage).sort(function (a, b) { return a - b; }).forEach(function (p) {
+      var h = document.createElement('div');
+      h.className = 'fgroup';
+      h.textContent = 'Page ' + (Number(p) + 1);
+      fillFieldList.appendChild(h);
+      byPage[p].forEach(function (f) { fillFieldList.appendChild(fillListEntry(f, Number(p))); });
+    });
+  }
+  function fillListEntry(f, pageIdx) {
+    var wrap = document.createElement('div');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'fitem';
+    b.setAttribute('data-field', f.name);
+    if (S.missing.indexOf(f.name) !== -1) b.classList.add('missing');
+    var tags = '';
+    if (f.flags.required) tags += '<span class="ftag">Required</span>';
+    if (f.flags.readOnly) tags += '<span class="ftag ro">Read-only</span>';
+    if (f.type === 'button') tags += '<span class="ftag ro">Not fillable</span>';
+    b.innerHTML = '<span class="ftype">' + esc(FormsCore.TYPE_LABELS[f.type] || 'Field') + '</span>' +
+      '<span class="fname2">' + esc(f.name) + '</span>' + tags;
+    b.addEventListener('click', function () { scrollToFieldWidget(f, pageIdx); });
+    wrap.appendChild(b);
+    if (f.type === 'signature') {
+      var note = document.createElement('p');
+      note.className = 'panelnote';
+      note.innerHTML = 'Signature fields can\'t be filled here — use <a href="sign-pdf.html">Sign PDF</a>.';
+      wrap.appendChild(note);
+    }
+    return wrap;
+  }
+  function scrollToFieldWidget(f, pageIdx) {
+    var w = null;
+    f.widgets.forEach(function (x) { if (!w && x.page === pageIdx) w = x; });
+    if (!w && f.widgets.length) w = f.widgets[0];
+    if (!w) return;
+    var pg = S.pages[w.page];
+    if (!pg) return;
+    pg.wrap.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    setTimeout(function () {
+      var els = fillEls[f.name] || [];
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].closest('.overlay') === pg.overlay) { els[i].focus(); break; }
+      }
+    }, 350);
+  }
+
+
+  /* ---------------- Edit mode: existing fields (read-only view) ---------------- */
+  function buildExistingList() {
+    editExistingList.innerHTML = '';
+    editExistingWrap.style.display = S.fields.length ? 'block' : 'none';
+    S.fields.forEach(function (f) {
+      var d = document.createElement('div');
+      d.className = 'fitem static';
+      var pagesTxt = f.pages.length ? ' · Page ' + (f.pages[0] + 1) : '';
+      d.innerHTML = '<span class="ftype">' + esc(FormsCore.TYPE_LABELS[f.type] || 'Field') + '</span>' +
+        '<span class="fname2">' + esc(f.name) + esc(pagesTxt) + '</span>';
+      editExistingList.appendChild(d);
+    });
+  }
+
+  /* ---------------- Edit mode: overlays + gestures ---------------- */
+  function takenNames(exceptId) {
+    var names = S.fields.map(function (f) { return f.name; });
+    S.created.forEach(function (s) { if (s.id !== exceptId) names.push(s.name); });
+    return names;
+  }
+  function findSpec(id) {
+    for (var i = 0; i < S.created.length; i++) if (S.created[i].id === id) return S.created[i];
+    return null;
+  }
+  function buildEditOverlays() {
+    S.fields.forEach(function (f) {
+      f.widgets.forEach(function (w) {
+        if (w.hidden || w.page < 0 || !w.rectUser) return;
+        var pg = S.pages[w.page];
+        if (!pg) return;
+        var d = document.createElement('div');
+        d.className = 'xfld';
+        placeEl(d, displayedRect(pg, w.rectUser), pg.scale);
+        d.innerHTML = '<span class="xlab">' + esc(f.name) + '</span>';
+        pg.overlay.appendChild(d);
+      });
+    });
+    S.created.forEach(function (spec) {
+      spec.widgets.forEach(function (w, wi) {
+        var pg = S.pages[w.page];
+        if (!pg) return;
+        var d = document.createElement('div');
+        d.className = 'cfld' + (spec.id === S.selId ? ' sel' : '');
+        d.setAttribute('data-spec', String(spec.id));
+        d.setAttribute('data-widget', String(wi));
+        placeEl(d, w.rect, pg.scale);
+        var lab = spec.type === 'radio' ? spec.name + ' · ' + w.option : spec.name;
+        d.innerHTML = '<span class="clab">' + esc(lab) + '</span>' + (spec.id === S.selId ? '<span class="handle"></span>' : '');
+        pg.overlay.appendChild(d);
+      });
+    });
+  }
+  function setArmed(armed) {
+    S.armed = armed;
+    Object.keys(palBtns).forEach(function (k) {
+      palBtns[k].classList.toggle('armed', !!(armed && armed.kind === 'new' && armed.type === k));
+    });
+    if (armed && armed.kind === 'radioAdd') toolbarHint.textContent = 'Click or drag on a page to place the next button of the "' + (findSpec(armed.id) || {}).name + '" group.';
+    else if (armed) toolbarHint.textContent = 'Now drag a rectangle on a page — or click a page to drop a standard-size ' + (FormsCore.TYPE_LABELS[armed.type] || 'field').toLowerCase() + '.';
+    else toolbarHint.textContent = S.mode === 'edit' ? 'Pick a field type, then draw it on a page. Drag fields to move them.' : 'Type your answers into the fields on the pages.';
+  }
+  Object.keys(palBtns).forEach(function (type) {
+    palBtns[type].addEventListener('click', function () {
+      hideEditError();
+      if (type === 'radio' && S.selId != null) {
+        var sel = findSpec(S.selId);
+        if (sel && sel.type === 'radio') { setArmed({ kind: 'radioAdd', id: sel.id }); return; }
+      }
+      if (S.armed && S.armed.kind === 'new' && S.armed.type === type) setArmed(null);
+      else setArmed({ kind: 'new', type: type });
+    });
+  });
+
+  function onOverlayDown(e, pageIdx) {
+    if (S.mode !== 'edit') return;
+    var pg = S.pages[pageIdx];
+    var pt = pagePoint(e, pg);
+    var cfld = e.target.closest ? e.target.closest('.cfld') : null;
+    if (cfld && pg.overlay.contains(cfld)) {
+      var spec = findSpec(Number(cfld.getAttribute('data-spec')));
+      var wi = Number(cfld.getAttribute('data-widget'));
+      if (!spec || !spec.widgets[wi]) return;
+      selectSpec(spec.id);
+      var isHandle = e.target.classList && e.target.classList.contains('handle');
+      S.gesture = {
+        kind: isHandle ? 'resize' : 'move', specId: spec.id, widgetIdx: wi, page: pageIdx,
+        startPt: pt, startRect: { x: spec.widgets[wi].rect.x, y: spec.widgets[wi].rect.y, w: spec.widgets[wi].rect.w, h: spec.widgets[wi].rect.h },
+        moved: false
+      };
+      e.preventDefault();
+      pg.overlay.setPointerCapture && e.pointerId != null && pg.overlay.setPointerCapture(e.pointerId);
+      pg.overlay.addEventListener('pointermove', onGestureMove);
+      pg.overlay.addEventListener('pointerup', onGestureUp, { once: true });
+      pg.overlay.addEventListener('pointercancel', onGestureUp, { once: true });
+      return;
+    }
+    if (S.armed) {
+      S.gesture = { kind: 'place', page: pageIdx, startPt: pt, curPt: pt, el: null, moved: false };
+      e.preventDefault();
+      pg.overlay.setPointerCapture && e.pointerId != null && pg.overlay.setPointerCapture(e.pointerId);
+      pg.overlay.addEventListener('pointermove', onGestureMove);
+      pg.overlay.addEventListener('pointerup', onGestureUp, { once: true });
+      pg.overlay.addEventListener('pointercancel', onGestureUp, { once: true });
+      return;
+    }
+    selectSpec(null);
+  }
+  function onGestureMove(e) {
+    var g = S.gesture;
+    if (!g) return;
+    var pg = S.pages[g.page];
+    if (!pg) return;
+    var pt = pagePoint(e, pg);
+    if (Math.abs(pt.x - g.startPt.x) + Math.abs(pt.y - g.startPt.y) > 1.5) g.moved = true;
+    if (g.kind === 'place') {
+      g.curPt = pt;
+      var r = { x: Math.min(g.startPt.x, pt.x), y: Math.min(g.startPt.y, pt.y), w: Math.abs(pt.x - g.startPt.x), h: Math.abs(pt.y - g.startPt.y) };
+      if (!g.el) { g.el = document.createElement('div'); g.el.className = 'dragrect'; pg.overlay.appendChild(g.el); }
+      placeEl(g.el, r, pg.scale);
+    } else if (g.kind === 'move' || g.kind === 'resize') {
+      var spec = findSpec(g.specId);
+      if (!spec) return;
+      var w = spec.widgets[g.widgetIdx];
+      var min = FormsCore.MIN_SIZE[spec.type] || { w: 10, h: 10 };
+      if (g.kind === 'move') {
+        w.rect = FormsCore.moveRect(g.startRect, pt.x - g.startPt.x, pt.y - g.startPt.y, g.startRect.w, g.startRect.h, pg.viewW, pg.viewH);
+      } else {
+        w.rect = FormsCore.resizeRect(g.startRect, pt.x - g.startPt.x, pt.y - g.startPt.y, pg.viewW, pg.viewH, min.w, min.h);
+      }
+      refreshCreatedEls();
+    }
+  }
+  function onGestureUp(e) {
+    var g = S.gesture;
+    S.gesture = null;
+    var pg = g && S.pages[g.page];
+    if (pg) pg.overlay.removeEventListener('pointermove', onGestureMove);
+    if (!g) return;
+    if (g.kind === 'place') {
+      if (g.el) g.el.remove();
+      var pt = g.curPt || g.startPt;
+      var type = g.kind === 'place' && S.armed ? (S.armed.kind === 'new' ? S.armed.type : 'radio') : null;
+      if (!type) return;
+      var min = FormsCore.MIN_SIZE[type] || { w: 10, h: 10 };
+      var r = { x: Math.min(g.startPt.x, pt.x), y: Math.min(g.startPt.y, pt.y), w: Math.abs(pt.x - g.startPt.x), h: Math.abs(pt.y - g.startPt.y) };
+      if (r.w < min.w + 6 || r.h < min.h + 4) {
+        var ds = FormsCore.DEFAULT_SIZE[type];
+        r = { x: pt.x - ds.w / 2, y: pt.y - ds.h / 2, w: ds.w, h: ds.h };
+      }
+      r = FormsCore.clampRect(r, pg.viewW, pg.viewH);
+      r = { x: FormsCore.round2(r.x), y: FormsCore.round2(r.y), w: FormsCore.round2(Math.max(min.w, r.w)), h: FormsCore.round2(Math.max(min.h, r.h)) };
+      placeField(S.armed, g.page, r);
+    } else {
+      refreshCreatedEls();
+      renderCreatedList();
+    }
+  }
+  function refreshCreatedEls() {
+    S.pages.forEach(function (pg) {
+      pg.overlay.querySelectorAll('.cfld').forEach(function (d) { d.remove(); });
+    });
+    /* rebuild only created elements, keeping existing-field outlines */
+    S.created.forEach(function (spec) {
+      spec.widgets.forEach(function (w, wi) {
+        var pg = S.pages[w.page];
+        if (!pg) return;
+        var d = document.createElement('div');
+        d.className = 'cfld' + (spec.id === S.selId ? ' sel' : '');
+        d.setAttribute('data-spec', String(spec.id));
+        d.setAttribute('data-widget', String(wi));
+        placeEl(d, w.rect, pg.scale);
+        var lab = spec.type === 'radio' ? spec.name + ' · ' + w.option : spec.name;
+        d.innerHTML = '<span class="clab">' + esc(lab) + '</span>' + (spec.id === S.selId ? '<span class="handle"></span>' : '');
+        pg.overlay.appendChild(d);
+      });
+    });
+  }
+  function placeField(armed, pageIdx, rect) {
+    hideEditError();
+    if (armed.kind === 'radioAdd') {
+      var spec = findSpec(armed.id);
+      if (!spec) { setArmed(null); return; }
+      var opts = spec.widgets.map(function (w) { return w.option; });
+      spec.widgets.push({ page: pageIdx, rect: rect, option: FormsCore.nextRadioOption(opts) });
+      selectSpec(spec.id);
+    } else {
+      var type = armed.type;
+      var name = FormsCore.uniqueFieldName(FormsCore.NAME_PREFIX[type], takenNames(null));
+      var ns = {
+        id: S.idSeq++, type: type, name: name,
+        widgets: [{ page: pageIdx, rect: rect, option: type === 'radio' ? 'option1' : undefined }],
+        options: [], flags: { required: false, readOnly: false, multiline: false, multiSelect: false },
+        defaultValue: type === 'checkbox' ? false : (type === 'optionlist' ? [] : null),
+        fontSize: null
+      };
+      if (type === 'dropdown' || type === 'optionlist') ns.options = ['Option 1', 'Option 2'];
+      S.created.push(ns);
+      selectSpec(ns.id);
+    }
+    setArmed(null);
+    refreshCreatedEls();
+    renderCreatedList();
+    updateBar();
+  }
+
+  /* ---------------- Edit mode: selection + properties ---------------- */
+  function selectSpec(id) {
+    S.selId = id;
+    refreshCreatedEls();
+    renderProps();
+    renderCreatedList();
+  }
+  function renderCreatedList() {
+    editFieldList.innerHTML = '';
+    createdPanel.style.display = S.mode === 'edit' && S.created.length ? 'block' : 'none';
+    S.created.forEach(function (spec) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fitem' + (spec.id === S.selId ? ' sel' : '');
+      var pagesTxt = spec.widgets.map(function (w) { return w.page + 1; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join(', ');
+      b.innerHTML = '<span class="ftype">' + esc(FormsCore.TYPE_LABELS[spec.type] || 'Field') + '</span>' +
+        '<span class="fname2">' + esc(spec.name) + '</span><span class="ftag ro">Page ' + esc(pagesTxt) + '</span>' +
+        '<span class="fdel" title="Delete field">✕</span>';
+      b.addEventListener('click', function (e) {
+        if (e.target.classList && e.target.classList.contains('fdel')) { deleteSpec(spec.id); return; }
+        selectSpec(spec.id);
+        var w = spec.widgets[0];
+        if (w && S.pages[w.page]) S.pages[w.page].wrap.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      });
+      editFieldList.appendChild(b);
+    });
+  }
+  function deleteSpec(id) {
+    S.created = S.created.filter(function (s) { return s.id !== id; });
+    if (S.selId === id) S.selId = null;
+    refreshCreatedEls();
+    renderProps();
+    renderCreatedList();
+    updateBar();
+  }
+  function duplicateSpec(id) {
+    var src = findSpec(id);
+    if (!src) return;
+    var copy = JSON.parse(JSON.stringify(src));
+    copy.id = S.idSeq++;
+    copy.name = FormsCore.ensureUnique(src.name, takenNames(null));
+    copy.widgets.forEach(function (w) {
+      var pg = S.pages[w.page];
+      if (pg) w.rect = FormsCore.clampRect({ x: w.rect.x + 14, y: w.rect.y + 14, w: w.rect.w, h: w.rect.h }, pg.viewW, pg.viewH);
+    });
+    S.created.push(copy);
+    selectSpec(copy.id);
+    updateBar();
+  }
+
+  function renderProps() {
+    var spec = S.selId != null ? findSpec(S.selId) : null;
+    propsEmpty.style.display = spec ? 'none' : 'block';
+    propsBody.innerHTML = '';
+    if (!spec) return;
+    var h = '';
+    h += '<div class="prop-row"><label for="propName">Field name</label><input type="text" id="propName" value="' + esc(spec.name) + '" autocomplete="off"></div>';
+    if (spec.type === 'text') {
+      h += '<div class="prop-row"><label for="propTextDefault">Default value</label><input type="text" id="propTextDefault" value="' + esc(spec.defaultValue || '') + '" autocomplete="off"></div>';
+      h += '<label class="checkrow"><input type="checkbox" id="propMulti"' + (spec.flags.multiline ? ' checked' : '') + '><span>Multiline<span style="font-weight:500;color:#666c8a"> — a text area instead of a single line</span></span></label>';
+      h += '<div class="prop-row"><label for="propFontSize">Font size</label><select id="propFontSize">' +
+        '<option value="">Auto</option>' + [8, 9, 10, 11, 12, 14, 16, 18, 20, 24].map(function (n) {
+          return '<option value="' + n + '"' + (spec.fontSize === n ? ' selected' : '') + '>' + n + ' pt</option>';
+        }).join('') + '</select></div>';
+    }
+    if (spec.type === 'checkbox') {
+      h += '<label class="checkrow"><input type="checkbox" id="propCheckDefault"' + (spec.defaultValue ? ' checked' : '') + '><span>Checked by default</span></label>';
+    }
+    if (spec.type === 'radio') {
+      h += '<div class="prop-row"><label>Buttons in this group</label><div id="propRadioOpts">' +
+        spec.widgets.map(function (w, wi) {
+          return '<div class="optrow"><span class="panelnote" style="margin:0">Page ' + (w.page + 1) + '</span>' +
+            '<input type="text" data-wi="' + wi + '" value="' + esc(w.option) + '" autocomplete="off">' +
+            '<button type="button" data-del="' + wi + '" title="Remove this button">✕</button></div>';
+        }).join('') + '</div></div>';
+      h += '<div class="prop-row"><button class="assetbtn" id="propAddRadio" type="button">Add another button</button></div>';
+      h += '<div class="prop-row"><label for="propDefault">Selected by default</label><select id="propDefault">' +
+        '<option value="">None</option>' + spec.widgets.map(function (w) {
+          return '<option value="' + esc(w.option) + '"' + (spec.defaultValue === w.option ? ' selected' : '') + '>' + esc(w.option) + '</option>';
+        }).join('') + '</select></div>';
+      h += '<p class="panelnote">Buttons sharing this group name are one question — the reader picks exactly one.</p>';
+    }
+    if (spec.type === 'dropdown' || spec.type === 'optionlist') {
+      h += '<div class="prop-row"><label for="propOptions">Options (one per line)</label><textarea id="propOptions">' + esc(spec.options.join('\n')) + '</textarea></div>';
+      if (spec.type === 'optionlist') {
+        h += '<label class="checkrow"><input type="checkbox" id="propListMulti"' + (spec.flags.multiSelect ? ' checked' : '') + '><span>Allow multiple selections</span></label>';
+      }
+      var multi = spec.type === 'optionlist' && spec.flags.multiSelect;
+      h += '<div class="prop-row"><label for="propDefault">Selected by default</label><select id="propDefault"' + (multi ? ' multiple size="3"' : '') + '>' +
+        (multi ? '' : '<option value="">None</option>') + spec.options.map(function (o) {
+          var sel = multi ? (spec.defaultValue || []).indexOf(o) !== -1 : spec.defaultValue === o;
+          return '<option value="' + esc(o) + '"' + (sel ? ' selected' : '') + '>' + esc(o) + '</option>';
+        }).join('') + '</select></div>';
+    }
+    h += '<label class="checkrow"><input type="checkbox" id="propRequired"' + (spec.flags.required ? ' checked' : '') + '><span>Required<span style="font-weight:500;color:#666c8a"> — the form can\'t be saved empty</span></span></label>';
+    h += '<label class="checkrow"><input type="checkbox" id="propReadOnly"' + (spec.flags.readOnly ? ' checked' : '') + '><span>Read-only<span style="font-weight:500;color:#666c8a"> — shown, but can\'t be changed</span></span></label>';
+    h += '<div class="mini-btns"><button id="propDuplicate" type="button">Duplicate</button><button id="propDelete" type="button" class="danger">Delete</button></div>';
+    propsBody.innerHTML = h;
+
+    $('propName').addEventListener('change', function () {
+      var v = this.value.trim();
+      if (!v) v = spec.name;
+      spec.name = FormsCore.ensureUnique(v, takenNames(spec.id));
+      this.value = spec.name;
+      refreshCreatedEls();
+      renderCreatedList();
+    });
+    var el;
+    if ((el = $('propTextDefault'))) el.addEventListener('input', function () { spec.defaultValue = this.value; });
+    if ((el = $('propMulti'))) el.addEventListener('change', function () { spec.flags.multiline = this.checked; });
+    if ((el = $('propFontSize'))) el.addEventListener('change', function () { spec.fontSize = this.value ? Number(this.value) : null; });
+    if ((el = $('propCheckDefault'))) el.addEventListener('change', function () { spec.defaultValue = this.checked; });
+    if ((el = $('propOptions'))) el.addEventListener('change', function () {
+      var lines = this.value.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s !== ''; });
+      var dedup = [];
+      lines.forEach(function (s) { if (dedup.indexOf(s) === -1) dedup.push(s); });
+      spec.options = dedup.length ? dedup : spec.options;
+      if (spec.type === 'dropdown' && spec.defaultValue && spec.options.indexOf(spec.defaultValue) === -1) spec.defaultValue = null;
+      if (spec.type === 'optionlist') spec.defaultValue = (spec.defaultValue || []).filter(function (d) { return spec.options.indexOf(d) !== -1; });
+      renderProps();
+    });
+    if ((el = $('propListMulti'))) el.addEventListener('change', function () {
+      spec.flags.multiSelect = this.checked;
+      if (!this.checked) spec.defaultValue = (spec.defaultValue || []).slice(0, 1);
+      renderProps();
+    });
+    if ((el = $('propDefault'))) el.addEventListener('change', function () {
+      if (spec.type === 'radio' || spec.type === 'dropdown') spec.defaultValue = this.value || null;
+      else if (spec.type === 'optionlist') {
+        if (spec.flags.multiSelect) {
+          var sel = [];
+          for (var i = 0; i < this.options.length; i++) if (this.options[i].selected) sel.push(this.options[i].value);
+          spec.defaultValue = sel;
+        } else spec.defaultValue = this.value ? [this.value] : [];
+      }
+    });
+    if ((el = $('propAddRadio'))) el.addEventListener('click', function () { setArmed({ kind: 'radioAdd', id: spec.id }); });
+    var optsBox = $('propRadioOpts');
+    if (optsBox) {
+      optsBox.querySelectorAll('input[data-wi]').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+          var wi = Number(this.getAttribute('data-wi'));
+          var old = spec.widgets[wi].option;
+          var v = this.value.trim() || old;
+          var others = spec.widgets.filter(function (w, i) { return i !== wi; }).map(function (w) { return w.option; });
+          v = FormsCore.ensureUnique(v, others);
+          spec.widgets[wi].option = v;
+          if (spec.defaultValue === old) spec.defaultValue = v;
+          this.value = v;
+          refreshCreatedEls();
+          renderProps();
+        });
+      });
+      optsBox.querySelectorAll('button[data-del]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var wi = Number(this.getAttribute('data-del'));
+          var removed = spec.widgets[wi];
+          spec.widgets.splice(wi, 1);
+          if (spec.defaultValue === removed.option) spec.defaultValue = null;
+          if (!spec.widgets.length) { deleteSpec(spec.id); return; }
+          refreshCreatedEls();
+          renderProps();
+        });
+      });
+    }
+    if ((el = $('propRequired'))) el.addEventListener('change', function () { spec.flags.required = this.checked; });
+    if ((el = $('propReadOnly'))) el.addEventListener('change', function () { spec.flags.readOnly = this.checked; });
+    if ((el = $('propDuplicate'))) el.addEventListener('click', function () { duplicateSpec(spec.id); });
+    if ((el = $('propDelete'))) el.addEventListener('click', function () { deleteSpec(spec.id); });
+  }
+
+  /* ---------------- mode switch + action bar ---------------- */
+  function switchMode(mode) {
+    S.mode = mode;
+    modeFillBtn.classList.toggle('active', mode === 'fill');
+    modeEditBtn.classList.toggle('active', mode === 'edit');
+    fillPanel.style.display = mode === 'fill' ? 'block' : 'none';
+    editPanel.style.display = mode === 'edit' ? 'block' : 'none';
+    propsPanel.style.display = mode === 'edit' ? 'block' : 'none';
+    modeHint.textContent = mode === 'fill'
+      ? 'Fill in the fields this document already has.'
+      : 'Add new fillable fields to this document.';
+    saveFillBtn.style.display = mode === 'fill' ? '' : 'none';
+    saveEditBtn.style.display = mode === 'edit' ? '' : 'none';
+    if (mode === 'fill') setArmed(null);
+    setArmed(S.armed);
+    toolbarHint.textContent = mode === 'fill'
+      ? 'Type your answers into the fields on the pages.'
+      : 'Pick a field type, then draw it on a page. Drag fields to move them.';
+    hideFillError();
+    hideEditError();
+    layoutOverlays();
+    renderCreatedList();
+    renderProps();
+    updateBar();
+  }
+  modeFillBtn.addEventListener('click', function () { switchMode('fill'); });
+  modeEditBtn.addEventListener('click', function () { switchMode('edit'); });
+  addFieldsBtn.addEventListener('click', function () { switchMode('edit'); });
+
+  function fillableCount() {
+    return S.fields.filter(function (f) { return !!FormsCore.FILLABLE[f.type]; }).length;
+  }
+  function updateBar() {
+    if (!S.editorOpen) { barSummary.textContent = ''; return; }
+    actionBar.classList.add('on');
+    if (S.mode === 'fill') {
+      var n = fillableCount();
+      barSummary.textContent = S.fields.length
+        ? n + ' fillable field' + (n === 1 ? '' : 's') + ' in this document'
+        : 'This document has no fields — switch to Edit Form to add some';
+      saveFillBtn.disabled = !(S.fields.length > 0 && n > 0);
+    } else {
+      barSummary.textContent = S.created.length
+        ? S.created.length + ' field' + (S.created.length === 1 ? '' : 's') + ' added'
+        : 'No fields added yet';
+      saveEditBtn.disabled = S.created.length === 0;
+    }
+  }
+
+  /* ---------------- saving ---------------- */
+  function downloadResult(outBytes, outName, title, rows, note) {
+    var blob = new Blob([outBytes], { type: 'application/pdf' });
+    if (downloadLink.href && downloadLink.href.indexOf('blob:') === 0) URL.revokeObjectURL(downloadLink.href);
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.setAttribute('download', outName);
+    downloadLink.textContent = 'Download ' + outName;
+    successTitle.textContent = title;
+    successInfo.textContent = '';
+    resultList.innerHTML = rows.map(function (r) {
+      return '<div class="rline"><span>' + esc(r[0]) + '</span><b>' + esc(r[1]) + '</b></div>';
+    }).join('');
+    if (note) { successNote.textContent = note; successNote.style.display = 'block'; }
+    else successNote.style.display = 'none';
+    editorLayout.classList.remove('on');
+    actionBar.classList.remove('on');
+    successEl.classList.add('on');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  saveFillBtn.addEventListener('click', async function () {
+    hideFillError();
+    hideEditorError();
+    var diff = FormsCore.diffValues(S.fields, S.values);
+    if (!diff.length) { showFillError('No changes detected — fill at least one field.'); return; }
+    var missing = FormsCore.validateRequired(S.fields, S.values);
+    if (missing.length) {
+      S.missing = missing.slice();
+      layoutOverlays();
+      buildFillList();
+      showFillError('Required field(s) still empty: ' + missing.join(', ') + '. Fill them in to save.');
+      missing.forEach(function (name) {
+        var f = null;
+        S.fields.forEach(function (x) { if (x.name === name) f = x; });
+        if (f) scrollToFieldWidget(f, f.widgets.length ? f.widgets[0].page : 0);
+      });
+      return;
+    }
+    var flatten = fillFlatten.checked;
+    showProcessing('Saving your filled form…', S.fileName);
+    try {
+      var res = await FormsEngine.applyValues(S.bytes.slice(0), S.values, { flatten: flatten }, PDFLib, ENGINE_EXT);
+      hideProcessing();
+      var outName = FormsCore.outputName(S.fileName, '_filled.pdf');
+      var note = '';
+      if (res.flattenedViewerFields && res.flattenedViewerFields.length) {
+        note = 'Heads-up: the answers in ' + res.flattenedViewerFields.join(', ') + ' use characters the form\'s own font can\'t print, so their look was fixed as-is when flattening. Open the file and check those answers look right — if not, save again without flattening.';
+      } else if (res.needAppearances) {
+        note = 'Some answers use characters the form\'s built-in font can\'t print, so the file asks your PDF viewer to render those answers itself. They will display correctly in any modern viewer, with your text exactly as typed.';
+      }
+      downloadResult(res.bytes, outName, 'Your filled form is ready!', [
+        ['File', outName],
+        ['Size', fmtSize(res.bytes.length || res.bytes.byteLength)],
+        ['Fields filled', String(res.changed)],
+        ['Form', flatten ? 'Flattened — answers baked into the pages' : 'Still a fillable form']
+      ], note);
+    } catch (err) {
+      hideProcessing();
+      showEditorError('Sorry — the filled form could not be saved. ' + (err && err.message ? err.message : ''));
+    }
+  });
+  saveEditBtn.addEventListener('click', async function () {
+    hideEditError();
+    hideEditorError();
+    if (!S.created.length) { showEditError('Add at least one field first — pick a type above and draw it on a page.'); return; }
+    var specs = S.created.map(function (spec) {
+      return {
+        type: spec.type, name: spec.name, options: spec.options.slice(),
+        flags: { required: spec.flags.required, readOnly: spec.flags.readOnly, multiline: spec.flags.multiline, multiSelect: spec.flags.multiSelect },
+        defaultValue: FormsCore.cloneValue(spec.defaultValue), fontSize: spec.fontSize,
+        widgets: spec.widgets.map(function (w) {
+          var pg = S.pages[w.page];
+          return { page: w.page, rect: w.rect, option: w.option, transform: pg.transform, offset: pg.offset };
+        })
+      };
+    });
+    showProcessing('Building your fillable form…', S.fileName);
+    try {
+      var res = await FormsEngine.createFields(S.bytes.slice(0), specs, PDFLib, ENGINE_EXT);
+      hideProcessing();
+      var outName = FormsCore.outputName(S.fileName, '_form.pdf');
+      var names = res.created.map(function (c) { return c.name; }).join(', ');
+      var note = res.needAppearances
+        ? 'One or more default values use characters the standard form font can\'t print, so the file asks your PDF viewer to render them — they will display correctly in any modern viewer.'
+        : '';
+      downloadResult(res.bytes, outName, 'Your fillable form is ready!', [
+        ['File', outName],
+        ['Size', fmtSize(res.bytes.length || res.bytes.byteLength)],
+        ['Fields created', String(res.created.length)],
+        ['Names', names]
+      ], note);
+    } catch (err) {
+      hideProcessing();
+      showEditorError('Sorry — the form could not be built. ' + (err && err.message ? err.message : ''));
+    }
+  });
+})();
+</script>
+</body>
+  </html>
