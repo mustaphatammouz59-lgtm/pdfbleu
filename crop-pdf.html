@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crop PDF — PdfBleu.com</title>
+<meta name="description" content="Crop PDF pages for free, right in your browser: drag a frame over the area to keep, apply it to one page or all pages, and download. The page size really changes while text and quality stay intact. No upload — your files never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#AB6993;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(171,105,147,.35)}
+.doctile .dw{font-size:30px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .warn a{color:#b71c1c}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#AB6993;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+/* ---------- Crop editor ---------- */
+.editor-layout{display:none;flex-direction:column;gap:18px}
+.editor-layout.on{display:flex}
+@media(min-width:920px){.editor-layout{flex-direction:row;align-items:flex-start}.editor-main{flex:1;min-width:0}.editor-side{width:330px;flex-shrink:0}}
+.editor-side{display:flex;flex-direction:column;gap:18px}
+.card-panel{background:#fff;border-radius:14px;padding:16px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.card-panel h2{font-size:17px;color:#1a237e;margin-bottom:8px}
+.hint{font-size:13.5px;color:#666c8a}
+.toolbar{position:sticky;top:8px;z-index:30;background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;box-shadow:0 2px 8px rgba(63,81,181,.12);margin-bottom:14px;align-items:center}
+.tbtn{border:1.5px solid #dfe3f7;background:#f9faff;color:#333a5e;border-radius:9px;padding:8px 12px;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;min-height:38px;justify-content:center;font-family:inherit}
+.tbtn:disabled{opacity:.45;cursor:not-allowed}
+.tsep{width:1px;align-self:stretch;background:#e0e4f5;margin:2px 2px}
+.pagenav{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#333a5e}
+.pagenav input{width:52px;border:1.5px solid #c5cae9;border-radius:8px;padding:7px 6px;font-size:14px;font-family:inherit;text-align:center;color:#21243d}
+.zoomwrap{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:#444a6d}
+.zoomwrap select{border:1.5px solid #c5cae9;border-radius:8px;padding:7px 6px;font-size:14px;font-family:inherit;background:#fff;color:#21243d}
+.stage{background:#848aa3;border-radius:12px;max-height:78vh;overflow:auto;display:flex;padding:16px}
+.stage-center{margin:auto}
+.pagelabel{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.pagewrap{position:relative;background:#fff;box-shadow:0 3px 14px rgba(10,12,30,.4);line-height:0}
+.pagewrap canvas{display:block}
+.poverlay{position:absolute;inset:0;line-height:1.4;touch-action:none;overflow:hidden;cursor:crosshair}
+.dim{position:absolute;background:rgba(23,25,43,.55);pointer-events:none}
+.croprect{position:absolute;border:2px solid #3F51B5;box-sizing:border-box;pointer-events:none}
+.cmove{position:absolute;inset:0;background:rgba(63,81,181,.07);cursor:move;pointer-events:auto}
+.handle{position:absolute;width:15px;height:15px;background:#fff;border:2px solid #3F51B5;border-radius:3px;transform:translate(-50%,-50%);pointer-events:auto;z-index:5;touch-action:none}
+.handle[data-h="nw"],.handle[data-h="se"]{cursor:nwse-resize}
+.handle[data-h="ne"],.handle[data-h="sw"]{cursor:nesw-resize}
+.handle[data-h="n"],.handle[data-h="s"]{cursor:ns-resize}
+.handle[data-h="e"],.handle[data-h="w"]{cursor:ew-resize}
+.radio-list .radio{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:14.5px;color:#333a5e}
+.radio-list input{width:18px;height:18px;accent-color:#3F51B5}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:6px}
+.fields .fld label{display:block;font-size:12.5px;font-weight:700;color:#444a6d;margin-bottom:3px}
+.fields .fld input{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 9px;font-size:14px;font-family:inherit;color:#21243d}
+.fields .fld input:disabled{background:#f0f1f8;color:#9aa0b8}
+.sizeline{font-size:13.5px;color:#333a5e;background:#f9faff;border:1.5px solid #e0e4f5;border-radius:8px;padding:9px 11px;margin-top:11px}
+.sizeline strong{color:#1a237e}
+.panelbtn{width:100%;border:1.5px solid #e53935;background:#fff;color:#c62828;border-radius:20px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px}
+.panelbtn:disabled{opacity:.45;cursor:not-allowed}
+.resetlink{display:inline-block;margin-top:11px;color:#3F51B5;font-size:13.5px;font-weight:700;cursor:pointer;background:none;border:none;padding:0;font-family:inherit;text-decoration:underline}
+.crophint{display:none;margin-top:11px;font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 11px}
+.crophint.on{display:block}
+.side-note{font-size:13.5px;color:#444a6d}
+.side-note a{color:#3F51B5;font-weight:600}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><path d="M28 12 H14 a2 2 0 0 0 -2 2 V28" stroke="#fff" stroke-width="3.4" fill="none"/><path d="M20 36 H34 a2 2 0 0 0 2 -2 V20" stroke="#fff" stroke-width="3.4" fill="none"/></svg></span>
+<h1>Crop PDF</h1>
+<p class="subtitle">Trim margins or keep just one area of your pages — the page size really changes, the content keeps its full quality.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: the cropping happens entirely in your browser — nothing is uploaded.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">⌗</span><span class="dext">PDF</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Crop PDF</h2>
+<p>Open a PDF, drag a frame over the part of the page you want to keep, and press “Crop PDF”. The pages are resized to your frame — exactly, with no quality loss.</p>
+<div class="warnnote">⚠ <strong>Hidden is not deleted:</strong> cropping changes the page size, so everything outside the frame is no longer shown — but it is still inside the file. If the margins hold something private, crop is not enough: use <a href="redact-pdf.html">Redact PDF</a> to destroy content permanently.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="editor-layout" id="editorLayout">
+<div class="editor-main">
+<div class="toolbar">
+<span class="pagenav">
+<button class="tbtn" id="prevBtn" type="button" title="Previous page">‹</button>
+<input id="pageNum" type="number" min="1" value="1" aria-label="Page number">
+<span>of <span id="pageTotal">1</span></span>
+<button class="tbtn" id="nextBtn" type="button" title="Next page">›</button>
+</span>
+<span class="tsep"></span>
+<span class="zoomwrap"><label for="zoomSel">Zoom</label>
+<select id="zoomSel">
+<option value="fitw" selected>Fit width</option>
+<option value="fitp">Fit page</option>
+<option value="50">50%</option>
+<option value="75">75%</option>
+<option value="100">100%</option>
+<option value="125">125%</option>
+<option value="150">150%</option>
+<option value="200">200%</option>
+</select></span>
+</div>
+<div class="stage" id="stage">
+<div class="stage-center">
+<div class="pagelabel" id="pageLabel">Page 1</div>
+<div class="pagewrap" id="pageWrap">
+<canvas id="pageCanvas"></canvas>
+<div class="poverlay" id="poverlay"></div>
+</div>
+</div>
+</div>
+</div>
+<aside class="editor-side">
+<div class="card-panel">
+<h2>Crop PDF</h2>
+<p class="hint">Drag on the page to select the area you want to keep. Drag the frame to move it, or pull its corners and edges to resize it.</p>
+<div class="radio-list" style="margin-top:10px">
+<div class="radio"><input type="radio" name="pmode" id="modeAll" value="all" checked><label for="modeAll">All pages — the same frame everywhere</label></div>
+<div class="radio"><input type="radio" name="pmode" id="modeCurrent" value="current"><label for="modeCurrent">Current page only — each page its own frame</label></div>
+</div>
+<div class="fields">
+<div class="fld"><label for="fLeft">Left (pt)</label><input id="fLeft" type="number" min="0" step="0.5"></div>
+<div class="fld"><label for="fTop">Top (pt)</label><input id="fTop" type="number" min="0" step="0.5"></div>
+<div class="fld"><label for="fWidth">Width (pt)</label><input id="fWidth" type="number" min="0" step="0.5"></div>
+<div class="fld"><label for="fHeight">Height (pt)</label><input id="fHeight" type="number" min="0" step="0.5"></div>
+</div>
+<div class="sizeline" id="sizeReadout">No crop frame yet — drag on the page to draw one.</div>
+<div class="crophint" id="cropHint"></div>
+<button class="panelbtn" id="removeCropBtn" type="button" disabled>Remove crop frame</button>
+<button class="resetlink" id="resetAll" type="button">Reset all</button>
+</div>
+<div class="card-panel">
+<h2>Good to know</h2>
+<p class="side-note">Cropping sets the page boxes of the PDF: the content, text and image quality inside the frame are preserved exactly, and text stays selectable. Pages can have different sizes — the frame is simply fitted inside each page it is applied to. Rotated pages are cropped the way you see them.</p>
+</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your cropped PDF is ready</h2>
+<p class="sub">The page boxes were updated — content and quality untouched.</p>
+<div class="resultlist">
+<div class="resultitem">
+<div><div class="rname" id="resName"></div><div class="rmeta" id="resMeta"></div></div>
+<a class="dl" id="dlBtn" href="#" download>Download</a>
+</div>
+</div>
+<button class="again" id="againBtn" type="button">Crop another file</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why crop with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">✂️</span><h3>An exact crop</h3><p>The page size is set to your frame in the file itself — not a picture of the page. Text stays selectable, vectors stay sharp, and the document prints at exactly the new size.</p></div>
+<div class="step"><span class="fic">📐</span><h3>One frame, every page</h3><p>Scanner margins, letterheads, footers: draw the frame once and apply it to the whole document, or give individual pages their own frame instead.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>The file is cropped in your browser and never uploaded. What you trim on your device stays on your device.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to crop a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Open your PDF</h3><p>Click the select button or drop your PDF into the area provided. The document opens in the crop editor, right here in your browser.</p></div>
+<div class="step"><span class="num">2</span><h3>Draw the frame</h3><p>Drag over the area you want to keep. Move the frame by dragging inside it, resize it with the handles, or type exact values in points.</p></div>
+<div class="step"><span class="num">3</span><h3>Choose the pages</h3><p>Apply the same frame to all pages — the usual choice for trimming margins — or switch to current-page mode and crop pages one by one.</p></div>
+<div class="step"><span class="num">4</span><h3>Crop and download</h3><p>Press “Crop PDF”. The page sizes are updated in the file and your cropped document is ready to download.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is the difference between “All pages” and “Current page”?</h3><p>With “All pages”, one frame is applied to the whole document — ideal when every page carries the same margins, header or footer. With “Current page”, each page keeps its own frame: you draw it while that page is on screen, and pages you never touch stay exactly as they were.</p></div>
+<div class="qa"><h3>My pages are not all the same size. What happens?</h3><p>The frame is fitted inside each page it applies to. On a smaller page it is pulled in to the page edges; if the frame would cover a smaller page completely, that page is left uncropped — a crop that keeps everything is not a crop.</p></div>
+<div class="qa"><h3>Does it work on rotated pages?</h3><p>Yes. You crop what you see: draw the frame over the rotated page exactly as it appears on screen, and the tool converts your frame into the page's own coordinates, rotation included.</p></div>
+<div class="qa"><h3>Will cropping make my file much smaller?</h3><p>Barely. Cropping changes the page size but keeps the content, so the file size hardly moves. If shrinking the file is your goal, use <a href="compress-pdf.html">Compress PDF</a> afterwards.</p></div>
+<div class="qa"><h3>I cropped too much — can I undo it?</h3><p>Not from the cropped file: once the page boxes are set smaller, viewers show only the new size, and the surest way back is your original file — so keep it. (The full content does remain inside the cropped file, which is also why cropping must never be used to hide private information — use <a href="redact-pdf.html">Redact PDF</a> for that.)</p></div>
+<div class="qa"><h3>Is the content outside the frame deleted?</h3><p>No. It is hidden by the new page size, not removed from the file. Anything outside the frame can be brought back by enlarging the page boxes again with the right software. For permanent removal, <a href="redact-pdf.html">Redact PDF</a> rebuilds the document so the content is destroyed.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p id="processingTitle">Working…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="cropBtn" type="button" disabled title="Draw a crop frame that trims at least one page">Crop PDF</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="cropCore">
+/* =====================================================================
+   PdfBleu Crop PDF — pure, node-testable core (no DOM in here).
+
+   Cropping = setting a page's CropBox AND MediaBox to the chosen
+   rectangle in the page's UNROTATED user space (bottom-left origin).
+   Nothing is rasterized: content, text and vector quality survive.
+
+   Geometry bridge: the editor works in DISPLAYED space (top-left
+   origin, the page's /Rotate applied) through pdf.js's scale-1
+   viewport transform. pdf.js bakes the view-box offset into that
+   transform, so the DOM layer first "un-bakes" it — composing the
+   viewport transform with a translation by the view-box lower-left
+   (CropCore.relativeTransform) — which yields a transform between
+   VIEW-RELATIVE user coordinates (origin at the view box's lower-left)
+   and displayed coordinates. rectDisplayedToUser then inverts that
+   transform (all 4 rect corners, min/max) and adds the view-box offset
+   back, landing in absolute user coordinates ready for pdf-lib.
+   ===================================================================== */
+var CropCore = (function () {
+  'use strict';
+
+  var MIN_SIZE = 10;      /* smallest crop frame edge, in points */
+  var FULL_EPS = 0.6;     /* tolerance for "covers the whole page" */
+
+  /* ---- affine helpers (pdf.js 6-number layout [a b c d e f]) ---- */
+
+  function applyPoint(m, x, y) {
+    return { x: m[0] * x + m[2] * y + m[4], y: m[1] * x + m[3] * y + m[5] };
+  }
+
+  function invert(m) {
+    var det = m[0] * m[3] - m[1] * m[2];
+    if (!det || !isFinite(det)) return null;
+    return [
+      m[3] / det, -m[1] / det, -m[2] / det, m[0] / det,
+      (m[2] * m[5] - m[3] * m[4]) / det,
+      (m[1] * m[4] - m[0] * m[5]) / det
+    ];
+  }
+
+  /* multiply(m1, m2): the transform that applies m2 first, then m1
+     (same convention as pdf.js Util.transform). */
+  function multiply(m1, m2) {
+    return [
+      m1[0] * m2[0] + m1[2] * m2[1],
+      m1[1] * m2[0] + m1[3] * m2[1],
+      m1[0] * m2[2] + m1[2] * m2[3],
+      m1[1] * m2[2] + m1[3] * m2[3],
+      m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
+      m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+    ];
+  }
+
+  /* The view-relative variant of a pdf.js viewport transform: maps
+     user coordinates measured from the view box's lower-left corner
+     to displayed coordinates. */
+  function relativeTransform(vpTransform, offset) {
+    var ox = offset ? (offset.x || 0) : 0;
+    var oy = offset ? (offset.y || 0) : 0;
+    return multiply(vpTransform, [1, 0, 0, 1, ox, oy]);
+  }
+
+  function rectCorners(r) {
+    return [
+      { x: r.x, y: r.y },
+      { x: r.x + r.w, y: r.y },
+      { x: r.x, y: r.y + r.h },
+      { x: r.x + r.w, y: r.y + r.h }
+    ];
+  }
+
+  function bboxOf(points) {
+    var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (var i = 0; i < points.length; i++) {
+      if (points[i].x < x0) x0 = points[i].x;
+      if (points[i].y < y0) y0 = points[i].y;
+      if (points[i].x > x1) x1 = points[i].x;
+      if (points[i].y > y1) y1 = points[i].y;
+    }
+    return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  }
+
+  /* Displayed rect (top-left origin, points) -> absolute user-space
+     rect (bottom-left origin) for setCropBox/setMediaBox.
+     `vt` must be the view-relative transform (relativeTransform) and
+     `offset` the view box's lower-left corner in user space. */
+  function rectDisplayedToUser(vt, rect, offset) {
+    var inv = invert(vt);
+    if (!inv || !rect) return null;
+    var pts = rectCorners(rect).map(function (p) { return applyPoint(inv, p.x, p.y); });
+    var b = bboxOf(pts);
+    var ox = offset ? (offset.x || 0) : 0;
+    var oy = offset ? (offset.y || 0) : 0;
+    return { x: b.x + ox, y: b.y + oy, w: b.w, h: b.h };
+  }
+
+  /* Inverse of rectDisplayedToUser (used by the roundtrip tests and
+     available to any caller that needs to show an existing box). */
+  function rectUserToDisplayed(vt, rect, offset) {
+    if (!rect) return null;
+    var ox = offset ? (offset.x || 0) : 0;
+    var oy = offset ? (offset.y || 0) : 0;
+    var rel = { x: rect.x - ox, y: rect.y - oy, w: rect.w, h: rect.h };
+    var pts = rectCorners(rel).map(function (p) { return applyPoint(vt, p.x, p.y); });
+    return bboxOf(pts);
+  }
+
+  /* ---- rectangle math in displayed points ---- */
+
+  function clampNum(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+
+  function rectFromDrag(x1, y1, x2, y2) {
+    return {
+      x: Math.min(x1, x2), y: Math.min(y1, y2),
+      w: Math.abs(x2 - x1), h: Math.abs(y2 - y1)
+    };
+  }
+
+  function clampRect(rect, W, H, minSize) {
+    if (!rect) return null;
+    var min = (minSize == null ? MIN_SIZE : minSize);
+    var mw = Math.min(min, W), mh = Math.min(min, H);
+    var w = clampNum(rect.w, mw, W);
+    var h = clampNum(rect.h, mh, H);
+    return {
+      x: clampNum(rect.x, 0, W - w),
+      y: clampNum(rect.y, 0, H - h),
+      w: w, h: h
+    };
+  }
+
+  function isFullPage(rect, W, H, eps) {
+    if (!rect) return false;
+    var e = (eps == null ? FULL_EPS : eps);
+    return rect.x <= e && rect.y <= e &&
+      rect.x + rect.w >= W - e && rect.y + rect.h >= H - e;
+  }
+
+  /* Resize by one of the 8 handles. dx/dy are the pointer's movement
+     in points since the drag started; `rect` is the drag-start rect.
+     Edges clamp to the page; an edge dragged past the opposite one
+     stops at the minimum size instead of flipping the rect. */
+  function resizeRect(rect, handle, dx, dy, W, H, minSize) {
+    var min = (minSize == null ? MIN_SIZE : minSize);
+    var l = rect.x, t = rect.y, r = rect.x + rect.w, b = rect.y + rect.h;
+    if (handle.indexOf('w') >= 0) l = clampNum(rect.x + dx, 0, r - min);
+    if (handle.indexOf('e') >= 0) r = clampNum(r + dx, l + min, W);
+    if (handle.indexOf('n') >= 0) t = clampNum(rect.y + dy, 0, b - min);
+    if (handle.indexOf('s') >= 0) b = clampNum(b + dy, t + min, H);
+    return { x: l, y: t, w: r - l, h: b - t };
+  }
+
+  function moveRect(rect, dx, dy, W, H) {
+    return {
+      x: clampNum(rect.x + dx, 0, Math.max(0, W - rect.w)),
+      y: clampNum(rect.y + dy, 0, Math.max(0, H - rect.h)),
+      w: rect.w, h: rect.h
+    };
+  }
+
+  /* Which pages actually get cropped?
+     mode 'all':     the shared rect, clamped into each page;
+     mode 'current': each page's own rect.
+     A rect that — after clamping — covers its page entirely is NOT a
+     crop (null). Returns { rects: [rect|null per page], count,
+     anyCrop }. */
+  function effectiveCrops(mode, shared, perPage, sizes) {
+    var rects = [], count = 0, i, src, r;
+    for (i = 0; i < sizes.length; i++) {
+      src = (mode === 'all') ? shared : (perPage ? perPage[i] : null);
+      r = src ? clampRect(src, sizes[i].w, sizes[i].h) : null;
+      if (r && isFullPage(r, sizes[i].w, sizes[i].h)) r = null;
+      rects.push(r);
+      if (r) count++;
+    }
+    return { rects: rects, count: count, anyCrop: count > 0 };
+  }
+
+  /* ---- misc ---- */
+
+  function ptToMm(pt) { return pt * 25.4 / 72; }
+
+  function round2(v) { return Math.round(v * 100) / 100; }
+
+  function sanitizeBase(name) {
+    var s = String(name == null ? '' : name).replace(/[^A-Za-z0-9._-]/g, '_').replace(/^\.+/, '').replace(/\.+$/, '');
+    return s || 'document';
+  }
+
+  function outputName(name) {
+    var base = String(name == null ? '' : name).replace(/\.pdf$/i, '');
+    return sanitizeBase(base) + '_crop.pdf';
+  }
+
+  return {
+    MIN_SIZE: MIN_SIZE,
+    applyPoint: applyPoint,
+    invert: invert,
+    multiply: multiply,
+    relativeTransform: relativeTransform,
+    rectDisplayedToUser: rectDisplayedToUser,
+    rectUserToDisplayed: rectUserToDisplayed,
+    rectFromDrag: rectFromDrag,
+    clampRect: clampRect,
+    isFullPage: isFullPage,
+    resizeRect: resizeRect,
+    moveRect: moveRect,
+    effectiveCrops: effectiveCrops,
+    ptToMm: ptToMm,
+    round2: round2,
+    sanitizeBase: sanitizeBase,
+    outputName: outputName
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  var PDFLibRef = window.PDFLib;
+
+  function $(id) { return document.getElementById(id); }
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput');
+  var fileCard = $('fileCard'), fileNameEl = $('fileName'), fileMeta = $('fileMeta'), fileWarn = $('fileWarn');
+  var removeFileBtn = $('removeFileBtn'), errorEl = $('error'), layout = $('layout');
+  var editorLayout = $('editorLayout'), stage = $('stage'), pageWrap = $('pageWrap');
+  var pageCanvas = $('pageCanvas'), poverlay = $('poverlay'), pageLabel = $('pageLabel');
+  var prevBtn = $('prevBtn'), nextBtn = $('nextBtn'), pageNum = $('pageNum'), pageTotal = $('pageTotal');
+  var zoomSel = $('zoomSel'), modeAll = $('modeAll'), modeCurrent = $('modeCurrent');
+  var fLeft = $('fLeft'), fTop = $('fTop'), fWidth = $('fWidth'), fHeight = $('fHeight');
+  var sizeReadout = $('sizeReadout'), cropHint = $('cropHint');
+  var removeCropBtn = $('removeCropBtn'), resetAll = $('resetAll');
+  var actionBar = $('actionBar'), barSummary = $('barSummary');
+  var startOverBtn = $('startOverBtn'), cropBtn = $('cropBtn');
+  var success = $('success'), resName = $('resName'), resMeta = $('resMeta'), dlBtn = $('dlBtn'), againBtn = $('againBtn');
+  var processing = $('processing'), processingTitle = $('processingTitle'), processingDetail = $('processingDetail');
+
+  var ERR_CORRUPT = 'This file could not be opened as a PDF — it may be damaged or not a real PDF.';
+
+  var S = {
+    fileName: '', bytes: null, pdf: null,
+    pages: [],        /* { w, h, rotation, transform } displayed-space info per page */
+    libOffsets: [],   /* { x, y } view-box lower-left per page, from pdf-lib */
+    cur: 0, mode: 'all', shared: null, perPage: [],
+    zoom: 'fitw', scale: 1, renderSeq: 0
+  };
+  var gesture = null; /* { kind: 'draw'|'move'|'resize', ... } */
+  var dlUrl = null;
+  var hintKind = '';
+
+  /* ---------- small helpers ---------- */
+  function fmtPt(v) { return String(Math.round(v * 10) / 10); }
+  function fmtSize(r) {
+    return fmtPt(r.w) + ' × ' + fmtPt(r.h) + ' pt (' +
+      fmtPt(CropCore.ptToMm(r.w)) + ' × ' + fmtPt(CropCore.ptToMm(r.h)) + ' mm)';
+  }
+  function fmtBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function tick() { return new Promise(function (res) { setTimeout(res, 0); }); }
+  function showErr(msg) { errorEl.textContent = msg; errorEl.classList.add('on'); }
+  function hideErr() { errorEl.textContent = ''; errorEl.classList.remove('on'); }
+  function setHint(kind, text) {
+    hintKind = kind || '';
+    if (kind) { cropHint.textContent = text; cropHint.classList.add('on'); }
+    else { cropHint.textContent = ''; cropHint.classList.remove('on'); }
+  }
+
+  /* ---------- crop state accessors ---------- */
+  function currentRawRect() {
+    return S.mode === 'all' ? S.shared : S.perPage[S.cur];
+  }
+  function currentDisplayRect() {
+    var page = S.pages[S.cur];
+    var raw = currentRawRect();
+    if (!page || !raw) return null;
+    return CropCore.clampRect(raw, page.w, page.h);
+  }
+  function commitRect(r) {
+    var page = S.pages[S.cur];
+    if (!page) return;
+    var c = CropCore.clampRect(r, page.w, page.h);
+    if (S.mode === 'all') S.shared = c; else S.perPage[S.cur] = c;
+    if (hintKind === 'error' || hintKind === 'small') setHint('');
+    refreshState();
+  }
+  function clearCurrentRect() {
+    if (S.mode === 'all') S.shared = null; else S.perPage[S.cur] = null;
+    refreshState();
+  }
+
+  /* ---------- panel / overlay rendering ---------- */
+  function updatePanel(r, force) {
+    var ae = document.activeElement;
+    var typing = ae === fLeft || ae === fTop || ae === fWidth || ae === fHeight;
+    if (r) {
+      if (force || !typing) {
+        fLeft.value = fmtPt(r.x); fTop.value = fmtPt(r.y);
+        fWidth.value = fmtPt(r.w); fHeight.value = fmtPt(r.h);
+      }
+      sizeReadout.innerHTML = 'Frame on this page: <strong>' + fmtSize(r) + '</strong>' +
+        (S.mode === 'all' ? '<br>The same frame is applied to every page, fitted inside each page.' : '');
+      var page = S.pages[S.cur];
+      if (page && CropCore.isFullPage(r, page.w, page.h)) {
+        setHint('full', 'This frame covers the whole page — nothing would be trimmed. Make it smaller to crop.');
+      } else if (hintKind === 'full') setHint('');
+    } else {
+      if (force || !typing) { fLeft.value = ''; fTop.value = ''; fWidth.value = ''; fHeight.value = ''; }
+      sizeReadout.textContent = S.mode === 'all'
+        ? 'No crop frame yet — drag on the page to draw one for all pages.'
+        : 'No frame on this page yet — drag on the page to draw one.';
+      if (hintKind === 'full') setHint('');
+    }
+    removeCropBtn.disabled = !currentRawRect();
+  }
+
+  var HANDLES = ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'];
+  function handlePos(h, W, H) {
+    var x = (h === 'nw' || h === 'w' || h === 'sw') ? 0 : (h === 'n' || h === 's') ? W / 2 : W;
+    var y = (h === 'nw' || h === 'n' || h === 'ne') ? 0 : (h === 'w' || h === 'e') ? H / 2 : H;
+    return { x: x, y: y };
+  }
+  function addDim(x, y, w, h) {
+    if (w <= 0 || h <= 0) return;
+    var d = document.createElement('div');
+    d.className = 'dim';
+    d.style.left = x + 'px'; d.style.top = y + 'px';
+    d.style.width = w + 'px'; d.style.height = h + 'px';
+    poverlay.appendChild(d);
+  }
+  function drawOverlay() {
+    poverlay.innerHTML = '';
+    var page = S.pages[S.cur];
+    if (!page) return;
+    var r = gesture ? gesture.rect : currentDisplayRect();
+    if (!r) { updatePanel(null); return; }
+    var s = S.scale;
+    var X = r.x * s, Y = r.y * s, W = r.w * s, H = r.h * s;
+    var pw = page.w * s, ph = page.h * s;
+    addDim(0, 0, pw, Y);
+    addDim(0, Y + H, pw, ph - (Y + H));
+    addDim(0, Y, X, H);
+    addDim(X + W, Y, pw - (X + W), H);
+    var cr = document.createElement('div');
+    cr.className = 'croprect';
+    cr.style.left = X + 'px'; cr.style.top = Y + 'px';
+    cr.style.width = W + 'px'; cr.style.height = H + 'px';
+    var mv = document.createElement('div');
+    mv.className = 'cmove'; mv.id = 'cmove';
+    cr.appendChild(mv);
+    if (!(gesture && gesture.kind === 'draw')) {
+      HANDLES.forEach(function (h) {
+        var el = document.createElement('div');
+        el.className = 'handle';
+        el.setAttribute('data-h', h);
+        var pos = handlePos(h, W, H);
+        el.style.left = pos.x + 'px'; el.style.top = pos.y + 'px';
+        cr.appendChild(el);
+      });
+    }
+    poverlay.appendChild(cr);
+    updatePanel(r);
+  }
+
+  function refreshState() {
+    var eff = CropCore.effectiveCrops(S.mode, S.shared, S.perPage, S.pages);
+    cropBtn.disabled = !eff.anyCrop;
+    cropBtn.title = eff.anyCrop ? '' : 'Draw a crop frame that trims at least one page';
+    barSummary.textContent = eff.anyCrop
+      ? eff.count + ' of ' + S.pages.length + (S.pages.length === 1 ? ' page' : ' pages') + ' will be cropped'
+      : 'Draw a crop frame to get started';
+    drawOverlay();
+    return eff;
+  }
+
+  /* ---------- page rendering ---------- */
+  function computeScale(page) {
+    if (S.zoom === 'fitw') return Math.max(0.05, (stage.clientWidth - 34) / page.w);
+    if (S.zoom === 'fitp') {
+      return Math.max(0.05, Math.min((stage.clientWidth - 34) / page.w, (stage.clientHeight - 34) / page.h));
+    }
+    return parseInt(S.zoom, 10) / 100;
+  }
+  async function renderPage() {
+    var page = S.pages[S.cur];
+    if (!page || !S.pdf) return;
+    var seq = ++S.renderSeq;
+    S.scale = computeScale(page);
+    var cssW = Math.max(1, Math.round(page.w * S.scale));
+    var cssH = Math.max(1, Math.round(page.h * S.scale));
+    pageWrap.style.width = cssW + 'px';
+    pageWrap.style.height = cssH + 'px';
+    drawOverlay();
+    var pg;
+    try { pg = await S.pdf.getPage(S.cur + 1); } catch (e) { return; }
+    if (seq !== S.renderSeq) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var vp = pg.getViewport({ scale: S.scale * dpr });
+    pageCanvas.width = Math.max(1, Math.round(vp.width));
+    pageCanvas.height = Math.max(1, Math.round(vp.height));
+    pageCanvas.style.width = cssW + 'px';
+    pageCanvas.style.height = cssH + 'px';
+    var ctx = pageCanvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+    try { await pg.render({ canvasContext: ctx, viewport: vp }).promise; } catch (e) { /* superseded render */ }
+  }
+  async function goToPage(i) {
+    if (!S.pages.length) return;
+    S.cur = Math.min(Math.max(i, 0), S.pages.length - 1);
+    pageNum.value = S.cur + 1;
+    pageLabel.textContent = 'Page ' + (S.cur + 1) + ' of ' + S.pages.length;
+    prevBtn.disabled = S.cur === 0;
+    nextBtn.disabled = S.cur === S.pages.length - 1;
+    await renderPage();
+  }
+
+  /* ---------- pointer gestures on the overlay ---------- */
+  function evPoint(e) {
+    var br = pageWrap.getBoundingClientRect();
+    return { x: (e.clientX - br.left) / S.scale, y: (e.clientY - br.top) / S.scale };
+  }
+  function clampPoint(p, page) {
+    return {
+      x: Math.min(Math.max(p.x, 0), page.w),
+      y: Math.min(Math.max(p.y, 0), page.h)
+    };
+  }
+  poverlay.addEventListener('pointerdown', function (e) {
+    if (!S.pages.length) return;
+    var page = S.pages[S.cur];
+    var p = clampPoint(evPoint(e), page);
+    var handle = (e.target && e.target.getAttribute) ? e.target.getAttribute('data-h') : null;
+    var startRect = currentDisplayRect();
+    if (handle && startRect) {
+      gesture = { kind: 'resize', handle: handle, start: startRect, p0: p, rect: startRect };
+    } else if (e.target && e.target.id === 'cmove' && startRect) {
+      gesture = { kind: 'move', start: startRect, p0: p, rect: startRect };
+    } else {
+      gesture = { kind: 'draw', anchor: p, rect: null };
+    }
+    try { poverlay.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  poverlay.addEventListener('pointermove', function (e) {
+    if (!gesture) return;
+    var page = S.pages[S.cur];
+    var p = clampPoint(evPoint(e), page);
+    if (gesture.kind === 'draw') {
+      gesture.rect = CropCore.rectFromDrag(gesture.anchor.x, gesture.anchor.y, p.x, p.y);
+    } else if (gesture.kind === 'move') {
+      gesture.rect = CropCore.moveRect(gesture.start, p.x - gesture.p0.x, p.y - gesture.p0.y, page.w, page.h);
+    } else {
+      gesture.rect = CropCore.resizeRect(gesture.start, gesture.handle, p.x - gesture.p0.x, p.y - gesture.p0.y, page.w, page.h);
+    }
+    drawOverlay();
+  });
+  function endGesture() {
+    if (!gesture) return;
+    var g = gesture;
+    gesture = null;
+    if (g.rect && g.rect.w >= CropCore.MIN_SIZE && g.rect.h >= CropCore.MIN_SIZE) {
+      commitRect(g.rect);
+    } else {
+      if (g.kind === 'draw' && g.rect) setHint('small', 'That frame is too small — the minimum is 10 × 10 pt. Draw a bigger area.');
+      refreshState();
+    }
+  }
+  poverlay.addEventListener('pointerup', endGesture);
+  poverlay.addEventListener('pointercancel', endGesture);
+
+  /* ---------- panel controls ---------- */
+  function fieldsCommit() {
+    var L = parseFloat(fLeft.value), T = parseFloat(fTop.value);
+    var W = parseFloat(fWidth.value), H = parseFloat(fHeight.value);
+    if (isNaN(L) || isNaN(T) || isNaN(W) || isNaN(H)) { drawOverlay(); return; }
+    commitRect({ x: L, y: T, w: W, h: H });
+    var r = currentDisplayRect();
+    if (r) updatePanel(r, true);
+  }
+  [fLeft, fTop, fWidth, fHeight].forEach(function (f) {
+    f.addEventListener('change', fieldsCommit);
+  });
+  modeAll.addEventListener('change', function () { if (modeAll.checked) { S.mode = 'all'; setHint(''); refreshState(); } });
+  modeCurrent.addEventListener('change', function () { if (modeCurrent.checked) { S.mode = 'current'; setHint(''); refreshState(); } });
+  removeCropBtn.addEventListener('click', function () { setHint(''); clearCurrentRect(); });
+  resetAll.addEventListener('click', function () {
+    S.shared = null;
+    S.perPage = S.pages.map(function () { return null; });
+    setHint('');
+    refreshState();
+  });
+  prevBtn.addEventListener('click', function () { goToPage(S.cur - 1); });
+  nextBtn.addEventListener('click', function () { goToPage(S.cur + 1); });
+  pageNum.addEventListener('change', function () {
+    var v = parseInt(pageNum.value, 10);
+    if (isNaN(v)) { pageNum.value = S.cur + 1; return; }
+    goToPage(v - 1);
+  });
+  zoomSel.addEventListener('change', function () { S.zoom = zoomSel.value; renderPage(); });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && editorLayout.classList.contains('on')) {
+      var a = document.activeElement;
+      if (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
+      if (currentRawRect()) { setHint(''); clearCurrentRect(); }
+    }
+  });
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (!editorLayout.classList.contains('on')) return;
+    if (S.zoom !== 'fitw' && S.zoom !== 'fitp') return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderPage, 160);
+  });
+
+  /* ---------- file handling ---------- */
+  function showFileCard(file, numPages) {
+    fileCard.classList.add('on');
+    fileNameEl.textContent = file.name;
+    fileMeta.textContent = (numPages ? numPages + (numPages === 1 ? ' page' : ' pages') + ' · ' : '') + fmtBytes(file.size);
+  }
+  async function openFile(file) {
+    hideErr();
+    fileWarn.textContent = '';
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
+      showErr('Please choose a PDF file.');
+      return;
+    }
+    var buf;
+    try { buf = await file.arrayBuffer(); }
+    catch (e) { showErr('That file could not be read.'); return; }
+    var bytes = new Uint8Array(buf);
+    var pdf;
+    try {
+      pdf = await pdfjsLib.getDocument({ data: bytes.slice(0) }).promise;
+    } catch (e) {
+      if (e && (e.name === 'PasswordException' || /password/i.test(String(e.message || '')))) {
+        showFileCard(file, null);
+        fileWarn.innerHTML = '🔒 This PDF is password-protected. Please <a href="unlock-pdf.html">unlock it first</a>, then open it here.';
+        return;
+      }
+      showErr(ERR_CORRUPT);
+      return;
+    }
+    var libDoc;
+    try {
+      libDoc = await PDFLibRef.PDFDocument.load(bytes.slice(0));
+    } catch (e) {
+      try { pdf.destroy(); } catch (err) {}
+      showErr(ERR_CORRUPT);
+      return;
+    }
+    var pages = [], offsets = [];
+    var libPages = libDoc.getPages();
+    try {
+      for (var i = 1; i <= pdf.numPages; i++) {
+        var pg = await pdf.getPage(i);
+        var vp = pg.getViewport({ scale: 1 });
+        pages.push({ w: vp.width, h: vp.height, rotation: pg.rotate, transform: vp.transform.slice() });
+        var cb = libPages[i - 1].getCropBox();
+        offsets.push({ x: cb.x, y: cb.y });
+      }
+    } catch (e) {
+      try { pdf.destroy(); } catch (err) {}
+      showErr(ERR_CORRUPT);
+      return;
+    }
+    S.fileName = file.name;
+    S.bytes = bytes;
+    S.pdf = pdf;
+    S.pages = pages;
+    S.libOffsets = offsets;
+    S.cur = 0;
+    S.mode = 'all';
+    S.shared = null;
+    S.perPage = pages.map(function () { return null; });
+    S.zoom = 'fitw';
+    modeAll.checked = true;
+    modeCurrent.checked = false;
+    zoomSel.value = 'fitw';
+    setHint('');
+    showFileCard(file, pdf.numPages);
+    pageTotal.textContent = pdf.numPages;
+    layout.style.display = 'none';
+    success.classList.remove('on');
+    editorLayout.classList.add('on');
+    actionBar.classList.add('on');
+    document.body.classList.add('bar-visible');
+    await goToPage(0);
+    refreshState();
+  }
+  function resetToUpload() {
+    if (S.pdf) { try { S.pdf.destroy(); } catch (e) {} }
+    S.pdf = null; S.bytes = null; S.pages = []; S.libOffsets = [];
+    S.shared = null; S.perPage = []; S.cur = 0; gesture = null;
+    if (dlUrl) { URL.revokeObjectURL(dlUrl); dlUrl = null; }
+    editorLayout.classList.remove('on');
+    actionBar.classList.remove('on');
+    document.body.classList.remove('bar-visible');
+    success.classList.remove('on');
+    layout.style.display = '';
+    fileCard.classList.remove('on');
+    fileWarn.textContent = '';
+    fileInput.value = '';
+    hideErr();
+    setHintSafe();
+  }
+  function setHintSafe() { hintKind = ''; cropHint.textContent = ''; cropHint.classList.remove('on'); }
+
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files[0]) openFile(fileInput.files[0]);
+  });
+  ['dragover', 'dragenter'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) openFile(f);
+  });
+  removeFileBtn.addEventListener('click', resetToUpload);
+  startOverBtn.addEventListener('click', resetToUpload);
+  againBtn.addEventListener('click', resetToUpload);
+
+  /* ---------- apply the crop ---------- */
+  cropBtn.addEventListener('click', async function () {
+    var eff = refreshState();
+    if (!eff.anyCrop) {
+      setHint('error', 'No crop area detected — draw a frame smaller than the full page on at least one page, then try again.');
+      return;
+    }
+    setHint('');
+    processingTitle.textContent = 'Cropping…';
+    processingDetail.textContent = '';
+    processing.classList.add('on');
+    try {
+      var lib = await PDFLibRef.PDFDocument.load(S.bytes.slice(0));
+      var libPages = lib.getPages();
+      var applied = [];
+      for (var i = 0; i < S.pages.length; i++) {
+        var r = eff.rects[i];
+        if (!r) continue;
+        processingDetail.textContent = 'Page ' + (i + 1) + ' of ' + S.pages.length;
+        var relT = CropCore.relativeTransform(S.pages[i].transform, S.libOffsets[i]);
+        var ur = CropCore.rectDisplayedToUser(relT, r, S.libOffsets[i]);
+        if (!ur || ur.w < 1 || ur.h < 1) continue;
+        var X = CropCore.round2(ur.x), Y = CropCore.round2(ur.y);
+        var W = CropCore.round2(ur.w), H = CropCore.round2(ur.h);
+        libPages[i].setCropBox(X, Y, W, H);
+        libPages[i].setMediaBox(X, Y, W, H);
+        applied.push({ w: W, h: H });
+        await tick();
+      }
+      if (!applied.length) throw new Error('no page could be cropped');
+      var out = await lib.save();
+      var blob = new Blob([out], { type: 'application/pdf' });
+      if (dlUrl) URL.revokeObjectURL(dlUrl);
+      dlUrl = URL.createObjectURL(blob);
+      var name = CropCore.outputName(S.fileName);
+      dlBtn.href = dlUrl;
+      dlBtn.setAttribute('download', name);
+      resName.textContent = name;
+      var seen = {}, sizes = [];
+      applied.forEach(function (a) {
+        var k = a.w + 'x' + a.h;
+        if (!seen[k]) { seen[k] = 1; sizes.push(a); }
+      });
+      var sizeTxt = sizes.map(function (a) { return fmtPt(a.w) + ' × ' + fmtPt(a.h) + ' pt'; }).join(' · ');
+      resMeta.textContent = fmtBytes(blob.size) + ' · ' + applied.length + ' of ' + S.pages.length +
+        (S.pages.length === 1 ? ' page' : ' pages') + ' cropped · New page size: ' + sizeTxt;
+      editorLayout.classList.remove('on');
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+      success.classList.add('on');
+      success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      setHint('error', 'Something went wrong while cropping this file. The original was left unchanged — please try again.');
+    } finally {
+      processing.classList.remove('on');
+    }
+  });
+})();
+</script>
+</body>
+                                                                                                                                                                                                                                                                                                                                           </html>
