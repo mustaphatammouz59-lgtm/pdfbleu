@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unlock PDF — PdfBleu.com</title>
+<meta name="description" content="Remove a PDF password or usage restrictions for free: unlock PDFs right in your browser with the qpdf engine. No upload — your files and your passwords never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filetools{display:none;gap:8px;margin-top:16px;flex-wrap:wrap}
+.filetools.on{display:flex}
+.filetools button{border:1.5px solid #c5cae9;background:#f9faff;color:#333a5e;border-radius:18px;padding:7px 14px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.filetools button.on{border-color:#3F51B5;background:#eef1fb}
+.filelist{display:grid;gap:10px;margin-top:14px}
+.filecard{display:flex;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard .coverwrap{background:#fff;border:1px solid #e0e4f5;border-radius:6px;width:64px;height:82px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.filecard .coverwrap img{max-width:100%;max-height:100%;display:block}
+.filecard .coverph{color:#8a90b8;font-size:11px;text-align:center;padding:6px}
+.filecard .coverph .lockic{font-size:22px;display:block;margin-bottom:2px}
+.filecard.bad{border-color:#ef9a9a;background:#fdf3f3}
+body.nocovers .filecard .coverwrap{display:none}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:12px;padding:3px 10px;margin-top:6px}
+.chip.detecting{background:#eceff9;color:#5c6bc0}
+.chip.plain{background:#e8f5e9;color:#1b5e20}
+.chip.restricted{background:#e3f2fd;color:#0d47a1}
+.chip.password{background:#fff8e1;color:#6d4c00;border:1px solid #ffcc80}
+.chip.damaged{background:#fdecea;color:#b71c1c}
+.chip.done{background:#2e7d32;color:#fff}
+.chip.failed{background:#e53935;color:#fff}
+.perms{font-size:12.5px;color:#666c8a;margin-top:4px}
+.pwrow{display:flex;gap:8px;margin-top:9px;align-items:center}
+.pwrow input{flex:1;min-width:0;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 11px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.pwrow .eye{border:1.5px solid #c5cae9;background:#fff;border-radius:8px;width:42px;height:40px;cursor:pointer;font-size:16px;flex-shrink:0}
+.filelist.sharedpw .pwrow{display:none}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.prop-row{margin-bottom:12px}
+.prop-row:last-child{margin-bottom:0}
+.prop-row label{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:5px}
+.prop-row input[type=text],.prop-row input[type=password]{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:9px 11px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.sharedpw-wrap{display:none}
+.sharedpw-wrap.on{display:block}
+.sharedpw-row{display:flex;gap:8px;align-items:center}
+.sharedpw-row input{flex:1;min-width:0}
+.sharedpw-row .eye{border:1.5px solid #c5cae9;background:#fff;border-radius:8px;width:42px;height:40px;cursor:pointer;font-size:16px;flex-shrink:0}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.footnote.err{color:#b71c1c;font-weight:600}
+.checkrow{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.honestnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:inherit}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.resultitem.skipped{background:#f4f6fb}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.scannote.red{color:#b71c1c;background:#fdecea;border-color:#ef9a9a}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><path d="M18 24 v-5 a6 6 0 0 1 11.5 -2" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><rect x="13" y="24" width="22" height="15" rx="3" fill="#fff"/><circle cx="24" cy="30.5" r="2.6" fill="#4A7AAB"/><path d="M24 32.5 V36" stroke="#4A7AAB" stroke-width="2.2" fill="none"/></svg></span>
+<h1>Unlock PDF</h1>
+<p class="subtitle">Take the password security and usage restrictions off your PDFs — printing, copying and editing limits lifted by the qpdf engine, right here in your browser.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: checking your PDFs and removing their protection both happen entirely in your browser — and any password you type stays in this page's memory only.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select PDF files</button>
+<p class="droptxt">or drop your PDFs here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" multiple hidden>
+<div class="filetools" id="fileTools">
+<button id="sortBtn" type="button">Sort by name</button>
+<button id="coversBtn" type="button" class="on">Hide covers</button>
+</div>
+<div class="filelist" id="fileList"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+
+<aside class="sidebar">
+<h2>Unlock PDF</h2>
+<p>Just press the Unlock button. Files that only carry restrictions — no printing, no copying — are freed instantly, with no password at all. A file protected by an open password asks for that password on its own card.</p>
+<div class="optgroup">
+<p class="footnote" id="engineStatus">The unlock engine (qpdf, running as WebAssembly) downloads once, the first time you add a file — after that, everything runs on your device.</p>
+</div>
+<div class="optgroup">
+<label class="checkrow"><input type="checkbox" id="samePw"> Use the same password for all files</label>
+<div class="sharedpw-wrap" id="sharedPwWrap">
+<div class="prop-row" style="margin-top:12px;margin-bottom:0"><label for="sharedPw">Shared password</label>
+<div class="sharedpw-row"><input type="password" id="sharedPw" autocomplete="off" placeholder="Password for every locked file"><button class="eye" id="sharedPwEye" type="button" title="Show or hide the password">👁</button></div>
+</div>
+</div>
+<p class="footnote" style="margin-top:10px">Passwords are used only in this page's memory, to open your files here on your device. They are never sent anywhere and never stored — close the tab and they are gone.</p>
+</div>
+<div class="honestnote">⚠️ <strong>Forgotten passwords can't be recovered or guessed here.</strong> This tool removes protection only when a file opens without a password (restrictions) or when you type its correct password. Nothing is cracked, brute-forced or bypassed.</div>
+<div class="freenote">Everything here is 100% free, with no limits: unlock as many files as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2 id="successTitle">Your unlocked PDFs are ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="skipNote" style="display:none"></div>
+<div class="scannote red" id="failNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Unlock more files</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why unlock with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🔓</span><h3>Restrictions removed instantly</h3><p>Many PDFs open fine but refuse to print, copy or edit. That is an owner-password restriction, not real secrecy — this tool lifts it in seconds, no password needed.</p></div>
+<div class="step"><span class="fic">🗝️</span><h3>Your password stays yours</h3><p>When a file does need its open password, you type it here and it is used once, in this page's memory, on your own device. It is never transmitted, logged or saved.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>The whole unlock runs locally with the qpdf engine compiled to WebAssembly. There is no server upload, so bank statements, contracts and ID scans stay exactly where they belong: with you.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to unlock a PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your PDFs</h3><p>Click the select button or drop your files into the area provided. You can unlock several PDFs in one go.</p></div>
+<div class="step"><span class="num">2</span><h3>Check each file's badge</h3><p>Every file is inspected on the spot: “Restrictions only” needs no password, “Password needed” grows a password field on its card, and “Not locked” files are simply skipped.</p></div>
+<div class="step"><span class="num">3</span><h3>Type any passwords</h3><p>Enter the open password on each card that asks for one — or tick the shared-password option when all your files use the same one.</p></div>
+<div class="step"><span class="num">4</span><h3>Unlock and download</h3><p>Press “Unlock PDF”. Each unlocked copy is verified before it is offered, then you can save the files one by one or all together in a ZIP.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is the difference between an open password and restrictions?</h3><p>An <strong>open password</strong> (user password) stops the file from being opened at all — nobody can even read it without the password. <strong>Restrictions</strong> (set with an owner password) let anyone open and read the file, but block actions like printing, copying text or editing. Restrictions can be removed without knowing any password; an open password can only be removed by typing it correctly.</p></div>
+<div class="qa"><h3>I forgot my PDF password. Can you recover it?</h3><p>No — and be wary of any site that promises otherwise. This tool does not guess, crack or brute-force passwords. If a file asks for an open password and you don't know it, there is no honest way for this page to open it. If your file only carries restrictions, though, no password is needed and the tool will free it right away.</p></div>
+<div class="qa"><h3>Is it legal to unlock a PDF?</h3><p>Unlocking files that are yours — or that you are authorized to use — is a normal, legitimate task: removing restrictions from your own bank statement so you can print it, or taking the password off a document you created. Using any unlock tool on someone else's protected documents without their permission is a different matter, and the responsibility for that choice is yours.</p></div>
+<div class="qa"><h3>Does unlocking change the content or quality of my PDF?</h3><p>No. The qpdf engine rewrites the file with the encryption layer removed and everything else untouched — same pages, same text, same images, same quality. Before offering a download, this page re-opens each unlocked copy and checks its page count against the original, so you never receive a broken file.</p></div>
+<div class="qa"><h3>Are my files or my password uploaded anywhere?</h3><p>No. The file check, the unlock itself and the verification all run in your browser; the engine is downloaded once as code, and your documents and passwords never travel over the network. A password you type exists only in this tab's memory and disappears when you close it.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Removing the protection…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button">Unlock PDF</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="unlockCore">
+/* =====================================================================
+   PdfBleu Unlock — pure decision helpers (no DOM, no wasm in here,
+   so this part can be unit-tested headlessly).
+
+   classify({pdfLibOk, pdfJsNeedsPassword, pdfJsOk}) -> one of:
+     'plain'      the file has no encryption at all (pdf-lib opened it)
+     'restricted' encrypted with an EMPTY user password: pdf.js opens
+                  it without being asked; only owner/permissions
+                  restrictions stand in the way -> qpdf frees it with
+                  no password at all
+     'password'   pdf.js demands a password before showing anything:
+                  an open (user) password is set, and only the correct
+                  password can remove it
+     'damaged'    neither library could make sense of the file
+
+   buildArgs(password) -> the qpdf argv (after the program name) for
+   a --decrypt run between the fixed virtual paths /input.pdf and
+   /output.pdf. The password travels as a single argv element
+   ("--password=..."), never through a shell, and when no password
+   is supplied the option is omitted entirely.
+   ===================================================================== */
+var UnlockCore = (function () {
+  'use strict';
+
+  var INPUT_PATH = '/input.pdf';
+  var OUTPUT_PATH = '/output.pdf';
+
+  function classify(flags) {
+    flags = flags || {};
+    if (flags.pdfLibOk) return 'plain';
+    if (flags.pdfJsNeedsPassword) return 'password';
+    if (flags.pdfJsOk) return 'restricted';
+    return 'damaged';
+  }
+
+  function buildArgs(password) {
+    var args = [];
+    if (password) args.push('--password=' + password);
+    args.push('--decrypt', INPUT_PATH, OUTPUT_PATH);
+    return args;
+  }
+
+  return {
+    classify: classify,
+    buildArgs: buildArgs,
+    INPUT_PATH: INPUT_PATH,
+    OUTPUT_PATH: OUTPUT_PATH
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  var QPDF_BASE = 'https://cdn.jsdelivr.net/npm/@neslinesli93/qpdf-wasm@0.3.0/dist/';
+  var QPDF_JS = QPDF_BASE + 'qpdf.js';
+
+  var drop = $('drop'), pickBtn = $('pickBtn'), fileInput = $('fileInput'),
+      fileTools = $('fileTools'), sortBtn = $('sortBtn'), coversBtn = $('coversBtn'),
+      fileList = $('fileList'), errorBox = $('error'),
+      engineStatus = $('engineStatus'),
+      samePw = $('samePw'), sharedPwWrap = $('sharedPwWrap'),
+      sharedPw = $('sharedPw'), sharedPwEye = $('sharedPwEye'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successTitle = $('successTitle'), successInfo = $('successInfo'),
+      resultList = $('resultList'), zipBtn = $('zipBtn'),
+      skipNote = $('skipNote'), failNote = $('failNote'),
+      restartBtn = $('restartBtn');
+
+  var state = {
+    files: [],   // {uid, name, size, bytes, status, numPages, cover, permsText, password, result}
+    uidSeq: 0,
+    busy: false
+  };
+
+  var engineMod = null, enginePromise = null;
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function baseName(name) { return name.replace(/\.pdf$/i, ''); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------------- qpdf engine: lazy load ---------------- */
+
+  function setEngineStatus(text, isError) {
+    engineStatus.textContent = text;
+    engineStatus.classList.toggle('err', !!isError);
+  }
+
+  function ensureEngine() {
+    if (engineMod) return Promise.resolve(engineMod);
+    if (enginePromise) return enginePromise;
+    setEngineStatus('Preparing the unlock engine… (one-time download)');
+    enginePromise = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = QPDF_JS;
+      s.async = true;
+      s.onload = function () {
+        var factory = window.Module;
+        if (typeof factory !== 'function') {
+          enginePromise = null;
+          setEngineStatus('The unlock engine could not be loaded — check your connection, then press Unlock PDF to try again.', true);
+          reject(new Error('qpdf factory missing'));
+          return;
+        }
+        factory({ locateFile: function (path) { return QPDF_BASE + path; } })
+          .then(function (mod) {
+            engineMod = mod;
+            setEngineStatus('Unlock engine ready ✓ — it runs entirely on your device.');
+            resolve(mod);
+          })
+          .catch(function (err) {
+            enginePromise = null;
+            setEngineStatus('The unlock engine could not be loaded — check your connection, then press Unlock PDF to try again.', true);
+            reject(err);
+          });
+      };
+      s.onerror = function () {
+        enginePromise = null;
+        setEngineStatus('The unlock engine could not be loaded — check your connection, then press Unlock PDF to try again.', true);
+        reject(new Error('qpdf script failed to load'));
+      };
+      document.head.appendChild(s);
+    });
+    return enginePromise;
+  }
+
+  // One qpdf --decrypt run inside the wasm virtual file system.
+  // Returns {ok, code, bytes} — never throws for a qpdf-level failure.
+  function runDecrypt(mod, bytes, password) {
+    try { mod.FS.unlink(UnlockCore.OUTPUT_PATH); } catch (e) {}
+    mod.FS.writeFile(UnlockCore.INPUT_PATH, bytes);
+    var code;
+    try {
+      var r = mod.callMain(UnlockCore.buildArgs(password));
+      code = (typeof r === 'number') ? r : 0;
+    } catch (e) {
+      code = (e && typeof e.status === 'number') ? e.status : 3;
+    }
+    var out = null;
+    try {
+      var o = mod.FS.readFile(UnlockCore.OUTPUT_PATH);
+      if (o && o.length) out = o;
+    } catch (e) {}
+    try { mod.FS.unlink(UnlockCore.INPUT_PATH); } catch (e) {}
+    try { mod.FS.unlink(UnlockCore.OUTPUT_PATH); } catch (e) {}
+    return { ok: code === 0 && !!out, code: code, bytes: out };
+  }
+
+  /* ---------------- file handling + detection ---------------- */
+
+  pickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); fileInput.click(); });
+  drop.addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files && fileInput.files.length) addFiles(fileInput.files);
+    fileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) addFiles(dt.files);
+  });
+
+  function addFiles(fileListIn) {
+    var added = 0;
+    Array.prototype.forEach.call(fileListIn, function (file) {
+      if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') return;
+      var rec = {
+        uid: ++state.uidSeq, name: file.name, size: file.size,
+        bytes: null, status: 'detecting', numPages: 0, cover: null,
+        permsText: '', password: '', result: null
+      };
+      state.files.push(rec);
+      added++;
+      detectFile(rec, file);
+    });
+    if (!added) showError('Please choose PDF files — the files you dropped were not PDFs.');
+    else { showError(null); ensureEngine().catch(function () {}); }
+    renderFileList();
+    refreshChrome();
+  }
+
+  // pdf.js permission flags (the ones readers actually enforce).
+  var PERM_LABELS = [
+    [4, 'printing'], [16, 'copying text'], [8, 'editing'], [32, 'annotations']
+  ];
+  function permsTextFrom(perms) {
+    if (!perms || !perms.length) return '';
+    var missing = [];
+    PERM_LABELS.forEach(function (pair) {
+      if (perms.indexOf(pair[0]) === -1) missing.push(pair[1]);
+    });
+    if (!missing.length) return '';
+    return 'Restricted: no ' + missing.join(', no ') + '.';
+  }
+
+  async function detectFile(rec, file) {
+    var pdfLibOk = false, pdfJsOk = false, needsPw = false;
+    try {
+      var buf = await file.arrayBuffer();
+      rec.bytes = new Uint8Array(buf);
+
+      // 1) pdf-lib opens only unencrypted PDFs.
+      try {
+        var ld = await PDFLib.PDFDocument.load(rec.bytes.slice(0));
+        pdfLibOk = true;
+        rec.numPages = ld.getPageCount();
+      } catch (e) { pdfLibOk = false; }
+
+      // 2) pdf.js: opens restrictions-only files, asks for a password
+      //    on open-password files, and gives us covers + permissions.
+      try {
+        var doc = await pdfjsLib.getDocument({ data: rec.bytes.slice(0) }).promise;
+        pdfJsOk = true;
+        rec.numPages = doc.numPages;
+        try {
+          var perms = await doc.getPermissions();
+          rec.permsText = permsTextFrom(perms);
+        } catch (e) {}
+        try {
+          var page = await doc.getPage(1);
+          var vp = page.getViewport({ scale: 1 });
+          var scale = Math.min(128 / vp.width, 164 / vp.height);
+          var viewport = page.getViewport({ scale: scale });
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(viewport.width);
+          canvas.height = Math.round(viewport.height);
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+          rec.cover = canvas.toDataURL('image/png');
+        } catch (e) { rec.cover = null; }
+        try { await doc.destroy(); } catch (e) {}
+      } catch (e) {
+        if (e && (e.name === 'PasswordException' || e.code === 1)) needsPw = true;
+      }
+    } catch (e) {
+      // unreadable file object: falls through to 'damaged'
+    }
+    rec.status = UnlockCore.classify({
+      pdfLibOk: pdfLibOk, pdfJsNeedsPassword: needsPw, pdfJsOk: pdfJsOk
+    });
+    renderFileList();
+    refreshChrome();
+  }
+
+  function removeFile(uid) {
+    state.files = state.files.filter(function (f) { return f.uid !== uid; });
+    renderFileList();
+    refreshChrome();
+    renderResults();
+  }
+
+  /* ---------------- file cards ---------------- */
+
+  var CHIP_TEXT = {
+    detecting: 'Checking…',
+    plain: 'Not locked',
+    restricted: 'Restrictions only — no password needed',
+    password: 'Password needed',
+    damaged: 'Damaged / can’t be read'
+  };
+
+  function renderFileList() {
+    fileList.classList.toggle('sharedpw', !!samePw.checked);
+    fileList.innerHTML = '';
+    state.files.forEach(function (f) {
+      var card = document.createElement('div');
+      card.className = 'filecard' + (f.status === 'damaged' ? ' bad' : '');
+
+      var cover = document.createElement('div');
+      cover.className = 'coverwrap';
+      if (f.cover) {
+        var img = document.createElement('img');
+        img.src = f.cover; img.alt = '';
+        cover.appendChild(img);
+      } else {
+        var ph = document.createElement('div');
+        ph.className = 'coverph';
+        if (f.status === 'password') ph.innerHTML = '<span class="lockic">🔒</span>Locked';
+        else if (f.status === 'damaged') ph.textContent = 'Can’t be read';
+        else if (f.status === 'detecting') ph.textContent = 'Checking…';
+        else ph.textContent = 'PDF';
+        cover.appendChild(ph);
+      }
+      card.appendChild(cover);
+
+      var info = document.createElement('div');
+      info.className = 'finfo';
+      var nm = document.createElement('div');
+      nm.className = 'fname'; nm.textContent = f.name;
+      info.appendChild(nm);
+      var meta = document.createElement('div');
+      meta.className = 'fmeta';
+      meta.textContent = fmtSize(f.size) + (f.numPages ? ' · ' + f.numPages + (f.numPages === 1 ? ' page' : ' pages') : '');
+      info.appendChild(meta);
+
+      var chip = document.createElement('span');
+      if (f.result && f.result.ok) { chip.className = 'chip done'; chip.textContent = 'Unlocked ✓'; }
+      else if (f.result && !f.result.ok) { chip.className = 'chip failed'; chip.textContent = f.result.reason === 'password' ? 'Wrong password' : 'Unlock failed'; }
+      else { chip.className = 'chip ' + f.status; chip.textContent = CHIP_TEXT[f.status] || f.status; }
+      info.appendChild(chip);
+
+      if (f.status === 'restricted' && f.permsText) {
+        var pm = document.createElement('div');
+        pm.className = 'perms'; pm.textContent = f.permsText;
+        info.appendChild(pm);
+      }
+      if (f.status === 'plain' && !f.result) {
+        var nt = document.createElement('div');
+        nt.className = 'perms'; nt.textContent = 'This file has no protection — Unlock will skip it.';
+        info.appendChild(nt);
+      }
+
+      if (f.status === 'password' && !(f.result && f.result.ok)) {
+        var row = document.createElement('div');
+        row.className = 'pwrow';
+        var inp = document.createElement('input');
+        inp.type = 'password';
+        inp.placeholder = 'Password for this file';
+        inp.setAttribute('autocomplete', 'off');
+        inp.value = f.password || '';
+        inp.setAttribute('data-uid', String(f.uid));
+        inp.addEventListener('input', function () {
+          f.password = inp.value;
+          if (f.result && !f.result.ok) { f.result = null; renderFileList(); refreshChrome(); }
+        });
+        inp.addEventListener('click', function (ev) { ev.stopPropagation(); });
+        var eye = document.createElement('button');
+        eye.type = 'button'; eye.className = 'eye'; eye.textContent = '👁';
+        eye.title = 'Show or hide the password';
+        eye.addEventListener('click', function () {
+          inp.type = (inp.type === 'password') ? 'text' : 'password';
+        });
+        row.appendChild(inp);
+        row.appendChild(eye);
+        info.appendChild(row);
+      }
+      card.appendChild(info);
+
+      var rm = document.createElement('button');
+      rm.className = 'rm'; rm.type = 'button'; rm.textContent = '✕';
+      rm.title = 'Remove this file';
+      rm.addEventListener('click', function () { removeFile(f.uid); });
+      card.appendChild(rm);
+
+      fileList.appendChild(card);
+    });
+    fileTools.classList.toggle('on', state.files.length > 0);
+  }
+
+  sortBtn.addEventListener('click', function () {
+    state.files.sort(function (a, b) { return a.name.localeCompare(b.name); });
+    renderFileList();
+  });
+  coversBtn.addEventListener('click', function () {
+    var hidden = document.body.classList.toggle('nocovers');
+    coversBtn.classList.toggle('on', !hidden);
+    coversBtn.textContent = hidden ? 'Show covers' : 'Hide covers';
+  });
+
+  /* ---------------- options ---------------- */
+
+  samePw.addEventListener('change', function () {
+    sharedPwWrap.classList.toggle('on', !!samePw.checked);
+    renderFileList();
+  });
+  sharedPwEye.addEventListener('click', function () {
+    sharedPw.type = (sharedPw.type === 'password') ? 'text' : 'password';
+  });
+
+  function effectivePassword(f) {
+    if (samePw.checked) return sharedPw.value || '';
+    return f.password || '';
+  }
+
+  /* ---------------- action bar / processing ---------------- */
+
+  function actionableFiles() {
+    return state.files.filter(function (f) {
+      return (f.status === 'restricted' || f.status === 'password') && !(f.result && f.result.ok);
+    });
+  }
+  function refreshChrome() {
+    var has = state.files.length > 0;
+    actionBar.classList.toggle('on', has);
+    document.body.classList.toggle('bar-visible', has);
+    var todo = actionableFiles();
+    var detecting = state.files.some(function (f) { return f.status === 'detecting'; });
+    var done = state.files.filter(function (f) { return f.result && f.result.ok; }).length;
+    barSummary.textContent = !has ? '' :
+      state.files.length + (state.files.length === 1 ? ' file' : ' files') +
+      (done ? ' · ' + done + ' unlocked' : '') +
+      (todo.length ? ' · ' + todo.length + ' to unlock' : (detecting ? ' · checking…' : ' · nothing to unlock'));
+    applyBtn.disabled = state.busy || detecting || todo.length === 0;
+  }
+
+  applyBtn.addEventListener('click', async function () {
+    var targets = actionableFiles();
+    if (!targets.length || state.busy) return;
+    state.busy = true;
+    refreshChrome();
+    showError(null);
+    processing.classList.add('on');
+    processingDetail.textContent = 'Preparing the unlock engine…';
+    var mod;
+    try {
+      mod = await ensureEngine();
+    } catch (e) {
+      processing.classList.remove('on');
+      state.busy = false;
+      refreshChrome();
+      showError('The unlock engine could not be loaded — check your connection and try again. Nothing was processed.');
+      return;
+    }
+    for (var i = 0; i < targets.length; i++) {
+      var f = targets[i];
+      processingDetail.textContent = 'Unlocking ' + f.name + ' (' + (i + 1) + ' of ' + targets.length + ')…';
+      // Let the overlay paint before the synchronous wasm run.
+      await new Promise(function (r) { setTimeout(r, 30); });
+      var pw = (f.status === 'password') ? effectivePassword(f) : '';
+      if (f.status === 'password' && !pw) {
+        f.result = { ok: false, reason: 'nopassword' };
+        continue;
+      }
+      var res = runDecrypt(mod, f.bytes, pw);
+      if (!res.ok) {
+        f.result = { ok: false, reason: f.status === 'password' ? 'password' : 'qpdf' };
+        continue;
+      }
+      // Verify before offering: the copy must open in pdf-lib (proof
+      // the encryption is really gone) with the same page count.
+      try {
+        var vd = await PDFLib.PDFDocument.load(res.bytes.slice(0));
+        if (f.numPages && vd.getPageCount() !== f.numPages) throw new Error('page count mismatch');
+        f.result = {
+          ok: true,
+          blob: new Blob([res.bytes], { type: 'application/pdf' }),
+          outName: baseName(f.name) + '_unlocked.pdf',
+          size: res.bytes.length
+        };
+      } catch (e) {
+        f.result = { ok: false, reason: 'verify' };
+      }
+    }
+    processing.classList.remove('on');
+    state.busy = false;
+    renderFileList();
+    refreshChrome();
+    renderResults(true);
+  });
+
+  /* ---------------- results ---------------- */
+
+  function okResults() {
+    return state.files.filter(function (f) { return f.result && f.result.ok; });
+  }
+
+  function renderResults(scroll) {
+    var ok = okResults();
+    var failed = state.files.filter(function (f) { return f.result && !f.result.ok; });
+    var skipped = state.files.filter(function (f) {
+      return !f.result && (f.status === 'plain' || f.status === 'damaged');
+    });
+    var anyRun = ok.length > 0 || failed.length > 0;
+    success.classList.toggle('on', anyRun);
+    if (!anyRun) return;
+
+    successTitle.textContent = ok.length ? 'Your unlocked PDFs are ready!' : 'Nothing was unlocked this time';
+    successInfo.textContent = ok.length
+      ? ok.length + (ok.length === 1 ? ' file' : ' files') + ' unlocked — protection removed and every copy verified. Save ' + (ok.length === 1 ? 'it' : 'them') + ' below.'
+      : 'See the notes below — fix what is flagged and press Unlock PDF again.';
+
+    // De-duplicate output names for the ZIP.
+    var seen = {};
+    ok.forEach(function (f) {
+      var n = f.result.outName;
+      if (seen[n]) { var k = 2; while (seen[baseName(n) + ' (' + k + ').pdf']) k++; n = baseName(n) + ' (' + k + ').pdf'; f.result.zipName = n; }
+      else f.result.zipName = n;
+      seen[f.result.zipName] = true;
+    });
+
+    resultList.innerHTML = '';
+    ok.forEach(function (f) {
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var left = document.createElement('div');
+      var rn = document.createElement('div');
+      rn.className = 'rname'; rn.textContent = f.result.outName;
+      var rm2 = document.createElement('div');
+      rm2.className = 'rmeta'; rm2.textContent = fmtSize(f.result.size) + ' · Protection removed';
+      left.appendChild(rn); left.appendChild(rm2);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.textContent = 'Download';
+      a.href = URL.createObjectURL(f.result.blob);
+      a.setAttribute('download', f.result.outName);
+      item.appendChild(left); item.appendChild(a);
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = ok.length > 1 ? 'block' : 'none';
+
+    if (skipped.length) {
+      skipNote.style.display = 'block';
+      skipNote.innerHTML = skipped.map(function (f) {
+        return '• ' + esc(f.name) + (f.status === 'plain'
+          ? ' — not locked, nothing to remove.'
+          : ' — could not be read, so it was skipped.');
+      }).join('<br>');
+    } else skipNote.style.display = 'none';
+
+    if (failed.length) {
+      failNote.style.display = 'block';
+      failNote.innerHTML = failed.map(function (f) {
+        var why = {
+          password: 'wrong password — check it and try again',
+          nopassword: 'no password was entered for this file',
+          qpdf: 'the unlock engine could not process this file',
+          verify: 'the unlocked copy could not be verified, so it was not offered for download'
+        }[f.result.reason] || 'unlock failed';
+        return '• ' + esc(f.name) + ' — ' + why + '.';
+      }).join('<br>') + '<br>The files stay in the list above: fix the password and press <strong>Unlock PDF</strong> again — only the failed files are retried.';
+    } else failNote.style.display = 'none';
+
+    if (scroll) success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  zipBtn.addEventListener('click', async function () {
+    var ok = okResults();
+    if (ok.length < 2) return;
+    zipBtn.disabled = true;
+    try {
+      var zip = new JSZip();
+      ok.forEach(function (f) { zip.file(f.result.zipName || f.result.outName, f.result.blob); });
+      var blob = await zip.generateAsync({ type: 'blob' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.setAttribute('download', 'pdfbleu-unlocked.zip');
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } finally {
+      zipBtn.disabled = false;
+    }
+  });
+
+  startOverBtn.addEventListener('click', function () { location.reload(); });
+  restartBtn.addEventListener('click', function () { location.reload(); });
+
+  renderFileList();
+  refreshChrome();
+})();
+</script>
+</body>
+  </html>
