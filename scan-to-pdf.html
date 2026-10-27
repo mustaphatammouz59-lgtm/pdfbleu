@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan to PDF — PdfBleu.com</title>
+<meta name="description" content="Scan documents with your camera and turn them into a single PDF, right in your browser. No app to install, no sign-up, no limits — your photos never leave your device.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.scanhonest{font-size:14px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:10px;padding:11px 14px;margin-bottom:16px;text-align:left}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.scannerpanel{border:1.5px solid #c5cae9;border-radius:12px;padding:16px;background:#f9faff;margin-bottom:18px}
+.scannerpanel h2{font-size:18px;color:#1a237e;margin-bottom:6px}
+.scannerpanel p{font-size:14px;color:#444a6d;margin-bottom:12px}
+button.cambtn{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:9px;box-shadow:0 4px 14px rgba(63,81,181,.30)}
+button.cambtn:active{transform:scale(.98)}
+.camframe{position:relative;background:#111;border-radius:12px;overflow:hidden;display:none;margin-top:14px}
+.camframe.on{display:block}
+.camframe video{width:100%;display:block;max-height:430px;object-fit:cover;background:#000}
+.guide{position:absolute;inset:9% 11%;pointer-events:none}
+.guide span{position:absolute;width:28px;height:28px;border:0 solid #4ADE80}
+.guide .c-tl{top:0;left:0;border-top-width:4px;border-left-width:4px;border-top-left-radius:8px}
+.guide .c-tr{top:0;right:0;border-top-width:4px;border-right-width:4px;border-top-right-radius:8px}
+.guide .c-bl{bottom:0;left:0;border-bottom-width:4px;border-left-width:4px;border-bottom-left-radius:8px}
+.guide .c-br{bottom:0;right:0;border-bottom-width:4px;border-right-width:4px;border-bottom-right-radius:8px}
+#captureFlash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .4s ease}
+#captureFlash.flash{opacity:.85;transition:none}
+.cambtns{display:none;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cambtns.on{display:flex}
+.cambtns button{border:none;padding:13px 24px;border-radius:24px;font-size:15.5px;font-weight:700;cursor:pointer}
+#captureBtn{background:#2e7d32;color:#fff;flex:1}
+#closeCameraBtn{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5 !important}
+.cameramsg{display:none;font-size:14px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:12px}
+.cameramsg.on{display:block}
+.scanbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.scanbtns button{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 20px;border-radius:22px;font-size:14.5px;font-weight:700;cursor:pointer;flex:1;min-width:140px}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.toolbar{display:none;gap:8px;flex-wrap:wrap;margin-top:16px}
+.toolbar.on{display:flex}
+.toolbar button{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:8px 15px;border-radius:20px;font-size:13.5px;font-weight:700;cursor:pointer}
+.imggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:14px}
+.imggrid:empty{display:none}
+.imgcard{background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:10px;cursor:grab}
+.imgcard.dragover{border-color:#3F51B5;background:#eef1fb}
+.imgcard .thumbwrap{background:#fff;border:1px solid #e0e4f5;border-radius:8px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px}
+.imgcard .thumbwrap img{max-width:100%;max-height:100%;display:block;object-fit:contain;transition:transform .18s ease}
+.imgcard .iname{font-size:13.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.imgcard .imeta{font-size:12.5px;color:#666c8a;margin-top:3px}
+.imgcard .ibtns{display:flex;gap:6px;margin-top:9px}
+.imgcard .ibtns button{flex:1;background:#fff;border:1.5px solid #c5cae9;color:#1a237e;border-radius:8px;padding:6px 0;cursor:pointer;font-size:15px;line-height:1}
+.imgcard .ibtns button.rm{color:#b71c1c;border-color:#ef9a9a}
+.imggrid.listmode{grid-template-columns:1fr}
+.imggrid.listmode .imgcard{display:flex;align-items:center;gap:12px}
+.imggrid.listmode .thumbwrap{display:none}
+.imggrid.listmode .icardbody{flex:1;min-width:0}
+.imggrid.listmode .ibtns{margin-top:0;flex-shrink:0}
+.imggrid.listmode .ibtns button{flex:none;padding:6px 12px}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar h3{font-size:16px;color:#1a237e;margin:16px 0 8px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.levels{display:grid;gap:10px;margin-bottom:4px}
+.levels.two{grid-template-columns:1fr 1fr}
+.levels.three{grid-template-columns:repeat(3,1fr)}
+.levelcard{position:relative;display:block;border:1.5px solid #c5cae9;border-radius:12px;padding:12px 10px;cursor:pointer;background:#fff;text-align:center}
+.levelcard:hover{border-color:#3F51B5}
+.levelcard.sel{border-color:#2e7d32;background:#e8f5e9;box-shadow:0 2px 8px rgba(46,125,50,.14)}
+.levelcard input{position:absolute;opacity:0;pointer-events:none}
+.levelcard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:15px}
+.levelcard .ldesc{display:block;font-size:12.5px;color:#666c8a;margin-top:2px}
+.levelcard .oicon{display:block;font-size:24px;margin-bottom:4px}
+.checkcard{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:12px 14px}
+.checkcard input{position:static;opacity:1;pointer-events:auto;width:19px;height:19px;margin-top:2px;accent-color:#2e7d32;flex-shrink:0}
+.checkcard .ltitle{text-align:left}
+.checkcard .ldesc{text-align:left}
+.pageselect{width:100%;padding:11px 12px;border:1.5px solid #c5cae9;border-radius:10px;font-size:15px;color:#21243d;background:#fff;font-family:inherit}
+#orientationBlock.qdisabled{opacity:.45;pointer-events:none}
+.qhint{display:none;font-size:13px;color:#444a6d;background:#eef1fb;border:1px solid #c5cae9;border-radius:8px;padding:9px 12px;margin-top:10px}
+.qhint.on{display:block}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.zipbtn{display:block;width:100%;background:#2e7d32;color:#fff;border:none;padding:14px 20px;border-radius:26px;font-size:16.5px;font-weight:700;cursor:pointer;margin-bottom:16px}
+.zipbtn:disabled{opacity:.55;cursor:not-allowed}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .ricon{font-size:30px;flex-shrink:0}
+.resultitem .rinfo{flex:1;min-width:0}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer}
+.howto{margin-top:30px}
+.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#EE6C4D"/><path d="M8 16 V8 H16 M32 8 H40 V16 M40 32 V40 H32 M16 40 H8 V32" stroke="#fff" stroke-width="3" fill="none"/><rect x="16" y="12" width="16" height="24" rx="2" fill="#fff"/><path d="M18 24 H30" stroke="#EE6C4D" stroke-width="2.6" fill="none"/></svg></span>
+<h1>Scan to PDF</h1>
+<p class="subtitle">Scan documents with your camera and turn them into a single PDF — right in your browser, no app to install.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device: scanning and conversion happen entirely in your browser, with no upload to any server.</div>
+<div class="scanhonest">📷 <strong>How scanning works here:</strong> there is no app to install and no QR code to scan — the scanner runs right on this page, using your device camera. Your browser will ask for camera permission first. If the camera is not available on this device, the “Take a photo” and “Choose from gallery” buttons below do exactly the same job. Nothing you photograph is ever uploaded.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Creating your PDF…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="scannerpanel" id="scannerPanel">
+<h2>📷 Scan with your camera</h2>
+<p>Point your camera at each page and tap “Take photo”. The camera stays open, so you can scan page after page, then build one PDF from all of them.</p>
+<button class="cambtn" id="useCameraBtn" type="button">📷 Use camera</button>
+<div class="camframe" id="cameraWrap">
+<video id="cameraVideo" autoplay playsinline muted></video>
+<div class="guide" aria-hidden="true"><span class="c-tl"></span><span class="c-tr"></span><span class="c-bl"></span><span class="c-br"></span></div>
+<div id="captureFlash"></div>
+</div>
+<div class="cambtns" id="cameraBtns">
+<button id="captureBtn" type="button">📸 Take photo</button>
+<button id="closeCameraBtn" type="button">Close camera</button>
+</div>
+<div class="cameramsg" id="cameraMsg"></div>
+<div class="scanbtns">
+<button id="takePhotoBtn" type="button">📸 Take a photo</button>
+<button id="galleryBtn" type="button">🖼️ Choose from gallery</button>
+</div>
+<input type="file" id="captureInput" accept="image/*" capture="environment" hidden>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select images</button>
+<p class="droptxt">or drop your images here — JPG, PNG, WebP, GIF or BMP</p>
+</div>
+<input type="file" id="fileInput" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" multiple hidden>
+<div class="toolbar" id="toolbar">
+<button id="sortBtn" type="button">Sort by name: A → Z</button>
+<button id="toggleThumbsBtn" type="button">Hide thumbnails</button>
+</div>
+<div class="imggrid" id="imageGrid"></div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Scan to PDF</h2>
+<p>Scan options — they apply to every page:</p>
+<h3>Enhance</h3>
+<div class="levels three" role="radiogroup" aria-label="Enhance">
+<label class="levelcard sel" id="enhanceColor">
+<input type="radio" name="scan_enhance" value="color" checked>
+<span class="oicon">🎨</span>
+<span class="ltitle">Color</span>
+<span class="ldesc">As photographed</span>
+</label>
+<label class="levelcard" id="enhanceGray">
+<input type="radio" name="scan_enhance" value="gray">
+<span class="oicon">🌗</span>
+<span class="ltitle">Grayscale</span>
+<span class="ldesc">Shades of grey</span>
+</label>
+<label class="levelcard" id="enhanceBw">
+<input type="radio" name="scan_enhance" value="bw">
+<span class="oicon">⬛</span>
+<span class="ltitle">Black &amp; white</span>
+<span class="ldesc">Crisp text pages</span>
+</label>
+</div>
+<div id="orientationBlock">
+<h3>Page orientation</h3>
+<div class="levels two" role="radiogroup" aria-label="Page orientation">
+<label class="levelcard sel" id="orientationPortrait">
+<input type="radio" name="scan_orientation" value="portrait" checked>
+<span class="oicon">▯</span>
+<span class="ltitle">Portrait</span>
+</label>
+<label class="levelcard" id="orientationLandscape">
+<input type="radio" name="scan_orientation" value="landscape">
+<span class="oicon">▭</span>
+<span class="ltitle">Landscape</span>
+</label>
+</div>
+</div>
+<div class="qhint" id="orientationHint">Orientation applies to A4 and US Letter pages. With Fit, each page follows its own photo.</div>
+<h3>Page size</h3>
+<select class="pageselect" id="pageSizeSelect" aria-label="Page size">
+<option value="fit" selected>Fit — same size as the photo</option>
+<option value="A4">A4 (210 × 297 mm)</option>
+<option value="letter">US Letter (216 × 279 mm)</option>
+</select>
+<h3>Margin</h3>
+<div class="levels three" role="radiogroup" aria-label="Margin">
+<label class="levelcard sel" id="margin0">
+<input type="radio" name="scan_margin" value="0" checked>
+<span class="ltitle">No margin</span>
+<span class="ldesc">0 pt</span>
+</label>
+<label class="levelcard" id="margin20">
+<input type="radio" name="scan_margin" value="20">
+<span class="ltitle">Small</span>
+<span class="ldesc">20 pt</span>
+</label>
+<label class="levelcard" id="margin40">
+<input type="radio" name="scan_margin" value="40">
+<span class="ltitle">Big</span>
+<span class="ldesc">40 pt</span>
+</label>
+</div>
+<h3>Output</h3>
+<label class="levelcard checkcard sel" id="mergeCard">
+<input type="checkbox" id="mergeCheck" checked>
+<span><span class="ltitle">Merge all scans in one PDF file</span>
+<span class="ldesc">When this is off, you get one single-page PDF per scan.</span></span>
+</label>
+<div class="warnnote">⚠ <strong>Good to know:</strong> photos taken with the camera are used exactly as framed — hold the page flat, fill the green frame and avoid shadows for the sharpest result. The Black &amp; white mode picks its threshold automatically for each page. Transparent areas become white, and extremely large photos may be slightly reduced to your browser's canvas limits — this is reported after the conversion.</div>
+<div class="freenote">Everything here is 100% free, with no limits: no subscription, no locked features, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your scanned PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<button class="zipbtn" id="zipBtn" type="button" style="display:none">Download all (.zip)</button>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scanNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Start over</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to scan documents to PDF</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Photograph each page</h3><p>Open the camera on this page and take one photo per page — or add photos you already have from your gallery. Each photo becomes one page, in the order shown.</p></div>
+<div class="step"><span class="num">2</span><h3>Arrange and enhance</h3><p>Drag the cards into the right order, rotate any page that came out sideways, then choose Color, Grayscale or Black &amp; white, plus the page size and margin.</p></div>
+<div class="step"><span class="num">3</span><h3>Create and download</h3><p>Press “Create PDF”, then download the merged document, each PDF separately, or all of them together in a single ZIP file.</p></div>
+</div>
+<div class="seo">
+<p>PdfBleu scans and builds your PDF entirely on your own device: your documents are never uploaded to a server, never stored anywhere, and never seen by anyone else. That makes this scanner a safe choice for ID cards, signed forms, contracts and receipts — and it works even on a slow connection, because nothing has to travel over the network.</p>
+<p>A phone camera is often the fastest scanner you own: photograph a signed contract before posting it, archive paper receipts and invoices, turn filled-in forms into one tidy file for an application, or save handwritten notes as a PDF you can share anywhere. With the Fit page size each page matches its photo exactly, while A4 and US Letter give you print-ready pages with the margin you choose.</p>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>How does scanning work without an app?</h3><p>Your browser can use your device camera directly. Tap “Use camera”, allow the permission, frame each page inside the green corners and tap “Take photo” once per page. When every page is captured, press “Create PDF” — the photos are combined into a PDF on the spot, on this page.</p></div>
+<div class="qa"><h3>The camera will not open. What can I do?</h3><p>Check that you allowed camera permission for this site in your browser settings, and that no other app is using the camera. If the live camera still is not available — some browsers and desktop computers limit it — use “Take a photo”, which opens your phone's camera app, or “Choose from gallery” for photos you already have. Both produce exactly the same pages.</p></div>
+<div class="qa"><h3>What does the Black &amp; white mode do?</h3><p>It turns each page into pure black text on a white background, which makes printed documents crisper and the PDF smaller. The cut-off between black and white is chosen automatically for every page with Otsu's method, which finds the threshold that best separates the dark ink from the light paper in that photo. Grayscale keeps the shades in between, and Color keeps the photo as taken.</p></div>
+<div class="qa"><h3>Are my scans uploaded anywhere?</h3><p>No. The camera feed, the photos and the finished PDF all stay on your device — this page never sends them to a server. You can scan private documents, ID papers and contracts without them passing through anyone else's computer.</p></div>
+<div class="qa"><h3>What do the page size and margin options mean?</h3><p>“Fit” makes each PDF page exactly the size of its photo. A4 and US Letter place each photo, centred and scaled to fit, on a standard print page in the orientation you pick. The margin adds blank space around the photo on those standard pages — handy so nothing important sits right at the printer's edge.</p></div>
+</div>
+</main>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<button id="createBtn" type="button" disabled>Create PDF</button>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="scanCore">
+/* =====================================================================
+   ScanCore — pure logic for Scan -> PDF: luminance histogram, Otsu
+   thresholding, pixel enhancement, layout maths and pdf-lib page
+   construction. No DOM access in here, so it is unit-testable in
+   node. The browser layer decodes photos (camera frames are already
+   upright; file photos get EXIF handling), bakes rotation, flattens
+   on white, applies caps, runs transformPixels and hands buildPdf
+   items whose pixels are final: {jpegBytes, w, h} in pixels.
+   Images are measured at 96 DPI, so 1 px = 72/96 pt.
+   ===================================================================== */
+var ScanCore = (function () {
+  'use strict';
+
+  var PX_TO_PT = 72 / 96;
+  var PAGE_SIZES = {
+    A4: { w: 595.28, h: 841.89 },
+    letter: { w: 612, h: 792 }
+  };
+  var MAX_DIMENSION = 12000;
+  var MAX_PIXELS = 40000000;
+
+  function luminance(r, g, b) {
+    var v = Math.round(0.2126 * r + 0.7152 * g + 0.0722 * b);
+    if (v < 0) v = 0;
+    if (v > 255) v = 255;
+    return v;
+  }
+
+  // Luminance histogram of an RGBA byte array (4 bytes per pixel).
+  function buildHistogram(rgba) {
+    var hist = new Array(256);
+    for (var i = 0; i < 256; i++) hist[i] = 0;
+    if (!rgba) return hist;
+    var n = Math.floor(rgba.length / 4);
+    for (var p = 0; p < n; p++) {
+      var o = p * 4;
+      hist[luminance(rgba[o], rgba[o + 1], rgba[o + 2])]++;
+    }
+    return hist;
+  }
+
+  // Otsu threshold: the grey level that maximises the between-class
+  // variance of the dark/light split. Fallbacks: an empty histogram
+  // gives 128; a histogram with a single occupied bin gives that bin.
+  function otsuThreshold(hist) {
+    if (!hist || !hist.length) return 128;
+    var total = 0;
+    var occupied = 0;
+    var singleBin = -1;
+    for (var i = 0; i < hist.length; i++) {
+      if (hist[i] > 0) { occupied++; singleBin = i; }
+      total += hist[i] || 0;
+    }
+    if (total === 0) return 128;
+    if (occupied <= 1) return singleBin < 0 ? 128 : singleBin;
+    var sumTotal = 0;
+    for (var j = 0; j < hist.length; j++) sumTotal += j * (hist[j] || 0);
+    var sumB = 0;
+    var wB = 0;
+    var best = 128;
+    var bestVar = -1;
+    for (var t = 0; t < hist.length; t++) {
+      wB += hist[t] || 0;
+      if (wB === 0) continue;
+      var wF = total - wB;
+      if (wF === 0) break;
+      sumB += t * (hist[t] || 0);
+      var mB = sumB / wB;
+      var mF = (sumTotal - sumB) / wF;
+      var diff = mB - mF;
+      var between = wB * wF * diff * diff;
+      if (between > bestVar) { bestVar = between; best = t; }
+    }
+    return best;
+  }
+
+  // Enhance one RGBA buffer. Returns a NEW Uint8ClampedArray; the
+  // input is never modified. 'color' copies the pixels unchanged,
+  // 'gray' replaces each channel with the luminance, 'bw' snaps each
+  // pixel to 0 or 255 using this image's own Otsu threshold. Alpha
+  // is always 255 in the output: semi-transparent pixels are first
+  // flattened onto white so they enhance like printed ink.
+  function transformPixels(rgba, mode) {
+    var out = new Uint8ClampedArray(rgba ? rgba.length : 0);
+    if (!rgba || rgba.length === 0) return out;
+    var m = mode || 'color';
+    var threshold = null;
+    if (m === 'bw') threshold = otsuThreshold(buildHistogram(rgba));
+    var n = Math.floor(rgba.length / 4);
+    for (var p = 0; p < n; p++) {
+      var o = p * 4;
+      var a = rgba[o + 3];
+      var r = rgba[o], g = rgba[o + 1], b = rgba[o + 2];
+      if (a < 255) {
+        var af = a / 255;
+        r = Math.round(r * af + 255 * (1 - af));
+        g = Math.round(g * af + 255 * (1 - af));
+        b = Math.round(b * af + 255 * (1 - af));
+      }
+      if (m === 'gray') {
+        var lumG = luminance(r, g, b);
+        out[o] = lumG; out[o + 1] = lumG; out[o + 2] = lumG;
+      } else if (m === 'bw') {
+        var v = luminance(r, g, b) > threshold ? 255 : 0;
+        out[o] = v; out[o + 1] = v; out[o + 2] = v;
+      } else {
+        out[o] = rgba[o]; out[o + 1] = rgba[o + 1]; out[o + 2] = rgba[o + 2];
+      }
+      out[o + 3] = 255;
+    }
+    // Any trailing bytes that do not form a full pixel are copied.
+    for (var k = n * 4; k < rgba.length; k++) out[k] = rgba[k];
+    return out;
+  }
+
+  // Pixel dimensions once a rotation (degrees, multiple of 90) is applied.
+  function effectiveDims(pxW, pxH, rotation) {
+    var r = ((Number(rotation) || 0) % 360 + 360) % 360;
+    if (r === 90 || r === 270) return { w: pxH, h: pxW };
+    return { w: pxW, h: pxH };
+  }
+
+  // Downscale factor so a canvas of pxW x pxH stays within the caps.
+  function capScale(pxW, pxH) {
+    var factor = 1;
+    if (pxW > 0 && pxH > 0) {
+      factor = Math.min(1, MAX_DIMENSION / pxW, MAX_DIMENSION / pxH, Math.sqrt(MAX_PIXELS / (pxW * pxH)));
+    }
+    return { factor: factor, capped: factor < 1 };
+  }
+
+  // Layout of one image on its page, in points (pdf-lib origin is
+  // bottom-left, x/y is the lower-left corner of the drawn image).
+  function computeLayout(pxW, pxH, opts) {
+    var o = opts || {};
+    var margin = Number(o.margin) || 0;
+    var eff = effectiveDims(pxW, pxH, o.rotation || 0);
+    var imgW = eff.w * PX_TO_PT;
+    var imgH = eff.h * PX_TO_PT;
+    var pageW, pageH;
+    var sizeKey = o.pageSize || 'fit';
+    if (sizeKey === 'fit') {
+      pageW = imgW;
+      pageH = imgH;
+    } else {
+      var base = PAGE_SIZES[sizeKey] || PAGE_SIZES.A4;
+      if (o.orientation === 'landscape') { pageW = base.h; pageH = base.w; }
+      else { pageW = base.w; pageH = base.h; }
+    }
+    var areaW = Math.max(1, pageW - margin * 2);
+    var areaH = Math.max(1, pageH - margin * 2);
+    var scale = (imgW > 0 && imgH > 0) ? Math.min(areaW / imgW, areaH / imgH) : 1;
+    var drawW = imgW * scale;
+    var drawH = imgH * scale;
+    return {
+      pageW: pageW,
+      pageH: pageH,
+      drawW: drawW,
+      drawH: drawH,
+      x: (pageW - drawW) / 2,
+      y: (pageH - drawH) / 2
+    };
+  }
+
+  async function buildOneDoc(items, opts, lib) {
+    var doc = await lib.PDFDocument.create();
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var bytes = item.jpegBytes || item.bytes;
+      var w = item.w != null ? item.w : item.pxW;
+      var h = item.h != null ? item.h : item.pxH;
+      var layout = computeLayout(w, h, opts);
+      var page = doc.addPage([layout.pageW, layout.pageH]);
+      var embedded = await doc.embedJpg(bytes);
+      page.drawImage(embedded, { x: layout.x, y: layout.y, width: layout.drawW, height: layout.drawH });
+    }
+    return await doc.save();
+  }
+
+  // Build PDFs from prepared items: [{jpegBytes, w, h}].
+  // opts.merge !== false -> one Uint8Array with every page.
+  // opts.merge === false -> an array of Uint8Array, one PDF each.
+  async function buildPdf(preparedItems, opts, PDFLibImpl) {
+    var o = opts || {};
+    var lib = PDFLibImpl || (typeof PDFLib !== 'undefined' ? PDFLib : null);
+    if (!lib) throw new Error('pdf-lib unavailable');
+    var items = preparedItems || [];
+    if (o.merge === false) {
+      var docs = [];
+      for (var i = 0; i < items.length; i++) {
+        docs.push(await buildOneDoc([items[i]], o, lib));
+      }
+      return docs;
+    }
+    return await buildOneDoc(items, o, lib);
+  }
+
+  // Download-name base: characters outside [A-Za-z0-9._-] become
+  // underscores; an empty result falls back to 'scan'.
+  function sanitizeBase(name) {
+    var s = String(name == null ? '' : name).replace(/[^A-Za-z0-9._-]/g, '_').replace(/^\.+/, '').replace(/\.+$/, '');
+    return s || 'scan';
+  }
+
+  return {
+    PX_TO_PT: PX_TO_PT,
+    PAGE_SIZES: PAGE_SIZES,
+    MAX_DIMENSION: MAX_DIMENSION,
+    MAX_PIXELS: MAX_PIXELS,
+    luminance: luminance,
+    buildHistogram: buildHistogram,
+    otsuThreshold: otsuThreshold,
+    transformPixels: transformPixels,
+    effectiveDims: effectiveDims,
+    capScale: capScale,
+    computeLayout: computeLayout,
+    buildPdf: buildPdf,
+    sanitizeBase: sanitizeBase
+  };
+})();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = ScanCore;
+}
+</script>
+<script>
+(function () {
+  'use strict';
+
+  var ALLOWED_EXT = /\.(jpe?g|png|webp|gif|bmp)$/i;
+
+  var pages = [];    // {id, file, name, base, url, pxW, pxH, rotation}
+  var results = [];  // {name, blob, pages, url}
+  var nextId = 1;
+  var scanCount = 0;
+  var sortDesc = false;
+  var thumbsShown = true;
+  var dragId = null;
+  var cameraStream = null;
+
+  var scannerPanel = document.getElementById('scannerPanel');
+  var useCameraBtn = document.getElementById('useCameraBtn');
+  var cameraWrap = document.getElementById('cameraWrap');
+  var cameraVideo = document.getElementById('cameraVideo');
+  var cameraBtns = document.getElementById('cameraBtns');
+  var captureBtn = document.getElementById('captureBtn');
+  var closeCameraBtn = document.getElementById('closeCameraBtn');
+  var cameraMsg = document.getElementById('cameraMsg');
+  var captureFlash = document.getElementById('captureFlash');
+  var takePhotoBtn = document.getElementById('takePhotoBtn');
+  var galleryBtn = document.getElementById('galleryBtn');
+  var captureInput = document.getElementById('captureInput');
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var pickBtn = document.getElementById('pickBtn');
+  var toolbar = document.getElementById('toolbar');
+  var sortBtn = document.getElementById('sortBtn');
+  var toggleThumbsBtn = document.getElementById('toggleThumbsBtn');
+  var grid = document.getElementById('imageGrid');
+  var errorBox = document.getElementById('error');
+  var processing = document.getElementById('processing');
+  var processingDetail = document.getElementById('processingDetail');
+  var layout = document.getElementById('layout');
+  var success = document.getElementById('success');
+  var successInfo = document.getElementById('successInfo');
+  var resultList = document.getElementById('resultList');
+  var scanNote = document.getElementById('scanNote');
+  var zipBtn = document.getElementById('zipBtn');
+  var restartBtn = document.getElementById('restartBtn');
+  var actionBar = document.getElementById('actionBar');
+  var barSummary = document.getElementById('barSummary');
+  var createBtn = document.getElementById('createBtn');
+  var orientationBlock = document.getElementById('orientationBlock');
+  var orientationHint = document.getElementById('orientationHint');
+  var pageSizeSelect = document.getElementById('pageSizeSelect');
+  var mergeCheck = document.getElementById('mergeCheck');
+  var mergeCard = document.getElementById('mergeCard');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function showCameraMsg(msg) {
+    cameraMsg.textContent = msg;
+    cameraMsg.classList.toggle('on', !!msg);
+  }
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+  function selectedEnhance() {
+    var checked = document.querySelector('input[name="scan_enhance"]:checked');
+    return checked ? checked.value : 'color';
+  }
+  function selectedOrientation() {
+    var checked = document.querySelector('input[name="scan_orientation"]:checked');
+    return checked && checked.value === 'landscape' ? 'landscape' : 'portrait';
+  }
+  function selectedMargin() {
+    var checked = document.querySelector('input[name="scan_margin"]:checked');
+    var v = checked ? parseInt(checked.value, 10) : 0;
+    return isNaN(v) ? 0 : v;
+  }
+  function selectedPageSize() {
+    return pageSizeSelect.value || 'fit';
+  }
+  function currentOpts() {
+    return { pageSize: selectedPageSize(), orientation: selectedOrientation(), margin: selectedMargin() };
+  }
+
+  function syncOptionCards() {
+    var enhance = selectedEnhance();
+    document.getElementById('enhanceColor').classList.toggle('sel', enhance === 'color');
+    document.getElementById('enhanceGray').classList.toggle('sel', enhance === 'gray');
+    document.getElementById('enhanceBw').classList.toggle('sel', enhance === 'bw');
+    var orientation = selectedOrientation();
+    document.getElementById('orientationPortrait').classList.toggle('sel', orientation === 'portrait');
+    document.getElementById('orientationLandscape').classList.toggle('sel', orientation === 'landscape');
+    var margin = selectedMargin();
+    document.getElementById('margin0').classList.toggle('sel', margin === 0);
+    document.getElementById('margin20').classList.toggle('sel', margin === 20);
+    document.getElementById('margin40').classList.toggle('sel', margin === 40);
+    mergeCard.classList.toggle('sel', !!mergeCheck.checked);
+    var fit = selectedPageSize() === 'fit';
+    orientationBlock.classList.toggle('qdisabled', fit);
+    orientationHint.classList.toggle('on', fit);
+  }
+  document.querySelectorAll('input[name="scan_enhance"]').forEach(function (inp) {
+    inp.addEventListener('change', syncOptionCards);
+  });
+  document.querySelectorAll('input[name="scan_orientation"]').forEach(function (inp) {
+    inp.addEventListener('change', syncOptionCards);
+  });
+  document.querySelectorAll('input[name="scan_margin"]').forEach(function (inp) {
+    inp.addEventListener('change', syncOptionCards);
+  });
+  ['enhanceColor', 'enhanceGray', 'enhanceBw', 'orientationPortrait', 'orientationLandscape', 'margin0', 'margin20', 'margin40'].forEach(function (id) {
+    document.getElementById(id).addEventListener('click', syncOptionCards);
+  });
+  pageSizeSelect.addEventListener('change', syncOptionCards);
+  mergeCheck.addEventListener('change', syncOptionCards);
+  mergeCard.addEventListener('click', syncOptionCards);
+  syncOptionCards();
+
+  function updateBar() {
+    var show = pages.length > 0;
+    actionBar.classList.toggle('on', show);
+    document.body.classList.toggle('bar-visible', show);
+    toolbar.classList.toggle('on', show);
+    if (show) {
+      var n = pages.length;
+      barSummary.textContent = n + (n === 1 ? ' page scanned' : ' pages scanned');
+    }
+    createBtn.disabled = pages.length < 1;
+  }
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    pages.forEach(function (item, idx) {
+      var eff = ScanCore.effectiveDims(item.pxW, item.pxH, item.rotation);
+      var card = document.createElement('div');
+      card.className = 'imgcard';
+      card.draggable = true;
+      card.setAttribute('data-id', String(item.id));
+
+      var tw = document.createElement('div');
+      tw.className = 'thumbwrap';
+      var img = document.createElement('img');
+      img.src = item.url;
+      img.alt = item.name;
+      img.draggable = false;
+      img.style.transform = 'rotate(' + item.rotation + 'deg)';
+      tw.appendChild(img);
+
+      var bodyBox = document.createElement('div');
+      bodyBox.className = 'icardbody';
+      var nm = document.createElement('div');
+      nm.className = 'iname';
+      nm.textContent = item.name;
+      var meta = document.createElement('div');
+      meta.className = 'imeta';
+      meta.textContent = 'Page ' + (idx + 1) + ' · ' + eff.w + ' × ' + eff.h + ' px · ' + formatSize(item.file.size);
+      bodyBox.appendChild(nm);
+      bodyBox.appendChild(meta);
+
+      var btns = document.createElement('div');
+      btns.className = 'ibtns';
+      function mkBtn(label, title, action, cls) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = label;
+        b.title = title;
+        if (cls) b.className = cls;
+        b.addEventListener('click', function (e) {
+          e.stopPropagation();
+          action();
+        });
+        return b;
+      }
+      btns.appendChild(mkBtn('↻', 'Rotate 90 degrees', function () {
+        item.rotation = (item.rotation + 90) % 360;
+        renderGrid();
+      }));
+      btns.appendChild(mkBtn('◀', 'Move left', function () {
+        if (idx > 0) { var t = pages[idx - 1]; pages[idx - 1] = pages[idx]; pages[idx] = t; renderGrid(); }
+      }));
+      btns.appendChild(mkBtn('▶', 'Move right', function () {
+        if (idx < pages.length - 1) { var t = pages[idx + 1]; pages[idx + 1] = pages[idx]; pages[idx] = t; renderGrid(); }
+      }));
+      btns.appendChild(mkBtn('✕', 'Remove this page', function () {
+        URL.revokeObjectURL(item.url);
+        pages.splice(idx, 1);
+        renderGrid();
+        updateBar();
+      }, 'rm'));
+
+      card.appendChild(tw);
+      card.appendChild(bodyBox);
+      card.appendChild(btns);
+
+      card.addEventListener('dragstart', function (e) {
+        dragId = item.id;
+        if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(item.id)); } catch (err) {} }
+      });
+      card.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        card.classList.add('dragover');
+      });
+      card.addEventListener('dragleave', function () { card.classList.remove('dragover'); });
+      card.addEventListener('drop', function (e) {
+        e.preventDefault();
+        card.classList.remove('dragover');
+        var fromId = dragId;
+        if (e.dataTransfer) { var d = parseInt(e.dataTransfer.getData('text/plain'), 10); if (!isNaN(d)) fromId = d; }
+        if (fromId == null || fromId === item.id) return;
+        var fromIdx = -1;
+        pages.forEach(function (it, i2) { if (it.id === fromId) fromIdx = i2; });
+        if (fromIdx < 0) return;
+        var moved = pages.splice(fromIdx, 1)[0];
+        var toIdx = -1;
+        pages.forEach(function (it, i2) { if (it.id === item.id) toIdx = i2; });
+        pages.splice(toIdx, 0, moved);
+        dragId = null;
+        renderGrid();
+      });
+      card.addEventListener('dragend', function () { dragId = null; });
+
+      grid.appendChild(card);
+    });
+  }
+
+  function naturalCompare(a, b) {
+    var ax = String(a).split(/(\d+)/);
+    var bx = String(b).split(/(\d+)/);
+    var len = Math.max(ax.length, bx.length);
+    for (var i = 0; i < len; i++) {
+      if (ax[i] === undefined) return -1;
+      if (bx[i] === undefined) return 1;
+      var an = /^\d+$/.test(ax[i]) ? parseInt(ax[i], 10) : null;
+      var bn = /^\d+$/.test(bx[i]) ? parseInt(bx[i], 10) : null;
+      if (an !== null && bn !== null) { if (an !== bn) return an - bn; }
+      else {
+        var cmp = ax[i].toLowerCase().localeCompare(bx[i].toLowerCase());
+        if (cmp !== 0) return cmp;
+      }
+    }
+    return 0;
+  }
+  sortBtn.addEventListener('click', function () {
+    sortDesc = !sortDesc;
+    var dir = sortDesc ? -1 : 1;
+    pages.sort(function (a, b) { return dir * naturalCompare(a.name, b.name); });
+    sortBtn.textContent = sortDesc ? 'Sort by name: Z → A' : 'Sort by name: A → Z';
+    renderGrid();
+  });
+  toggleThumbsBtn.addEventListener('click', function () {
+    thumbsShown = !thumbsShown;
+    grid.classList.toggle('listmode', !thumbsShown);
+    toggleThumbsBtn.textContent = thumbsShown ? 'Hide thumbnails' : 'Show thumbnails';
+  });
+
+  /* ---------------- camera ---------------- */
+
+  function stopCamera() {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(function (track) { try { track.stop(); } catch (e) {} });
+      cameraStream = null;
+    }
+    try { cameraVideo.srcObject = null; } catch (e) {}
+    cameraWrap.classList.remove('on');
+    cameraBtns.classList.remove('on');
+    useCameraBtn.style.display = '';
+  }
+
+  async function openCamera() {
+    showCameraMsg('');
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+      showCameraMsg('The live camera is not available in this browser — no problem: the “Take a photo” and “Choose from gallery” buttons below do exactly the same job.');
+      return;
+    }
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      cameraStream = stream;
+      cameraVideo.srcObject = stream;
+      try { await cameraVideo.play(); } catch (e) {}
+      cameraWrap.classList.add('on');
+      cameraBtns.classList.add('on');
+      useCameraBtn.style.display = 'none';
+    } catch (err) {
+      showCameraMsg('The camera could not be opened — it may be blocked or in use by another app. No problem: the “Take a photo” and “Choose from gallery” buttons below do exactly the same job.');
+    }
+  }
+  useCameraBtn.addEventListener('click', openCamera);
+  closeCameraBtn.addEventListener('click', stopCamera);
+
+  function flashCapture() {
+    captureFlash.classList.add('flash');
+    setTimeout(function () { captureFlash.classList.remove('flash'); }, 60);
+  }
+
+  captureBtn.addEventListener('click', function () {
+    if (!cameraStream) return;
+    var vw = cameraVideo.videoWidth;
+    var vh = cameraVideo.videoHeight;
+    if (!(vw > 0) || !(vh > 0)) {
+      showCameraMsg('The camera is still starting — wait a moment and tap “Take photo” again.');
+      return;
+    }
+    var canvas = document.createElement('canvas');
+    canvas.width = vw;
+    canvas.height = vh;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(cameraVideo, 0, 0, vw, vh);
+    flashCapture();
+    canvas.toBlob(function (blob) {
+      canvas.width = 0; canvas.height = 0;
+      if (!blob) {
+        showCameraMsg('That photo could not be captured. Please try again.');
+        return;
+      }
+      scanCount++;
+      var name = 'scan-' + scanCount + '.jpg';
+      var url = URL.createObjectURL(blob);
+      pages.push({
+        id: nextId++,
+        file: blob,
+        name: name,
+        base: 'scan-' + scanCount,
+        url: url,
+        pxW: vw,
+        pxH: vh,
+        rotation: 0
+      });
+      showError('');
+      renderGrid();
+      updateBar();
+    }, 'image/jpeg', 0.92);
+  });
+
+  window.addEventListener('pagehide', stopCamera);
+
+  /* ---------------- adding photos from files ---------------- */
+
+  function isImageFile(f) {
+    if (!f) return false;
+    if (f.type && f.type.indexOf('image/') === 0) return true;
+    return ALLOWED_EXT.test(f.name || '');
+  }
+
+  // Decode a file just far enough to learn its EXIF-oriented size.
+  async function decodeDims(f, url) {
+    if (typeof createImageBitmap === 'function') {
+      try {
+        var bmp = await createImageBitmap(f, { imageOrientation: 'from-image' });
+        var dims = { w: bmp.width, h: bmp.height };
+        if (bmp.close) bmp.close();
+        return dims;
+      } catch (e1) {
+        try {
+          var bmp2 = await createImageBitmap(f);
+          var dims2 = { w: bmp2.width, h: bmp2.height };
+          if (bmp2.close) bmp2.close();
+          return dims2;
+        } catch (e2) { /* fall through to the Image element */ }
+      }
+    }
+    return await new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve({ w: img.naturalWidth, h: img.naturalHeight }); };
+      img.onerror = function () { reject(new Error('decode')); };
+      img.src = url;
+    });
+  }
+
+  async function addFiles(fileListIn) {
+    showError('');
+    var rejected = [];
+    var failed = [];
+    var listIn = Array.prototype.slice.call(fileListIn || []);
+    for (var i = 0; i < listIn.length; i++) {
+      var f = listIn[i];
+      if (!isImageFile(f)) { rejected.push(f.name); continue; }
+      var url = URL.createObjectURL(f);
+      try {
+        var dims = await decodeDims(f, url);
+        if (!(dims.w > 0) || !(dims.h > 0)) throw new Error('empty');
+        pages.push({
+          id: nextId++,
+          file: f,
+          name: f.name,
+          base: f.name.replace(/\.[^.]*$/, '') || 'image',
+          url: url,
+          pxW: dims.w,
+          pxH: dims.h,
+          rotation: 0
+        });
+      } catch (e) {
+        URL.revokeObjectURL(url);
+        failed.push(f.name);
+      }
+    }
+    var msgs = [];
+    if (rejected.length) msgs.push('These files are not images and were not added: ' + rejected.join(', ') + '.');
+    if (failed.length) msgs.push('These images could not be read and were not added: ' + failed.join(', ') + '.');
+    if (msgs.length) showError(msgs.join(' '));
+    renderGrid();
+    updateBar();
+  }
+
+  takePhotoBtn.addEventListener('click', function () { captureInput.click(); });
+  galleryBtn.addEventListener('click', function () { input.click(); });
+  captureInput.addEventListener('change', function () { if (captureInput.files && captureInput.files.length) addFiles(captureInput.files); captureInput.value = ''; });
+  pickBtn.addEventListener('click', function (e) { e.stopPropagation(); input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files && input.files.length) addFiles(input.files); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) addFiles(e.dataTransfer.files);
+  });
+
+  /* ---------------- results / reset ---------------- */
+
+  function clearResults() {
+    results.forEach(function (r) { if (r.url) URL.revokeObjectURL(r.url); });
+    results = [];
+    resultList.innerHTML = '';
+    zipBtn.style.display = 'none';
+  }
+
+  function resetAll() {
+    stopCamera();
+    pages.forEach(function (it) { URL.revokeObjectURL(it.url); });
+    pages = [];
+    scanCount = 0;
+    clearResults();
+    showError('');
+    showCameraMsg('');
+    success.classList.remove('on');
+    layout.style.display = '';
+    renderGrid();
+    updateBar();
+  }
+  restartBtn.addEventListener('click', resetAll);
+
+  /* ---------------- conversion ---------------- */
+
+  function canvasToJpegBytes(canvas) {
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(function (blob) {
+        if (!blob) { reject(new Error('encode')); return; }
+        blob.arrayBuffer().then(function (buf) { resolve(new Uint8Array(buf)); }, reject);
+      }, 'image/jpeg', 0.92);
+    });
+  }
+
+  async function loadSource(item) {
+    if (typeof createImageBitmap === 'function') {
+      try { return await createImageBitmap(item.file, { imageOrientation: 'from-image' }); } catch (e1) {}
+      try { return await createImageBitmap(item.file); } catch (e2) {}
+    }
+    return await new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error('decode')); };
+      img.src = item.url;
+    });
+  }
+
+  // Decode, rotate, flatten on white, cap and enhance one page,
+  // then encode it as JPEG bytes ready for ScanCore.buildPdf.
+  // Camera frames are already upright (no EXIF); file photos go
+  // through the same EXIF-aware decode as the other image tools.
+  async function preparePage(item, enhanceMode) {
+    var src = await loadSource(item);
+    var srcW = src.width || src.naturalWidth;
+    var srcH = src.height || src.naturalHeight;
+    if (!(srcW > 0) || !(srcH > 0)) throw new Error('empty image');
+    var eff = ScanCore.effectiveDims(srcW, srcH, item.rotation);
+    var cap = ScanCore.capScale(eff.w, eff.h);
+    var targetW = Math.max(1, Math.round(eff.w * cap.factor));
+    var targetH = Math.max(1, Math.round(eff.h * cap.factor));
+    var canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, targetW, targetH);
+    ctx.translate(targetW / 2, targetH / 2);
+    ctx.rotate((item.rotation || 0) * Math.PI / 180);
+    ctx.scale(cap.factor, cap.factor);
+    ctx.drawImage(src, -srcW / 2, -srcH / 2);
+    if (src.close) src.close();
+    if (enhanceMode && enhanceMode !== 'color') {
+      var imgData = ctx.getImageData(0, 0, targetW, targetH);
+      var transformed = ScanCore.transformPixels(imgData.data, enhanceMode);
+      imgData.data.set(transformed);
+      ctx.putImageData(imgData, 0, 0);
+    } else {
+      // Still normalise alpha onto the white background.
+      var raw = ctx.getImageData(0, 0, targetW, targetH);
+      raw.data.set(ScanCore.transformPixels(raw.data, 'color'));
+      ctx.putImageData(raw, 0, 0);
+    }
+    var bytes = await canvasToJpegBytes(canvas);
+    canvas.width = 0; canvas.height = 0;
+    return { jpegBytes: bytes, w: targetW, h: targetH, capped: cap.capped, name: item.name, base: item.base };
+  }
+
+  function showSuccess(infoText, notes) {
+    successInfo.textContent = infoText;
+    resultList.innerHTML = '';
+    results.forEach(function (r) {
+      r.url = URL.createObjectURL(r.blob);
+      var item = document.createElement('div');
+      item.className = 'resultitem';
+      var icon = document.createElement('span');
+      icon.className = 'ricon';
+      icon.textContent = '📄';
+      var info = document.createElement('div');
+      info.className = 'rinfo';
+      var rn = document.createElement('div'); rn.className = 'rname'; rn.textContent = r.name;
+      var rm = document.createElement('div'); rm.className = 'rmeta';
+      rm.textContent = r.pages + (r.pages === 1 ? ' page' : ' pages') + ' · ' + formatSize(r.blob.size);
+      info.appendChild(rn); info.appendChild(rm);
+      var a = document.createElement('a');
+      a.className = 'dl'; a.href = r.url; a.download = r.name; a.textContent = 'Download';
+      item.appendChild(icon); item.appendChild(info); item.appendChild(a);
+      resultList.appendChild(item);
+    });
+    zipBtn.style.display = results.length > 1 ? 'block' : 'none';
+    zipBtn.disabled = false;
+    zipBtn.textContent = 'Download all (.zip)';
+    if (notes && notes.length) {
+      scanNote.innerHTML = '';
+      notes.forEach(function (n) {
+        var d = document.createElement('div');
+        d.textContent = '⚠ ' + n;
+        scanNote.appendChild(d);
+      });
+      scanNote.style.display = 'block';
+    } else {
+      scanNote.style.display = 'none';
+    }
+    layout.style.display = 'none';
+    success.classList.add('on');
+    actionBar.classList.remove('on');
+    document.body.classList.remove('bar-visible');
+    success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  createBtn.addEventListener('click', async function () {
+    showError('');
+    if (!pages.length) { showError('Please first scan or add at least one page.'); return; }
+    var opts = currentOpts();
+    var enhanceMode = selectedEnhance();
+    var merged = !!mergeCheck.checked;
+    var total = pages.length;
+    createBtn.disabled = true;
+    processing.classList.add('on');
+    clearResults();
+    try {
+      var prepared = [];
+      var cappedCount = 0;
+      var skippedCount = 0;
+      for (var i = 0; i < total; i++) {
+        processingDetail.textContent = 'Page ' + (i + 1) + ' of ' + total;
+        try {
+          var p = await preparePage(pages[i], enhanceMode);
+          if (p.capped) cappedCount++;
+          prepared.push(p);
+        } catch (e) {
+          skippedCount++;
+        }
+      }
+      if (!prepared.length) {
+        processing.classList.remove('on');
+        showError('None of your pages could be converted. They may be damaged or in a format your browser cannot read.');
+        createBtn.disabled = false;
+        updateBar();
+        return;
+      }
+      var notes = [];
+      if (cappedCount > 0) notes.push(cappedCount + ' very large photo(s) were slightly reduced to fit your browser\u2019s canvas limits.');
+      if (skippedCount > 0) notes.push(skippedCount + ' page(s) could not be read and were skipped.');
+      if (merged) {
+        var buildOpts = { pageSize: opts.pageSize, orientation: opts.orientation, margin: opts.margin, merge: true };
+        var bytes = await ScanCore.buildPdf(prepared, buildOpts, null);
+        var blob = new Blob([bytes], { type: 'application/pdf' });
+        results = [{ name: 'pdfbleu-scanned.pdf', blob: blob, pages: prepared.length, url: null }];
+        showSuccess(prepared.length + (prepared.length === 1 ? ' page' : ' pages') + ' combined into one PDF of ' + prepared.length + (prepared.length === 1 ? ' page' : ' pages') + '.', notes);
+      } else {
+        var singleOpts = { pageSize: opts.pageSize, orientation: opts.orientation, margin: opts.margin, merge: false };
+        var docs = await ScanCore.buildPdf(prepared, singleOpts, null);
+        var usedNames = {};
+        var outResults = [];
+        for (var j = 0; j < prepared.length; j++) {
+          var baseName = ScanCore.sanitizeBase(prepared[j].base);
+          var outName = baseName + '.pdf';
+          if (usedNames[outName]) { usedNames[outName]++; outName = baseName + '-' + usedNames[outName] + '.pdf'; }
+          else usedNames[outName] = 1;
+          outResults.push({ name: outName, blob: new Blob([docs[j]], { type: 'application/pdf' }), pages: 1, url: null });
+        }
+        results = outResults;
+        showSuccess(prepared.length + (prepared.length === 1 ? ' page' : ' pages') + ' converted into ' + results.length + (results.length === 1 ? ' PDF' : ' PDFs') + ', one page each.', notes);
+      }
+    } catch (err) {
+      showError('An error occurred while creating the PDF. Please try again, perhaps with fewer or smaller photos.');
+    } finally {
+      processing.classList.remove('on');
+      createBtn.disabled = false;
+      updateBar();
+      if (success.classList.contains('on')) {
+        actionBar.classList.remove('on');
+        document.body.classList.remove('bar-visible');
+      }
+    }
+  });
+
+  zipBtn.addEventListener('click', async function () {
+    if (!results.length) return;
+    var original = zipBtn.textContent;
+    zipBtn.disabled = true;
+    zipBtn.textContent = 'Preparing ZIP…';
+    try {
+      var zip = new JSZip();
+      results.forEach(function (r) { zip.file(r.name, r.blob); });
+      var blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/zip' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'pdfbleu-scanned.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 6000);
+    } catch (e) {
+      showError('The ZIP file could not be prepared. You can still download the PDFs one by one.');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } finally {
+      zipBtn.disabled = false;
+      zipBtn.textContent = original;
+    }
+  });
+
+  updateBar();
+})();
+</script>
+</body>
+                                                                                       </html>
