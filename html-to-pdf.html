@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML to PDF — PdfBleu.com</title>
+<meta name="description" content="Convert HTML to PDF for free in your browser: load a web page by URL, upload an .html file or paste your code, choose the page size and download the PDF. Nothing is uploaded to a server.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+body.bar-visible{padding-bottom:86px}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:22px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:12px;font-size:14.5px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35)}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.modetabs{display:flex;gap:8px;margin-bottom:14px}
+.modetab{flex:1;border:1.5px solid #c5cae9;background:#fff;border-radius:11px;padding:11px 8px;font-size:15px;font-weight:700;color:#333a5e;cursor:pointer;font-family:inherit}
+.modetab.sel{border-color:#3F51B5;background:#eef1fb;color:#1a237e}
+.optgroup{border-top:1px solid #e0e4f5;padding-top:14px;margin-top:14px}
+.optgroup:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.prop-row{margin-bottom:12px}
+.prop-row:last-child{margin-bottom:0}
+.prop-row label{display:block;font-size:13.5px;font-weight:600;color:#444a6d;margin-bottom:5px}
+.prop-row input[type=text],.prop-row input[type=number],.prop-row select{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:8px 10px;font-size:14.5px;font-family:inherit;background:#fff;color:#21243d}
+.footnote{font-size:12.5px;color:#888fb0;margin-top:5px}
+.checkrow{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;font-weight:600;color:#333a5e;cursor:pointer}
+.checkrow input{width:18px;height:18px;accent-color:#3F51B5;cursor:pointer;flex-shrink:0;margin-top:2px}
+.checkrow .hint{display:block;font-size:12.5px;font-weight:400;color:#888fb0}
+.layercards{display:grid;gap:9px;grid-template-columns:1fr 1fr}
+.layercard{display:block;width:100%;text-align:left;border:1.5px solid #c5cae9;border-radius:11px;padding:11px 13px;cursor:pointer;background:#fff;font-family:inherit}
+.layercard .ltitle{display:block;font-weight:700;color:#1a237e;font-size:14.5px}
+.layercard .ldesc{display:block;font-size:12.5px;color:#666c8a;margin-top:2px}
+.layercard.sel{border-color:#2e7d32;background:#e8f5e9}
+.urlrow{display:flex;gap:8px}
+.urlrow input{flex:1;min-width:0;border:1.5px solid #c5cae9;border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit;background:#fff;color:#21243d}
+.urlrow button{border:none;background:#3F51B5;color:#fff;border-radius:8px;padding:10px 18px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.urlrow button:disabled{opacity:.55;cursor:not-allowed}
+textarea.pastearea{width:100%;border:1.5px solid #c5cae9;border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:ui-monospace,Consolas,Menlo,monospace;background:#fcfcff;color:#21243d;resize:vertical;min-height:170px}
+.widebtn{margin-top:10px;border:1.5px solid #3F51B5;color:#3F51B5;background:#fff;border-radius:20px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.ambernote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.ambernote .switchrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.ambernote .switchrow button{border:1.5px solid #b8860b;background:#fff;color:#6d4c00;border-radius:16px;padding:6px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.sourcechip{display:none;margin-top:14px;background:#eef1fb;border:1.5px solid #c5cae9;border-radius:10px;padding:10px 12px;align-items:center;gap:10px}
+.sourcechip.on{display:flex}
+.sourcechip .sctext{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#333a5e;word-break:break-all}
+.sourcechip .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.resetlink{background:none;border:none;color:#3F51B5;font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0}
+.resetrow{text-align:right;margin-bottom:6px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.processing{display:none;position:fixed;inset:0;background:rgba(255,255,255,.93);z-index:80;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.actionbar{display:none;position:fixed;left:0;right:0;bottom:0;background:#fff;box-shadow:0 -3px 14px rgba(26,35,126,.16);padding:12px 16px;z-index:40;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.actionbar.on{display:flex}
+.actionbar .summary{font-weight:700;color:#1a237e;font-size:15px}
+.actionbar .barbtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.actionbar button{background:#2e7d32;color:#fff;border:none;padding:14px 30px;border-radius:28px;font-size:16.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.actionbar button:disabled{opacity:.55;cursor:not-allowed}
+.actionbar button.ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:12px 22px;font-size:15px}
+.success{display:none;background:#fff;border:1px solid #4CAF50;border-radius:14px;padding:26px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.success.on{display:block}
+.success .big{font-size:44px;display:block;margin-bottom:8px;text-align:center}
+.success h2{color:#1b5e20;font-size:23px;margin-bottom:8px;text-align:center}
+.success p.sub{color:#444a6d;margin-bottom:16px;text-align:center}
+.resultlist{display:grid;gap:10px;margin-bottom:16px}
+.resultitem{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:10px;padding:11px 14px;flex-wrap:wrap}
+.resultitem .rname{font-weight:700;font-size:14px;word-break:break-all}
+.resultitem .rmeta{font-size:13px;color:#666c8a}
+.resultitem a.dl{background:#2e7d32;color:#fff;text-decoration:none;padding:11px 22px;border-radius:22px;font-size:15px;font-weight:700;flex-shrink:0}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-bottom:16px;text-align:left}
+.success button.again{display:block;margin:4px auto 0;background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 24px;border-radius:24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.previewsec{display:none;margin-top:18px}
+.previewsec.on{display:block}
+.previewhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.previewhead h2{font-size:19px;color:#1a237e}
+.previewhead .ptitle{font-size:13px;color:#666c8a;word-break:break-all}
+#previewViewport{overflow:hidden;position:relative;background:#fff;border:1.5px solid #dfe3f7;border-radius:8px}
+#previewScaler{transform-origin:top left}
+#renderFrame{border:none;display:block;background:#fff}
+.features{margin-top:30px}
+.features h2,.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.howto{margin-top:30px}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}.steps4{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.steps4{grid-template-columns:repeat(4,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step .fic{font-size:27px;display:block;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#FBEFA8"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#D6BF2D"/><path d="M10 10 L16 16" stroke="#B7A001" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#B7A001"/><text x="30" y="37" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">&lt;/&gt;</text></svg></span>
+<h1>HTML to PDF</h1>
+<p class="subtitle">Turn a web page into a PDF document — by URL, from an .html file, or by pasting the page's code. The conversion happens entirely in your browser.</p>
+</div>
+<div class="private-note">🔒 Nothing is sent to a server: the page is rendered and converted right here, in your browser.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="modetabs">
+<button class="modetab sel" id="tabUrlBtn" type="button">Website URL</button>
+<button class="modetab" id="tabFileBtn" type="button">Upload file</button>
+<button class="modetab" id="tabPasteBtn" type="button">Paste HTML</button>
+</div>
+
+<div id="paneUrl">
+<div class="prop-row"><label for="urlInput">Website URL</label>
+<div class="urlrow"><input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off" spellcheck="false"><button id="loadUrlBtn" type="button">Load page</button></div>
+<p class="footnote">Your browser asks the site for the page directly — no server of ours is involved. Many sites refuse this kind of reading; if yours does, use one of the other two tabs.</p>
+</div>
+<div class="ambernote" id="urlError" style="display:none">
+<span id="urlErrorText">This site blocked your browser from reading it, so the page could not be loaded by URL. That is the site's own protection, and no tool running inside a web page can bypass it.</span>
+<div class="switchrow"><button id="urlToPasteBtn" type="button">Paste the HTML instead</button><button id="urlToFileBtn" type="button">Upload the .html file</button></div>
+</div>
+</div>
+
+<div id="paneFile" style="display:none">
+<div class="drop" id="fileDrop">
+<button class="pick" id="filePickBtn" type="button"><span class="plus">+</span>Select an HTML file</button>
+<p class="droptxt">or drop the .html file here</p>
+</div>
+<input type="file" id="htmlFileInput" accept=".html,.htm,text/html" hidden>
+<p class="footnote">Tip: in your browser, “Save page as…” with the “complete page” format gives the best result. Images and style files stored next to the page usually cannot be found again from a single file — content saved inline in the file works best.</p>
+</div>
+
+<div id="panePaste" style="display:none">
+<div class="prop-row"><label for="pasteArea">Paste the page's HTML code</label>
+<textarea class="pastearea" id="pasteArea" rows="10" spellcheck="false" placeholder="&lt;html&gt;…&lt;/html&gt;"></textarea>
+</div>
+<button class="widebtn" id="usePasteBtn" type="button">Use this HTML</button>
+</div>
+
+<div class="ambernote">Most websites block other pages from reading them in the browser, so URL conversion works only for sites that allow it — pasting the page's HTML or uploading the saved .html file always works. Nothing is sent to a server: the conversion happens in your browser. Scripts inside the HTML are stripped and never run, so pages that build their content with JavaScript may convert incompletely, and images hosted on other sites appear only when their host allows it.</div>
+
+<div class="sourcechip" id="sourceChip">
+<span class="sctext" id="sourceChipText"></span>
+<button class="rm" id="clearSourceBtn" type="button" title="Remove this page">✕</button>
+</div>
+<div class="error" id="error"></div>
+</div>
+
+<div class="previewsec" id="previewSec">
+<div class="tool">
+<div class="previewhead">
+<h2>Preview</h2>
+<span class="ptitle" id="previewTitle"></span>
+</div>
+<div id="previewViewport">
+<div id="previewScaler">
+<iframe id="renderFrame" title="Web page preview"></iframe>
+</div>
+</div>
+<p class="footnote">Preview — the PDF is made from exactly this rendering.</p>
+</div>
+</div>
+</div>
+
+<aside class="sidebar">
+<div class="resetrow"><button class="resetlink" id="resetAllBtn" type="button">Reset all</button></div>
+<h2>HTML to PDF options</h2>
+<p>Set how the page should be rendered and laid out on paper.</p>
+<div class="optgroup">
+<div class="prop-row"><label for="screenSize">Screen size</label>
+<select id="screenSize">
+<option value="custom" id="screenCustom" selected>Your screen</option>
+<option value="1920">Desktop HD (1920px)</option>
+<option value="1440">Desktop (1440px)</option>
+<option value="768">Tablet (768px)</option>
+<option value="320">Mobile (320px)</option>
+</select>
+<p class="footnote">The width the page is rendered at — wide screens show the desktop layout, narrow ones the mobile layout.</p>
+</div>
+<div class="prop-row"><label for="pageSize">Page size</label>
+<select id="pageSize">
+<option value="a4" selected>A4 (210 × 297 mm)</option>
+<option value="a3">A3 (297 × 420 mm)</option>
+<option value="a5">A5 (148 × 210 mm)</option>
+<option value="letter">US Letter (216 × 279 mm)</option>
+</select>
+</div>
+<div class="prop-row"><label class="checkrow"><input type="checkbox" id="singlePage" checked><span>One long page<span class="hint">The whole web page becomes a single tall PDF page instead of being split into several pages.</span></span></label></div>
+</div>
+<div class="optgroup">
+<div class="prop-row"><label>Orientation</label>
+<div class="layercards">
+<button class="layercard sel" id="orientPortrait" type="button"><span class="ltitle">Portrait</span><span class="ldesc">Taller than wide.</span></button>
+<button class="layercard" id="orientLandscape" type="button"><span class="ltitle">Landscape</span><span class="ldesc">Wider than tall.</span></button>
+</div>
+</div>
+<div class="prop-row"><label>Page margin</label>
+<div class="layercards">
+<button class="layercard sel" id="marginNone" type="button"><span class="ltitle">None</span><span class="ldesc">0 mm — edge to edge.</span></button>
+<button class="layercard" id="marginSmall" type="button"><span class="ltitle">Small</span><span class="ldesc">10 mm on every side.</span></button>
+</div>
+<div class="layercards" style="margin-top:9px">
+<button class="layercard" id="marginBig" type="button"><span class="ltitle">Big</span><span class="ldesc">20 mm on every side.</span></button>
+</div>
+</div>
+</div>
+<div class="optgroup">
+<div class="prop-row"><label>HTML settings</label>
+<label class="checkrow" style="margin-bottom:9px"><input type="checkbox" id="blockAds"><span>Try to block ads <span class="hint">(best effort)</span></span></label>
+<label class="checkrow"><input type="checkbox" id="removePopups"><span>Remove overlay popups <span class="hint">(best effort)</span></span></label>
+<p class="footnote">Applied when converting: common ad blocks, cookie banners and pop-up overlays are removed from the rendering just before the PDF is made.</p>
+</div>
+</div>
+<div class="freenote">Everything here is 100% free, with no limits: convert as many pages as you like — no subscription, no sign-up.</div>
+</aside>
+</div>
+
+<div class="success" id="success">
+<span class="big">✅</span>
+<h2>Your PDF is ready!</h2>
+<p class="sub" id="successInfo"></p>
+<div class="resultlist" id="resultList"></div>
+<div class="scannote" id="scaleNote" style="display:none"></div>
+<button class="again" id="restartBtn" type="button">Convert another</button>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="features">
+<h2>Why convert HTML with PdfBleu</h2>
+<div class="steps">
+<div class="step"><span class="fic">🌐</span><h3>Three ways in</h3><p>Load a page by its URL, upload an .html file from your device, or paste the code directly — whichever route the page allows, there is a way to convert it.</p></div>
+<div class="step"><span class="fic">📐</span><h3>Real page options</h3><p>Screen width, A4, A3, A5 or US Letter, portrait or landscape, margins, and a choice between one long page or normal split pages — set it up the way you want it printed.</p></div>
+<div class="step"><span class="fic">🔒</span><h3>Private by design</h3><p>No server fetches the page for you and nothing is uploaded. Your browser does the whole conversion, so even internal or sensitive pages never leave your device.</p></div>
+</div>
+</div>
+
+<div class="howto">
+<h2>How to convert HTML to PDF</h2>
+<div class="steps steps4">
+<div class="step"><span class="num">1</span><h3>Add your page</h3><p>Enter a website URL, upload an .html file from your device, or paste the page's HTML code into the box.</p></div>
+<div class="step"><span class="num">2</span><h3>Check the preview</h3><p>The page is rendered below exactly as it will be converted. If the URL was blocked, switch to pasting the code or uploading the saved file.</p></div>
+<div class="step"><span class="num">3</span><h3>Choose your options</h3><p>Pick the screen size the page should be rendered at, then the paper size, orientation, margins and one long page or split pages.</p></div>
+<div class="step"><span class="num">4</span><h3>Convert and download</h3><p>Press “Convert to PDF” and save the document to your device. That's all there is to it.</p></div>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>Why did loading my URL fail?</h3><p>Browsers only let one page read another site when that site explicitly allows it — a security rule known as CORS. Most large sites don't allow it, so the request is refused before the page ever reaches us. No tool running inside a web page can get around that, and we don't route your request through any third-party proxy. The reliable fix: open the page in your browser, save it or view its source, then paste the HTML or upload the saved .html file here.</p></div>
+<div class="qa"><h3>Why does my PDF look different from the website?</h3><p>For safety, scripts inside the page are removed and never run, so anything the page normally builds with JavaScript after loading may be missing. Images and fonts hosted on other domains appear only when those hosts allow them to be used elsewhere, and your login state, animations and hover effects can't be captured. What you see in the preview is exactly what ends up in the PDF.</p></div>
+<div class="qa"><h3>Is the text in the PDF selectable?</h3><p>No. The page is rendered as an image — like a very sharp screenshot — and placed into the PDF. It prints crisply, but you cannot select or copy the text. That is the trade-off of converting entirely in the browser, with no server involved.</p></div>
+<div class="qa"><h3>Can it convert pages in Arabic or other scripts?</h3><p>Yes. Your own browser draws the text, so Arabic, Hebrew, Chinese and other writing systems appear just as they do on screen — no missing characters and no question marks.</p></div>
+<div class="qa"><h3>Is anything uploaded or stored?</h3><p>No. The HTML you provide stays in this tab, the conversion runs on your device and the PDF is generated locally. Nothing is uploaded anywhere, and closing the tab erases everything.</p></div>
+</div>
+</main>
+
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Converting HTML to PDF…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+
+<div class="actionbar" id="actionBar">
+<span class="summary" id="barSummary"></span>
+<div class="barbtns">
+<button class="ghost" id="startOverBtn" type="button">Start over</button>
+<button id="applyBtn" type="button" disabled>Convert to PDF</button>
+</div>
+</div>
+
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="htmlPdfCore">
+/* =====================================================================
+   PdfBleu HTML to PDF — pure planning & naming helpers (no DOM).
+   The browser pipeline renders the page into a canvas; this module
+   decides how that canvas maps onto PDF pages, and what the output
+   file is called. Kept DOM-free so it can be tested headlessly.
+   ===================================================================== */
+var HtmlPdfCore = (function () {
+  'use strict';
+
+  // Page sizes in millimetres: [width, height] in portrait.
+  var PAGE_SIZES = {
+    a4: [210, 297],
+    a3: [297, 420],
+    a5: [148, 210],
+    letter: [215.9, 279.4]
+  };
+
+  /* plan(canvasW, canvasH, opts) — opts: {page, orientation,
+     marginMm, singlePage}.
+     Paginated: the canvas is cut into horizontal slices, one per
+     page; sliceHpx is the slice height in canvas pixels and
+     offsetsPx the y offset of each slice.
+     Single page: one tall page whose width is the paper width and
+     whose height fits the whole canvas, scaled to the content width
+     (paper width minus both margins), plus the two margins. */
+  function plan(canvasW, canvasH, opts) {
+    opts = opts || {};
+    var size = PAGE_SIZES[opts.page] || PAGE_SIZES.a4;
+    var pageWmm = size[0], pageHmm = size[1];
+    if (opts.orientation === 'landscape') {
+      var t = pageWmm; pageWmm = pageHmm; pageHmm = t;
+    }
+    var marginMm = Math.max(0, Number(opts.marginMm) || 0);
+    var contentWmm = pageWmm - 2 * marginMm;
+    canvasW = Math.max(0, Number(canvasW) || 0);
+    canvasH = Math.max(0, Number(canvasH) || 0);
+    if (opts.singlePage) {
+      var contentHmm = canvasW > 0 ? canvasH * (contentWmm / canvasW) : 0;
+      return {
+        singlePage: true,
+        pageWmm: pageWmm,
+        pageHmm: contentHmm + 2 * marginMm,
+        contentWmm: contentWmm,
+        contentHmm: contentHmm,
+        marginMm: marginMm,
+        pages: 1,
+        sliceHpx: canvasH,
+        offsetsPx: [0]
+      };
+    }
+    var availHmm = pageHmm - 2 * marginMm;
+    var pxPerMm = canvasW > 0 ? canvasW / contentWmm : 0;
+    var sliceHpx = Math.max(1, Math.round(availHmm * pxPerMm));
+    var pages = Math.max(1, Math.ceil(canvasH / sliceHpx));
+    var offsetsPx = [];
+    for (var i = 0; i < pages; i++) offsetsPx.push(i * sliceHpx);
+    return {
+      singlePage: false,
+      pageWmm: pageWmm,
+      pageHmm: pageHmm,
+      contentWmm: contentWmm,
+      contentHmm: availHmm,
+      marginMm: marginMm,
+      pages: pages,
+      sliceHpx: sliceHpx,
+      offsetsPx: offsetsPx
+    };
+  }
+
+  // Strip characters that are illegal or troublesome in file names.
+  function sanitizeFileName(name) {
+    var s = String(name == null ? '' : name);
+    s = s.replace(/[\\\/:*?"<>|#%&{}$!@+=`~^]/g, '');
+    s = s.replace(/[\u0000-\u001f\u007f]/g, '');
+    s = s.replace(/\s+/g, ' ').trim();
+    s = s.replace(/^\.+/, '').replace(/\.+$/, '').trim();
+    if (s.length > 120) s = s.slice(0, 120).trim();
+    return s;
+  }
+
+  /* fileNameFor(source) — source describes where the HTML came from:
+     {kind:'url', url}  -> "<hostname>.pdf"
+     {kind:'file', name} -> the file name with a .pdf extension
+     anything else (paste) -> "pdfbleu-webpage.pdf" */
+  function fileNameFor(source) {
+    if (source && source.kind === 'url' && source.url) {
+      try {
+        var host = new URL(source.url).hostname;
+        host = sanitizeFileName(host);
+        if (host) return host + '.pdf';
+      } catch (e) { /* fall through to the default name */ }
+    }
+    if (source && source.kind === 'file' && source.name) {
+      var base = sanitizeFileName(String(source.name).replace(/\.html?$/i, ''));
+      if (base) return base + '.pdf';
+    }
+    return 'pdfbleu-webpage.pdf';
+  }
+
+  /* The one DOMPurify configuration used to sanitize every source
+     before it is rendered: active content and embedding tags are
+     forbidden, our own <base> is injected separately (never taken
+     from the source), and <style> blocks are kept so pages keep
+     their appearance. */
+  var SANITIZE_CONFIG = {
+    FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'form', 'base', 'link', 'meta', 'noscript', 'title'],
+    FORBID_ATTR: ['srcdoc'],
+    ADD_TAGS: ['style'],
+    ADD_ATTR: ['target']
+  };
+
+  return {
+    plan: plan,
+    fileNameFor: fileNameFor,
+    sanitizeFileName: sanitizeFileName,
+    PAGE_SIZES: PAGE_SIZES,
+    SANITIZE_CONFIG: SANITIZE_CONFIG
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+
+  var toolCard = $('toolCard'), layout = $('layout'),
+      tabUrlBtn = $('tabUrlBtn'), tabFileBtn = $('tabFileBtn'), tabPasteBtn = $('tabPasteBtn'),
+      paneUrl = $('paneUrl'), paneFile = $('paneFile'), panePaste = $('panePaste'),
+      urlInput = $('urlInput'), loadUrlBtn = $('loadUrlBtn'),
+      urlError = $('urlError'), urlErrorText = $('urlErrorText'),
+      urlToPasteBtn = $('urlToPasteBtn'), urlToFileBtn = $('urlToFileBtn'),
+      fileDrop = $('fileDrop'), filePickBtn = $('filePickBtn'), htmlFileInput = $('htmlFileInput'),
+      pasteArea = $('pasteArea'), usePasteBtn = $('usePasteBtn'),
+      sourceChip = $('sourceChip'), sourceChipText = $('sourceChipText'),
+      clearSourceBtn = $('clearSourceBtn'), errorBox = $('error'),
+      previewSec = $('previewSec'), previewTitle = $('previewTitle'),
+      previewViewport = $('previewViewport'), previewScaler = $('previewScaler'),
+      renderFrame = $('renderFrame'),
+      screenSize = $('screenSize'), screenCustom = $('screenCustom'),
+      pageSize = $('pageSize'), singlePage = $('singlePage'),
+      orientPortrait = $('orientPortrait'), orientLandscape = $('orientLandscape'),
+      marginNone = $('marginNone'), marginSmall = $('marginSmall'), marginBig = $('marginBig'),
+      blockAds = $('blockAds'), removePopups = $('removePopups'),
+      resetAllBtn = $('resetAllBtn'),
+      actionBar = $('actionBar'), barSummary = $('barSummary'),
+      applyBtn = $('applyBtn'), startOverBtn = $('startOverBtn'),
+      processing = $('processing'), processingDetail = $('processingDetail'),
+      success = $('success'), successInfo = $('successInfo'),
+      resultList = $('resultList'), scaleNote = $('scaleNote'),
+      restartBtn = $('restartBtn');
+
+  var state = {
+    tab: 'url',
+    source: null,        // {kind, label, url?, name?, base, title, chars}
+    cleanFragment: '',
+    headCss: [],
+    screenWidth: 800,
+    frameHeight: 0,
+    orientation: 'portrait',
+    marginMm: 0,
+    result: null         // {name, blob, url, pages, size, reduced}
+  };
+
+  function fmtSize(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+  function showError(msg) {
+    if (msg) { errorBox.textContent = msg; errorBox.classList.add('on'); }
+    else errorBox.classList.remove('on');
+  }
+  function setDetail(t) { processingDetail.textContent = t; }
+  function nextFrame() { return new Promise(function (r) { setTimeout(r, 30); }); }
+
+  /* "Your screen" = the width actually available to the preview in
+     this layout, measured once at load (the reference labels it with
+     the real number, and so do we). */
+  var availWidth = Math.max(280, (toolCard.clientWidth || 720) - 42);
+  state.screenWidth = availWidth;
+  screenCustom.textContent = 'Your screen (' + availWidth + 'px)';
+
+  /* ---------------- input tabs ---------------- */
+
+  function setTab(t) {
+    state.tab = t;
+    tabUrlBtn.classList.toggle('sel', t === 'url');
+    tabFileBtn.classList.toggle('sel', t === 'file');
+    tabPasteBtn.classList.toggle('sel', t === 'paste');
+    paneUrl.style.display = t === 'url' ? '' : 'none';
+    paneFile.style.display = t === 'file' ? '' : 'none';
+    panePaste.style.display = t === 'paste' ? '' : 'none';
+  }
+  tabUrlBtn.addEventListener('click', function () { setTab('url'); });
+  tabFileBtn.addEventListener('click', function () { setTab('file'); });
+  tabPasteBtn.addEventListener('click', function () { setTab('paste'); });
+  urlToPasteBtn.addEventListener('click', function () { setTab('paste'); pasteArea.focus(); });
+  urlToFileBtn.addEventListener('click', function () { setTab('file'); });
+
+  /* ---------------- sources ---------------- */
+
+  function showUrlError(msg) {
+    urlErrorText.textContent = msg;
+    urlError.style.display = '';
+  }
+  function hideUrlError() { urlError.style.display = 'none'; }
+
+  loadUrlBtn.addEventListener('click', loadFromUrl);
+  urlInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); loadFromUrl(); } });
+
+  async function loadFromUrl() {
+    var raw = (urlInput.value || '').trim();
+    hideUrlError();
+    showError(null);
+    if (!raw) { showError('Type the address of the page first — for example https://example.com'); return; }
+    var candidate = /^https?:\/\//i.test(raw) ? raw : 'https://' + raw;
+    var parsed = null;
+    try { parsed = new URL(candidate); } catch (e) { parsed = null; }
+    if (!parsed || (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') || !parsed.hostname) {
+      showError('That does not look like a valid website address. Check it and try again — for example https://example.com');
+      return;
+    }
+    loadUrlBtn.disabled = true;
+    loadUrlBtn.textContent = 'Loading…';
+    try {
+      var resp = await fetch(parsed.href, { mode: 'cors' });
+      if (!resp.ok) throw new Error('http-' + resp.status);
+      var text = await resp.text();
+      if (!text || !text.trim()) throw new Error('empty');
+      setSource({ kind: 'url', url: parsed.href, base: parsed.href, label: parsed.href }, text);
+    } catch (err) {
+      if (err && err.message === 'http-404') {
+        showUrlError('The site answered, but this page was not found (error 404). Check the address — or paste the page\'s HTML / upload the saved file instead:');
+      } else if (err && /^http-/.test(err.message || '')) {
+        showUrlError('The site answered with an error (' + err.message.slice(5) + '), so there was no page to convert. You can still paste the page\'s HTML or upload the saved file:');
+      } else {
+        showUrlError('This site blocked your browser from reading it, so the page could not be loaded by URL. That is the site\'s own protection, and no tool running inside a web page can bypass it. The two routes that always work:');
+      }
+    }
+    loadUrlBtn.disabled = false;
+    loadUrlBtn.textContent = 'Load page';
+  }
+
+  filePickBtn.addEventListener('click', function (ev) { ev.stopPropagation(); htmlFileInput.click(); });
+  fileDrop.addEventListener('click', function () { htmlFileInput.click(); });
+  htmlFileInput.addEventListener('change', function () {
+    if (htmlFileInput.files && htmlFileInput.files.length) readHtmlFile(htmlFileInput.files[0]);
+    htmlFileInput.value = '';
+  });
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    fileDrop.addEventListener(evt, function (e) { e.preventDefault(); fileDrop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    fileDrop.addEventListener(evt, function (e) { e.preventDefault(); fileDrop.classList.remove('drag'); });
+  });
+  fileDrop.addEventListener('drop', function (e) {
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) readHtmlFile(dt.files[0]);
+  });
+
+  async function readHtmlFile(file) {
+    showError(null);
+    hideUrlError();
+    if (!/\.html?$/i.test(file.name) && file.type !== 'text/html') {
+      showError('That file is not an HTML page. Choose a file ending in .html or .htm.');
+      return;
+    }
+    try {
+      var text = await file.text();
+      if (!text || !text.trim()) { showError('That file appears to be empty.'); return; }
+      setSource({ kind: 'file', name: file.name, base: null, label: file.name }, text);
+    } catch (e) {
+      showError('The file could not be read. Try again, or paste its content into the “Paste HTML” tab.');
+    }
+  }
+
+  usePasteBtn.addEventListener('click', function () {
+    showError(null);
+    hideUrlError();
+    var text = pasteArea.value || '';
+    if (!text.trim()) { showError('Paste some HTML code into the box first.'); return; }
+    setSource({ kind: 'paste', base: null, label: 'Pasted HTML' }, text);
+  });
+
+  clearSourceBtn.addEventListener('click', function () { clearSource(); });
+
+  /* ---------------- sanitize + render frame ---------------- */
+
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  function buildSrcdoc(fragment, cssTexts, base) {
+    var head = '<meta charset="utf-8">';
+    if (base) head += '<base href="' + escapeAttr(base) + '">';
+    head += '<style>html,body{margin:0;padding:0;background:#ffffff}body{font-family:Arial,Helvetica,sans-serif;color:#111111}</style>';
+    for (var i = 0; i < cssTexts.length; i++) head += '<style>' + cssTexts[i] + '</style>';
+    return '<!DOCTYPE html><html><head>' + head + '</head><body>' + fragment + '</body></html>';
+  }
+
+  function setSource(src, rawHtml) {
+    showError(null);
+    src.chars = rawHtml.length;
+    var title = '';
+    var docStyles = [];
+    try {
+      var parsedDoc = new DOMParser().parseFromString(rawHtml, 'text/html');
+      title = (parsedDoc.title || '').trim();
+      parsedDoc.querySelectorAll('style').forEach(function (st) { docStyles.push(st.textContent); });
+    } catch (e) { /* title/styles are a bonus, not a requirement */ }
+    src.title = title;
+
+    var clean = '';
+    if (typeof DOMPurify !== 'undefined') {
+      clean = DOMPurify.sanitize(rawHtml, HtmlPdfCore.SANITIZE_CONFIG);
+    } else {
+      showError('The safety filter library could not be loaded, so the page cannot be prepared. Check your connection and reload.');
+      return;
+    }
+    // Styles that live in the document head are not part of the
+    // sanitized body fragment: collect the ones that are missing
+    // from the fragment and re-inject them into the frame's head.
+    var holder = document.createElement('div');
+    holder.innerHTML = clean;
+    var inFragment = {};
+    holder.querySelectorAll('style').forEach(function (st) { inFragment[st.textContent] = true; });
+    var missing = [];
+    docStyles.forEach(function (css) { if (!inFragment[css] && missing.indexOf(css) === -1) missing.push(css); });
+
+    state.source = src;
+    state.cleanFragment = clean;
+    state.headCss = missing;
+    state.result = null;
+    applySrcdoc();
+    refreshSourceUI();
+  }
+
+  function applySrcdoc() {
+    renderFrame.srcdoc = buildSrcdoc(state.cleanFragment, state.headCss, state.source ? state.source.base : null);
+  }
+
+  function sourceLabel() {
+    var s = state.source;
+    if (!s) return '';
+    if (s.kind === 'url') return '🌐 ' + s.url;
+    if (s.kind === 'file') return '📄 ' + s.name;
+    return '✏️ Pasted HTML';
+  }
+
+  function refreshSourceUI() {
+    var s = state.source;
+    if (s) {
+      sourceChipText.textContent = sourceLabel() + ' · ' + s.chars.toLocaleString('en-US') + ' characters';
+      sourceChip.classList.add('on');
+      previewTitle.textContent = s.title ? '“' + s.title + '”' : '';
+      previewSec.classList.add('on');
+      applyBtn.disabled = false;
+      barSummary.textContent = 'Ready to convert';
+      actionBar.classList.add('on');
+      document.body.classList.add('bar-visible');
+    } else {
+      sourceChip.classList.remove('on');
+      previewTitle.textContent = '';
+      previewSec.classList.remove('on');
+      applyBtn.disabled = true;
+      barSummary.textContent = '';
+      actionBar.classList.remove('on');
+      document.body.classList.remove('bar-visible');
+    }
+  }
+
+  function clearSource() {
+    state.source = null;
+    state.cleanFragment = '';
+    state.headCss = [];
+    state.frameHeight = 0;
+    state.result = null;
+    renderFrame.removeAttribute('srcdoc');
+    refreshSourceUI();
+  }
+
+  renderFrame.addEventListener('load', function () {
+    measureFrame();
+    try {
+      var doc = renderFrame.contentDocument;
+      if (doc) {
+        doc.querySelectorAll('img').forEach(function (img) {
+          if (!img.complete) {
+            img.addEventListener('load', measureFrame);
+            img.addEventListener('error', measureFrame);
+          }
+        });
+        // Links inside the preview open in a new tab, so a stray tap
+        // never throws away the page being converted.
+        doc.querySelectorAll('a[href]').forEach(function (a) {
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+        });
+      }
+    } catch (e) { /* same-origin srcdoc: should not happen */ }
+    setTimeout(measureFrame, 350);
+    setTimeout(measureFrame, 1000);
+  });
+
+  function measureFrame() {
+    var doc = null;
+    try { doc = renderFrame.contentDocument; } catch (e) { doc = null; }
+    if (!doc || !doc.body) return;
+    var h = Math.max(doc.body.scrollHeight || 0, doc.documentElement ? (doc.documentElement.scrollHeight || 0) : 0);
+    if (h > 0) state.frameHeight = h;
+    renderFrame.style.width = state.screenWidth + 'px';
+    renderFrame.style.height = Math.max(state.frameHeight, 40) + 'px';
+    layoutPreview();
+  }
+
+  function layoutPreview() {
+    var avail = previewViewport.clientWidth;
+    if (!avail || !state.source) return;
+    var w = state.screenWidth;
+    var scale = avail / w;
+    if (!(scale > 0)) scale = 1;
+    if (scale > 2) scale = 2;
+    previewScaler.style.width = w + 'px';
+    previewScaler.style.transform = 'scale(' + scale + ')';
+    previewViewport.style.height = Math.ceil(Math.max(state.frameHeight, 40) * scale) + 'px';
+  }
+  window.addEventListener('resize', layoutPreview);
+
+  /* ---------------- options ---------------- */
+
+  function currentScreenWidth() {
+    var v = screenSize.value;
+    return v === 'custom' ? availWidth : (parseInt(v, 10) || availWidth);
+  }
+  screenSize.addEventListener('change', function () {
+    state.screenWidth = currentScreenWidth();
+    if (state.source) measureFrame();
+  });
+
+  function setOrientation(o) {
+    state.orientation = o;
+    orientPortrait.classList.toggle('sel', o === 'portrait');
+    orientLandscape.classList.toggle('sel', o === 'landscape');
+  }
+  orientPortrait.addEventListener('click', function () { setOrientation('portrait'); });
+  orientLandscape.addEventListener('click', function () { setOrientation('landscape'); });
+
+  function setMargin(mm) {
+    state.marginMm = mm;
+    marginNone.classList.toggle('sel', mm === 0);
+    marginSmall.classList.toggle('sel', mm === 10);
+    marginBig.classList.toggle('sel', mm === 20);
+  }
+  marginNone.addEventListener('click', function () { setMargin(0); });
+  marginSmall.addEventListener('click', function () { setMargin(10); });
+  marginBig.addEventListener('click', function () { setMargin(20); });
+
+  // Cleanup choices change what the final rendering should be, so a
+  // toggle rebuilds the frame: the live document is always either
+  // completely untouched or cleaned exactly once, at convert time.
+  function onCleanupToggle() { if (state.source) applySrcdoc(); }
+  blockAds.addEventListener('change', onCleanupToggle);
+  removePopups.addEventListener('change', onCleanupToggle);
+
+  resetAllBtn.addEventListener('click', function () { resetAll(); });
+  startOverBtn.addEventListener('click', function () { resetAll(); });
+
+  function resetAll() {
+    clearSource();
+    urlInput.value = '';
+    pasteArea.value = '';
+    hideUrlError();
+    showError(null);
+    setTab('url');
+    screenSize.value = 'custom';
+    state.screenWidth = availWidth;
+    pageSize.value = 'a4';
+    singlePage.checked = true;
+    setOrientation('portrait');
+    setMargin(0);
+    blockAds.checked = false;
+    removePopups.checked = false;
+    success.classList.remove('on');
+    layout.style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ---------------- cleanup (best effort) ---------------- */
+
+  var AD_RE = /(^|[-\s_])(ad|ads|advert|adverts|advertisement|sponsored|adslot|adbox)([-\s_]|$)/i;
+  var POPUP_RE = /popup|modal|overlay|cookie|consent|dialog|paywall|newsletter/i;
+
+  function elKey(el) {
+    var cls = '';
+    try { cls = typeof el.className === 'string' ? el.className : ''; } catch (e) { cls = ''; }
+    return (el.id || '') + ' ' + cls;
+  }
+  function cleanupAds(doc) {
+    var els = doc.querySelectorAll('[id], [class]');
+    Array.prototype.slice.call(els).forEach(function (el) {
+      var key = elKey(el);
+      if (AD_RE.test(key) || /adsbygoogle/i.test(key) || el.hasAttribute('data-ad-slot') || el.hasAttribute('data-ad-client')) {
+        el.remove();
+      }
+    });
+  }
+  function cleanupPopups(doc) {
+    var win = doc.defaultView;
+    if (!win) return;
+    var els = doc.querySelectorAll('body *');
+    Array.prototype.slice.call(els).forEach(function (el) {
+      var cs = null;
+      try { cs = win.getComputedStyle(el); } catch (e) { cs = null; }
+      if (!cs) return;
+      if (cs.position !== 'fixed' && cs.position !== 'absolute') return;
+      var z = parseInt(cs.zIndex, 10);
+      if ((isFinite(z) && z >= 100) || POPUP_RE.test(elKey(el))) el.remove();
+    });
+  }
+
+  /* ---------------- conversion ---------------- */
+
+  applyBtn.addEventListener('click', convert);
+  restartBtn.addEventListener('click', function () { resetAll(); });
+
+  async function convert() {
+    if (!state.source) return;
+    showError(null);
+    if (typeof html2canvas !== 'function' || typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+      showError('A required library could not be loaded. Check your connection and reload the page.');
+      return;
+    }
+    processing.classList.add('on');
+    try {
+      setDetail('Preparing the page…');
+      await nextFrame();
+      var doc = null;
+      try { doc = renderFrame.contentDocument; } catch (e) { doc = null; }
+      if (doc) {
+        if (blockAds.checked) { try { cleanupAds(doc); } catch (e) {} }
+        if (removePopups.checked) { try { cleanupPopups(doc); } catch (e) {} }
+      }
+      measureFrame();
+      var cssW = state.screenWidth, cssH = state.frameHeight;
+      if (!cssH || cssH < 5) {
+        throw new Error('The page looks empty — there is nothing to convert. If its content is normally built by JavaScript, it cannot be captured here: scripts are removed for safety.');
+      }
+      // Render scale: aim for 2x (print-sharp) but keep the canvas
+      // within browser limits (<= 40 MP, <= 12,000 px per side).
+      var scale = 2;
+      scale = Math.min(scale, 12000 / cssW, 12000 / cssH, Math.sqrt(40000000 / (cssW * cssH)));
+      if (!(scale > 0) || scale < 0.1) scale = 0.1;
+      var reduced = scale < 1.99;
+
+      setDetail('Rendering the page…');
+      await nextFrame();
+      // Capture the frame unscaled: html2canvas dislikes CSS transforms.
+      var prevTransform = previewScaler.style.transform;
+      var prevHeight = previewViewport.style.height;
+      previewScaler.style.transform = 'none';
+      previewViewport.style.height = 'auto';
+      var canvas = null;
+      try {
+        canvas = await html2canvas(renderFrame, { scale: scale, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+      } catch (e) { canvas = null; }
+      if ((!canvas || !canvas.width || !canvas.height) && doc && doc.body) {
+        try {
+          canvas = await html2canvas(doc.body, { scale: scale, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+        } catch (e2) { /* handled below */ }
+      }
+      previewScaler.style.transform = prevTransform;
+      previewViewport.style.height = prevHeight;
+      if (!canvas || !canvas.width || !canvas.height) {
+        throw new Error('The page could not be rendered into an image. This can happen with extremely large pages or content the browser refuses to draw.');
+      }
+
+      setDetail('Building the PDF…');
+      await nextFrame();
+      var opts = {
+        page: pageSize.value,
+        orientation: state.orientation,
+        marginMm: state.marginMm,
+        singlePage: singlePage.checked
+      };
+      var plan = HtmlPdfCore.plan(canvas.width, canvas.height, opts);
+      if (!plan.singlePage && plan.pages > 200) {
+        throw new Error('This page would need ' + plan.pages + ' PDF pages — the limit here is 200. Tick “One long page” instead.');
+      }
+      if (plan.singlePage && plan.pageHmm > 5000) {
+        throw new Error('This page is too long for a single PDF page (over 5 metres at this width). Untick “One long page” to split it into normal pages.');
+      }
+      var JsPDF = window.jspdf.jsPDF;
+      var orientation = plan.pageWmm > plan.pageHmm ? 'landscape' : 'portrait';
+      var pdf = new JsPDF({ unit: 'mm', format: [plan.pageWmm, plan.pageHmm], orientation: orientation });
+      if (plan.singlePage) {
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', plan.marginMm, plan.marginMm, plan.contentWmm, plan.contentHmm);
+      } else {
+        for (var i = 0; i < plan.pages; i++) {
+          if (i > 0) pdf.addPage([plan.pageWmm, plan.pageHmm], orientation);
+          var yPx = plan.offsetsPx[i];
+          var sliceH = Math.min(plan.sliceHpx, canvas.height - yPx);
+          if (sliceH <= 0) continue;
+          var sc = document.createElement('canvas');
+          sc.width = canvas.width;
+          sc.height = sliceH;
+          sc.getContext('2d').drawImage(canvas, 0, yPx, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+          var sliceHmm = sliceH * (plan.contentWmm / canvas.width);
+          pdf.addImage(sc.toDataURL('image/jpeg', 0.92), 'JPEG', plan.marginMm, plan.marginMm, plan.contentWmm, sliceHmm);
+        }
+      }
+      var blob = pdf.output('blob');
+      if (state.result && state.result.url) URL.revokeObjectURL(state.result.url);
+      state.result = {
+        name: HtmlPdfCore.fileNameFor(state.source),
+        blob: blob,
+        url: URL.createObjectURL(blob),
+        pages: plan.pages,
+        size: blob.size,
+        reduced: reduced
+      };
+      showSuccess(plan);
+    } catch (err) {
+      showError((err && err.message) ? err.message : 'The conversion failed. Try again, or use a different input tab.');
+    }
+    processing.classList.remove('on');
+  }
+
+  function showSuccess(plan) {
+    var r = state.result;
+    successInfo.textContent = 'Converted ' + (state.source.title ? '“' + state.source.title + '”' : 'your page') +
+      ' into ' + r.pages + (r.pages === 1 ? ' page' : ' pages') + ' — ' + fmtSize(r.size) + '.';
+    resultList.innerHTML = '';
+    var item = document.createElement('div');
+    item.className = 'resultitem';
+    var info = document.createElement('div');
+    var nm = document.createElement('div');
+    nm.className = 'rname'; nm.textContent = r.name;
+    var meta = document.createElement('div');
+    meta.className = 'rmeta';
+    meta.textContent = r.pages + (r.pages === 1 ? ' page' : ' pages') + ' · ' + fmtSize(r.size) + ' · ' +
+      Math.round(plan.pageWmm) + ' × ' + Math.round(plan.pageHmm) + ' mm';
+    info.appendChild(nm); info.appendChild(meta);
+    var dl = document.createElement('a');
+    dl.className = 'dl'; dl.href = r.url; dl.download = r.name; dl.textContent = 'Download';
+    item.appendChild(info); item.appendChild(dl);
+    resultList.appendChild(item);
+    if (r.reduced) {
+      scaleNote.textContent = 'Very long page: it was rendered at a reduced scale to fit the browser\'s canvas limits, so fine details are a little softer than usual.';
+      scaleNote.style.display = '';
+    } else {
+      scaleNote.style.display = 'none';
+    }
+    layout.style.display = 'none';
+    actionBar.classList.remove('on');
+    document.body.classList.remove('bar-visible');
+    success.classList.add('on');
+    success.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+})();
+</script>
+</body>
+  </html>
