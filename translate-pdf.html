@@ -325,7 +325,7 @@ footer a{color:#3F51B5;text-decoration:none}
 <div class="qa"><h3>How does this tool work?</h3><p>Your PDF is opened in your browser and its text is extracted page by page, on your device. The text is split into short segments, which are sent one at a time to the free MyMemory translation service and returned in the target language. The translated paragraphs are then rebuilt into a new PDF (for most languages) and a text file, keeping the original page order.</p></div>
 <div class="qa"><h3>Is my file uploaded?</h3><p>The file itself — no, never. It is opened and read entirely on your device, exactly like our other tools. But its <em>text</em> is sent to MyMemory to be translated, over an encrypted connection; that is how this one tool works, and it is why we ask you not to use it for highly sensitive documents.</p></div>
 <div class="qa"><h3>Why did translation stop in the middle?</h3><p>Almost always, the free service's daily limit: MyMemory allows roughly 1,000 words per day per visitor. When the limit is reached, translation stops cleanly, the pages already finished are kept, and you can download them as a text file. Translate the rest tomorrow, or use the page-range option to do a long document in daily slices.</p></div>
-<div class="qa"><h3>Which output will I get?</h3><p>For most languages — Latin, Greek, Cyrillic, Arabic and Hebrew scripts — you get a rebuilt PDF plus a TXT file. For Chinese, Japanese, Korean, Hindi and Thai, the translation is delivered as a text file (.txt) only: producing a PDF would need a font that covers those scripts, and rather than ship a broken PDF we give you the complete text.</p></div>
+<div class="qa"><h3>Which output will I get?</h3><p>For most languages — Latin, Greek, Cyrillic, Arabic and Hebrew scripts — you get a rebuilt PDF plus a TXT file. For Chinese, Japanese, Korean, Hindi and Thai, the translation is delivered as a text file (.txt) only: producing a PDF would need a font that covers those scripts, and rather than ship a broken PDF we give you the complete text. In Arabic, Persian and Urdu, vowel marks (tashkeel) are not carried into the rebuilt PDF — the embedded font's layout engine cannot position them — but the TXT file keeps the translation exactly as received.</p></div>
 <div class="qa"><h3>Does it keep the original layout and images?</h3><p>No. The result is a text-only rebuild: the same paragraphs, in the same order, on matching pages — but not the original fonts, columns or pictures. Keeping the exact layout while replacing the text is a server-side AI feature; it is honestly out of scope for a tool that runs in your browser.</p></div>
 <div class="qa"><h3>My PDF is a scan — what do I do?</h3><p>A scanned PDF holds pictures, not text, so there is nothing to translate and this page will tell you so. Run the file through <a href="ocr-pdf.html">OCR PDF</a> first to recognize the text and add a text layer, then translate the result here.</p></div>
 <div class="qa"><h3>How good is the translation?</h3><p>It is machine translation from a free service: generally good for understanding a document, drafting a reply, or studying — and noticeably weaker on idioms, legal phrasing and nuance. For anything important or legally binding, treat the output as a draft and have it reviewed by a human translator.</p></div>
@@ -1013,6 +1013,19 @@ var TranslateBuilder = (function () {
     return lines.length ? lines : [''];
   }
 
+  /* Arabic vowel/annotation marks (tashkeel) crash fontkit's mark
+     positioning with Amiri — node bisection 2026-10-28: any of
+     U+064B-U+065F, U+0670 or U+06D6-U+06ED in the text makes the font
+     layout throw "Cannot read properties of null (reading
+     'xCoordinate')" and the whole PDF build fails (found by a phone
+     test: French downloaded fine, Arabic did not). The rebuilt PDF
+     therefore drops the marks — Arabic is normally written without
+     them; the TXT download keeps the translation exactly as received.
+     Tatweel (U+0640) is a letter-like extender, not a mark: kept. */
+  function stripArabicMarks(text) {
+    return String(text == null ? '' : text).replace(/[ً-ٰٟۖ-ۭ]/g, '');
+  }
+
   async function buildPdf(opts) {
     var PDFLib = opts.PDFLib;
     var plan = TranslateCore.planOutput(opts.target);
@@ -1027,6 +1040,11 @@ var TranslateBuilder = (function () {
     var inkBody = PDFLib.rgb(0.13, 0.14, 0.24);
     var inkTitle = PDFLib.rgb(0.10, 0.14, 0.49);
     var pages = (opts.pages && opts.pages.length) ? opts.pages : [{ page: 1, paragraphs: [] }];
+    if (isArabicScript) {
+      pages = pages.map(function (p) {
+        return { page: p.page, paragraphs: (p.paragraphs || []).map(function (t) { return stripArabicMarks(t); }) };
+      });
+    }
     var totalParas = 0;
     pages.forEach(function (p) { totalParas += (p.paragraphs || []).length; });
     pages.forEach(function (pg, pi) {
@@ -1061,6 +1079,7 @@ var TranslateBuilder = (function () {
   return {
     buildPdf: buildPdf,
     wrapLines: wrapLines,
+    stripArabicMarks: stripArabicMarks,
     FONT_MAIN_URL: FONT_MAIN_URL,
     FONT_ARABIC_URL: FONT_ARABIC_URL
   };
@@ -1458,6 +1477,17 @@ var TranslateBuilder = (function () {
     }
     return null;
   }
+  /* Last-resort sanitiser for the PDF build retry: strips combining
+     marks across scripts (Arabic tashkeel is already removed inside
+     the builder; this covers anything else a font's layout engine
+     might reject on a given device). */
+  function stripAllMarksFromPages(pages) {
+    return (pages || []).map(function (pg) {
+      return { page: pg.page, paragraphs: (pg.paragraphs || []).map(function (t) {
+        return String(t).replace(/[̀-ͯ҃-҉֑-ׇً-ٰٟۖ-ۭ⃐-⃿︠-︯]/g, '');
+      }) };
+    });
+  }
   async function downloadPdf() {
     var assembled = state.lastAssembled;
     if (!assembled || !window.PDFLib) return;
@@ -1477,7 +1507,7 @@ var TranslateBuilder = (function () {
         showError('The font needed to build the PDF could not be downloaded from any of its mirrors. Check your connection and tap Download PDF again. The TXT download contains the full translation.');
         return;
       }
-      var bytes = await TranslateBuilder.buildPdf({
+      var buildOpts = {
         pages: assembled.pages,
         target: to,
         base: state.base,
@@ -1485,10 +1515,19 @@ var TranslateBuilder = (function () {
         PDFLib: window.PDFLib,
         fontkit: fk,
         fontBytes: fontBytes
-      });
+      };
+      var bytes;
+      try {
+        bytes = await TranslateBuilder.buildPdf(buildOpts);
+      } catch (e1) {
+        /* One retry with every combining mark stripped — some fonts'
+           layout engines reject marks they cannot position. */
+        buildOpts.pages = stripAllMarksFromPages(assembled.pages);
+        bytes = await TranslateBuilder.buildPdf(buildOpts);
+      }
       downloadBlob(new Blob([bytes], { type: 'application/pdf' }), state.base + '_translated.pdf');
     } catch (err) {
-      showError('The PDF could not be built on this device. The TXT download contains the full translation.');
+      showError('The PDF could not be built on this device. (' + (err && err.message ? err.message : 'unknown error') + ') The TXT download contains the full translation.');
     } finally {
       btn.disabled = false;
     }
