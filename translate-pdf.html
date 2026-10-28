@@ -1026,13 +1026,39 @@ var TranslateBuilder = (function () {
     return String(text == null ? '' : text).replace(/[ً-ٰٟۖ-ۭ]/g, '');
   }
 
+  /* Split a visual-order RTL line into runs of one character class.
+     The embedded font's encoder reorders number/Latin runs inside a
+     mixed string — they come out backwards — while a single-class
+     string is encoded exactly as written (both proven by rendering,
+     2026-10-28: a phone number and an email inside an Arabic line
+     rendered reversed until the line was drawn run by run). RTL lines
+     are therefore drawn run by run at successive x positions. */
+  function splitVisualRuns(s, arabicScript) {
+    var runs = [];
+    var cur = '';
+    var curMain = null;
+    Array.from(String(s)).forEach(function (ch) {
+      var cp = ch.codePointAt(0);
+      var main = arabicScript ? (cp >= 0xFB50 && cp <= 0xFEFC) : (cp >= 0x0590 && cp <= 0x05FF);
+      if (curMain === null || main === curMain) { cur += ch; curMain = main; }
+      else { runs.push(cur); cur = ch; curMain = main; }
+    });
+    if (cur) runs.push(cur);
+    return runs;
+  }
+
   async function buildPdf(opts) {
     var PDFLib = opts.PDFLib;
     var plan = TranslateCore.planOutput(opts.target);
     var isArabicScript = opts.target === 'ar' || opts.target === 'fa' || opts.target === 'ur';
     var doc = await PDFLib.PDFDocument.create();
     if (opts.fontkit) doc.registerFontkit(opts.fontkit);
-    var font = await doc.embedFont(isArabicScript ? opts.fontBytes.arabic : opts.fontBytes.main, { subset: true });
+    /* The Arabic font is embedded WHOLE, never subsetted: fontkit's
+       subsetter drops most of Amiri's glyph outlines, so a subsetted
+       build extracts perfectly (its ToUnicode map survives) yet renders
+       with the words invisible — proven by rendering, 2026-10-28.
+       DejaVu subsets correctly and keeps other languages' files small. */
+    var font = await doc.embedFont(isArabicScript ? opts.fontBytes.arabic : opts.fontBytes.main, { subset: !isArabicScript });
     doc.setTitle(String(opts.base || 'document') + ' (translated to ' + String(opts.langName || opts.target) + ')');
     doc.setCreator('PdfBleu.com');
     var W = 595.28, H = 841.89, M = 56, BODY = 11;
@@ -1064,10 +1090,21 @@ var TranslateBuilder = (function () {
               : line.split(' ').filter(Boolean).reverse().join(' ');
             x = W - M - font.widthOfTextAtSize(drawn, size);
           }
-          page.drawText(drawn, {
-            x: x, y: y - size, size: size, font: font,
-            color: isTitle ? inkTitle : inkBody
-          });
+          if (plan.rtl) {
+            var cx = x;
+            splitVisualRuns(drawn, isArabicScript).forEach(function (run) {
+              page.drawText(run, {
+                x: cx, y: y - size, size: size, font: font,
+                color: isTitle ? inkTitle : inkBody
+              });
+              cx += font.widthOfTextAtSize(run, size);
+            });
+          } else {
+            page.drawText(drawn, {
+              x: x, y: y - size, size: size, font: font,
+              color: isTitle ? inkTitle : inkBody
+            });
+          }
           y -= lh;
         });
         y -= isTitle ? 10 : 8;
@@ -1080,6 +1117,7 @@ var TranslateBuilder = (function () {
     buildPdf: buildPdf,
     wrapLines: wrapLines,
     stripArabicMarks: stripArabicMarks,
+    splitVisualRuns: splitVisualRuns,
     FONT_MAIN_URL: FONT_MAIN_URL,
     FONT_ARABIC_URL: FONT_ARABIC_URL
   };
