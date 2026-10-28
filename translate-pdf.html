@@ -1341,6 +1341,10 @@ var TranslateBuilder = (function () {
     pv.textContent = text.length > 600 ? text.slice(0, 600) + '…' : text;
     pv.setAttribute('dir', plan.rtl ? 'rtl' : 'ltr');
     $('downloadPdfBtn').style.display = plan.pdf ? '' : 'none';
+    if (plan.pdf) { /* warm the PDF machinery in the background, mirrors included */
+      ensureFontkit().catch(function () {});
+      fontBytesFor(to).catch(function () {});
+    }
     $('resultPanel').className = 'result on';
     $('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
@@ -1390,15 +1394,69 @@ var TranslateBuilder = (function () {
     downloadBlob(new Blob(['\ufeff' + text], { type: 'text/plain;charset=utf-8' }),
       state.base + (partial ? '_translated_partial.txt' : '_translated.txt'));
   }
+  /* Font + fontkit loading with mirror fallbacks. The primary host is
+     jsDelivr; if it is unreachable from the visitor's network, the same
+     files are tried on jsDelivr's Fastly and Gcore mirrors and on unpkg.
+     (Phone test 2026-10-28: jsDelivr failed from the visitor's network
+     while cdnjs and MyMemory worked, which broke only the PDF build.) */
+  var FONTKIT_URLS = [
+    'https://cdn.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js',
+    'https://fastly.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js',
+    'https://gcore.jsdelivr.net/npm/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js',
+    'https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js'
+  ];
+  function fontUrlsFor(target) {
+    var isAr = target === 'ar' || target === 'fa' || target === 'ur';
+    var primary = isAr ? TranslateBuilder.FONT_ARABIC_URL : TranslateBuilder.FONT_MAIN_URL;
+    var path = primary.replace('https://cdn.jsdelivr.net/', '');
+    return [primary,
+      'https://fastly.jsdelivr.net/' + path,
+      'https://gcore.jsdelivr.net/' + path,
+      'https://unpkg.com/' + path.replace(/^npm\//, '')];
+  }
+  function validFontBytes(u8) {
+    if (!u8 || u8.length < 50000) return false;
+    return (u8[0] === 0 && u8[1] === 1 && u8[2] === 0 && u8[3] === 0) ||   /* TTF */
+           (u8[0] === 0x4f && u8[1] === 0x54 && u8[2] === 0x54 && u8[3] === 0x4f) || /* OTTO */
+           (u8[0] === 0x74 && u8[1] === 0x72 && u8[2] === 0x75 && u8[3] === 0x65);   /* true */
+  }
+  async function fetchFontBytes(urls) {
+    var lastErr = null;
+    for (var i = 0; i < urls.length; i++) {
+      try {
+        var r = await fetch(urls[i]);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var u8 = new Uint8Array(await r.arrayBuffer());
+        if (!validFontBytes(u8)) throw new Error('not a font file');
+        return u8;
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('font download failed');
+  }
   async function fontBytesFor(target) {
     var isAr = target === 'ar' || target === 'fa' || target === 'ur';
-    var url = isAr ? TranslateBuilder.FONT_ARABIC_URL : TranslateBuilder.FONT_MAIN_URL;
-    if (!state.fontCache[url]) {
-      var r = await fetch(url);
-      if (!r.ok) throw new Error('font download failed');
-      state.fontCache[url] = new Uint8Array(await r.arrayBuffer());
+    var key = isAr ? 'arabic' : 'main';
+    if (!state.fontCache[key]) {
+      state.fontCache[key] = await fetchFontBytes(fontUrlsFor(target));
     }
-    return isAr ? { arabic: state.fontCache[url] } : { main: state.fontCache[url] };
+    return isAr ? { arabic: state.fontCache[key] } : { main: state.fontCache[key] };
+  }
+  function loadScript(url) {
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error('script load failed')); };
+      document.head.appendChild(s);
+    });
+  }
+  async function ensureFontkit() {
+    if (window.fontkit) return window.fontkit;
+    for (var i = 0; i < FONTKIT_URLS.length; i++) {
+      try { await loadScript(FONTKIT_URLS[i]); if (window.fontkit) return window.fontkit; }
+      catch (e) { /* try the next mirror */ }
+    }
+    return null;
   }
   async function downloadPdf() {
     var assembled = state.lastAssembled;
@@ -1407,18 +1465,30 @@ var TranslateBuilder = (function () {
     var btn = $('downloadPdfBtn');
     btn.disabled = true;
     try {
+      var fk = await ensureFontkit();
+      if (!fk) {
+        showError('A small library needed to build the PDF could not be loaded from any of its mirrors. Check your connection and tap Download PDF again. The TXT download contains the full translation.');
+        return;
+      }
+      var fontBytes;
+      try {
+        fontBytes = await fontBytesFor(to);
+      } catch (e) {
+        showError('The font needed to build the PDF could not be downloaded from any of its mirrors. Check your connection and tap Download PDF again. The TXT download contains the full translation.');
+        return;
+      }
       var bytes = await TranslateBuilder.buildPdf({
         pages: assembled.pages,
         target: to,
         base: state.base,
         langName: langName(to),
         PDFLib: window.PDFLib,
-        fontkit: window.fontkit,
-        fontBytes: await fontBytesFor(to)
+        fontkit: fk,
+        fontBytes: fontBytes
       });
       downloadBlob(new Blob([bytes], { type: 'application/pdf' }), state.base + '_translated.pdf');
     } catch (err) {
-      showError('The PDF could not be built — the font may have failed to download. The TXT download contains the full translation.');
+      showError('The PDF could not be built on this device. The TXT download contains the full translation.');
     } finally {
       btn.disabled = false;
     }
@@ -1503,4 +1573,4 @@ var TranslateBuilder = (function () {
 })();
 </script>
 </body>
-                                         </html>
+   </html>
