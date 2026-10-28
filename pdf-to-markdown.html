@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to Markdown — PdfBleu.com</title>
+<meta name="description" content="Convert a PDF to clean, structured Markdown (.md) entirely on your device: headings, bold and italic, lists, tables, links and extracted images — no upload, no sign-up.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:1060px;margin:0 auto;padding:22px 14px 44px}
+.tool-head{text-align:center;margin-bottom:16px}
+.tool-head .tic{display:inline-flex;background:#fff;border:1px solid #e0e4f5;border-radius:16px;padding:10px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-bottom:10px}
+.tool-head h1{font-size:30px;color:#1a237e;margin-bottom:6px}
+.tool-head .subtitle{color:#444a6d;font-size:16px;max-width:640px;margin:0 auto}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px;text-align:center}
+.layout{display:flex;flex-direction:column;gap:18px}
+@media(min-width:920px){.layout{flex-direction:row;align-items:flex-start}.workarea{flex:1;min-width:0}.sidebar{width:320px;flex-shrink:0}}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08);position:relative}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:28px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .droptxt{color:#666c8a;margin-top:14px;font-size:15px}
+button.pick{background:#3F51B5;color:#fff;border:none;padding:15px 30px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(63,81,181,.35);font-family:inherit}
+button.pick .plus{background:#fff;color:#3F51B5;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;font-weight:800}
+button.pick:active{transform:scale(.98)}
+.filecard{display:none;margin-top:18px;background:#f9faff;border:1.5px solid #dfe3f7;border-radius:12px;padding:12px;align-items:flex-start;gap:12px}
+.filecard.on{display:flex}
+.doctile{width:62px;height:78px;flex-shrink:0;border-radius:8px;background:#7253E2;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(114,83,226,.35)}
+.doctile .dw{font-size:26px;font-weight:800;line-height:1}
+.doctile .dext{font-size:10px;font-weight:700;letter-spacing:1px;margin-top:3px;opacity:.85}
+.filecard .finfo{flex:1;min-width:0}
+.filecard .fname{font-size:14.5px;font-weight:700;word-break:break-all;line-height:1.35}
+.filecard .fmeta{font-size:13px;color:#666c8a;margin-top:4px}
+.filecard .warn{font-size:13px;color:#b71c1c;margin-top:4px;font-weight:600}
+.filecard .rm{background:#e53935;color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;flex-shrink:0}
+.docstats{display:none;margin-top:14px;background:#eef1fb;border:1.5px solid #dfe3f7;border-radius:10px;padding:10px 14px;font-size:14px;color:#333a5e}
+.docstats.on{display:block}
+.docstats b{color:#1a237e}
+.emptypanel{display:none;margin-top:16px;background:#fff8e1;border:1.5px solid #ffcc80;color:#6d4c00;border-radius:10px;padding:14px 16px;font-size:14.5px}
+.emptypanel.on{display:block}
+.emptypanel h3{font-size:16px;margin-bottom:5px;color:#6d4c00}
+.emptypanel a{color:#3F51B5;font-weight:700}
+.sidebar{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.sidebar h2{font-size:19px;color:#1a237e;margin-bottom:10px}
+.sidebar p{font-size:14px;color:#444a6d;margin-bottom:10px}
+.sidebar .optlabel{font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#888fb0;margin:16px 0 8px}
+.checkrow{display:flex;gap:10px;align-items:flex-start;border:1.5px solid #c5cae9;border-radius:12px;padding:10px 12px;margin-bottom:9px;cursor:pointer;background:#fff}
+.checkrow:hover{border-color:#3F51B5}
+.checkrow input{margin-top:3px;width:17px;height:17px;accent-color:#3F51B5;flex-shrink:0;cursor:pointer}
+.checkrow .ctitle{display:block;font-weight:700;color:#1a237e;font-size:14.5px}
+.checkrow .cdesc{display:block;font-size:12.5px;color:#666c8a;margin-top:1px}
+.optsel{width:100%;border:1.5px solid #c5cae9;border-radius:12px;padding:10px 12px;font-size:14.5px;font-weight:600;color:#333a5e;background:#fff;font-family:inherit;cursor:pointer}
+.warnnote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;margin-top:14px}
+.freenote{font-size:13px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;margin-top:14px}
+.error{display:none;margin-top:16px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.error.on{display:block}
+.error a{color:#3F51B5;font-weight:700}
+.processing{display:none;position:absolute;inset:0;background:rgba(255,255,255,.92);border-radius:14px;z-index:5;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}
+.processing.on{display:flex}
+.spinner{width:52px;height:52px;border:6px solid #dfe3f7;border-top-color:#3F51B5;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{font-weight:700;color:#1a237e;font-size:17px}
+.processing .pdetail{font-weight:400;font-size:14px;color:#444a6d}
+.result{display:none;background:#fff;border:1px solid #e0e4f5;border-radius:14px;padding:22px 20px;box-shadow:0 2px 8px rgba(63,81,181,.08);margin-top:18px}
+.result.on{display:block}
+.result h2{font-size:21px;color:#1a237e;margin-bottom:8px}
+.result .rstats{font-size:14px;color:#1b5e20;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:9px 12px;font-weight:600}
+.scannote{font-size:13.5px;color:#6d4c00;background:#fff8e1;border:1px solid #ffcc80;border-radius:8px;padding:9px 12px;margin-top:12px;display:none}
+.scannote.on{display:block}
+.scannote a{color:#3F51B5;font-weight:700}
+.tabs{display:flex;gap:8px;margin-top:16px}
+.tabs button{border:1.5px solid #c5cae9;background:#fff;color:#333a5e;border-radius:20px;padding:8px 20px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.tabs button.on{background:#3F51B5;color:#fff;border-color:#3F51B5}
+.mdraw{display:none;margin-top:12px;background:#171a2e;color:#d6e4ff;border-radius:10px;padding:14px;font-family:Consolas,'Courier New',monospace;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto}
+.mdraw.on{display:block}
+.mdprev{display:none;margin-top:12px;border:1.5px solid #dfe3f7;border-radius:10px;padding:18px 20px;max-height:640px;overflow:auto;font-size:15px;color:#333a5e}
+.mdprev.on{display:block}
+.mdprev h1{font-size:24px;color:#1a237e;margin:14px 0 8px}
+.mdprev h2{font-size:20px;color:#1a237e;margin:14px 0 7px}
+.mdprev h3{font-size:17px;color:#1a237e;margin:12px 0 6px}
+.mdprev h4{font-size:15.5px;color:#1a237e;margin:12px 0 6px}
+.mdprev p{margin:0 0 10px}
+.mdprev ul,.mdprev ol{margin:0 0 10px 22px}
+.mdprev li{margin-bottom:3px}
+.mdprev code{background:#eef1fb;border-radius:4px;padding:1px 5px;font-family:Consolas,'Courier New',monospace;font-size:13px}
+.mdprev pre{background:#171a2e;color:#d6e4ff;border-radius:8px;padding:12px;overflow:auto;margin:0 0 10px}
+.mdprev pre code{background:transparent;color:inherit;padding:0}
+.mdprev table{border-collapse:collapse;margin:0 0 12px;font-size:14px}
+.mdprev th,.mdprev td{border:1px solid #c5cae9;padding:6px 10px;text-align:left;vertical-align:top}
+.mdprev th{background:#eef1fb;color:#1a237e}
+.mdprev img{max-width:100%;border-radius:8px;margin:6px 0}
+.mdprev a{color:#3F51B5}
+.mdprev .pagediv{border-top:2px dashed #c5cae9;color:#888fb0;font-size:12.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin:16px 0 10px;padding-top:8px}
+.ractions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.ractions button{border:none;border-radius:24px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.ractions .primary{background:#2e7d32;color:#fff}
+.ractions .secondary{background:#3F51B5;color:#fff}
+.ractions .ghost{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5}
+.howto{margin-top:30px}
+.howto h2,.faq h2{font-size:22px;color:#1a237e;margin-bottom:14px;text-align:center}
+.faq{margin-top:30px}
+.steps{display:grid;gap:12px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px}
+.step .num{background:#3F51B5;color:#fff;border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:8px}
+.step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.step p{font-size:14px;color:#444a6d}
+.qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.qa p{font-size:14.5px;color:#444a6d}
+.qa a{color:#3F51B5;font-weight:600}
+.seo{margin-top:22px;color:#444a6d;font-size:14.5px}
+.seo p{margin-bottom:10px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<div class="tool-head">
+<span class="tic"><svg width="52" height="52" viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#7253E2"/><text x="16" y="34" font-size="20" font-weight="700" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif">M</text><path d="M34 13 V29" stroke="#fff" stroke-width="3.4" fill="none"/><polygon points="28,24 34,33 40,24" fill="#fff"/></svg></span>
+<h1>PDF to Markdown</h1>
+<p class="subtitle">Turn a PDF into clean, structured Markdown — headings, lists, tables, links and images — ready for your notes, docs or AI tools.</p>
+</div>
+<div class="private-note">🔒 Your files never leave your device. The document is read and converted entirely in your browser, with no upload to any server.</div>
+
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+
+<div class="layout" id="layout">
+<div class="workarea">
+<div class="tool" id="toolCard">
+<div class="processing" id="processing">
+<div class="spinner"></div>
+<p>Reading your document…</p>
+<p class="pdetail" id="processingDetail"></p>
+</div>
+<div class="drop" id="drop">
+<button class="pick" id="pickBtn" type="button"><span class="plus">+</span>Select a PDF file</button>
+<p class="droptxt">or drop your PDF here</p>
+</div>
+<input type="file" id="fileInput" accept=".pdf,application/pdf" hidden>
+<div class="filecard" id="fileCard">
+<div class="doctile"><span class="dw">M</span><span class="dext">PDF</span></div>
+<div class="finfo">
+<div class="fname" id="fileName"></div>
+<div class="fmeta" id="fileMeta"></div>
+<div class="warn" id="fileWarn"></div>
+</div>
+<button class="rm" id="removeFileBtn" type="button" title="Remove this file">✕</button>
+</div>
+<div class="docstats" id="docStats"></div>
+<div class="emptypanel" id="emptyPanel">
+<h3>Text not found</h3>
+<p>This file contains no readable text and no images we could extract, so there is nothing to convert. If it is a scanned document, run <a href="ocr-pdf.html">OCR PDF</a> first to add a text layer, then convert it here.</p>
+</div>
+<div class="error" id="error"></div>
+</div>
+</div>
+<aside class="sidebar">
+<h2>Convert to Markdown</h2>
+<p>The converter reads your PDF's fonts and layout to rebuild its structure as Markdown. Toggle an option and the result below updates instantly — the file is not read again.</p>
+<div class="optlabel">Detection</div>
+<label class="checkrow">
+<input type="checkbox" id="optHeadings" checked>
+<span><span class="ctitle">Detect headings</span><span class="cdesc">Larger text becomes # to #### headings, by size.</span></span>
+</label>
+<label class="checkrow">
+<input type="checkbox" id="optTables" checked>
+<span><span class="ctitle">Detect tables</span><span class="cdesc">Aligned columns become Markdown pipe tables.</span></span>
+</label>
+<label class="checkrow">
+<input type="checkbox" id="optImages" checked>
+<span><span class="ctitle">Extract images</span><span class="cdesc">Embedded pictures are saved into an images folder (ZIP download).</span></span>
+</label>
+<div class="optlabel">Page markers</div>
+<select class="optsel" id="optMarkers">
+<option value="comment" selected>HTML comment — &lt;!-- Page 2 --&gt;</option>
+<option value="rule">Horizontal rule — ---</option>
+<option value="none">None</option>
+</select>
+<div class="warnnote">⚠ <strong>Honest limits:</strong> structure is detected from font sizes and positions — a heuristic, not magic. Two-column magazine layouts are read in the PDF's internal order and may interleave, and tables with merged cells fall back to plain lines. A quick touch-up may be needed on complex documents.</div>
+<div class="freenote">Everything here is free with no limits: no subscription, no page cap, no sign-up.</div>
+</aside>
+</div>
+
+<div class="result" id="resultPanel">
+<h2>Your Markdown</h2>
+<p class="rstats" id="resultStats"></p>
+<div class="scannote" id="scanNote"></div>
+<div class="tabs">
+<button type="button" id="tabMd" class="on">Markdown</button>
+<button type="button" id="tabPreview">Preview</button>
+</div>
+<pre class="mdraw on" id="mdRaw"></pre>
+<div class="mdprev" id="mdPreview"></div>
+<div class="ractions">
+<button class="secondary" id="copyBtn" type="button">Copy Markdown</button>
+<button class="primary" id="downloadMdBtn" type="button">Download .md</button>
+<button class="primary" id="downloadZipBtn" type="button">Download ZIP</button>
+<button class="secondary" id="downloadMdOnlyBtn" type="button">Download .md only</button>
+<button class="ghost" id="startOverBtn" type="button">Convert another</button>
+</div>
+</div>
+
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+
+<div class="howto">
+<h2>How to convert a PDF to Markdown</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3>Choose your PDF</h3><p>Click the select button or drop your file into the area provided. The document is opened right here, on your device.</p></div>
+<div class="step"><span class="num">2</span><h3>Check the structure</h3><p>Headings, lists, tables, links and images are detected automatically. Use the options to turn a detection off, and watch the Markdown update instantly.</p></div>
+<div class="step"><span class="num">3</span><h3>Copy or download</h3><p>Copy the Markdown straight into your notes or editor, download the .md file, or grab the ZIP when the document contains images.</p></div>
+</div>
+<div class="seo">
+<p>Markdown is the plain-text format behind GitHub READMEs, note apps like Obsidian and Notion, documentation sites, and most AI chat tools. Converting a PDF to Markdown turns a fixed, hard-to-reuse document into text you can search, edit, version, quote and feed to other tools — while keeping the structure that makes it readable: headings, lists, tables and links.</p>
+<p>This converter works from the PDF itself: it reads each line's font size and weight to spot headings, watches for bullet and number markers to rebuild lists, aligns repeated columns into pipe tables, and turns real PDF link annotations into Markdown links. Embedded images are pulled out into an images folder and referenced from the text, so nothing in the document is silently dropped.</p>
+</div>
+</div>
+
+<div class="faq">
+<h2>Frequently asked questions</h2>
+<div class="qa"><h3>What is Markdown, and where is it used?</h3><p>Markdown is a lightweight plain-text format: a few simple marks (# for headings, - for lists, ** for bold) give a text file a structure that both people and programs can read. It powers GitHub, documentation sites, note-taking apps such as Obsidian, Joplin and Notion, static site generators — and it is the easiest format to paste into an AI assistant when you want it to work with a document.</p></div>
+<div class="qa"><h3>How are headings and tables detected?</h3><p>From the PDF's own signals. A heading is a short line set in a noticeably larger font than the document's body text — the bigger the difference, the higher the heading level. A table is a run of at least three lines whose text starts line up in the same columns, with clear gaps between them. It is a careful heuristic: clean, computer-made documents convert very well, while complex layouts may need a few manual touch-ups afterwards.</p></div>
+<div class="qa"><h3>Are images included?</h3><p>Yes. Pictures embedded in the PDF are extracted as PNG files into an images folder and referenced from the Markdown like ![Image p2-1](images/image-p2-1.png). Because the references are relative paths, the download becomes a ZIP containing the .md file and the images folder together. For placement, an image is listed at the end of the page it appears on — a PDF does not record exactly where a picture sits in the reading order, so that is the honest approximation.</p></div>
+<div class="qa"><h3>What about multi-column documents?</h3><p>The text is read in the order the PDF itself stores it. Many documents store columns in reading order and convert cleanly, but magazine-style layouts sometimes store a whole page column-crossed — then the Markdown can interleave the columns. There is no reliable way to untangle every such file automatically, and we would rather tell you than pretend otherwise.</p></div>
+<div class="qa"><h3>My PDF is a scan — what do I do?</h3><p>A scanned PDF holds pictures of pages, not text, so there is nothing to structure. If your file has almost no text, this page will say so — and if it does contain pictures, it will still extract and reference them. For the text itself, run the file through <a href="ocr-pdf.html">OCR PDF</a> first to add a recognized text layer, then convert the result here.</p></div>
+<div class="qa"><h3>Is my file uploaded?</h3><p>No — everything runs on your device. The file is opened by your browser, its text, links and images are read in this page, and the Markdown is produced locally. Nothing is sent to a server at any point, which is exactly why this tool can be used on private documents with confidence.</p></div>
+<div class="qa"><h3>How do links work?</h3><p>Real PDF link annotations — the clickable areas a document carries — become Markdown links, like [documentation](https://example.org/docs), wrapped around the words they covered. Web addresses that are merely written as text, without an annotation behind them, stay as plain text, exactly as written.</p></div>
+</div>
+</main>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script id="markdownCore">
+/* =====================================================================
+   PdfBleu PDF to Markdown — conversion core.
+   Pure, deterministic, DOM-free (node-testable).
+
+   LINE MODEL
+   ----------
+   A "rich line" is one visual line of a PDF page:
+     { page, y, x, size, kind?, ref?, alt?, cells: [cell, ...] }
+   - y is the baseline in PDF user space (grows upwards), x the left
+     edge, size the largest font size on the line.
+   - kind === 'image' marks an image pseudo-line (ref/alt set, no
+     cells); extraction appends those at the end of their page.
+   - A cell is one text item (or link-split fragment group) on the
+     line: { x, w, size, runs: [run, ...] }.
+   - A run is a styled span: { t, bold, italic, mono, link? }.
+
+   PIPELINE
+   --------
+   pdf.js items --itemMetrics--> metrics --applyLinks--> metrics
+   --groupPageLines--> rich lines (per page)
+   --convert--> blocks (heading / para / list / table / code / image /
+   pagebreak) --render--> Markdown text + stats.
+
+   All heuristics are deterministic and documented where they live:
+   heading size tiers, paragraph y-gap merging with dehyphenation,
+   bullet/number list detection with continuation lines, table
+   detection by repeated column alignment (pdf-to-excel style
+   clustering, hardened so justified paragraphs cannot fake a table),
+   and CommonMark-safe inline rendering with escaping.
+   ===================================================================== */
+var MarkdownCore = (function () {
+  'use strict';
+
+  /* ================= item metrics ================= */
+  // x = transform[4], y = transform[5] (PDF user space, y up);
+  // size = vertical scale of the text matrix, fallback item.height;
+  // w = item.width, which pdf.js already reports in user-space
+  // units (verified against pdf-lib fixtures: "Product" at 11pt ->
+  // width 41.56, and pdf.js's own space items carry the exact gap).
+  function itemMetrics(it) {
+    var tr = it.transform || [1, 0, 0, 1, 0, 0];
+    var size = Math.hypot(tr[2] || 0, tr[3] || 0);
+    if (!size || !isFinite(size)) size = it.height || 0;
+    var fontName = it.fontName || '';
+    return {
+      str: it.str == null ? '' : String(it.str),
+      x: tr[4] || 0,
+      y: tr[5] || 0,
+      w: it.width || 0,
+      endX: (tr[4] || 0) + (it.width || 0),
+      size: size,
+      bold: /bold/i.test(fontName),
+      italic: /italic|oblique/i.test(fontName),
+      mono: /courier|mono|consolas/i.test(fontName)
+    };
+  }
+
+  /* ================= link attachment ================= */
+  // links: [{url, rect:[x1,y1,x2,y2]}] in PDF user space, from the
+  // page's /Link annotations. An item is link-affected when the
+  // annotation covers at least half of the item's vertical span and
+  // some of its width. The item's text is then split into word
+  // segments whose horizontal extents are estimated proportionally
+  // (character widths inside one pdf.js item are not exposed); a
+  // segment receives the URL when its centre falls inside the
+  // annotation rect, i.e. >= 50% of that segment is covered. The
+  // result rides on the item as .parts = [{str, link}] — without
+  // parts, the item is a single unlinked span.
+  function applyLinks(items, links) {
+    if (!links || !links.length) return items;
+    return items.map(function (m) {
+      if (!m.str || !m.str.trim()) return m;
+      var y1 = m.y - 0.3 * m.size, y2 = m.y + 0.9 * m.size;
+      var hit = null;
+      for (var i = 0; i < links.length; i++) {
+        var r = links[i].rect;
+        var ox = Math.min(m.endX, r[2]) - Math.max(m.x, r[0]);
+        var oy = Math.min(y2, r[3]) - Math.max(y1, r[1]);
+        if (ox > 0 && oy >= 0.5 * (y2 - y1)) { hit = links[i]; break; }
+      }
+      if (!hit) return m;
+      var r2 = hit.rect;
+      var total = m.str.length;
+      var tokens = m.str.match(/\s+|\S+/g) || [];
+      var parts = [];
+      var pos = 0;
+      tokens.forEach(function (tok) {
+        var start = m.x + m.w * (pos / total);
+        var end = m.x + m.w * ((pos + tok.length) / total);
+        pos += tok.length;
+        var inside = /^\s+$/.test(tok) ? null
+          : ((start + end) / 2 >= r2[0] - 0.5 && (start + end) / 2 <= r2[2] + 0.5 ? hit.url : null);
+        var last = parts.length ? parts[parts.length - 1] : null;
+        if (last && last.link === inside) last.str += tok;
+        else parts.push({ str: tok, link: inside });
+      });
+      var hasLink = parts.some(function (p) { return p.link; });
+      if (!hasLink) return m;
+      var copy = {};
+      for (var k in m) copy[k] = m[k];
+      copy.parts = parts;
+      return copy;
+    });
+  }
+
+  /* ================= grouping items into rich lines ================= */
+  // Sort by baseline (top first), attach items to the current line
+  // when their baseline is within max(2pt, 0.5 x size) of it, sort
+  // each line's items by x. Whitespace-only items are dropped: the
+  // gaps between absolute x positions already carry the spacing.
+  function groupPageLines(page, items) {
+    var norm = [];
+    (items || []).forEach(function (m) {
+      if (!m || typeof m.str !== 'string' || !m.str.trim()) return;
+      norm.push(m);
+    });
+    norm.sort(function (a, b) {
+      if (a.y !== b.y) return b.y - a.y;
+      return a.x - b.x;
+    });
+    var raw = [];
+    norm.forEach(function (m) {
+      var cur = raw.length ? raw[raw.length - 1] : null;
+      var tol = Math.max(2, 0.5 * Math.max(m.size, cur ? cur.size : 0));
+      if (cur && Math.abs(m.y - cur.y) <= tol) {
+        cur.items.push(m);
+        if (m.size > cur.size) cur.size = m.size;
+      } else {
+        raw.push({ y: m.y, size: m.size, items: [m] });
+      }
+    });
+    return raw.map(function (L) {
+      var sorted = L.items.slice().sort(function (a, b) { return a.x - b.x; });
+      var cells = sorted.map(function (m) {
+        var runs;
+        if (m.parts) {
+          runs = m.parts.filter(function (p) { return p.str !== ''; }).map(function (p) {
+            return { t: p.str, bold: m.bold, italic: m.italic, mono: m.mono, link: p.link || undefined };
+          });
+        } else {
+          runs = [{ t: m.str, bold: m.bold, italic: m.italic, mono: m.mono, link: undefined }];
+        }
+        return { x: m.x, w: m.w, size: m.size, runs: runs };
+      });
+      return {
+        page: page,
+        y: L.y,
+        x: cells.length ? cells[0].x : 0,
+        size: L.size,
+        cells: cells
+      };
+    });
+  }
+
+  /* ================= test/synthetic line builders ================= */
+  // line(page, y, size, cells): cells are {x, text, bold?, italic?,
+  // mono?, link?}; cell width is estimated at 0.5 x size per char,
+  // which keeps table-gap arithmetic in tests transparent.
+  function line(page, y, size, cells) {
+    var cs = (cells || []).map(function (c) {
+      var t = c.text == null ? '' : String(c.text);
+      return {
+        x: c.x || 0,
+        w: t.length * size * 0.5,
+        size: size,
+        runs: [{ t: t, bold: !!c.bold, italic: !!c.italic, mono: !!c.mono, link: c.link }]
+      };
+    });
+    return { page: page, y: y, x: cs.length ? cs[0].x : 0, size: size, cells: cs };
+  }
+  function imgLine(page, ref, alt) {
+    return { page: page, y: 0, x: 0, size: 0, kind: 'image', ref: ref, alt: alt, cells: [] };
+  }
+
+  /* ================= flattening a line ================= */
+  // One walk that produces the plain text AND the run list together,
+  // so they can never disagree: a single space is inserted between
+  // two cells when their horizontal gap exceeds 0.25 x font size
+  // (a word separation), unless the text already has whitespace there.
+  function flatten(ln) {
+    if (ln._flat) return ln._flat;
+    var runs = [], text = '', prev = null;
+    (ln.cells || []).forEach(function (cell) {
+      var ct = cell.runs.map(function (r) { return r.t; }).join('');
+      if (prev) {
+        var gap = cell.x - prev.endX;
+        if (gap > 0.25 * Math.max(prev.size, cell.size) && text && !/\s$/.test(text) && !/^\s/.test(ct)) {
+          runs.push({ t: ' ', bold: false, italic: false, mono: false, link: undefined });
+          text += ' ';
+        }
+      }
+      cell.runs.forEach(function (r) { runs.push(r); });
+      text += ct;
+      prev = { endX: cell.x + cell.w, size: cell.size };
+    });
+    ln._flat = { text: text, runs: runs };
+    return ln._flat;
+  }
+  function lineText(ln) { return ln.kind === 'image' ? '' : flatten(ln).text; }
+  function lineRuns(ln) { return flatten(ln).runs; }
+  function cellRuns(ln) {
+    var out = [];
+    (ln.cells || []).forEach(function (c) { c.runs.forEach(function (r) { out.push(r); }); });
+    return out;
+  }
+
+  /* ================= document metrics ================= */
+  // Body size = the modal line size (rounded to 0.5 pt) across all
+  // non-empty lines of the document; fallback 11.
+  function bodySize(lines) {
+    var freq = {}, best = 0, body = 0;
+    (lines || []).forEach(function (ln) {
+      if (ln.kind === 'image') return;
+      if (!lineText(ln).trim()) return;
+      var k = Math.round((ln.size || 0) * 2) / 2;
+      if (!k) return;
+      freq[k] = (freq[k] || 0) + 1;
+      if (freq[k] > best) { best = freq[k]; body = k; }
+    });
+    return body || 11;
+  }
+
+  /* ================= headings ================= */
+  // Deterministic tiers on size ratio vs body size:
+  //   >= 1.85 -> H1, >= 1.45 -> H2, >= 1.22 -> H3, >= 1.10 -> H4.
+  // A heading must be a short line (<= 100 chars) and must not end
+  // with a comma; H3/H4 must not end with a period either (they are
+  // too close to body text to trust a full sentence). Bold at body
+  // size is never a heading (ratio 1.0). Title exception: the first
+  // content line of page 1 (flagged isTitleCandidate by convert) at
+  // ratio >= 1.45 is H1 even at up to 120 chars.
+  function headingLevel(ln, body) {
+    var text = lineText(ln).trim();
+    if (!text || !body) return 0;
+    var ratio = (ln.size || 0) / body;
+    if (ln.isTitleCandidate && ratio >= 1.45 && text.length <= 120 && !/,$/.test(text)) return 1;
+    if (text.length > 100) return 0;
+    if (/,$/.test(text)) return 0;
+    var level = 0;
+    if (ratio >= 1.85) level = 1;
+    else if (ratio >= 1.45) level = 2;
+    else if (ratio >= 1.22) level = 3;
+    else if (ratio >= 1.10) level = 4;
+    if ((level === 3 || level === 4) && /\.$/.test(text)) return 0;
+    return level;
+  }
+
+  /* ================= lists ================= */
+  // A list item starts with a bullet glyph + space, or a number /
+  // letter / roman marker "N." / "N)" + space. Bullet lines of
+  // 200+ chars are paragraphs (guard against prose starting with a
+  // dash). Returns {ordered, contentStart} or null.
+  function listInfo(ln) {
+    var text = lineText(ln);
+    var m;
+    if ((m = /^([•‧◦\*\-–])\s+/.exec(text))) {
+      if (text.trim().length >= 200) return null;
+      return { ordered: false, contentStart: m[0].length };
+    }
+    if ((m = /^(\d{1,3})[.)]\s+/.exec(text))) return { ordered: true, contentStart: m[0].length };
+    if ((m = /^([a-z])[.)]\s+/.exec(text))) return { ordered: true, contentStart: m[0].length };
+    if ((m = /^([ivxIVX]{1,4})[.)]\s+/.exec(text))) return { ordered: true, contentStart: m[0].length };
+    return null;
+  }
+  function stripRuns(runs, count) {
+    var out = [], left = count;
+    (runs || []).forEach(function (r) {
+      if (left >= r.t.length) { left -= r.t.length; return; }
+      if (left > 0) {
+        var c = {}; for (var k in r) c[k] = r[k];
+        c.t = r.t.slice(left); left = 0;
+        if (c.t) out.push(c);
+        return;
+      }
+      out.push(r);
+    });
+    return out;
+  }
+
+  /* Append another line's runs to a growing paragraph/list item:
+     soft hyphenation (letter + "-" + lowercase) loses the hyphen,
+     a hard hyphen joins without a space, otherwise one space. */
+  function appendLineRuns(target, ln) {
+    var curText = target.map(function (r) { return r.t; }).join('');
+    var addText = lineText(ln);
+    var add = lineRuns(ln).slice();
+    if (/[A-Za-z]-$/.test(curText) && /^[a-z]/.test(addText)) {
+      // dehyphenate: drop the trailing '-' from the last run
+      for (var i = target.length - 1; i >= 0; i--) {
+        if (target[i].t) { target[i] = shallowRun(target[i], target[i].t.slice(0, -1)); break; }
+      }
+    } else if (!/-$/.test(curText) && !/\s$/.test(curText) && !/^\s/.test(addText)) {
+      target.push({ t: ' ', bold: false, italic: false, mono: false, link: undefined });
+    }
+    add.forEach(function (r) { target.push(r); });
+  }
+  function shallowRun(r, t) {
+    var c = {}; for (var k in r) c[k] = r[k]; c.t = t; return c;
+  }
+
+  /* ================= tables ================= */
+  // Candidate: a line with >= 2 cells. Columns are clustered from
+  // every cell x-start of the run (chaining, 8 pt tolerance — the
+  // pdf-to-excel approach). The run is a table only when:
+  //   - it has >= 3 lines and 2..8 columns;
+  //   - no line puts two cells in the same column;
+  //   - EVERY column is used by at least 2 lines (a justified
+  //     paragraph scatters fragments into one-off columns and is
+  //     rejected by this rule);
+  //   - at least half the lines show a real column gutter (a gap of
+  //     >= 1 x font size between neighbouring cells), which styled
+  //     fragments inside a paragraph do not have.
+  function tableInfo(linesArr) {
+    var refs = [];
+    linesArr.forEach(function (ln, li) {
+      ln.cells.forEach(function (c, ci) { refs.push({ x: c.x, li: li, ci: ci }); });
+    });
+    refs.sort(function (a, b) { return a.x - b.x; });
+    var clusters = [], prevX = null;
+    refs.forEach(function (r) {
+      if (!clusters.length || r.x - prevX > 8) clusters.push([]);
+      clusters[clusters.length - 1].push(r);
+      prevX = r.x;
+    });
+    var C = clusters.length;
+    if (C < 2 || C > 8) return null;
+    var colOf = {};
+    clusters.forEach(function (cl, idx) {
+      cl.forEach(function (r) { colOf[r.li + ':' + r.ci] = idx; });
+    });
+    var colUse = [];
+    for (var i = 0; i < C; i++) colUse.push(0);
+    var li, ci;
+    for (li = 0; li < linesArr.length; li++) {
+      var seen = {};
+      for (ci = 0; ci < linesArr[li].cells.length; ci++) {
+        var col = colOf[li + ':' + ci];
+        if (seen[col]) return null;
+        seen[col] = true;
+      }
+      for (var k in seen) colUse[k]++;
+    }
+    for (i = 0; i < C; i++) if (colUse[i] < 2) return null;
+    var wide = 0;
+    linesArr.forEach(function (ln) {
+      for (var j = 1; j < ln.cells.length; j++) {
+        var gap = ln.cells[j].x - (ln.cells[j - 1].x + ln.cells[j - 1].w);
+        if (gap >= 1.0 * ln.size) { wide++; break; }
+      }
+    });
+    if (wide * 2 < linesArr.length) return null;
+    var rows = linesArr.map(function (ln, li2) {
+      var row = [];
+      for (var c = 0; c < C; c++) row.push([]);
+      ln.cells.forEach(function (cell, ci2) { row[colOf[li2 + ':' + ci2]] = cell.runs; });
+      return row;
+    });
+    return { cols: C, rows: rows };
+  }
+  // Longest valid table starting at index `start` within page lines
+  // (returns the number of lines consumed, 0 when no table starts).
+  function tableConsumed(lines, start) {
+    var best = 0;
+    for (var end = start + 3; end <= lines.length; end++) {
+      var slice = lines.slice(start, end);
+      var okRun = true;
+      for (var i = 0; i < slice.length; i++) {
+        if (slice[i].kind === 'image' || slice[i].cells.length < 2) { okRun = false; break; }
+      }
+      if (!okRun) break;
+      if (tableInfo(slice)) best = end - start;
+      else break;
+    }
+    return best;
+  }
+
+  /* ================= inline rendering ================= */
+  function escapeMd(text, opts) {
+    opts = opts || {};
+    var s = String(text == null ? '' : text)
+      .replace(/\\/g, '\\\\')
+      .replace(/`/g, '\\`')
+      .replace(/\*/g, '\\*')
+      .replace(/_/g, '\\_')
+      .replace(/\[/g, '\\[')
+      .replace(/\]/g, '\\]');
+    if (opts.inTable) s = s.replace(/\|/g, '\\|');
+    if (opts.atStart) {
+      s = s.replace(/^>/, '\\>');
+      s = s.replace(/^#/, '\\#');
+      s = s.replace(/^([-+])\s/, '\\$1 ');
+      s = s.replace(/^(\d{1,9})([.)])\s/, '$1\\$2 ');
+    }
+    return s;
+  }
+  function mdUrl(url) {
+    var u = String(url == null ? '' : url);
+    if (/[\s()]/.test(u)) return '<' + u + '>';
+    return u;
+  }
+  function codeSpan(text) {
+    if (text.indexOf('`') >= 0) return '`` ' + text + ' ``';
+    return '`' + text + '`';
+  }
+  function styleKey(r) {
+    return (r.bold ? 'b' : '') + (r.italic ? 'i' : '') + (r.mono ? 'm' : '') + '|' + (r.link || '');
+  }
+  function mergeRuns(runs) {
+    var out = [];
+    (runs || []).forEach(function (r) {
+      if (!r || !r.t) return;
+      var last = out.length ? out[out.length - 1] : null;
+      if (last && styleKey(last) === styleKey(r)) last.t += r.t;
+      else out.push({ t: r.t, bold: !!r.bold, italic: !!r.italic, mono: !!r.mono, link: r.link });
+    });
+    return out;
+  }
+  // Render a run list to Markdown inline text. Leading/trailing
+  // spaces of a styled span are moved OUTSIDE its markers (never
+  // "** bold **"). Link wraps outside style: [**x**](url).
+  function renderInline(runs, opts) {
+    opts = opts || {};
+    var merged = mergeRuns(runs);
+    var out = '';
+    var atStart = !!(opts.lineStart || opts.inTable);
+    merged.forEach(function (r) {
+      var lead = /^\s*/.exec(r.t)[0];
+      var trail = /\s*$/.exec(r.t)[0];
+      var core = r.t.slice(lead.length, r.t.length - trail.length);
+      if (!core) { out += r.t; return; }
+      var rendered;
+      if (r.mono) {
+        rendered = codeSpan(core);
+      } else {
+        // stripBold (headings): a heading's weight already implies
+        // emphasis, so bold spans render plain (bold+italic -> italic).
+        var bold = r.bold && !opts.stripBold;
+        rendered = escapeMd(core, { atStart: atStart, inTable: opts.inTable });
+        if (bold && r.italic) rendered = '***' + rendered + '***';
+        else if (bold) rendered = '**' + rendered + '**';
+        else if (r.italic) rendered = '*' + rendered + '*';
+      }
+      if (r.link) rendered = '[' + rendered + '](' + mdUrl(r.link) + ')';
+      out += lead + rendered + trail;
+      atStart = false;
+    });
+    return out;
+  }
+
+  /* ================= classification ================= */
+  function isMonoLine(ln) {
+    var rs = cellRuns(ln), any = false;
+    for (var i = 0; i < rs.length; i++) {
+      if (!rs[i].t || !rs[i].t.trim()) continue;
+      if (!rs[i].mono) return false;
+      any = true;
+    }
+    return any;
+  }
+
+  function classify(lines, opts, body) {
+    var n = lines.length;
+    var i;
+    var mono = [], monoBlock = [], head = [], lst = [];
+    for (i = 0; i < n; i++) {
+      mono.push(lines[i].kind !== 'image' && isMonoLine(lines[i]));
+      head.push(lines[i].kind !== 'image' && opts.headings ? headingLevel(lines[i], body) : 0);
+      lst.push(lines[i].kind !== 'image' ? listInfo(lines[i]) : null);
+    }
+    // monoBlock[i]: line i belongs to a run of >= 2 mono lines
+    for (i = 0; i < n; i++) {
+      if (!mono[i]) { monoBlock.push(false); continue; }
+      var a = i, b = i;
+      while (a > 0 && mono[a - 1]) a--;
+      while (b < n - 1 && mono[b + 1]) b++;
+      monoBlock.push(b - a + 1 >= 2);
+    }
+    function tableAt(idx) {
+      if (!opts.tables) return 0;
+      if (lines[idx].kind === 'image' || lines[idx].cells.length < 2) return 0;
+      return tableConsumed(lines, idx);
+    }
+    function gapOk(prev, cur) {
+      var gap = prev.y - cur.y;
+      return gap > 0 && gap <= 1.6 * Math.max(prev.size || 0, cur.size || 0);
+    }
+    var blocks = [];
+    i = 0;
+    while (i < n) {
+      var ln = lines[i];
+      if (ln.kind !== 'image' && !lineText(ln).trim()) { i++; continue; }
+      if (ln.kind === 'image') {
+        if (opts.images) blocks.push({ type: 'image', ref: ln.ref, alt: ln.alt });
+        i++;
+        continue;
+      }
+      if (head[i]) {
+        blocks.push({ type: 'heading', level: head[i], runs: lineRuns(ln) });
+        i++;
+        continue;
+      }
+      if (monoBlock[i]) {
+        var codeLines = [];
+        var j = i;
+        while (j < n && mono[j]) { codeLines.push(lineText(lines[j])); j++; }
+        blocks.push({ type: 'code', lines: codeLines });
+        i = j;
+        continue;
+      }
+      if (lst[i]) {
+        var ordered = lst[i].ordered;
+        var items = [];
+        var cur = { runs: stripRuns(lineRuns(ln), lst[i].contentStart) };
+        items.push(cur);
+        var itemX = ln.x;
+        var prevLine = ln;
+        i++;
+        while (i < n) {
+          var nl = lines[i];
+          if (nl.kind === 'image' || head[i] || monoBlock[i]) break;
+          if (lst[i]) {
+            if (lst[i].ordered === ordered) {
+              cur = { runs: stripRuns(lineRuns(nl), lst[i].contentStart) };
+              items.push(cur);
+              itemX = nl.x;
+              prevLine = nl;
+              i++;
+              continue;
+            }
+            break;
+          }
+          if (tableAt(i)) break;
+          var moreIndented = nl.x > itemX + 2;
+          var tight = gapOk(prevLine, nl) && nl.x >= itemX - 2;
+          if (!moreIndented && !tight) break;
+          appendLineRuns(cur.runs, nl);
+          prevLine = nl;
+          i++;
+        }
+        blocks.push({ type: 'list', ordered: ordered, items: items });
+        continue;
+      }
+      var tc = tableAt(i);
+      if (tc >= 3) {
+        var info = tableInfo(lines.slice(i, i + tc));
+        blocks.push({ type: 'table', rows: info.rows, cols: info.cols });
+        i += tc;
+        continue;
+      }
+      // paragraph: merge following plain lines while the y-gap is
+      // small and nothing structural intervenes
+      var para = { type: 'para', runs: lineRuns(ln).slice() };
+      prevLine = ln;
+      i++;
+      while (i < n) {
+        var pl = lines[i];
+        if (pl.kind === 'image' || head[i] || lst[i] || monoBlock[i]) break;
+        if (tableAt(i)) break;
+        if (!gapOk(prevLine, pl)) break;
+        appendLineRuns(para.runs, pl);
+        prevLine = pl;
+        i++;
+      }
+      blocks.push(para);
+    }
+    return blocks;
+  }
+
+  /* ================= rendering ================= */
+  function runsPlainText(runs) {
+    return mergeRuns(runs).map(function (r) { return r.t; }).join('');
+  }
+  function countWordsIn(text) {
+    var n = 0;
+    String(text || '').split(/\s+/).forEach(function (w) { if (w) n++; });
+    return n;
+  }
+  function render(blocks, opts) {
+    var stats = { headings: 0, tables: 0, listItems: 0, links: 0, images: 0, words: 0 };
+    function noteRuns(runs) {
+      mergeRuns(runs).forEach(function (r) { if (r.link) stats.links++; });
+      stats.words += countWordsIn(runsPlainText(runs));
+    }
+    var parts = [];
+    blocks.forEach(function (b) {
+      if (b.type === 'heading') {
+        stats.headings++;
+        noteRuns(b.runs);
+        parts.push('#'.repeat(b.level) + ' ' + renderInline(b.runs, { stripBold: true }));
+      } else if (b.type === 'para') {
+        noteRuns(b.runs);
+        var p = renderInline(b.runs, { lineStart: true });
+        if (p.trim()) parts.push(p);
+      } else if (b.type === 'list') {
+        var linesMd = b.items.map(function (it, idx) {
+          stats.listItems++;
+          noteRuns(it.runs);
+          return (b.ordered ? (idx + 1) + '. ' : '- ') + renderInline(it.runs, {});
+        });
+        parts.push(linesMd.join('\n'));
+      } else if (b.type === 'table') {
+        stats.tables++;
+        var rowsMd = b.rows.map(function (row, ri) {
+          var cellsMd = row.map(function (cell) {
+            noteRuns(cell);
+            return renderInline(cell, { inTable: true });
+          });
+          return '| ' + cellsMd.join(' | ') + ' |';
+        });
+        var sep = '| ' + b.rows[0].map(function () { return '---'; }).join(' | ') + ' |';
+        parts.push(rowsMd[0] + '\n' + sep + (rowsMd.length > 1 ? '\n' + rowsMd.slice(1).join('\n') : ''));
+      } else if (b.type === 'code') {
+        b.lines.forEach(function (t) { stats.words += countWordsIn(t); });
+        parts.push('```\n' + b.lines.join('\n') + '\n```');
+      } else if (b.type === 'image') {
+        stats.images++;
+        parts.push('![' + b.alt + '](' + b.ref + ')');
+      } else if (b.type === 'pagebreak') {
+        if (opts.markers === 'comment') parts.push('<!-- Page ' + b.page + ' -->');
+        else if (opts.markers === 'rule') parts.push('---');
+      }
+    });
+    return { markdown: parts.join('\n\n') + '\n', stats: stats };
+  }
+
+  /* ================= top level ================= */
+  function convert(pagesOfLines, opts) {
+    opts = opts || {};
+    var o = {
+      headings: opts.headings !== false,
+      tables: opts.tables !== false,
+      images: opts.images !== false,
+      markers: opts.markers || 'comment'
+    };
+    var all = [];
+    (pagesOfLines || []).forEach(function (ls) { (ls || []).forEach(function (l) { all.push(l); }); });
+    var body = bodySize(all);
+    // title candidate: first content line of page 1
+    var firstPage = (pagesOfLines || [])[0] || [];
+    for (var i = 0; i < firstPage.length; i++) {
+      if (firstPage[i].kind !== 'image' && lineText(firstPage[i]).trim()) {
+        firstPage[i].isTitleCandidate = true;
+        break;
+      }
+    }
+    var blocks = [];
+    (pagesOfLines || []).forEach(function (ls, pi) {
+      var pb = classify(ls || [], o, body);
+      if (pi > 0 && pb.length) blocks.push({ type: 'pagebreak', page: pi + 1 });
+      pb.forEach(function (b) { blocks.push(b); });
+    });
+    var content = blocks.filter(function (b) { return b.type !== 'pagebreak'; });
+    if (!content.length) return { error: 'EMPTY' };
+    var r = render(blocks, o);
+    return { markdown: r.markdown, stats: r.stats, blocks: blocks };
+  }
+
+  // Names of the files a download ZIP must contain, in order.
+  function zipPlan(base, images) {
+    var out = [String(base || 'document') + '.md'];
+    (images || []).forEach(function (im) { out.push(im.ref); });
+    return out;
+  }
+
+  return {
+    itemMetrics: itemMetrics,
+    applyLinks: applyLinks,
+    groupPageLines: groupPageLines,
+    line: line,
+    imgLine: imgLine,
+    lineText: lineText,
+    lineRuns: lineRuns,
+    bodySize: bodySize,
+    headingLevel: headingLevel,
+    listInfo: listInfo,
+    escapeMd: escapeMd,
+    renderInline: renderInline,
+    classify: classify,
+    render: render,
+    convert: convert,
+    zipPlan: zipPlan
+  };
+})();
+</script>
+<script id="markdownExtract">
+/* =====================================================================
+   PdfBleu — PDF to Markdown extraction layer.
+   DOM-free and canvas-free: it talks to pdf.js (global pdfjsLib) and
+   to the pure MarkdownCore. Image pixel encoding is injected as
+   imageResolver(page, imageObj, fallbackName) -> Promise<data|null>
+   (browser: canvas encoder; node tests: a fake returning dummy
+   bytes). Any image that fails to resolve is skipped, never fatal.
+   ===================================================================== */
+var MarkdownExtract = (function () {
+  'use strict';
+
+  function getImageObject(page, name, timeoutMs) {
+    return new Promise(function (resolve) {
+      var done = false;
+      var timer = setTimeout(function () { if (!done) { done = true; resolve(null); } }, timeoutMs || 10000);
+      try {
+        page.objs.get(name, function (img) {
+          if (!done) { done = true; clearTimeout(timer); resolve(img || null); }
+        });
+      } catch (e) {
+        if (!done) { done = true; clearTimeout(timer); resolve(null); }
+      }
+    });
+  }
+
+  // Resolve the real font names behind the text items (the operator
+  // list forces pdf.js to load the font objects), pdf-to-word pattern.
+  async function resolveFontNames(page, items) {
+    try { await page.getOperatorList(); } catch (e) { /* fonts may still resolve */ }
+    var cache = {};
+    for (var i = 0; i < items.length; i++) {
+      var g = items[i].fontName;
+      if (!g || cache[g] !== undefined) continue;
+      try {
+        var o = page.commonObjs.get(g);
+        cache[g] = (o && o.name) ? o.name : g;
+      } catch (e) { cache[g] = g; }
+    }
+    items.forEach(function (it) {
+      if (it.fontName && cache[it.fontName]) it.fontName = cache[it.fontName];
+    });
+  }
+
+  // /Link annotations with a URL, in PDF user space (bottom-up) —
+  // the same space as item transform[4]/[5].
+  async function collectLinks(page) {
+    var out = [];
+    try {
+      var annots = await page.getAnnotations();
+      (annots || []).forEach(function (a) {
+        if (!a || a.subtype !== 'Link') return;
+        var url = a.url || '';
+        if (!url && a.unsafeUrl) {
+          url = String(a.unsafeUrl);
+          if (url.charAt(0) === '/' && /^\/[a-z][a-z0-9+.-]*:/i.test(url)) url = url.slice(1);
+        }
+        if (url && a.rect && a.rect.length === 4) out.push({ url: url, rect: a.rect });
+      });
+    } catch (e) { /* annotations are optional */ }
+    return out;
+  }
+
+  // Scan the operator list for image paint operations, in op order.
+  function imageOpsOf(opList) {
+    var OPS = pdfjsLib.OPS;
+    var ops = [];
+    var fnArray = opList.fnArray, argsArray = opList.argsArray;
+    for (var i = 0; i < fnArray.length; i++) {
+      var fn = fnArray[i];
+      if (fn === OPS.paintImageXObject || fn === OPS.paintJpegXObject) {
+        ops.push({ inline: false, name: argsArray[i][0], fallback: null });
+      } else if (fn === OPS.paintInlineImageXObject) {
+        ops.push({ inline: true, name: null, fallback: argsArray[i][0] });
+      }
+    }
+    return ops;
+  }
+
+  // Extract one page into rich lines. Image pseudo-lines are
+  // appended at the end of the page's line stream (approximation,
+  // disclosed in the FAQ). Returns {lines, images, imageOps}.
+  async function extractPage(page, pageNum, imageResolver) {
+    var tc = await page.getTextContent();
+    var items = tc.items || [];
+    await resolveFontNames(page, items);
+    var links = await collectLinks(page);
+    var metrics = items.map(MarkdownCore.itemMetrics);
+    metrics = MarkdownCore.applyLinks(metrics, links);
+    var lines = MarkdownCore.groupPageLines(pageNum, metrics);
+
+    var images = [], opCount = 0;
+    if (imageResolver) {
+      var opList = null;
+      try { opList = await page.getOperatorList(); } catch (e) { /* no images then */ }
+      if (opList) {
+        var ops = imageOpsOf(opList);
+        opCount = ops.length;
+        for (var i = 0; i < ops.length; i++) {
+          var op = ops[i];
+          var imgObj = op.inline ? op.fallback : await getImageObject(page, op.name, 10000);
+          if (!imgObj) continue;
+          var data = null;
+          try { data = await imageResolver(page, imgObj, op.name); } catch (e) { data = null; }
+          if (!data) continue;
+          var n = i + 1;
+          var ref = 'images/image-p' + pageNum + '-' + n + '.png';
+          var alt = 'Image p' + pageNum + '-' + n;
+          images.push({ ref: ref, alt: alt, data: data });
+          lines.push(MarkdownCore.imgLine(pageNum, ref, alt));
+        }
+      }
+    }
+    return { lines: lines, images: images, imageOps: opCount };
+  }
+
+  // Extract a whole document: {pages: [lines...], images, words,
+  // totalOps}. onProgress(done, total) is optional.
+  async function extractDocument(pdf, imageResolver, onProgress) {
+    var pages = [], images = [], words = 0, totalOps = 0;
+    for (var p = 1; p <= pdf.numPages; p++) {
+      var page = await pdf.getPage(p);
+      var r = await extractPage(page, p, imageResolver);
+      pages.push(r.lines);
+      r.images.forEach(function (im) { images.push(im); });
+      totalOps += r.imageOps;
+      r.lines.forEach(function (ln) {
+        var t = MarkdownCore.lineText(ln).trim();
+        if (t) t.split(/\s+/).forEach(function (w) { if (w) words++; });
+      });
+      if (onProgress) onProgress(p, pdf.numPages);
+    }
+    return { pages: pages, images: images, words: words, totalOps: totalOps };
+  }
+
+  return {
+    getImageObject: getImageObject,
+    resolveFontNames: resolveFontNames,
+    collectLinks: collectLinks,
+    imageOpsOf: imageOpsOf,
+    extractPage: extractPage,
+    extractDocument: extractDocument
+  };
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  var state = {
+    file: null, base: 'document', pdf: null,
+    pages: 0, extracted: null, result: null,
+    objectUrls: []
+  };
+
+  function fmtNum(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function fmtSize(b) {
+    if (b >= 1048576) return (b / 1048576).toFixed(1) + ' MB';
+    return Math.max(1, Math.round(b / 1024)) + ' KB';
+  }
+  function showError(html) { var e = $('error'); e.innerHTML = html; e.classList.add('on'); }
+  function hideError() { $('error').classList.remove('on'); }
+  function setProcessing(on, detail) {
+    $('processing').classList.toggle('on', !!on);
+    if (detail != null) $('processingDetail').textContent = detail;
+  }
+
+  /* ---------- image decoding (browser only) ----------
+     Two paths, pdf-to-jpg pattern: a ready bitmap is drawn straight
+     to a canvas; raw pixel data (ImageKind 1/2/3) is flattened onto
+     white with putImageData. Anything odd returns null. */
+  function pdfImageToRgba(img) {
+    var w = img.width, h = img.height;
+    if (!w || !h || !img.data) return null;
+    var data = img.data;
+    var out = new Uint8ClampedArray(w * h * 4);
+    var kind = img.kind;
+    var i, j;
+    if (kind === 3) { // RGBA 32bpp
+      if (data.length < w * h * 4) return null;
+      out.set(data.subarray(0, w * h * 4));
+      return { width: w, height: h, data: out };
+    }
+    if (kind === 2) { // RGB 24bpp
+      if (data.length < w * h * 3) return null;
+      for (i = 0, j = 0; i < w * h * 4; i += 4, j += 3) {
+        out[i] = data[j]; out[i + 1] = data[j + 1]; out[i + 2] = data[j + 2]; out[i + 3] = 255;
+      }
+      return { width: w, height: h, data: out };
+    }
+    if (kind === 1) { // grayscale 1bpp
+      var rowBytes = Math.ceil(w / 8);
+      if (data.length < rowBytes * h) return null;
+      for (var y = 0; y < h; y++) {
+        for (var x = 0; x < w; x++) {
+          var bit = (data[y * rowBytes + (x >> 3)] >> (7 - (x & 7))) & 1;
+          var v = bit ? 255 : 0, o = (y * w + x) * 4;
+          out[o] = v; out[o + 1] = v; out[o + 2] = v; out[o + 3] = 255;
+        }
+      }
+      return { width: w, height: h, data: out };
+    }
+    // gray/other fallback: one byte per pixel
+    if (data.length >= w * h) {
+      for (i = 0, j = 0; i < w * h * 4; i += 4, j++) {
+        out[i] = data[j]; out[i + 1] = data[j]; out[i + 2] = data[j]; out[i + 3] = 255;
+      }
+      return { width: w, height: h, data: out };
+    }
+    return null;
+  }
+  function canvasPng(canvas) {
+    return new Promise(function (resolve) {
+      if (canvas.toBlob) canvas.toBlob(function (b) { resolve(b); }, 'image/png');
+      else {
+        try {
+          var bin = atob(canvas.toDataURL('image/png').split(',')[1]);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          resolve(new Blob([arr], { type: 'image/png' }));
+        } catch (e) { resolve(null); }
+      }
+    });
+  }
+  function browserImageResolver(page, img) {
+    var canvas = document.createElement('canvas');
+    if (img.bitmap) {
+      canvas.width = img.bitmap.width; canvas.height = img.bitmap.height;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img.bitmap, 0, 0);
+      return canvasPng(canvas);
+    }
+    var rgba = pdfImageToRgba(img);
+    if (!rgba) return Promise.resolve(null);
+    canvas.width = rgba.width; canvas.height = rgba.height;
+    var ctx2 = canvas.getContext('2d');
+    ctx2.fillStyle = '#ffffff'; ctx2.fillRect(0, 0, canvas.width, canvas.height);
+    var tmp = document.createElement('canvas');
+    tmp.width = rgba.width; tmp.height = rgba.height;
+    tmp.getContext('2d').putImageData(new ImageData(rgba.data, rgba.width, rgba.height), 0, 0);
+    ctx2.drawImage(tmp, 0, 0);
+    return canvasPng(canvas);
+  }
+
+  /* ---------- file loading ---------- */
+  function handleFile(file) {
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
+      showError('That file is not a PDF. Choose a .pdf document.');
+      return;
+    }
+    state.file = file;
+    state.base = file.name.replace(/\.pdf$/i, '') || 'document';
+    hideError();
+    $('emptyPanel').classList.remove('on');
+    $('fileCard').classList.add('on');
+    $('fileName').textContent = file.name;
+    $('fileMeta').textContent = fmtSize(file.size) + ' — reading…';
+    $('fileWarn').textContent = '';
+    $('docStats').classList.remove('on');
+    $('resultPanel').classList.remove('on');
+    loadFile(file);
+  }
+  async function loadFile(file) {
+    setProcessing(true, 'Opening the PDF…');
+    try {
+      if (state.pdf) { try { await state.pdf.destroy(); } catch (e) {} state.pdf = null; }
+      var buf = await file.arrayBuffer();
+      var pdf;
+      try {
+        pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+      } catch (e) {
+        if (e && e.name === 'PasswordException') {
+          setProcessing(false);
+          $('fileWarn').textContent = 'This PDF is password-protected.';
+          $('fileMeta').textContent = fmtSize(file.size);
+          showError('This PDF is protected by a password, so its text cannot be read. Remove the protection first with <a href="unlock-pdf.html">Unlock PDF</a>, then convert the unlocked file here.');
+          return;
+        }
+        throw e;
+      }
+      state.pdf = pdf;
+      state.pages = pdf.numPages;
+      $('fileMeta').textContent = fmtSize(file.size) + ' · ' + pdf.numPages + (pdf.numPages === 1 ? ' page' : ' pages');
+      setProcessing(true, 'Extracting text, links and images…');
+      var ext = await MarkdownExtract.extractDocument(pdf, browserImageResolver, function (done, total) {
+        setProcessing(true, 'Reading page ' + done + ' of ' + total + '…');
+      });
+      state.extracted = ext;
+      $('docStats').innerHTML = '<b>' + fmtNum(ext.words) + '</b> words read · <b>' + fmtNum(ext.images.length) + '</b> image' + (ext.images.length === 1 ? '' : 's') + ' found';
+      $('docStats').classList.add('on');
+      setProcessing(false);
+      convertNow();
+    } catch (e) {
+      setProcessing(false);
+      showError('This PDF could not be read. The file may be damaged — try <a href="repair-pdf.html">Repair PDF</a> first, then convert the repaired copy.');
+    }
+  }
+
+  /* ---------- conversion & result ---------- */
+  function currentOpts() {
+    return {
+      headings: $('optHeadings').checked,
+      tables: $('optTables').checked,
+      images: $('optImages').checked,
+      markers: $('optMarkers').value
+    };
+  }
+  function revokeObjectUrls() {
+    state.objectUrls.forEach(function (u) { try { URL.revokeObjectURL(u); } catch (e) {} });
+    state.objectUrls = [];
+  }
+  function convertNow() {
+    if (!state.extracted) return;
+    hideError();
+    var ext = state.extracted;
+    var res = MarkdownCore.convert(ext.pages, currentOpts());
+    state.result = res;
+    if (res.error === 'EMPTY') {
+      $('resultPanel').classList.remove('on');
+      $('scanNote').classList.remove('on');
+      $('emptyPanel').classList.add('on');
+      return;
+    }
+    $('emptyPanel').classList.remove('on');
+    var s = res.stats;
+    $('resultStats').textContent =
+      state.pages + (state.pages === 1 ? ' page' : ' pages') + ' · ' +
+      fmtNum(s.words) + ' words · ' +
+      s.headings + (s.headings === 1 ? ' heading' : ' headings') + ' · ' +
+      s.tables + (s.tables === 1 ? ' table' : ' tables') + ' · ' +
+      s.listItems + ' list items · ' +
+      s.links + (s.links === 1 ? ' link' : ' links') + ' · ' +
+      s.images + (s.images === 1 ? ' image' : ' images');
+    // Scanned-looking documents: images but almost no text.
+    if (ext.words < 40 && ext.images.length > 0) {
+      $('scanNote').innerHTML = 'This document looks scanned: it holds ' + ext.images.length + ' image' + (ext.images.length === 1 ? '' : 's') + ' but only ' + ext.words + ' words of text. The images are referenced below — for the text itself, run <a href="ocr-pdf.html">OCR PDF</a> first.';
+      $('scanNote').classList.add('on');
+    } else {
+      $('scanNote').classList.remove('on');
+    }
+    $('mdRaw').textContent = res.markdown;
+    renderPreview(res);
+    $('copyBtn').textContent = 'Copy Markdown';
+    updateDownloadButtons();
+    $('resultPanel').classList.add('on');
+    $('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function outputImages() {
+    if (!state.extracted || !state.result || !state.result.stats) return [];
+    var refs = {};
+    state.result.blocks.forEach(function (b) { if (b.type === 'image') refs[b.ref] = true; });
+    return state.extracted.images.filter(function (im) { return refs[im.ref]; });
+  }
+  function updateDownloadButtons() {
+    var imgs = outputImages();
+    var hasImages = imgs.length > 0;
+    $('downloadZipBtn').style.display = hasImages ? '' : 'none';
+    $('downloadMdOnlyBtn').style.display = hasImages ? '' : 'none';
+    $('downloadMdBtn').style.display = hasImages ? 'none' : '';
+  }
+
+  /* ---------- safe preview renderer ----------
+     Renders OUR OWN block model (never the raw document text as
+     HTML): every node is built with createElement and every piece
+     of document text goes through textContent. */
+  function appendInline(parent, runs) {
+    var merged = [];
+    (runs || []).forEach(function (r) {
+      if (!r.t) return;
+      var key = (r.bold ? 'b' : '') + (r.italic ? 'i' : '') + (r.mono ? 'm' : '') + '|' + (r.link || '');
+      var last = merged.length ? merged[merged.length - 1] : null;
+      if (last && last.key === key) last.t += r.t;
+      else merged.push({ key: key, t: r.t, bold: r.bold, italic: r.italic, mono: r.mono, link: r.link });
+    });
+    merged.forEach(function (r) {
+      var node;
+      if (r.mono) { node = document.createElement('code'); node.textContent = r.t; }
+      else if (r.bold && r.italic) { node = document.createElement('strong'); var em = document.createElement('em'); em.textContent = r.t; node.appendChild(em); }
+      else if (r.bold) { node = document.createElement('strong'); node.textContent = r.t; }
+      else if (r.italic) { node = document.createElement('em'); node.textContent = r.t; }
+      else node = document.createTextNode(r.t);
+      if (r.link) {
+        if (/^(https?:|mailto:)/i.test(r.link)) {
+          var a = document.createElement('a');
+          a.href = r.link; a.target = '_blank'; a.rel = 'noopener';
+          a.appendChild(node);
+          parent.appendChild(a);
+        } else {
+          parent.appendChild(node);
+        }
+      } else {
+        parent.appendChild(node);
+      }
+    });
+  }
+  function renderPreview(res) {
+    revokeObjectUrls();
+    var host = $('mdPreview');
+    while (host.firstChild) host.removeChild(host.firstChild);
+    var imageUrls = {};
+    outputImages().forEach(function (im) {
+      var u = URL.createObjectURL(im.data);
+      state.objectUrls.push(u);
+      imageUrls[im.ref] = u;
+    });
+    res.blocks.forEach(function (b) {
+      var el;
+      if (b.type === 'heading') {
+        el = document.createElement('h' + Math.min(4, b.level));
+        appendInline(el, b.runs);
+        host.appendChild(el);
+      } else if (b.type === 'para') {
+        el = document.createElement('p');
+        appendInline(el, b.runs);
+        host.appendChild(el);
+      } else if (b.type === 'list') {
+        el = document.createElement(b.ordered ? 'ol' : 'ul');
+        b.items.forEach(function (it) {
+          var li = document.createElement('li');
+          appendInline(li, it.runs);
+          el.appendChild(li);
+        });
+        host.appendChild(el);
+      } else if (b.type === 'table') {
+        el = document.createElement('table');
+        b.rows.forEach(function (row, ri) {
+          var tr = document.createElement('tr');
+          row.forEach(function (cell) {
+            var td = document.createElement(ri === 0 ? 'th' : 'td');
+            appendInline(td, cell);
+            tr.appendChild(td);
+          });
+          el.appendChild(tr);
+        });
+        host.appendChild(el);
+      } else if (b.type === 'code') {
+        el = document.createElement('pre');
+        var code = document.createElement('code');
+        code.textContent = b.lines.join('\n');
+        el.appendChild(code);
+        host.appendChild(el);
+      } else if (b.type === 'image') {
+        el = document.createElement('img');
+        el.alt = b.alt;
+        if (imageUrls[b.ref]) el.src = imageUrls[b.ref];
+        host.appendChild(el);
+      } else if (b.type === 'pagebreak') {
+        el = document.createElement('div');
+        el.className = 'pagediv';
+        el.textContent = 'Page ' + b.page;
+        host.appendChild(el);
+      }
+    });
+  }
+
+  /* ---------- downloads / copy ---------- */
+  function saveBlob(blob, name) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  function mdBlob() {
+    return new Blob(['\ufeff' + state.result.markdown], { type: 'text/markdown;charset=utf-8' });
+  }
+  $('copyBtn').addEventListener('click', function () {
+    if (!state.result) return;
+    var btn = $('copyBtn');
+    function done() {
+      btn.textContent = 'Copied ✓';
+      setTimeout(function () { btn.textContent = 'Copy Markdown'; }, 2000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(state.result.markdown).then(done, function () { fallbackCopy(done); });
+    } else fallbackCopy(done);
+  });
+  function fallbackCopy(done) {
+    var ta = document.createElement('textarea');
+    ta.value = state.result.markdown;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    done();
+  }
+  $('downloadMdBtn').addEventListener('click', function () {
+    if (state.result) saveBlob(mdBlob(), state.base + '.md');
+  });
+  $('downloadMdOnlyBtn').addEventListener('click', function () {
+    if (state.result) saveBlob(mdBlob(), state.base + '.md');
+  });
+  $('downloadZipBtn').addEventListener('click', async function () {
+    if (!state.result) return;
+    var zip = new JSZip();
+    zip.file(state.base + '.md', state.result.markdown);
+    outputImages().forEach(function (im) { zip.file(im.ref, im.data); });
+    var blob = await zip.generateAsync({ type: 'blob' });
+    saveBlob(blob, state.base + '_markdown.zip');
+  });
+
+  /* ---------- tabs ---------- */
+  function showTab(which) {
+    $('tabMd').classList.toggle('on', which === 'md');
+    $('tabPreview').classList.toggle('on', which === 'preview');
+    $('mdRaw').classList.toggle('on', which === 'md');
+    $('mdPreview').classList.toggle('on', which === 'preview');
+  }
+  $('tabMd').addEventListener('click', function () { showTab('md'); });
+  $('tabPreview').addEventListener('click', function () { showTab('preview'); });
+
+  /* ---------- options: instant re-render from cached extraction ---------- */
+  ['optHeadings', 'optTables', 'optImages', 'optMarkers'].forEach(function (id) {
+    $(id).addEventListener('change', function () { if (state.extracted) convertNow(); });
+  });
+
+  /* ---------- reset ---------- */
+  function startOver() {
+    revokeObjectUrls();
+    if (state.pdf) { try { state.pdf.destroy(); } catch (e) {} state.pdf = null; }
+    state.file = null; state.base = 'document'; state.extracted = null; state.result = null; state.pages = 0;
+    $('fileInput').value = '';
+    $('fileCard').classList.remove('on');
+    $('docStats').classList.remove('on');
+    $('emptyPanel').classList.remove('on');
+    $('resultPanel').classList.remove('on');
+    hideError();
+    setProcessing(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  $('startOverBtn').addEventListener('click', startOver);
+  $('removeFileBtn').addEventListener('click', startOver);
+
+  /* ---------- dropzone wiring ---------- */
+  var drop = $('drop');
+  drop.addEventListener('click', function () { $('fileInput').click(); });
+  $('pickBtn').addEventListener('click', function (e) { e.stopPropagation(); $('fileInput').click(); });
+  $('fileInput').addEventListener('change', function (e) {
+    if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+  });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+  });
+  drop.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  document.addEventListener('dragover', function (e) { e.preventDefault(); });
+  document.addEventListener('drop', function (e) { e.preventDefault(); });
+})();
+</script>
+</body>
+                           </html>
