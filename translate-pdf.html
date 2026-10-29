@@ -859,12 +859,14 @@ var TranslateCore = (function () {
     var tr = it.transform || [1, 0, 0, 1, 0, 0];
     var size = Math.hypot(tr[2] || 0, tr[3] || 0);
     if (!size || !isFinite(size)) size = it.height || 0;
-    var scaleX = Math.hypot(tr[0] || 0, tr[1] || 0) || 1;
     return {
       str: it.str,
       x: tr[4] || 0,
       y: tr[5] || 0,
-      endX: (tr[4] || 0) + (it.width || 0) * scaleX,
+      /* pdf.js item.width is already in user-space units — scaling
+         it again (as this once did) inflated every endX ~11x and
+         hid the true gaps between items. */
+      endX: (tr[4] || 0) + (it.width || 0),
       size: size
     };
   }
@@ -888,24 +890,69 @@ var TranslateCore = (function () {
     });
     return raw.map(function (L) {
       var sorted = L.items.slice().sort(function (a, b) { return a.x - b.x; });
-      var text = '', prev = null;
+      /* Split the line into segments at column-gutter gaps: a
+         horizontal gap far wider than a word space means a new
+         column starts, not a new word. */
+      var segments = [];
+      var seg = null, prev = null;
       sorted.forEach(function (m) {
+        var lim = Math.max(16, 1.8 * Math.max(m.size, prev ? prev.size : 0));
+        var wsOnly = !/\S/.test(m.str);
+        /* A break is a wide gap before an item — or a whitespace-only
+           item wide enough to BE the gap (pdf.js fills a column
+           gutter with one long space item that would otherwise
+           bridge the two columns into a single segment). */
+        if (prev && ((m.x - prev.endX) > lim || (wsOnly && (m.endX - m.x) > lim))) {
+          segments.push(seg); seg = null; prev = null;
+          if (wsOnly) return;
+        }
+        if (!seg) seg = { text: '', x: m.x, endX: m.endX };
         if (prev) {
           var gap = m.x - prev.endX;
-          if (gap > 0.25 * Math.max(m.size, prev.size) && !/^\s/.test(m.str) && !/\s$/.test(text)) text += ' ';
+          if (gap > 0.25 * Math.max(m.size, prev.size) && !/^\s/.test(m.str) && !/\s$/.test(seg.text)) seg.text += ' ';
         }
-        text += m.str;
+        seg.text += m.str;
+        if (m.endX > seg.endX) seg.endX = m.endX;
         prev = m;
       });
-      return { text: text, size: L.size, y: L.y };
+      if (seg) segments.push(seg);
+      return {
+        text: segments.map(function (s) { return s.text; }).join(' '),
+        size: L.size, y: L.y, segments: segments
+      };
     });
   }
-  function itemsToParagraphs(items) {
-    var lines = groupLines(items).filter(function (L) { return L.text.trim().length > 0; });
+  /* Two-column detection: several lines split at (roughly) the same
+     vertical gutter, with real content on both sides. Conservative
+     on purpose — a false positive would scramble a normal document,
+     a false negative just keeps the old row-by-row order. */
+  function detectColumns(lines) {
+    var splits = [];
+    lines.forEach(function (L) {
+      if (L.segments.length === 2) {
+        splits.push((L.segments[0].endX + L.segments[1].x) / 2);
+      }
+    });
+    if (splits.length < 2) return null;
+    var sorted = splits.slice().sort(function (a, b) { return a - b; });
+    var gutter = sorted[Math.floor(sorted.length / 2)];
+    var agree = splits.filter(function (g) { return Math.abs(g - gutter) <= 24; }).length;
+    if (agree < Math.ceil(splits.length * 0.6)) return null;
+    var left = 0, right = 0;
+    lines.forEach(function (L) {
+      L.segments.forEach(function (s) {
+        if (s.endX <= gutter + 2) left++;
+        else if (s.x >= gutter - 2) right++;
+      });
+    });
+    if (left < 3 || right < 3) return null;
+    return { gutter: gutter };
+  }
+  function joinParas(units) {
     var paras = [];
     var cur = null, prev = null;
-    lines.forEach(function (L) {
-      var t = L.text.replace(/\s+/g, ' ').trim();
+    units.forEach(function (L) {
+      var t = L.text;
       if (!cur) { cur = t; prev = L; return; }
       var gap = prev.y - L.y;
       var lh = Math.max(prev.size, L.size, 1) * 1.2;
@@ -917,6 +964,43 @@ var TranslateCore = (function () {
     });
     if (cur) paras.push(cur);
     return paras;
+  }
+  function cleanText(s) { return String(s).replace(/\s+/g, ' ').trim(); }
+  function itemsToParagraphs(items) {
+    var lines = groupLines(items).filter(function (L) { return L.text.trim().length > 0; });
+    var cols = detectColumns(lines);
+    if (!cols) {
+      return joinParas(lines.map(function (L) {
+        return { text: cleanText(L.text), size: L.size, y: L.y };
+      }));
+    }
+    /* Column-aware reading order (2026-10-29): a two-column page
+       read row by row interleaves the columns — the user's course
+       index came out with Unit 2 interrupted by Unit 7 and item
+       numbers running 1, 2, 1, 3. Read instead: full-width lines
+       above the columns, the left column top to bottom, the right
+       column, any full-width lines caught between, then those
+       below. */
+    var units = [];
+    lines.forEach(function (L) {
+      L.segments.forEach(function (s) {
+        var t = cleanText(s.text);
+        if (!t) return;
+        var col = 'S';
+        if (s.endX <= cols.gutter + 2) col = 'L';
+        else if (s.x >= cols.gutter - 2) col = 'R';
+        units.push({ text: t, size: L.size, y: L.y, col: col });
+      });
+    });
+    var colUnits = units.filter(function (u) { return u.col !== 'S'; });
+    var topY = Math.max.apply(null, colUnits.map(function (u) { return u.y; }));
+    var botY = Math.min.apply(null, colUnits.map(function (u) { return u.y; }));
+    var head = units.filter(function (u) { return u.col === 'S' && u.y > topY; });
+    var tail = units.filter(function (u) { return u.col === 'S' && u.y < botY; });
+    var mid = units.filter(function (u) { return u.col === 'S' && u.y <= topY && u.y >= botY; });
+    var left = units.filter(function (u) { return u.col === 'L'; });
+    var right = units.filter(function (u) { return u.col === 'R'; });
+    return joinParas(head).concat(joinParas(left), joinParas(right), joinParas(mid), joinParas(tail));
   }
 
   /* ---------------- document plumbing ---------------- */
