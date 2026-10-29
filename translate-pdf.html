@@ -1031,21 +1031,32 @@ var TranslateBuilder = (function () {
   var FONT_MAIN_URL = 'https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf';
   var FONT_ARABIC_URL = 'https://cdn.jsdelivr.net/npm/@expo-google-fonts/amiri@0.2.3/Amiri_400Regular.ttf';
 
-  function wrapLines(font, text, size, maxW) {
+  /* `measure`, when given, transforms every string before it is
+     measured with the embedded font. For Arabic-script targets it
+     MUST be TranslateCore.shapeArabic: pdf-lib caches glyph
+     encodings per font, and measuring LOGICAL Arabic text (whose
+     layout glyph count differs from its character count — hamza
+     marks, lam-alef) poisons that cache, so later drawText calls
+     on shaped text write wrong glyphs (إجراءات came out with two
+     garbage glyphs in a real user document, 2026-10-29, while the
+     TXT was perfect). Measuring the shaped string — exactly what
+     will be drawn — is both safe and more accurate. */
+  function wrapLines(font, text, size, maxW, measure) {
+    function width(s) { return font.widthOfTextAtSize(measure ? measure(s) : s, size); }
     var words = String(text == null ? '' : text).split(/\s+/).filter(Boolean);
     var lines = [];
     var cur = '';
     function addWord(w) {
-      if (font.widthOfTextAtSize(w, size) <= maxW) {
+      if (width(w) <= maxW) {
         if (!cur) cur = w;
-        else if (font.widthOfTextAtSize(cur + ' ' + w, size) <= maxW) cur += ' ' + w;
+        else if (width(cur + ' ' + w) <= maxW) cur += ' ' + w;
         else { lines.push(cur); cur = w; }
         return;
       }
       if (cur) { lines.push(cur); cur = ''; }
       var part = '';
       Array.from(w).forEach(function (ch) {
-        if (font.widthOfTextAtSize(part + ch, size) <= maxW || !part) part += ch;
+        if (width(part + ch) <= maxW || !part) part += ch;
         else { lines.push(part); part = ch; }
       });
       cur = part;
@@ -1140,7 +1151,7 @@ var TranslateBuilder = (function () {
         var isTitle = pi === 0 && pai === 0 && String(para).length < 60 && totalParas > 1;
         var size = isTitle ? 15 : BODY;
         var lh = size * 1.4;
-        var lines = wrapLines(font, para, size, maxW);
+        var lines = wrapLines(font, para, size, maxW, isArabicScript ? TranslateCore.shapeArabic : null);
         lines.forEach(function (line) {
           if (y - lh < M) { page = doc.addPage([W, H]); y = H - M; }
           var drawn = line, x = M;
