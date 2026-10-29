@@ -922,31 +922,44 @@ var TranslateCore = (function () {
       };
     });
   }
-  /* Two-column detection: several lines split at (roughly) the same
-     vertical gutter, with real content on both sides. Conservative
-     on purpose — a false positive would scramble a normal document,
-     a false negative just keeps the old row-by-row order. */
+  /* Two-column detection. The first version keyed on the gutter
+     midpoint between segment END and next start — real columns have
+     ragged right edges, so the midpoints scattered and detection
+     never fired on the user's actual document (2026-10-29, his
+     source PDF: left column x=121, right x=333, midpoints ranged
+     244-316). Column STARTS are stable, so: cluster segment start
+     positions; the two dominant clusters at least 60pt apart, with
+     at least 3 segments each, are the column edges. Conservative on
+     purpose — a false positive would scramble a normal document, a
+     false negative just keeps the old row-by-row order. */
   function detectColumns(lines) {
-    var splits = [];
+    var starts = [];
     lines.forEach(function (L) {
-      if (L.segments.length === 2) {
-        splits.push((L.segments[0].endX + L.segments[1].x) / 2);
+      L.segments.forEach(function (s) { starts.push(s.x); });
+    });
+    if (starts.length < 6) return null;
+    starts.sort(function (a, b) { return a - b; });
+    var clusters = [];
+    starts.forEach(function (x) {
+      var c = clusters.length ? clusters[clusters.length - 1] : null;
+      if (c && x - c.max <= 8) { c.max = x; c.count++; }
+      else clusters.push({ min: x, max: x, count: 1 });
+    });
+    var best = null;
+    for (var i = 0; i < clusters.length; i++) {
+      for (var j = i + 1; j < clusters.length; j++) {
+        var a = clusters[i], b = clusters[j];
+        if (b.min - a.min < 60) continue;
+        if (a.count < 3 || b.count < 3) continue;
+        var score = Math.min(a.count, b.count);
+        if (!best || score > best.score) {
+          best = { leftX: a.min, rightX: b.min, score: score };
+        }
       }
-    });
-    if (splits.length < 2) return null;
-    var sorted = splits.slice().sort(function (a, b) { return a - b; });
-    var gutter = sorted[Math.floor(sorted.length / 2)];
-    var agree = splits.filter(function (g) { return Math.abs(g - gutter) <= 24; }).length;
-    if (agree < Math.ceil(splits.length * 0.6)) return null;
-    var left = 0, right = 0;
-    lines.forEach(function (L) {
-      L.segments.forEach(function (s) {
-        if (s.endX <= gutter + 2) left++;
-        else if (s.x >= gutter - 2) right++;
-      });
-    });
-    if (left < 3 || right < 3) return null;
-    return { gutter: gutter };
+    }
+    if (!best) return null;
+    best.splitX = (best.leftX + best.rightX) / 2;
+    return best;
   }
   function joinParas(units) {
     var paras = [];
@@ -986,9 +999,14 @@ var TranslateCore = (function () {
       L.segments.forEach(function (s) {
         var t = cleanText(s.text);
         if (!t) return;
-        var col = 'S';
-        if (s.endX <= cols.gutter + 2) col = 'L';
-        else if (s.x >= cols.gutter - 2) col = 'R';
+        /* A segment is full-width (spanning) when it starts in the
+           left zone but reaches into the right column's territory —
+           titles and footer lines do this; genuine column segments
+           never reach the other column's edge. */
+        var col;
+        if (s.x < cols.splitX && s.endX > cols.rightX - 4) col = 'S';
+        else if (s.x < cols.splitX) col = 'L';
+        else col = 'R';
         units.push({ text: t, size: L.size, y: L.y, col: col });
       });
     });
