@@ -990,10 +990,8 @@ var TranslateCore = (function () {
     /* Column-aware reading order (2026-10-29): a two-column page
        read row by row interleaves the columns — the user's course
        index came out with Unit 2 interrupted by Unit 7 and item
-       numbers running 1, 2, 1, 3. Read instead: full-width lines
-       above the columns, the left column top to bottom, the right
-       column, any full-width lines caught between, then those
-       below. */
+       numbers running 1, 2, 1, 3. Read in horizontal bands
+       instead (see below). */
     var units = [];
     lines.forEach(function (L) {
       L.segments.forEach(function (s) {
@@ -1010,15 +1008,33 @@ var TranslateCore = (function () {
         units.push({ text: t, size: L.size, y: L.y, col: col });
       });
     });
-    var colUnits = units.filter(function (u) { return u.col !== 'S'; });
-    var topY = Math.max.apply(null, colUnits.map(function (u) { return u.y; }));
-    var botY = Math.min.apply(null, colUnits.map(function (u) { return u.y; }));
-    var head = units.filter(function (u) { return u.col === 'S' && u.y > topY; });
-    var tail = units.filter(function (u) { return u.col === 'S' && u.y < botY; });
-    var mid = units.filter(function (u) { return u.col === 'S' && u.y <= topY && u.y >= botY; });
-    var left = units.filter(function (u) { return u.col === 'L'; });
-    var right = units.filter(function (u) { return u.col === 'R'; });
-    return joinParas(head).concat(joinParas(left), joinParas(right), joinParas(mid), joinParas(tail));
+    /* Reading order = horizontal bands (2026-10-29, second fix):
+       walk the units top to bottom; a full-width unit flushes the
+       column block accumulated above it (left column, then right)
+       and then takes its own place. The first scheme sorted
+       full-width lines by the column block's top/bottom edges
+       (head / mid / tail): on his real page 2, the intro sentence
+       sits BELOW the Module X block but ABOVE the workshops table,
+       so it counted as "mid" and was dumped after the right column
+       — the sentence landed at the very end of the page, torn from
+       its continuation line. Bands keep every full-width line where
+       it actually sits on the page. */
+    var out = [], pendingS = [], pendingL = [], pendingR = [];
+    function flushCols() {
+      if (pendingL.length || pendingR.length) {
+        out = out.concat(joinParas(pendingL), joinParas(pendingR));
+        pendingL = []; pendingR = [];
+      }
+    }
+    function flushS() {
+      if (pendingS.length) { out = out.concat(joinParas(pendingS)); pendingS = []; }
+    }
+    units.forEach(function (u) {
+      if (u.col === 'S') { flushCols(); pendingS.push(u); }
+      else { flushS(); if (u.col === 'L') pendingL.push(u); else pendingR.push(u); }
+    });
+    flushCols(); flushS();
+    return out;
   }
 
   /* ---------------- document plumbing ---------------- */
@@ -1123,8 +1139,8 @@ var TranslateCore = (function () {
    source page starts a new output page, overflow flows onward, and
    a short first paragraph of the first page becomes a 15 pt title.
    Fonts: DejaVu Sans for Latin/Greek/Cyrillic/Hebrew targets, Amiri
-   for Arabic-script targets (lines shaped with
-   TranslateCore.shapeArabic and right-aligned); Hebrew lines are
+   for Arabic-script targets (real fontkit layout, glyphs drawn in
+   visual order — see drawArabicLine); Hebrew lines are
    word-reversed and right-aligned.
    ===================================================================== */
 var TranslateBuilder = (function () {
@@ -1134,15 +1150,12 @@ var TranslateBuilder = (function () {
   var FONT_ARABIC_URL = 'https://cdn.jsdelivr.net/npm/@expo-google-fonts/amiri@0.2.3/Amiri_400Regular.ttf';
 
   /* `measure`, when given, transforms every string before it is
-     measured with the embedded font. For Arabic-script targets it
-     MUST be TranslateCore.shapeArabic: pdf-lib caches glyph
-     encodings per font, and measuring LOGICAL Arabic text (whose
-     layout glyph count differs from its character count — hamza
-     marks, lam-alef) poisons that cache, so later drawText calls
-     on shaped text write wrong glyphs (إجراءات came out with two
-     garbage glyphs in a real user document, 2026-10-29, while the
-     TXT was perfect). Measuring the shaped string — exactly what
-     will be drawn — is both safe and more accurate. */
+     measured with the embedded font. (Arabic-script targets no
+     longer use this function at all — they wrap and draw with real
+     fontkit layout, see wrapArabic/drawArabicLine below. History:
+     measuring LOGICAL Arabic text with pdf-lib's widthOfTextAtSize
+     poisoned its glyph-encoding cache and corrupted later drawText
+     output in a real user document, 2026-10-29.) */
   function wrapLines(font, text, size, maxW, measure) {
     function width(s) { return font.widthOfTextAtSize(measure ? measure(s) : s, size); }
     var words = String(text == null ? '' : text).split(/\s+/).filter(Boolean);
@@ -1220,6 +1233,212 @@ var TranslateBuilder = (function () {
     return groups.reverse().map(function (g) { return g.str; }).join(' ');
   }
 
+  /* ---- Arabic-script text: real shaping, drawn glyph by glyph ----
+     Three hand-rolled approaches failed in the user's hands during
+     2026-10-28/29: drawing logical text (pdf-lib writes glyphs in
+     logical order, so RTL lines come out mirrored), hand-shaping to
+     Unicode presentation forms (those cmap glyphs are metric twins
+     of the real contextual forms but the surrounding bidi handling
+     kept tearing embedded numbers/URLs apart), and run-by-run
+     drawText of shaped strings (digit groups inside RTL lines ended
+     up reversed, dates and emails scattered — the user's verdict:
+     "the words are scattered, incomprehensible").
+     What remains is what real text engines do: shape the LOGICAL
+     line with fontkit's own layout (the same engine pdf-lib encodes
+     with — verified: pdf-lib's encodeText of a logical string yields
+     exactly fontkit layout's glyph ids), then write those glyphs
+     into the content stream in VISUAL order with explicit positions.
+     Bidi at the word level: an Arabic word is one unit (its glyphs
+     reverse); a maximal run of non-Arabic words is one island unit
+     drawn in its natural left-to-right order (phones, emails, URLs
+     stay solid blocks); units are laid out right to left.
+     pdf-lib's font is only ever ENCODED (never drawn from) on this
+     path: the encodeText calls register each glyph's Unicode mapping
+     so the embedded font still gets a working ToUnicode layer. */
+  function arAdvanceSum(run) {
+    var t = 0;
+    run.positions.forEach(function (p) { t += p.xAdvance; });
+    return t;
+  }
+  function arWidth(fk, text, size) {
+    return arAdvanceSum(fk.layout(text)) * size / fk.unitsPerEm;
+  }
+  function wrapArabic(fk, text, size, maxW) {
+    var words = String(text == null ? '' : text).split(/\s+/).filter(Boolean);
+    var lines = [];
+    var cur = '';
+    function fits(s) { return arWidth(fk, s, size) <= maxW; }
+    words.forEach(function (w) {
+      if (fits(w)) {
+        if (!cur) cur = w;
+        else if (fits(cur + ' ' + w)) cur += ' ' + w;
+        else { lines.push(cur); cur = w; }
+        return;
+      }
+      if (cur) { lines.push(cur); cur = ''; }
+      var part = '';
+      Array.from(w).forEach(function (ch) {
+        if (fits(part + ch) || !part) part += ch;
+        else { lines.push(part); part = ch; }
+      });
+      cur = part;
+    });
+    if (cur) lines.push(cur);
+    return lines.length ? lines : [''];
+  }
+  function visualUnitsAr(line) {
+    var words = String(line).split(' ').filter(Boolean);
+    var units = [];
+    words.forEach(function (w) {
+      var arab = /[؀-ۿ]/.test(w);
+      if (!arab && units.length && !units[units.length - 1].arab) {
+        units[units.length - 1].text += ' ' + w;
+      } else {
+        units.push({ text: w, arab: arab });
+      }
+    });
+    return units.reverse();
+  }
+  function fmtNum(n) { return String(Math.round(n * 1000) / 1000); }
+  /* Returns the content-stream text for one line (accumulated per
+     page and attached at the end of buildPdf). Each unit is ONE TJ
+     run: extractors see whole words, not per-glyph fragments — a
+     first version positioned every glyph with its own Tm and both
+     pdf.js and poppler shredded the text layer into single letters.
+     TJ numbers carry the rare layout-vs-glyph advance deltas (kern
+     pairs) so positions stay exact. */
+  function drawArabicLine(font, fk, line, rightX, baselineY, size, color, usedGlyphs) {
+    var units = visualUnitsAr(line);
+    if (!units.length) return '';
+    font.encodeText(line); /* partial ToUnicode fallback (see fixArabicToUnicode) */
+    var scale = size / fk.unitsPerEm;
+    var spaceAdv = fk.layout(' ').positions[0].xAdvance;
+    var laid = units.map(function (u) {
+      var run = fk.layout(u.text);
+      if (usedGlyphs) {
+        run.glyphs.forEach(function (g) {
+          if (!usedGlyphs[g.id]) usedGlyphs[g.id] = g.codePoints;
+        });
+      }
+      return { run: run, arab: u.arab, w: arAdvanceSum(run) };
+    });
+    var total = spaceAdv * (laid.length - 1);
+    laid.forEach(function (L) { total += L.w; });
+    var x = rightX - total * scale;
+    var out = 'q\n' + color.red + ' ' + color.green + ' ' + color.blue + ' rg\nBT\n/FAmiri ' + size + ' Tf\n';
+    laid.forEach(function (L, ui) {
+      var glyphs = L.run.glyphs, pos = L.run.positions;
+      /* fontkit layout already returns an RTL run's glyphs in
+         VISUAL order (its first glyph for البحرية is ة, the last
+         letter). Reversing them again mirrored every word on the
+         page — caught by poppler bbox geometry (the ية fragment
+         sat at the word's right edge), 2026-10-29. Paint as-is. */
+      var order = glyphs.map(function (_, i) { return i; });
+      var parts = [];
+      var hexBuf = '';
+      order.forEach(function (i) {
+        var hex = glyphs[i].id.toString(16);
+        while (hex.length < 4) hex = '0' + hex;
+        hexBuf += hex;
+        var delta = pos[i].xAdvance - glyphs[i].advanceWidth;
+        if (delta !== 0) {
+          parts.push('<' + hexBuf + '>');
+          parts.push(fmtNum(-delta * 1000 / fk.unitsPerEm));
+          hexBuf = '';
+        }
+      });
+      if (hexBuf) parts.push('<' + hexBuf + '>');
+      out += '1 0 0 1 ' + fmtNum(x) + ' ' + fmtNum(baselineY) + ' Tm\n[' + parts.join(' ') + '] TJ\n';
+      x += L.w * scale;
+      if (ui < laid.length - 1) x += spaceAdv * scale;
+    });
+    out += 'ET\nQ\n';
+    return out;
+  }
+
+  /* pdf-lib's embedded-font tables only cover glyphs reachable
+     from the font's cmap, but this builder draws GSUB contextual
+     glyphs. Two consequences, both fixed in this post-pass:
+     (1) ToUnicode: unmapped glyph ids extract as random scripts —
+     replaced here with a complete map (every cmap glyph plus every
+     glyph actually drawn; fontkit layout glyphs carry their SOURCE
+     codepoints).
+     (2) /W widths: glyphs missing from pdf-lib's width table fall
+     back to the default width (1000 units — a full em per glyph),
+     so TJ-drawn words sprawled across the page at ~3x width
+     (proven by bbox measurement, 2026-10-29). The CIDFont's /W is
+     rewritten here with fontkit's true advance for every glyph id
+     up to the largest drawn one. */
+  function utf16beHex(cp) {
+    var s = '';
+    var units = [];
+    if (cp > 0xFFFF) {
+      var v = cp - 0x10000;
+      units = [0xD800 + (v >> 10), 0xDC00 + (v & 0x3FF)];
+    } else units = [cp];
+    units.forEach(function (u) {
+      var h = u.toString(16);
+      while (h.length < 4) h = '0' + h;
+      s += h;
+    });
+    return s;
+  }
+  async function fixArabicToUnicode(PDFLib, bytes, fk, usedGlyphs) {
+    var map = {};
+    fk.characterSet.forEach(function (cp) {
+      var g = fk.glyphForCodePoint(cp);
+      if (g && !map[g.id]) map[g.id] = [cp];
+    });
+    Object.keys(usedGlyphs).forEach(function (id) { map[id] = usedGlyphs[id]; });
+    var entries = Object.keys(map).map(function (id) {
+      var hid = Number(id).toString(16);
+      while (hid.length < 4) hid = '0' + hid;
+      var val = map[id].map(utf16beHex).join('');
+      return '<' + hid + '> <' + val + '>';
+    });
+    var cmap = '/CIDInit /ProcSet findresource begin\n12 dict begin\nbegincmap\n' +
+      '/CIDSystemInfo <<\n  /Registry (Adobe)\n  /Ordering (UCS)\n  /Supplement 0\n>> def\n' +
+      '/CMapName /Adobe-Identity-UCS def\n/CMapType 2 def\n' +
+      '1 begincodespacerange\n<0000> <ffff>\nendcodespacerange\n';
+    for (var i = 0; i < entries.length; i += 100) {
+      var chunk = entries.slice(i, i + 100);
+      cmap += chunk.length + ' beginbfchar\n' + chunk.join('\n') + '\nendbfchar\n';
+    }
+    cmap += 'endcmap\nCMapName currentdict /CMap defineresource pop\nend\nend';
+    var doc2 = await PDFLib.PDFDocument.load(bytes);
+    var ctx = doc2.context;
+    var fontDict = null;
+    var cidFont = null;
+    ctx.enumerateIndirectObjects().forEach(function (pair) {
+      var obj = pair[1];
+      if (obj instanceof PDFLib.PDFDict) {
+        var st = obj.get(PDFLib.PDFName.of('Subtype'));
+        if (st && st.toString() === '/Type0') fontDict = obj;
+        if (st && st.toString() === '/CIDFontType2') cidFont = obj;
+      }
+    });
+    if (fontDict) {
+      fontDict.set(PDFLib.PDFName.of('ToUnicode'), ctx.register(ctx.flateStream(cmap)));
+    }
+    if (cidFont) {
+      var maxId = 0;
+      Object.keys(map).forEach(function (id) { if (+id > maxId) maxId = +id; });
+      var inner = PDFLib.PDFArray.withContext(ctx);
+      for (var gid = 0; gid <= maxId; gid++) {
+        var gl = fk.getGlyph(gid);
+        var wdt = gl ? Math.round(gl.advanceWidth * 1000 / fk.unitsPerEm) : 0;
+        inner.push(PDFLib.PDFNumber.of(wdt));
+      }
+      var wArr = PDFLib.PDFArray.withContext(ctx);
+      wArr.push(PDFLib.PDFNumber.of(0));
+      wArr.push(inner);
+      cidFont.set(PDFLib.PDFName.of('W'), wArr);
+      cidFont.set(PDFLib.PDFName.of('DW'), PDFLib.PDFNumber.of(0));
+    }
+    if (!fontDict && !cidFont) return bytes;
+    return await doc2.save();
+  }
+
   async function buildPdf(opts) {
     var PDFLib = opts.PDFLib;
     var plan = TranslateCore.planOutput(opts.target);
@@ -1246,26 +1465,49 @@ var TranslateBuilder = (function () {
     }
     var totalParas = 0;
     pages.forEach(function (p) { totalParas += (p.paragraphs || []).length; });
+    /* Standalone fontkit instance for Arabic-script layout: all
+       measuring and shaping happens here, never through pdf-lib's
+       font methods (see the cache-poisoning note above). */
+    var fkArabic = null;
+    var usedGlyphs = {};
+    var arStreams = new Map();
+    if (isArabicScript && opts.fontkit && opts.fontkit.create) {
+      fkArabic = opts.fontkit.create(opts.fontBytes.arabic);
+    }
+    function arInitPage(p) {
+      p.node.setFontDictionary(PDFLib.PDFName.of('FAmiri'), font.ref);
+      if (!arStreams.has(p)) arStreams.set(p, []);
+      return p;
+    }
     pages.forEach(function (pg, pi) {
       var page = doc.addPage([W, H]);
+      if (fkArabic) arInitPage(page);
       var y = H - M;
       (pg.paragraphs || []).forEach(function (para, pai) {
         var isTitle = pi === 0 && pai === 0 && String(para).length < 60 && totalParas > 1;
         var size = isTitle ? 15 : BODY;
         var lh = size * 1.4;
-        var lines = wrapLines(font, para, size, maxW, isArabicScript ? TranslateCore.shapeArabic : null);
+        if (isArabicScript && fkArabic) {
+          wrapArabic(fkArabic, para, size, maxW).forEach(function (line) {
+            if (y - lh < M) { page = arInitPage(doc.addPage([W, H])); y = H - M; }
+            arStreams.get(page).push(drawArabicLine(font, fkArabic, line, W - M, y - size, size,
+              isTitle ? inkTitle : inkBody, usedGlyphs));
+            y -= lh;
+          });
+          y -= isTitle ? 10 : 8;
+          return;
+        }
+        var lines = wrapLines(font, para, size, maxW, null);
         lines.forEach(function (line) {
           if (y - lh < M) { page = doc.addPage([W, H]); y = H - M; }
           var drawn = line, x = M;
           if (plan.rtl) {
-            drawn = isArabicScript
-              ? TranslateCore.shapeArabic(line)
-              : reverseHebrewLine(line);
+            drawn = reverseHebrewLine(line);
             x = W - M - font.widthOfTextAtSize(drawn, size);
           }
           if (plan.rtl) {
             var cx = x;
-            splitVisualRuns(drawn, isArabicScript).forEach(function (run) {
+            splitVisualRuns(drawn, false).forEach(function (run) {
               page.drawText(run, {
                 x: cx, y: y - size, size: size, font: font,
                 color: isTitle ? inkTitle : inkBody
@@ -1283,12 +1525,24 @@ var TranslateBuilder = (function () {
         y -= isTitle ? 10 : 8;
       });
     });
-    return await doc.save();
+    if (fkArabic) {
+      arStreams.forEach(function (chunks, p) {
+        p.node.set(PDFLib.PDFName.of('Contents'),
+          doc.context.register(doc.context.flateStream(chunks.join(''))));
+      });
+    }
+    var savedBytes = await doc.save();
+    if (fkArabic) {
+      savedBytes = await fixArabicToUnicode(PDFLib, savedBytes, fkArabic, usedGlyphs);
+    }
+    return savedBytes;
   }
 
   return {
     buildPdf: buildPdf,
     wrapLines: wrapLines,
+    wrapArabic: wrapArabic,
+    visualUnitsAr: visualUnitsAr,
     stripArabicMarks: stripArabicMarks,
     splitVisualRuns: splitVisualRuns,
     reverseHebrewLine: reverseHebrewLine,
