@@ -719,6 +719,48 @@ var TranslateCore = (function () {
     return (cp >= 0x064B && cp <= 0x065F) || cp === 0x0670 || (cp >= 0x06D6 && cp <= 0x06ED);
   }
 
+  /* Island merging for the visual-order reversal shared by shapeArabic
+     and unshape: a run of neutral units separated by spaces that
+     contains a Latin word (a foreign phrase, an email with a name, a
+     place name) is ONE unit for reversal, so the phrase keeps its
+     internal word order — "Mise en place" must not come out as
+     "places - en - Mise" (user-reported, 2026-10-28). Leading/trailing
+     punctuation-only units stay outside the island (a colon before an
+     email still belongs to the Arabic side), and runs without letters
+     (phone numbers) keep the established per-number behaviour:
+     digit groups in RTL order, digits forwards inside each group. */
+  var LATIN_LETTER = /[A-Za-zÀ-ÖØ-öø-ÿ]/;
+  function mergeIslands(units) {
+    var out = [];
+    var i = 0;
+    while (i < units.length) {
+      if (units[i].kind !== 'neutral') { out.push(units[i]); i++; continue; }
+      var run = [];
+      var j = i;
+      while (j < units.length && (units[j].kind === 'neutral' || units[j].kind === 'space')) {
+        run.push(units[j]); j++;
+      }
+      var first = -1, last = -1;
+      run.forEach(function (u, idx) {
+        if (u.kind === 'neutral' && LATIN_LETTER.test(u.str)) {
+          if (first < 0) first = idx;
+          last = idx;
+        }
+      });
+      if (first < 0) {
+        run.forEach(function (u) { out.push(u); });
+      } else {
+        for (var a = 0; a < first; a++) out.push(run[a]);
+        var merged = { str: '', kind: 'neutral' };
+        for (var b = first; b <= last; b++) merged.str += run[b].str;
+        out.push(merged);
+        for (var c = last + 1; c < run.length; c++) out.push(run[c]);
+      }
+      i = j;
+    }
+    return out;
+  }
+
   function shapeArabic(text) {
     var chars = Array.from(String(text == null ? '' : text));
     if (!chars.length) return '';
@@ -773,16 +815,16 @@ var TranslateCore = (function () {
     var lastKind = null;
     shaped.forEach(function (sa) {
       if (sa.kind === 'mark') {
-        if (units.length) units[units.length - 1] += sa.str;
-        else { units.push(sa.str); lastKind = 'neutral'; }
-      } else if (sa.kind === 'arab') { units.push(sa.str); lastKind = 'arab'; }
-      else if (sa.kind === 'space') { units.push(sa.str); lastKind = 'space'; }
+        if (units.length) units[units.length - 1].str += sa.str;
+        else { units.push({ str: sa.str, kind: 'neutral' }); lastKind = 'neutral'; }
+      } else if (sa.kind === 'arab') { units.push({ str: sa.str, kind: 'arab' }); lastKind = 'arab'; }
+      else if (sa.kind === 'space') { units.push({ str: sa.str, kind: 'space' }); lastKind = 'space'; }
       else {
-        if (lastKind === 'neutral' && units.length) units[units.length - 1] += sa.str;
-        else { units.push(sa.str); lastKind = 'neutral'; }
+        if (lastKind === 'neutral' && units.length) units[units.length - 1].str += sa.str;
+        else { units.push({ str: sa.str, kind: 'neutral' }); lastKind = 'neutral'; }
       }
     });
-    return units.reverse().join('');
+    return mergeIslands(units).reverse().map(function (u) { return u.str; }).join('');
   }
 
   function unshape(text) {
@@ -792,18 +834,18 @@ var TranslateCore = (function () {
     chars.forEach(function (ch) {
       var cp = ch.codePointAt(0);
       if (isMarkCp(cp)) {
-        if (units.length) units[units.length - 1] += ch;
-        else { units.push(ch); lastKind = 'neutral'; }
+        if (units.length) units[units.length - 1].str += ch;
+        else { units.push({ str: ch, kind: 'neutral' }); lastKind = 'neutral'; }
         return;
       }
-      if (UNFORM[cp] !== undefined || JOIN[cp] !== undefined) { units.push(ch); lastKind = 'arab'; return; }
-      if (ch === ' ' || ch === '\t' || ch === '\n') { units.push(' '); lastKind = 'space'; return; }
-      if (lastKind === 'neutral' && units.length) units[units.length - 1] += ch;
-      else { units.push(ch); lastKind = 'neutral'; }
+      if (UNFORM[cp] !== undefined || JOIN[cp] !== undefined) { units.push({ str: ch, kind: 'arab' }); lastKind = 'arab'; return; }
+      if (ch === ' ' || ch === '\t' || ch === '\n') { units.push({ str: ' ', kind: 'space' }); lastKind = 'space'; return; }
+      if (lastKind === 'neutral' && units.length) units[units.length - 1].str += ch;
+      else { units.push({ str: ch, kind: 'neutral' }); lastKind = 'neutral'; }
     });
-    units.reverse();
+    units = mergeIslands(units).reverse();
     return units.map(function (u) {
-      return Array.from(u).map(function (ch) {
+      return Array.from(u.str).map(function (ch) {
         var back = UNFORM[ch.codePointAt(0)];
         if (back === undefined) return ch;
         if (Array.isArray(back)) return String.fromCodePoint(back[0]) + String.fromCodePoint(back[1]);
@@ -1047,6 +1089,24 @@ var TranslateBuilder = (function () {
     return runs;
   }
 
+  /* Visual order for a Hebrew line: reverse the line's word groups,
+     where consecutive non-Hebrew words (a foreign phrase, a phone
+     number) form one group that keeps its internal order — the same
+     island rule TranslateCore.mergeIslands applies to Arabic lines. */
+  function reverseHebrewLine(line) {
+    var words = String(line == null ? '' : line).split(' ').filter(Boolean);
+    var groups = [];
+    words.forEach(function (w) {
+      var heb = /[֐-׿]/.test(w);
+      if (!heb && groups.length && !groups[groups.length - 1].heb) {
+        groups[groups.length - 1].str += ' ' + w;
+      } else {
+        groups.push({ str: w, heb: heb });
+      }
+    });
+    return groups.reverse().map(function (g) { return g.str; }).join(' ');
+  }
+
   async function buildPdf(opts) {
     var PDFLib = opts.PDFLib;
     var plan = TranslateCore.planOutput(opts.target);
@@ -1087,7 +1147,7 @@ var TranslateBuilder = (function () {
           if (plan.rtl) {
             drawn = isArabicScript
               ? TranslateCore.shapeArabic(line)
-              : line.split(' ').filter(Boolean).reverse().join(' ');
+              : reverseHebrewLine(line);
             x = W - M - font.widthOfTextAtSize(drawn, size);
           }
           if (plan.rtl) {
@@ -1118,6 +1178,7 @@ var TranslateBuilder = (function () {
     wrapLines: wrapLines,
     stripArabicMarks: stripArabicMarks,
     splitVisualRuns: splitVisualRuns,
+    reverseHebrewLine: reverseHebrewLine,
     FONT_MAIN_URL: FONT_MAIN_URL,
     FONT_ARABIC_URL: FONT_ARABIC_URL
   };
