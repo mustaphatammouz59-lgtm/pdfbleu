@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Metadata Editor — View and edit PDF title, author, keywords — PdfBleu.com</title>
+<meta name="description" content="View and edit a PDF's metadata: title, author, subject and keywords. Clean personal info before sharing. Free and 100% private, in your browser.">
+<link rel="canonical" href="https://pdfbleu.mustaphatammouz59.workers.dev/pdf-metadata.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfBleu.com">
+<meta property="og:title" content="PDF Metadata Editor — View and edit PDF title, author, keywords — PdfBleu.com">
+<meta property="og:description" content="View and edit a PDF's metadata: title, author, subject and keywords. Clean personal info before sharing. Free and 100% private, in your browser.">
+<meta property="og:url" content="https://pdfbleu.mustaphatammouz59.workers.dev/pdf-metadata.html">
+<meta name="twitter:card" content="summary">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
+h1{font-size:27px;color:#1a237e;margin-bottom:8px}
+.intro{color:#444a6d;margin-bottom:16px}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .icon{font-size:40px;display:block;margin-bottom:6px}
+.drop p{color:#3F51B5;font-weight:600}
+.drop small{color:#666c8a}
+button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
+button.action{background:#2e7d32}
+button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
+button:disabled{opacity:.5;cursor:not-allowed}
+label.field{display:block;font-weight:600;margin-top:18px;margin-bottom:6px;color:#1a237e}
+input[type=text]{width:100%;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:16px}
+.hint{font-size:13px;color:#666c8a;margin-top:5px}
+.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
+.meta-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px;display:none}
+.meta-table td{border:1px solid #e0e4f5;padding:8px 10px;vertical-align:top}
+.meta-table td.k{font-weight:700;color:#1a237e;width:34%;background:#f4f6fb}
+.meta-table td.v{color:#444a6d;word-break:break-word}
+.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
+.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
+.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+.pbx-faq{max-width:820px;margin:34px auto 0;padding:0 14px}
+.pbx-faq h2{font-size:22px;color:#1a237e;text-align:center;margin-bottom:14px}
+.pbx-qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.pbx-qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.pbx-qa p{font-size:14px;color:#444a6d}
+.pbx-rel{max-width:820px;margin:30px auto 6px;padding:0 14px;text-align:center}
+.pbx-rel h2{font-size:20px;color:#1a237e;margin-bottom:12px}
+.pbx-rel a{display:inline-block;margin:4px;padding:9px 16px;background:#fff;border:1.5px solid #c5cae9;border-radius:22px;color:#3F51B5;text-decoration:none;font-weight:600;font-size:14px}
+.pbx-rel a:hover{background:#eceff9}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<h1>PDF Metadata Editor</h1>
+<p class="intro">Every PDF carries hidden document information — title, author, subject, keywords, and the software that created it. View it here, fix it, or clear it before you share the file.</p>
+<div class="private-note">🔒 Your file never leaves your device: the inspection and editing happen entirely in your browser.</div>
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+<div class="tool">
+<div class="drop" id="drop">
+<span class="icon">🏷️</span>
+<p>Drop your PDF file here</p>
+<small>or tap the button below to select it</small>
+</div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
+<p class="fileinfo" id="fileInfo"></p>
+<table class="meta-table" id="metaTable" aria-label="Current PDF metadata"></table>
+<label class="field" for="fTitle">Title</label>
+<input type="text" id="fTitle" autocomplete="off">
+<label class="field" for="fAuthor">Author</label>
+<input type="text" id="fAuthor" autocomplete="off">
+<label class="field" for="fSubject">Subject</label>
+<input type="text" id="fSubject" autocomplete="off">
+<label class="field" for="fKeywords">Keywords (comma-separated)</label>
+<input type="text" id="fKeywords" autocomplete="off">
+<p class="hint">Leave a field empty to remove that information from the file. The document's pages and content are never changed — only these info fields.</p>
+<button class="secondary" id="clearBtn" type="button">Clear all four fields</button>
+<div class="status" id="status">Saving… please wait.</div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+<button class="action" id="goBtn" type="button" disabled>Save metadata and download</button>
+</div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+</main>
+<div class="pbx-faq"><h2>Frequently asked questions</h2>
+<div class="pbx-qa"><h3>What is PDF metadata?</h3><p>It is the document information stored inside the file: the title shown in a reader's tab, the author name, subject, keywords, and which program created or produced the PDF, with its dates. It is not printed on the pages, but anyone can read it in the file's properties.</p></div>
+<div class="pbx-qa"><h3>Why clear metadata before sharing?</h3><p>Files from Word, scanners and office software often carry your name, your company, or the original document title. Clearing the fields here removes that from the copy you send — the pages themselves stay identical.</p></div>
+<div class="pbx-qa"><h3>Does editing metadata change my document?</h3><p>No. Only the info fields change; pages, text, images and layout are preserved exactly, and your original file is never modified.</p></div>
+</div>
+<div class="pbx-rel"><h2>Related tools</h2><a href="edit-pdf.html">Edit PDF</a><a href="page-numbers.html">Page Numbers</a><a href="watermark.html">Watermark</a><a href="pdf-forms.html">PDF Forms</a></div>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script>
+(function () {
+  var file = null;
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var goBtn = document.getElementById('goBtn');
+  var status = document.getElementById('status');
+  var errorBox = document.getElementById('error');
+  var fileInfo = document.getElementById('fileInfo');
+  var result = document.getElementById('result');
+  var table = document.getElementById('metaTable');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function downloadBytes(bytes, name) {
+    var blob = new Blob([bytes], { type: 'application/pdf' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+  function fmtDate(d) {
+    if (!d) return '—';
+    try { return d.toLocaleString(); } catch (e) { return String(d); }
+  }
+  function row(k, v) {
+    var tr = document.createElement('tr');
+    var tdK = document.createElement('td'); tdK.className = 'k'; tdK.textContent = k;
+    var tdV = document.createElement('td'); tdV.className = 'v'; tdV.textContent = v || '—';
+    tr.appendChild(tdK); tr.appendChild(tdV);
+    return tr;
+  }
+  async function setFile(f) {
+    showError('');
+    result.style.display = 'none';
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
+    try {
+      var buf = await f.arrayBuffer();
+      var doc = await PDFLib.PDFDocument.load(buf);
+      file = f;
+      fileInfo.textContent = 'File: ' + f.name + ' — ' + doc.getPageCount() + ' page(s).';
+      fileInfo.style.display = 'block';
+      table.innerHTML = '';
+      table.appendChild(row('Title', doc.getTitle()));
+      table.appendChild(row('Author', doc.getAuthor()));
+      table.appendChild(row('Subject', doc.getSubject()));
+      table.appendChild(row('Keywords', doc.getKeywords() || ''));
+      table.appendChild(row('Creator', doc.getCreator()));
+      table.appendChild(row('Producer', doc.getProducer()));
+      table.appendChild(row('Created', fmtDate(doc.getCreationDate())));
+      table.appendChild(row('Modified', fmtDate(doc.getModificationDate())));
+      table.style.display = 'table';
+      document.getElementById('fTitle').value = doc.getTitle() || '';
+      document.getElementById('fAuthor').value = doc.getAuthor() || '';
+      document.getElementById('fSubject').value = doc.getSubject() || '';
+      document.getElementById('fKeywords').value = doc.getKeywords() || '';
+      goBtn.disabled = false;
+    } catch (err) {
+      file = null; goBtn.disabled = true;
+      showError('Could not read this PDF. It may be password-protected or damaged.');
+    }
+  }
+  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault(); drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  });
+  document.getElementById('clearBtn').addEventListener('click', function () {
+    ['fTitle', 'fAuthor', 'fSubject', 'fKeywords'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+  });
+  goBtn.addEventListener('click', async function () {
+    showError('');
+    if (!file) { showError('Please select a PDF file first.'); return; }
+    goBtn.disabled = true; status.style.display = 'block';
+    try {
+      var buf = await file.arrayBuffer();
+      var doc = await PDFLib.PDFDocument.load(buf);
+      doc.setTitle(document.getElementById('fTitle').value.trim());
+      doc.setAuthor(document.getElementById('fAuthor').value.trim());
+      doc.setSubject(document.getElementById('fSubject').value.trim());
+      var kw = document.getElementById('fKeywords').value.split(',')
+        .map(function (s) { return s.trim(); }).filter(Boolean);
+      doc.setKeywords(kw);
+      doc.setModificationDate(new Date());
+      downloadBytes(await doc.save(), 'pdfbleu-metadata.pdf');
+      result.textContent = 'Done: your PDF was saved with the new metadata.';
+      result.style.display = 'block';
+    } catch (err) {
+      showError('An error occurred while saving the metadata. Please try again.');
+    } finally { status.style.display = 'none'; goBtn.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to Text — Extract text from a PDF — PdfBleu.com</title>
+<meta name="description" content="Extract all the text from a PDF into a plain .txt file, page by page. Free and 100% private: everything happens in your browser, no upload.">
+<link rel="canonical" href="https://pdfbleu.mustaphatammouz59.workers.dev/pdf-to-text.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfBleu.com">
+<meta property="og:title" content="PDF to Text — Extract text from a PDF — PdfBleu.com">
+<meta property="og:description" content="Extract all the text from a PDF into a plain .txt file, page by page. Free and 100% private: everything happens in your browser, no upload.">
+<meta property="og:url" content="https://pdfbleu.mustaphatammouz59.workers.dev/pdf-to-text.html">
+<meta name="twitter:card" content="summary">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
+header{background:#fff;box-shadow:0 2px 10px rgba(26,35,126,.10);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:100%}
+header .logo{font-size:26px;font-weight:800;color:#3F51B5;text-decoration:none;letter-spacing:-.5px}
+header .logo .com{color:#4ADE80}
+header a.home{color:#3F51B5;text-decoration:none;border:1.5px solid #3F51B5;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:600}
+main{max-width:760px;margin:0 auto;padding:20px 14px 40px}
+h1{font-size:27px;color:#1a237e;margin-bottom:8px}
+.intro{color:#444a6d;margin-bottom:16px}
+.private-note{background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:16px}
+.tool{background:#fff;border-radius:14px;padding:20px;border:1px solid #e0e4f5;box-shadow:0 2px 8px rgba(63,81,181,.08)}
+.drop{border:2.5px dashed #3F51B5;border-radius:12px;padding:30px 14px;text-align:center;background:#eef1fb;cursor:pointer}
+.drop.drag{background:#dfe5f9}
+.drop .icon{font-size:40px;display:block;margin-bottom:6px}
+.drop p{color:#3F51B5;font-weight:600}
+.drop small{color:#666c8a}
+button.pick,button.action{background:#3F51B5;color:#fff;border:none;padding:13px 26px;border-radius:26px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:14px}
+button.action{background:#2e7d32}
+button.secondary{background:#fff;color:#3F51B5;border:1.5px solid #3F51B5;padding:11px 22px;border-radius:26px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:12px}
+button:disabled{opacity:.5;cursor:not-allowed}
+.fileinfo{margin-top:12px;font-size:14px;color:#444a6d;display:none}
+.result{display:none;margin-top:14px;background:#e8f5e9;border:1px solid #4CAF50;color:#1b5e20;border-radius:8px;padding:11px 14px;font-size:14px}
+.status{display:none;margin-top:14px;text-align:center;color:#3F51B5;font-weight:600}
+.error{display:none;margin-top:14px;background:#fdecea;border:1px solid #e53935;color:#b71c1c;border-radius:8px;padding:11px 14px;font-size:14px}
+textarea{width:100%;min-height:220px;margin-top:14px;padding:12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:14px;font-family:inherit;display:none}
+.ad-box{background:#eceff9;border:1.5px dashed #9fa8da;color:#5c6bc0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:8px;margin:18px auto;font-weight:600}
+.ad-300{width:300px;max-width:100%;height:250px}
+.ad-fluid{width:100%;min-height:110px}
+.ad-box small{font-weight:400;font-size:12px}
+footer{text-align:center;padding:22px 12px;color:#666c8a;font-size:14px}
+footer a{color:#3F51B5;text-decoration:none}
+.pbx-faq{max-width:820px;margin:34px auto 0;padding:0 14px}
+.pbx-faq h2{font-size:22px;color:#1a237e;text-align:center;margin-bottom:14px}
+.pbx-qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.pbx-qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.pbx-qa p{font-size:14px;color:#444a6d}
+.pbx-rel{max-width:820px;margin:30px auto 6px;padding:0 14px;text-align:center}
+.pbx-rel h2{font-size:20px;color:#1a237e;margin-bottom:12px}
+.pbx-rel a{display:inline-block;margin:4px;padding:9px 16px;background:#fff;border:1.5px solid #c5cae9;border-radius:22px;color:#3F51B5;text-decoration:none;font-weight:600;font-size:14px}
+.pbx-rel a:hover{background:#eceff9}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<header>
+<a class="logo" href="index.html">PdfBleu<span class="com">.com</span></a>
+<a class="home" href="index.html">Home</a>
+</header>
+<main>
+<h1>PDF to Text</h1>
+<p class="intro">Extract all the text from your PDF into a plain .txt file, page by page — ready to copy, search, translate or reuse anywhere.</p>
+<div class="private-note">🔒 Your file never leaves your device: the extraction happens entirely in your browser.</div>
+<div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
+<div class="tool">
+<div class="drop" id="drop">
+<span class="icon">📄</span>
+<p>Drop your PDF file here</p>
+<small>or tap the button below to select it</small>
+</div>
+<input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+<button class="pick" id="pickBtn" type="button">Select a PDF file</button>
+<p class="fileinfo" id="fileInfo"></p>
+<div class="status" id="status">Extracting… please wait.</div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+<textarea id="outText" readonly aria-label="Extracted text"></textarea>
+<button class="secondary" id="copyBtn" type="button" style="display:none">Copy the text</button>
+<button class="action" id="goBtn" type="button" disabled>Extract and download .txt</button>
+</div>
+<div class="ad-box ad-fluid">AdSense Space<br><small>In-article — fluid</small></div>
+</main>
+<div class="pbx-faq"><h2>Frequently asked questions</h2>
+<div class="pbx-qa"><h3>My PDF produced an empty text file — why?</h3><p>Your PDF is most likely a scan: its pages are pictures of text, with no text layer to extract. Use our OCR PDF tool first to make it searchable, then extract again.</p></div>
+<div class="pbx-qa"><h3>Is the layout preserved?</h3><p>No — a .txt file is plain text. Lines and page order are kept, with a clear separator between pages, but columns, fonts and positions are not. If you need an editable formatted document, use PDF to Word instead.</p></div>
+<div class="pbx-qa"><h3>Can I copy just part of the text?</h3><p>Yes. After extracting, the full text appears in the box on this page: select what you need, or use the Copy button to take all of it.</p></div>
+</div>
+<div class="pbx-rel"><h2>Related tools</h2><a href="pdf-to-word.html">PDF to Word</a><a href="pdf-to-jpg.html">PDF to JPG</a><a href="pdf-to-png.html">PDF to PNG</a><a href="ocr-pdf.html">OCR PDF</a></div>
+<footer>
+<p>© 2026 PdfBleu.com — <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="index.html">All tools</a></p>
+</footer>
+<script>
+(function () {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var file = null;
+  var extracted = '';
+  var drop = document.getElementById('drop');
+  var input = document.getElementById('fileInput');
+  var goBtn = document.getElementById('goBtn');
+  var copyBtn = document.getElementById('copyBtn');
+  var status = document.getElementById('status');
+  var errorBox = document.getElementById('error');
+  var fileInfo = document.getElementById('fileInfo');
+  var result = document.getElementById('result');
+  var outText = document.getElementById('outText');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = msg ? 'block' : 'none';
+  }
+  function linesOfPage(tc) {
+    var lines = [];
+    var cur = null;
+    var curY = null;
+    tc.items.forEach(function (it) {
+      var y = it.transform[5];
+      if (curY === null || Math.abs(y - curY) > 2) {
+        cur = [];
+        lines.push(cur);
+        curY = y;
+      }
+      cur.push(it.str);
+      if (it.hasEOL) { curY = null; cur = null; }
+    });
+    return lines.map(function (parts) { return parts.join(' ').replace(/\s+/g, ' ').trim(); })
+      .filter(function (l) { return l.length; }).join('\n');
+  }
+  async function setFile(f) {
+    showError('');
+    result.style.display = 'none';
+    outText.style.display = 'none';
+    copyBtn.style.display = 'none';
+    extracted = '';
+    var isPdf = f && (f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (!isPdf) { showError('This file is not a PDF. Please select a PDF file.'); return; }
+    try {
+      var buf = await f.arrayBuffer();
+      var doc = await pdfjsLib.getDocument({ data: buf }).promise;
+      file = f;
+      fileInfo.textContent = 'File: ' + f.name + ' — ' + doc.numPages + ' page(s).';
+      fileInfo.style.display = 'block';
+      goBtn.disabled = false;
+    } catch (err) {
+      file = null; goBtn.disabled = true;
+      showError('Could not read this PDF. It may be password-protected or damaged.');
+    }
+  }
+  document.getElementById('pickBtn').addEventListener('click', function () { input.click(); });
+  drop.addEventListener('click', function () { input.click(); });
+  input.addEventListener('change', function () { if (input.files[0]) setFile(input.files[0]); input.value = ''; });
+  drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag'); });
+  drop.addEventListener('dragleave', function () { drop.classList.remove('drag'); });
+  drop.addEventListener('drop', function (e) {
+    e.preventDefault(); drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  });
+  copyBtn.addEventListener('click', function () {
+    outText.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(extracted);
+    else document.execCommand('copy');
+    copyBtn.textContent = 'Copied ✓';
+    setTimeout(function () { copyBtn.textContent = 'Copy the text'; }, 2000);
+  });
+  goBtn.addEventListener('click', async function () {
+    showError('');
+    if (!file) { showError('Please select a PDF file first.'); return; }
+    goBtn.disabled = true; status.style.display = 'block';
+    try {
+      var buf = await file.arrayBuffer();
+      var doc = await pdfjsLib.getDocument({ data: buf }).promise;
+      var pagesTxt = [];
+      for (var p = 1; p <= doc.numPages; p++) {
+        status.textContent = 'Extracting… page ' + p + ' of ' + doc.numPages;
+        var page = await doc.getPage(p);
+        var tc = await page.getTextContent();
+        pagesTxt.push(linesOfPage(tc));
+      }
+      extracted = pagesTxt.map(function (t, i) {
+        return '— Page ' + (i + 1) + ' —\n\n' + t;
+      }).join('\n\n');
+      var chars = extracted.replace(/\s/g, '').length;
+      if (chars < 10) {
+        showError('This PDF contains almost no extractable text. It is probably a scanned document: use the OCR PDF tool first, then extract again.');
+        return;
+      }
+      var words = extracted.split(/\s+/).filter(Boolean).length;
+      outText.value = extracted;
+      outText.style.display = 'block';
+      copyBtn.style.display = 'block';
+      result.textContent = 'Done: ' + doc.numPages + ' page(s), about ' + words + ' words extracted.';
+      result.style.display = 'block';
+      var blob = new Blob([extracted], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = file.name.replace(/\.pdf$/i, '') + '.txt';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    } catch (err) {
+      showError('An error occurred while extracting the text. Please try again.');
+    } finally { status.style.display = 'none'; status.textContent = 'Extracting… please wait.'; goBtn.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>

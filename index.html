@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PdfBleu.com — All your free, 100% private PDF tools</title>
 <meta name="description" content="Merge, split, compress and convert your PDFs for free, with no sign-up and no limits. Your files never leave your device.">
+<link rel="canonical" href="https://pdfbleu.mustaphatammouz59.workers.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfBleu.com">
+<meta property="og:title" content="PdfBleu.com — All your free, 100% private PDF tools">
+<meta property="og:description" content="Merge, split, compress and convert your PDFs for free, with no sign-up and no limits. Your files never leave your device.">
+<meta property="og:url" content="https://pdfbleu.mustaphatammouz59.workers.dev/">
+<meta name="twitter:card" content="summary">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f6fb;color:#21243d;line-height:1.55}
@@ -82,6 +89,27 @@ footer{background:#1a237e;color:#c5cae9;margin-top:36px}
 <span class="pill">100% private — your files never leave your device</span>
 </section>
 
+<style>
+.pbx-search{max-width:560px;margin:0 auto 16px;padding:0 14px}
+.pbx-search input{width:100%;padding:13px 18px;border:1.5px solid #c5cae9;border-radius:26px;font-size:16px;font-family:inherit;color:#21243d;background:#fff;outline:none}
+.pbx-search input:focus{border-color:#3F51B5;box-shadow:0 0 0 3px rgba(63,81,181,.15)}
+.pbx-nores{display:none;text-align:center;color:#666c8a;font-size:15px;margin:6px 0 14px}
+.pbx-sec{max-width:1000px;margin:38px auto 0;padding:0 14px}
+.pbx-sec h2{font-size:23px;color:#1a237e;text-align:center;margin-bottom:16px}
+.pbx-steps{display:grid;gap:12px}
+@media(min-width:760px){.pbx-steps{grid-template-columns:repeat(3,1fr)}}
+.pbx-step{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:18px;text-align:center}
+.pbx-step .n{background:#3F51B5;color:#fff;border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:9px}
+.pbx-step h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.pbx-step p{font-size:14px;color:#444a6d}
+.pbx-faq{max-width:820px;margin:38px auto 0;padding:0 14px}
+.pbx-faq h2{font-size:23px;color:#1a237e;text-align:center;margin-bottom:14px}
+.pbx-qa{background:#fff;border:1px solid #e0e4f5;border-radius:12px;padding:16px;margin-bottom:12px}
+.pbx-qa h3{font-size:16px;color:#1a237e;margin-bottom:5px}
+.pbx-qa p{font-size:14px;color:#444a6d}
+</style>
+<div class="pbx-search"><input type="search" id="pbxSearch" placeholder="Search a tool — try “merge”, “word”, “sign”…" aria-label="Search tools"></div>
+<p class="pbx-nores" id="pbxNoRes">No tool matches your search. Try a shorter word, or browse the categories below.</p>
 <div class="chips" id="outils">
 <button class="chip active" data-filter="all" type="button">All</button>
 <button class="chip" data-filter="organize" type="button">Organize PDF</button>
@@ -108,6 +136,8 @@ footer{background:#1a237e;color:#c5cae9;margin-top:36px}
 <a class="card" data-category="convert" href="excel-to-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#C2E5C3"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#5EA162"/><path d="M10 10 L16 16" stroke="#2E7237" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#2E7237"/><text x="30" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">X</text></svg></div><h3>Excel to PDF</h3><p>Export your Excel spreadsheets as clean PDF pages ready to print.</p></a>
 <a class="card" data-category="convert" href="html-to-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="30" height="30" rx="7" fill="#FBEFA8"/><rect x="15" y="15" width="30" height="30" rx="7" fill="#D6BF2D"/><path d="M10 10 L16 16" stroke="#B7A001" stroke-width="2.6" fill="none"/><polygon points="11,16.5 17,16.5 17,10.5" fill="#B7A001"/><text x="30" y="37" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">&lt;/&gt;</text></svg></div><h3>HTML to PDF</h3><p>Save a complete web page into a PDF file.</p></a>
 <a class="card" data-category="convert" href="pdf-to-jpg.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#FBEFA8"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#D6BF2D"/><path d="M38 10 L32 16" stroke="#B7A001" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#B7A001"/><circle cx="13" cy="25" r="3.4" fill="#ffffff"/><polygon points="8,40 16,29 22,36 25,32 30,40" fill="#ffffff"/></svg></div><h3>PDF to JPG</h3><p>Extract each page of your PDF as a JPG image.</p></a>
+<a class="card" data-category="convert" href="pdf-to-png.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#BFE8CF"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#3D9970"/><circle cx="13" cy="25" r="3" fill="#fff"/><path d="M6 40 L16 30 L22 36 L27 31 L31 35 L31 41 Q31 42 30 42 L7 42 Q6 42 6 41 Z" fill="#fff"/></svg></div><h3>PDF to PNG</h3><p>Turn each page into a crisp, lossless PNG image.</p></a>
+<a class="card" data-category="convert" href="pdf-to-text.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#D9D2E9"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#6750A4"/><path d="M10 24 H26 M10 30 H26 M10 36 H20" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><h3>PDF to Text</h3><p>Extract all the text from a PDF into a plain .txt file.</p></a>
 <a class="card" data-category="convert" href="pdf-to-word.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#DCE5FA"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#5F83C6"/><path d="M38 10 L32 16" stroke="#295795" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#295795"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">W</text></svg></div><h3>PDF to Word</h3><p>Convert your PDFs back into editable Word documents.</p></a>
 <a class="card" data-category="convert" href="pdf-to-powerpoint.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#F3D9CC"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#FF7651"/><path d="M38 10 L32 16" stroke="#D04526" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#D04526"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">P</text></svg></div><h3>PDF to PowerPoint</h3><p>Turn the pages of a PDF into PowerPoint slides.</p></a>
 <a class="card" data-category="convert" href="pdf-to-excel.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="3" width="30" height="30" rx="7" fill="#C2E5C3"/><rect x="3" y="15" width="30" height="30" rx="7" fill="#5EA162"/><path d="M38 10 L32 16" stroke="#2E7237" stroke-width="2.6" fill="none"/><polygon points="37,16.5 31,16.5 31,10.5" fill="#2E7237"/><text x="18" y="37" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="Arial,sans-serif">X</text></svg></div><h3>PDF to Excel</h3><p>Recover the tables from a PDF into an Excel workbook.</p></a>
@@ -117,6 +147,7 @@ footer{background:#1a237e;color:#c5cae9;margin-top:36px}
 <a class="card" data-category="edit" href="watermark.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><circle cx="24" cy="13" r="5" fill="#fff"/><rect x="21" y="17" width="6" height="5" fill="#fff"/><rect x="13" y="22" width="22" height="6" rx="2" fill="#fff"/><rect x="10" y="30" width="28" height="7" rx="2" fill="#fff"/></svg></div><h3>Watermark</h3><p>Stamp a text such as "CONFIDENTIAL" on every page.</p></a>
 <a class="card" data-category="edit" href="crop-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><path d="M28 12 H14 a2 2 0 0 0 -2 2 V28" stroke="#fff" stroke-width="3.4" fill="none"/><path d="M20 36 H34 a2 2 0 0 0 2 -2 V20" stroke="#fff" stroke-width="3.4" fill="none"/></svg></div><h3>Crop PDF</h3><p>Trim the margins or a specific area of your pages.</p></a>
 <a class="card" data-category="edit" href="edit-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><g transform="rotate(45 24 24)"><rect x="20" y="8" width="8" height="5" fill="#D9B8CC"/><rect x="20" y="13" width="8" height="19" fill="#fff"/><polygon points="20,32 28,32 24,42" fill="#fff"/><polygon points="22.5,37.5 25.5,37.5 24,42" fill="#AB6993"/></g></svg></div><h3>Edit PDF</h3><p>Add text, images and annotations to your documents.</p></a>
+<a class="card" data-category="edit" href="pdf-metadata.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><circle cx="24" cy="19" r="4.5" fill="#fff"/><path d="M24 24 V38" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></div><h3>PDF Metadata</h3><p>View and edit a PDF's title, author, subject and keywords.</p></a>
 <a class="card" data-category="edit" href="pdf-forms.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#AB6993"/><rect x="13" y="8" width="22" height="32" rx="2" fill="#fff"/><rect x="17" y="13" width="6" height="6" fill="none" stroke="#AB6993" stroke-width="1.8"/><path d="M18.5 16 l2 2 3 -3.5" stroke="#AB6993" stroke-width="1.6" fill="none"/><path d="M17 27 H31 M17 33 H27" stroke="#AB6993" stroke-width="2" fill="none"/></svg></div><h3>PDF Forms</h3><p>Create and fill in forms directly in the PDF.</p></a>
 <a class="card" data-category="security" href="unlock-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><path d="M18 24 v-5 a6 6 0 0 1 11.5 -2" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><rect x="13" y="24" width="22" height="15" rx="3" fill="#fff"/><circle cx="24" cy="30.5" r="2.6" fill="#4A7AAB"/><path d="M24 32.5 V36" stroke="#4A7AAB" stroke-width="2.2" fill="none"/></svg></div><h3>Unlock PDF</h3><p>Remove the protection from a PDF whose password you know.</p></a>
 <a class="card" data-category="security" href="protect-pdf.html"><div class="tic"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="4" width="40" height="40" rx="9" fill="#4A7AAB"/><path d="M24 6 L37 10.5 V23 C37 32.5 31 38.5 24 42 C17 38.5 11 32.5 11 23 V10.5 Z" fill="#fff"/><rect x="19.5" y="21" width="9" height="8" rx="1.6" fill="#4A7AAB"/><path d="M21.5 21 v-2 a2.5 2.5 0 0 1 5 0 v2" stroke="#4A7AAB" stroke-width="1.8" fill="none"/></svg></div><h3>Protect PDF</h3><p>Encrypt your document with a password before sharing it.</p></a>
@@ -148,15 +179,28 @@ footer{background:#1a237e;color:#c5cae9;margin-top:36px}
 <p class="badges">🔒 No server upload &nbsp;·&nbsp; 🚫 No account &nbsp;·&nbsp; ♾️ No limits &nbsp;·&nbsp; 📱 Mobile and computer</p>
 </section>
 
+<section class="pbx-sec"><h2>How it works</h2><div class="pbx-steps">
+<div class="pbx-step"><span class="n">1</span><h3>Pick a tool and your file</h3><p>Drag and drop your PDF, or tap to select it. Nothing is uploaded: the file stays on your device from start to finish.</p></div>
+<div class="pbx-step"><span class="n">2</span><h3>The tool works in your browser</h3><p>Processing happens on your phone or computer, usually in a few seconds. No account, no queue, no waiting for a server.</p></div>
+<div class="pbx-step"><span class="n">3</span><h3>Download your file</h3><p>Your result is ready immediately. Close the tab and nothing remains anywhere — we never saw your document.</p></div>
+</div></section>
+<section class="pbx-faq"><h2>Frequently asked questions</h2>
+<div class="pbx-qa"><h3>Is PdfBleu really free?</h3><p>Yes. Every tool is free, with no sign-up and no page limits set by us. The site is supported by advertising, which is why you see clearly labelled ad spaces.</p></div>
+<div class="pbx-qa"><h3>Are my files uploaded to your servers?</h3><p>No for every processing tool: they run 100% in your browser, and your files never leave your device. One honest exception: Translate PDF sends only the extracted text (never the file) to a translation service, and says so clearly on its page.</p></div>
+<div class="pbx-qa"><h3>Do I need to create an account?</h3><p>No. There is no account, no sign-up form and no user database.</p></div>
+<div class="pbx-qa"><h3>Are there file size limits?</h3><p>We set no artificial limit. Because everything runs on your device, very large files depend on your phone or computer's available memory.</p></div>
+<div class="pbx-qa"><h3>Does it work on my phone?</h3><p>Yes. The site and every tool are designed for mobile first, and work the same on a computer.</p></div>
+<div class="pbx-qa"><h3>Which languages are supported?</h3><p>The interface is in English. The tools work on documents in any language; the only stated limits are on the Office-to-PDF converters, which currently render Arabic characters as “?” and tell you before you download.</p></div>
+</section>
 <div class="ad-box ad-300">AdSense Space<br><small>300 × 250</small></div>
 </main>
 <footer>
 <div class="foot-in">
 <div class="foot-grid">
 <div><h4>Product</h4><a href="index.html">Home</a><a href="merge-pdf.html">Merge PDF</a><a href="compress-pdf.html">Compress PDF</a><a href="rotate-pdf.html">Rotate PDF</a></div>
-<div><h4>Resources</h4><a href="split-pdf.html">Split PDF</a><a href="extract-pages.html">Extract pages</a><a href="pdf-to-jpg.html">PDF to JPG</a><a href="jpg-to-pdf.html">JPG to PDF</a></div>
-<div><h4>Legal</h4><a href="privacy.html">Privacy policy</a><a href="privacy.html">Security of your files</a></div>
-<div><h4>Company</h4><a href="privacy.html">Our privacy promise</a><a href="index.html">All tools</a></div>
+<div><h4>Resources</h4><a href="blog.html">Blog &amp; guides</a><a href="split-pdf.html">Split PDF</a><a href="extract-pages.html">Extract pages</a><a href="pdf-to-jpg.html">PDF to JPG</a><a href="jpg-to-pdf.html">JPG to PDF</a></div>
+<div><h4>Legal</h4><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of service</a><a href="cookie-policy.html">Cookie policy</a><a href="dmca.html">DMCA</a></div>
+<div><h4>Company</h4><a href="about.html">About us</a><a href="contact.html">Contact us</a><a href="privacy.html">Our privacy promise</a><a href="index.html">All tools</a></div>
 </div>
 <div class="foot-bottom"><span>Language: English</span><span>© PdfBleu 2026 — PdfBleu.com</span></div>
 </div>
@@ -187,5 +231,29 @@ footer{background:#1a237e;color:#c5cae9;margin-top:36px}
   });
 })();
 </script>
+<script>
+(function () {
+  var input = document.getElementById('pbxSearch');
+  var noRes = document.getElementById('pbxNoRes');
+  if (!input) return;
+  var cards = document.querySelectorAll('.card');
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase();
+    if (!q) {
+      var active = document.querySelector('.chip.active') || document.querySelector('.chip');
+      if (active) active.click();
+      noRes.style.display = 'none';
+      return;
+    }
+    var shown = 0;
+    cards.forEach(function (card) {
+      var hit = card.textContent.toLowerCase().indexOf(q) >= 0;
+      card.style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    });
+    noRes.style.display = shown ? 'none' : 'block';
+  });
+})();
+</script>
 </body>
-  </html>
+</html>
